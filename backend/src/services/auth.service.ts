@@ -1,0 +1,159 @@
+import SessionModel from "../models/session.model";
+import UserModel from "../models/user.model";
+import VerificationCodeModel from "../models/verification-code.model";
+
+import appAssert from "../utils/app-assert.util";
+import { onYearFromNow, thirtyDaysFormNow } from "../utils/date.util";
+import { getVerifyEmailTemplate } from "../utils/email-template.util";
+import {
+  AccessTokenSignOptions,
+  RefreshTokenSignOptions,
+  signToken,
+} from "../utils/jwt.util";
+import sendEmail from "../utils/send-email.util";
+
+import {
+  CONFLICT,
+  INTERNAL_SERVER_ERROR,
+  NOT_FOUND,
+  UNAUTHORIZED,
+} from "../constants/http-code.constant";
+import { ORIGIN_APP } from "../constants/env-validate.constant";
+import VerificationCodeType from "../constants/verification-code.constant";
+
+interface LoginParams {
+  email: string;
+  password: string;
+  userAgent?: string;
+}
+
+interface RegisterParams extends LoginParams {
+  confirmPassword: string;
+}
+
+// Create account service
+export const createAccount = async (data: RegisterParams) => {
+  // verify email if exist
+  const isEmailExist = await UserModel.findOne({ email: data.email });
+
+  appAssert(!isEmailExist, CONFLICT, "Email is already in use");
+
+  // create user
+  const user = await UserModel.create({
+    email: data.email,
+    password: data.password,
+  });
+
+  // send verification code
+  const verificationCode = await VerificationCodeModel.create({
+    userId: user.id,
+    type: VerificationCodeType.EmailVerification,
+    expiresAt: onYearFromNow(),
+  });
+
+  // send verification email
+  const url = `${ORIGIN_APP}/email/verify?code=${verificationCode.id}`;
+
+  const { data: emailData, error } = await sendEmail({
+    to: user.email,
+    ...getVerifyEmailTemplate(url),
+  });
+
+  appAssert(
+    emailData?.id,
+    INTERNAL_SERVER_ERROR,
+    `${error?.name}-${error?.message}`
+  );
+
+  // create session
+  const session = await SessionModel.create({
+    userId: user.id,
+    userAgent: data.userAgent,
+    expiresAt: thirtyDaysFormNow(),
+  });
+
+  // sign access token and refresh token
+  const accessToken = signToken(
+    { userId: user.id, sessionId: session.id },
+    AccessTokenSignOptions
+  );
+
+  const refreshToken = signToken(
+    { sessionId: session.id },
+    RefreshTokenSignOptions
+  );
+
+  // return user and tokens
+  return { user: user.omitPassword(), accessToken, refreshToken };
+};
+
+// Login service
+export const loginUser = async (data: LoginParams) => {
+  // find user by email
+  const user = await UserModel.findOne({ email: data.email });
+
+  appAssert(user, UNAUTHORIZED, "Invalid email or password");
+
+  // validate password
+  const isPasswordMatch = await user.comparePassword(data.password);
+
+  appAssert(isPasswordMatch, UNAUTHORIZED, "Invalid email or password");
+
+  // create session
+  const session = await SessionModel.create({
+    userId: user.id,
+    userAgent: data.userAgent,
+    expiresAt: thirtyDaysFormNow(),
+  });
+
+  // sign access token and refresh token
+  const accessToken = signToken(
+    { userId: user.id, sessionId: session.id },
+    AccessTokenSignOptions
+  );
+
+  const refreshToken = signToken(
+    {
+      sessionId: session.id,
+    },
+    RefreshTokenSignOptions
+  );
+
+  // return tokens
+  return { accessToken, refreshToken };
+};
+
+// verify email service
+export const verifyEmail = async (code: string) => {
+  // verify verificationCode
+  const verificationCode = await VerificationCodeModel.findOne({
+    _id: code,
+    type: VerificationCodeType.EmailVerification,
+    expiresAt: { $gt: new Date() },
+  });
+
+  appAssert(
+    verificationCode,
+    NOT_FOUND,
+    "Invalid or expired verification code"
+  );
+
+  // update user verified status to true
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    verificationCode.userId,
+    {
+      verified: true,
+    },
+    { new: true }
+  );
+
+  appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to verify email");
+
+  // delete verification code
+  await verificationCode.deleteOne();
+
+  // return updated user
+  return {
+    user: updatedUser.omitPassword(),
+  };
+};
