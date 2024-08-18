@@ -7,9 +7,10 @@ import {
 import {
   createAccount,
   loginUser,
+  logoutUser,
   verifyEmail,
 } from "../services/auth.service";
-import { setAuthCookies } from "../utils/cookies.util";
+import { clearAuthCookies, setAuthCookies } from "../utils/cookies.util";
 import { CREATED, OK } from "../constants/http-code.constant";
 
 // register handler
@@ -25,6 +26,21 @@ export const registerHandler: RequestHandler = async (req, res, next) => {
     return setAuthCookies({ res, accessToken, refreshToken })
       .status(CREATED)
       .json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// verify email
+export const verifyEmailHandler: RequestHandler = async (req, res, next) => {
+  try {
+    // verify verificationCode
+    const code = verificationCodeSchema.parse(req.params.code);
+
+    // verify email verified status
+    await verifyEmail(code);
+
+    return res.status(OK).json({ message: "Email verified successfully" });
   } catch (error) {
     next(error);
   }
@@ -48,16 +64,19 @@ export const loginHandler: RequestHandler = async (req, res, next) => {
   }
 };
 
-// verify email
-export const verifyEmailHandler: RequestHandler = async (req, res, next) => {
+// logout handler
+export const logoutHandler: RequestHandler = async (req, res, next) => {
   try {
-    // verify verificationCode
-    const code = verificationCodeSchema.parse(req.params.code);
+    // get access token from cookies
+    const { accessToken } = req.cookies;
 
-    // verify email verified status
-    await verifyEmail(code);
+    // logout user
+    await logoutUser(accessToken);
 
-    return res.status(OK).json({ message: "Email verified successfully" });
+    // clear cookies and return response
+    return clearAuthCookies(res)
+      .status(OK)
+      .json({ message: "Logout successfully" });
   } catch (error) {
     next(error);
   }

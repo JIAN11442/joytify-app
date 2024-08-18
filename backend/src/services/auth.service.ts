@@ -9,6 +9,7 @@ import {
   AccessTokenSignOptions,
   RefreshTokenSignOptions,
   signToken,
+  verifyToken,
 } from "../utils/jwt.util";
 import sendEmail from "../utils/send-email.util";
 
@@ -156,4 +157,13 @@ export const verifyEmail = async (code: string) => {
   return {
     user: updatedUser.omitPassword(),
   };
+};
+
+// logout service
+export const logoutUser = async (accessToken: string) => {
+  // verify access token
+  const { payload } = await verifyToken(accessToken, AccessTokenSignOptions);
+
+  // find session by userId and delete it
+  return await SessionModel.findByIdAndDelete(payload?.sessionId);
 };
