@@ -3,8 +3,16 @@ import UserModel from "../models/user.model";
 import VerificationCodeModel from "../models/verification-code.model";
 
 import appAssert from "../utils/app-assert.util";
-import { onYearFromNow, thirtyDaysFormNow } from "../utils/date.util";
-import { getVerifyEmailTemplate } from "../utils/email-template.util";
+import {
+  oneHourFromNow,
+  onYearFromNow,
+  thirtyDaysFormNow,
+  thirtySecondsAgo,
+} from "../utils/date.util";
+import {
+  getPasswordResetTemplate,
+  getVerifyEmailTemplate,
+} from "../utils/email-template.util";
 import {
   AccessTokenSignOptions,
   RefreshTokenSignOptions,
@@ -17,6 +25,7 @@ import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
+  TOO_MANY_REQUESTS,
   UNAUTHORIZED,
 } from "../constants/http-code.constant";
 import { ORIGIN_APP } from "../constants/env-validate.constant";
@@ -32,7 +41,7 @@ interface RegisterParams extends LoginParams {
   confirmPassword: string;
 }
 
-// Create account service
+// create account service
 export const createAccount = async (data: RegisterParams) => {
   // verify email if exist
   const isEmailExist = await UserModel.findOne({ email: data.email });
@@ -88,42 +97,6 @@ export const createAccount = async (data: RegisterParams) => {
   return { user: user.omitPassword(), accessToken, refreshToken };
 };
 
-// Login service
-export const loginUser = async (data: LoginParams) => {
-  // find user by email
-  const user = await UserModel.findOne({ email: data.email });
-
-  appAssert(user, UNAUTHORIZED, "Invalid email or password");
-
-  // validate password
-  const isPasswordMatch = await user.comparePassword(data.password);
-
-  appAssert(isPasswordMatch, UNAUTHORIZED, "Invalid email or password");
-
-  // create session
-  const session = await SessionModel.create({
-    userId: user.id,
-    userAgent: data.userAgent,
-    expiresAt: thirtyDaysFormNow(),
-  });
-
-  // sign access token and refresh token
-  const accessToken = signToken(
-    { userId: user.id, sessionId: session.id },
-    AccessTokenSignOptions
-  );
-
-  const refreshToken = signToken(
-    {
-      sessionId: session.id,
-    },
-    RefreshTokenSignOptions
-  );
-
-  // return tokens
-  return { accessToken, refreshToken };
-};
-
 // verify email service
 export const verifyEmail = async (code: string) => {
   // verify verificationCode
@@ -159,6 +132,42 @@ export const verifyEmail = async (code: string) => {
   };
 };
 
+// login service
+export const loginUser = async (data: LoginParams) => {
+  // find user by email
+  const user = await UserModel.findOne({ email: data.email });
+
+  appAssert(user, UNAUTHORIZED, "Invalid email or password");
+
+  // validate password
+  const isPasswordMatch = await user.comparePassword(data.password);
+
+  appAssert(isPasswordMatch, UNAUTHORIZED, "Invalid email or password");
+
+  // create session
+  const session = await SessionModel.create({
+    userId: user.id,
+    userAgent: data.userAgent,
+    expiresAt: thirtyDaysFormNow(),
+  });
+
+  // sign access token and refresh token
+  const accessToken = signToken(
+    { userId: user.id, sessionId: session.id },
+    AccessTokenSignOptions
+  );
+
+  const refreshToken = signToken(
+    {
+      sessionId: session.id,
+    },
+    RefreshTokenSignOptions
+  );
+
+  // return tokens
+  return { accessToken, refreshToken };
+};
+
 // logout service
 export const logoutUser = async (accessToken: string) => {
   // verify access token
@@ -166,4 +175,58 @@ export const logoutUser = async (accessToken: string) => {
 
   // find session by userId and delete it
   return await SessionModel.findByIdAndDelete(payload?.sessionId);
+};
+
+// forgot password and send reset password email service
+export const sendResetPasswordEmail = async (email: string) => {
+  // find user by email
+  const user = await UserModel.findOne({ email });
+
+  appAssert(user, NOT_FOUND, "User not found");
+
+  // check if verification code is duplicated within a certain period of time.
+  const count = await VerificationCodeModel.countDocuments({
+    userId: user.id,
+    type: VerificationCodeType.PasswordReset,
+    expiresAt: { $gt: thirtySecondsAgo() },
+  });
+
+  // if count is greater than 0,
+  // it means that the user has requested a password reset within a certain period of time.
+  appAssert(
+    count < 1,
+    TOO_MANY_REQUESTS,
+    "Too many requests, please try again later"
+  );
+
+  const expiresAt = oneHourFromNow();
+
+  // create verification code
+  const verificationCode = await VerificationCodeModel.create({
+    userId: user.id,
+    type: VerificationCodeType.PasswordReset,
+    expiresAt,
+  });
+
+  // send reset password email
+  const url = `${ORIGIN_APP}/password/reset?code=${
+    verificationCode.id
+  }&exp=${expiresAt.getTime()}`;
+
+  const { data: EmailData, error } = await sendEmail({
+    to: user.email,
+    ...getPasswordResetTemplate(url),
+  });
+
+  appAssert(
+    EmailData?.id,
+    INTERNAL_SERVER_ERROR,
+    `${error?.name}-${error?.message}`
+  );
+
+  // return
+  return {
+    url,
+    sentEmailId: EmailData.id,
+  };
 };

@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import {
+  emailSchema,
   loginSchema,
   registerSchema,
   verificationCodeSchema,
@@ -8,6 +9,7 @@ import {
   createAccount,
   loginUser,
   logoutUser,
+  sendResetPasswordEmail,
   verifyEmail,
 } from "../services/auth.service";
 import { clearAuthCookies, setAuthCookies } from "../utils/cookies.util";
@@ -77,6 +79,20 @@ export const logoutHandler: RequestHandler = async (req, res, next) => {
     return clearAuthCookies(res)
       .status(OK)
       .json({ message: "Logout successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// forgot password handler
+export const forgotPasswordHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const email = emailSchema.parse(req.body.email);
+
+    // verify email and send reset password email
+    await sendResetPasswordEmail(email);
+
+    return res.status(OK).json({ message: "Reset password email sent" });
   } catch (error) {
     next(error);
   }
