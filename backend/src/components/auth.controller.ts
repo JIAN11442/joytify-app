@@ -3,12 +3,14 @@ import {
   emailSchema,
   loginSchema,
   registerSchema,
+  resetPasswordSchema,
   verificationCodeSchema,
 } from "../schemas/auth.schema";
 import {
   createAccount,
   loginUser,
   logoutUser,
+  resetUserPassword,
   sendResetPasswordEmail,
   verifyEmail,
 } from "../services/auth.service";
@@ -56,7 +58,10 @@ export const loginHandler: RequestHandler = async (req, res, next) => {
       userAgent: req.headers["user-agent"],
     });
 
-    const { accessToken, refreshToken } = await loginUser(request);
+    const { accessToken, refreshToken } = await loginUser({
+      ...request,
+      req,
+    });
 
     return setAuthCookies({ res, accessToken, refreshToken })
       .status(OK)
@@ -93,6 +98,21 @@ export const forgotPasswordHandler: RequestHandler = async (req, res, next) => {
     await sendResetPasswordEmail(email);
 
     return res.status(OK).json({ message: "Reset password email sent" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// reset password handler
+export const resetPasswordHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const request = resetPasswordSchema.parse(req.body);
+
+    await resetUserPassword(request);
+
+    return clearAuthCookies(res)
+      .status(OK)
+      .json({ message: "Password reset successfully" });
   } catch (error) {
     next(error);
   }

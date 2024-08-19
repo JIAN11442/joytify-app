@@ -49,3 +49,8 @@ export const registerSchema = loginSchema
     (data) => data.password === data.confirmPassword,
     warningMsg.passwordIsNotMatch
   );
+
+export const resetPasswordSchema = z.object({
+  verificationCode: verificationCodeSchema,
+  password: passwordSchema,
+});

@@ -30,14 +30,20 @@ import {
 } from "../constants/http-code.constant";
 import { ORIGIN_APP } from "../constants/env-validate.constant";
 import VerificationCodeType from "../constants/verification-code.constant";
+import { HashValue } from "../utils/bcrypt.util";
+import { Request } from "express";
 
-interface LoginParams {
+interface AuthDefaults {
   email: string;
   password: string;
   userAgent?: string;
 }
 
-interface RegisterParams extends LoginParams {
+interface LoginParams extends AuthDefaults {
+  req?: Request;
+}
+
+interface RegisterParams extends AuthDefaults {
   confirmPassword: string;
 }
 
@@ -144,6 +150,24 @@ export const loginUser = async (data: LoginParams) => {
 
   appAssert(isPasswordMatch, UNAUTHORIZED, "Invalid email or password");
 
+  // return if user is already logged in
+  const existAccessToken = data.req?.cookies.accessToken;
+
+  if (existAccessToken) {
+    const { payload } = await verifyToken(
+      existAccessToken,
+      AccessTokenSignOptions
+    );
+
+    const sessionIsExist = await SessionModel.exists({
+      _id: payload?.sessionId,
+      userId: payload?.userId,
+      expiresAt: { $gt: new Date() },
+    });
+
+    appAssert(!sessionIsExist, CONFLICT, "User is already logged in");
+  }
+
   // create session
   const session = await SessionModel.create({
     userId: user.id,
@@ -228,5 +252,58 @@ export const sendResetPasswordEmail = async (email: string) => {
   return {
     url,
     sentEmailId: EmailData.id,
+  };
+};
+
+type resetPasswordParams = {
+  verificationCode: string;
+  password: string;
+};
+
+// reset password service
+export const resetUserPassword = async (data: resetPasswordParams) => {
+  // verify verification code
+  const verificationCode = await VerificationCodeModel.findOne({
+    _id: data.verificationCode,
+    type: VerificationCodeType.PasswordReset,
+    expiresAt: { $gt: new Date() },
+  });
+
+  appAssert(
+    verificationCode,
+    NOT_FOUND,
+    "Invalid or expired verification code"
+  );
+
+  // check if new password is same as old password
+  const user = await UserModel.findById(verificationCode.userId);
+  const passwordIsConflict = await user?.comparePassword(data.password);
+
+  appAssert(
+    !passwordIsConflict,
+    CONFLICT,
+    "New password cannot be the same as the old password"
+  );
+
+  // update user password
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    verificationCode.userId,
+    {
+      password: await HashValue(data.password),
+    },
+    { new: true }
+  );
+
+  appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to reset password");
+
+  // delete reset password verification code
+  await verificationCode.deleteOne();
+
+  // delete all the user session
+  await SessionModel.deleteMany({ userId: updatedUser.id });
+
+  // return updated user
+  return {
+    user: updatedUser.omitPassword(),
   };
 };
