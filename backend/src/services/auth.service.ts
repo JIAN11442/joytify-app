@@ -4,6 +4,7 @@ import VerificationCodeModel from "../models/verification-code.model";
 
 import appAssert from "../utils/app-assert.util";
 import {
+  oneDay,
   oneHourFromNow,
   onYearFromNow,
   thirtyDaysFormNow,
@@ -15,6 +16,7 @@ import {
 } from "../utils/email-template.util";
 import {
   AccessTokenSignOptions,
+  RefreshTokenPayload,
   RefreshTokenSignOptions,
   signToken,
   verifyToken,
@@ -46,6 +48,11 @@ interface LoginParams extends AuthDefaults {
 interface RegisterParams extends AuthDefaults {
   confirmPassword: string;
 }
+
+type resetPasswordParams = {
+  verificationCode: string;
+  password: string;
+};
 
 // create account service
 export const createAccount = async (data: RegisterParams) => {
@@ -255,11 +262,6 @@ export const sendResetPasswordEmail = async (email: string) => {
   };
 };
 
-type resetPasswordParams = {
-  verificationCode: string;
-  password: string;
-};
-
 // reset password service
 export const resetUserPassword = async (data: resetPasswordParams) => {
   // verify verification code
@@ -306,4 +308,58 @@ export const resetUserPassword = async (data: resetPasswordParams) => {
   return {
     user: updatedUser.omitPassword(),
   };
+};
+
+// refresh tokens service
+export const refreshTokens = async (refreshToken: string) => {
+  // verify refresh token
+  const { payload } = await verifyToken<RefreshTokenPayload>(
+    refreshToken,
+    RefreshTokenSignOptions
+  );
+
+  appAssert(payload, UNAUTHORIZED, "Invalid refresh token");
+
+  // find session by sessionId
+  const now = new Date();
+
+  const session = await SessionModel.findOne({
+    _id: payload.sessionId,
+    expiresAt: { $gt: now },
+  });
+
+  appAssert(session, UNAUTHORIZED, "session is expired");
+
+  // if session expires in less than 1 day,
+  // then need to create a refresh token and update session expiresAt time
+  const sessionNeedToRefresh =
+    session.expiresAt.getTime() - now.getTime() < oneDay();
+
+  if (sessionNeedToRefresh) {
+    // update session expiresAt time (new 30d expiresAt time)
+    session.expiresAt = thirtyDaysFormNow();
+    await session.save();
+  }
+
+  // sign a new refresh token (new 30d expiresAt time)
+  const newRefreshToken = sessionNeedToRefresh
+    ? signToken({ sessionId: session.id }, RefreshTokenSignOptions)
+    : undefined;
+
+  // sign access token (new 15min expiresAt time)
+  const newAccessToken = signToken(
+    {
+      userId: session.userId,
+      sessionId: session.id,
+    },
+    AccessTokenSignOptions
+  );
+
+  // return tokens
+  return {
+    newAccessToken,
+    newRefreshToken,
+  };
+
+  return { session };
 };

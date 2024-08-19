@@ -3,6 +3,7 @@ import {
   forgotPasswordHandler,
   loginHandler,
   logoutHandler,
+  refreshTokensHandler,
   registerHandler,
   resetPasswordHandler,
   verifyEmailHandler,
@@ -18,5 +19,6 @@ authRoute.post("/password/reset", resetPasswordHandler);
 
 authRoute.get("/email/verify/:code", verifyEmailHandler);
 authRoute.get("/logout", logoutHandler);
+authRoute.get("/refresh", refreshTokensHandler);
 
 export default authRoute;

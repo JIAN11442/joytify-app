@@ -10,11 +10,16 @@ import {
   createAccount,
   loginUser,
   logoutUser,
+  refreshTokens,
   resetUserPassword,
   sendResetPasswordEmail,
   verifyEmail,
 } from "../services/auth.service";
-import { clearAuthCookies, setAuthCookies } from "../utils/cookies.util";
+import {
+  clearAuthCookies,
+  getRefreshTokenCookieOptions,
+  setAuthCookies,
+} from "../utils/cookies.util";
 import { CREATED, OK } from "../constants/http-code.constant";
 
 // register handler
@@ -113,6 +118,36 @@ export const resetPasswordHandler: RequestHandler = async (req, res, next) => {
     return clearAuthCookies(res)
       .status(OK)
       .json({ message: "Password reset successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// refresh tokens handler
+export const refreshTokensHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.cookies;
+
+    const { newAccessToken, newRefreshToken } = await refreshTokens(
+      refreshToken
+    );
+
+    if (newRefreshToken) {
+      res.cookie(
+        "refreshToken",
+        newRefreshToken,
+        getRefreshTokenCookieOptions()
+      );
+    }
+
+    return res
+      .cookie("accessToken", newAccessToken)
+      .status(OK)
+      .json({
+        message: `Access token ${
+          newRefreshToken ? "and refresh token are" : "is"
+        } refreshed`,
+      });
   } catch (error) {
     next(error);
   }
