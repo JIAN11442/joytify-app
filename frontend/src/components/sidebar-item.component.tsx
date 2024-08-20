@@ -60,7 +60,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         ) : (
           <p
             className={`
-              text-lg
+              text-lgc
               font-bold
               truncate
             `}

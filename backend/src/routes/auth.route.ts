@@ -7,7 +7,7 @@ import {
   registerHandler,
   resetPasswordHandler,
   verifyEmailHandler,
-} from "../components/auth.controller";
+} from "../controllers/auth.controller";
 
 const authRoute = Router();
 

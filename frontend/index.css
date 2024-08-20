@@ -4,16 +4,64 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+:root {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+
+  transition-duration: 100ms;
+  overflow-x: hidden;
+
+  background-color: black;
+  color-scheme: dark;
+}
+
 @layer components {
-  * {
-    @apply m-0 p-0 box-border text-base duration-100;
+  .input-box {
+    @apply w-[100%]
+    p-4
+    pl-[3.5rem]
+    border
+    border-grey-custom/10
+    bg-grey-dark
+    text-grey-custom/80
+    placeholder:text-grey-custom/30
+    placeholder:text-sm
+    rounded-sm
+    outline-none;
   }
 
-  html {
-    @apply overflow-x-hidden;
+  .input-base-icon {
+    @apply absolute 
+    -translate-y-1/2 
+    top-1/2
+    text-grey-custom/50;
   }
 
-  body {
-    @apply font-sohne font-normal;
+  .input-left-icon {
+    @apply input-base-icon left-5;
+  }
+
+  .input-right-icon {
+    @apply input-base-icon right-5;
+  }
+
+  .submit-btn {
+    @apply w-[100%]
+    p-3
+    bg-green-custom
+    disabled:bg-[#404040]
+    disabled:text-neutral-500
+    border
+    border-green-custom/50
+    disabled:border-neutral-600
+    rounded-sm
+    transition;
   }
 }

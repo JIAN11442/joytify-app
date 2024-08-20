@@ -8,14 +8,19 @@ import { LuLibrary } from "react-icons/lu";
 import ContentBox from "./content-box.component";
 import SidebarItem from "./sidebar-item.component";
 import Icon from "./react-icons.component";
+import Loader from "./loader.component";
+
 import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
+import useAuthHook from "../hooks/auth.hook";
 
 const Sidebar = () => {
   const { collapse, setCollapse } = useSidebarState();
   const { isCollapsed, changeForScreenResize } = collapse;
 
   const { screenWidth } = useProviderState();
+
+  const { user, isLoading } = useAuthHook();
 
   // handle collapse sidebar
   const handleCollapse = () => {
@@ -55,10 +60,9 @@ const Sidebar = () => {
     <div
       className={`
         flex
-        h-[100vh]
+        h-screen
         p-2
         gap-x-2
-        bg-black  
       `}
     >
       {/* Sidebars */}
@@ -72,7 +76,7 @@ const Sidebar = () => {
               ? `w-[70px]`
               : ` 
                   max-md:w-[380px]
-                  md:w-[420px]
+                  md:w-[500px]
                 `
           }
           gap-2
@@ -195,6 +199,27 @@ const Sidebar = () => {
           </div>
 
           {/* Body */}
+          <>
+            {isLoading ? (
+              <Loader />
+            ) : user ? (
+              "is login"
+            ) : (
+              !isCollapsed && (
+                <p
+                  className={`
+                  mt-5
+                  pl-4
+                  text-[15px]
+                  font-medium
+                  text-neutral-500
+                `}
+                >
+                  The playlist is empty before logging into your account.
+                </p>
+              )
+            )}
+          </>
         </ContentBox>
       </div>
 
