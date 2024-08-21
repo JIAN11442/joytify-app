@@ -2,6 +2,7 @@ import { forwardRef, useState } from "react";
 import Icon from "./react-icons.component";
 import { IconType } from "react-icons";
 import { IoEye, IoEyeOff } from "react-icons/io5";
+import { twMerge } from "tailwind-merge";
 
 type InputBoxProps = {
   id: string;
@@ -11,9 +12,11 @@ type InputBoxProps = {
   placeholder: string;
   icon: IconType;
   disabled?: boolean;
+  autoFocus?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  className?: string;
 };
 
 const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
@@ -26,9 +29,11 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       placeholder,
       icon,
       disabled,
+      autoFocus = false,
       onChange,
       onBlur,
       onKeyDown,
+      className,
     },
     ref
   ) => {
@@ -64,10 +69,16 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
           defaultValue={value}
           placeholder={placeholder}
           disabled={disabled}
+          autoFocus={autoFocus}
           onChange={onChange}
           onBlur={onBlur}
           onKeyDown={onKeyDown}
-          className={`input-box`}
+          className={twMerge(
+            `
+              input-box
+            `,
+            className
+          )}
         />
 
         {/* input icon */}

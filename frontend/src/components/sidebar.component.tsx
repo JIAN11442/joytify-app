@@ -2,37 +2,20 @@ import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
 import { BiSearch } from "react-icons/bi";
-import { AiOutlinePlus } from "react-icons/ai";
-import { LuLibrary } from "react-icons/lu";
 
 import ContentBox from "./content-box.component";
 import SidebarItem from "./sidebar-item.component";
-import Icon from "./react-icons.component";
-import Loader from "./loader.component";
+import LibraryBody from "./library-body.component";
+import LibraryHeader from "./library-header.component";
 
 import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
-import useAuthHook from "../hooks/auth.hook";
 
 const Sidebar = () => {
   const { collapse, setCollapse } = useSidebarState();
   const { isCollapsed, changeForScreenResize } = collapse;
 
   const { screenWidth } = useProviderState();
-
-  const { user, isLoading } = useAuthHook();
-
-  // handle collapse sidebar
-  const handleCollapse = () => {
-    // if sidebar isn't collapsed before click, it will collapse according screen resize after click
-    // otherwise, if sidebar is collapsed before click, it can't collapse according screen resize after click
-    // because collapse is a user behavior action, we don't want to change it automatically
-    setCollapse({
-      ...collapse,
-      isCollapsed: !isCollapsed,
-      changeForScreenResize: isCollapsed,
-    });
-  };
 
   // while changeForScreenSize is true,
   // collapse sidebar while screen is md in tailwindcss
@@ -122,104 +105,10 @@ const Sidebar = () => {
           `}
         >
           {/* Header */}
-          <div
-            className={`
-              flex
-              items-center
-              justify-between
-              pr-2
-            `}
-          >
-            {/* Title */}
-            <SidebarItem
-              icon={LuLibrary}
-              label="Your Library"
-              onClick={handleCollapse}
-              collapse={isCollapsed}
-              className={`
-                py-5
-                px-3
-                w-fit
-              `}
-            />
-
-            {/* Buttons */}
-            <>
-              {!isCollapsed && (
-                <div
-                  className={`
-                  flex
-                  gap-1
-                `}
-                >
-                  {/* Search music */}
-                  <button
-                    className={`
-                      p-2
-                      rounded-full
-                      hover:bg-neutral-800
-                      hover:scale-110
-                      transition
-                      group
-                    `}
-                  >
-                    <Icon
-                      name={BiSearch}
-                      opts={{ size: 20 }}
-                      className={`
-                        text-neutral-400
-                        group-hover:text-white
-                      `}
-                    />
-                  </button>
-
-                  {/* Adding music */}
-                  <button
-                    className={`
-                      p-2
-                      rounded-full
-                      hover:bg-neutral-800
-                      hover:scale-110
-                      transition
-                      group
-                    `}
-                  >
-                    <Icon
-                      name={AiOutlinePlus}
-                      opts={{ size: 20 }}
-                      className={`
-                        text-neutral-400
-                        group-hover:text-white  
-                      `}
-                    />
-                  </button>
-                </div>
-              )}
-            </>
-          </div>
+          <LibraryHeader />
 
           {/* Body */}
-          <>
-            {isLoading ? (
-              <Loader />
-            ) : user ? (
-              "is login"
-            ) : (
-              !isCollapsed && (
-                <p
-                  className={`
-                  mt-5
-                  pl-4
-                  text-[15px]
-                  font-medium
-                  text-neutral-500
-                `}
-                >
-                  The playlist is empty before logging into your account.
-                </p>
-              )
-            )}
-          </>
+          <LibraryBody />
         </ContentBox>
       </div>
 
