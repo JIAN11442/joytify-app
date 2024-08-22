@@ -4,40 +4,15 @@ import { IconType } from "react-icons";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
 
-type InputBoxProps = {
-  id: string;
-  type: React.HTMLInputTypeAttribute;
-  name: string;
+interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  icon?: IconType;
   value?: string;
-  placeholder: string;
-  icon: IconType;
-  disabled?: boolean;
-  autoFocus?: boolean;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  className?: string;
-};
+}
 
 const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
-  (
-    {
-      id,
-      type,
-      name,
-      value,
-      placeholder,
-      icon,
-      disabled,
-      autoFocus = false,
-      onChange,
-      onBlur,
-      onKeyDown,
-      className,
-    },
-    ref
-  ) => {
+  ({ id, icon, value, type, disabled, className, ...props }, ref) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isFileSelected, setIsFileSelected] = useState(false);
 
     // switch password visibility
     const handleSwitchPasswordVisibility = (
@@ -50,6 +25,17 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       }, 0);
 
       return () => clearTimeout(timeout);
+    };
+
+    // listening the file change
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files?.length;
+
+      if (files) {
+        setIsFileSelected(true);
+      } else {
+        setIsFileSelected(false);
+      }
     };
 
     return (
@@ -65,30 +51,37 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
                 : "password"
               : type
           }
-          name={name}
-          defaultValue={value}
-          placeholder={placeholder}
           disabled={disabled}
-          autoFocus={autoFocus}
-          onChange={onChange}
-          onBlur={onBlur}
-          onKeyDown={onKeyDown}
+          value={value}
+          onChange={(e) => handleFileChange(e)}
           className={twMerge(
             `
               input-box
+              ${icon && "pl-[3.5rem]"}
+              ${
+                type === "file" &&
+                `text-sm ${
+                  isFileSelected ? "text-grey-custom/80" : "text-grey-custom/30"
+                }`
+              }
             `,
             className
           )}
+          {...props}
         />
 
         {/* input icon */}
-        <Icon
-          name={icon}
-          className={`
-            input-left-icon
-            ${value?.length && "text-green-custom/80"}
-          `}
-        />
+        <>
+          {icon && (
+            <Icon
+              name={icon}
+              className={`
+                input-left-icon
+                ${value?.length && "text-green-custom/80"}
+              `}
+            />
+          )}
+        </>
 
         {/* password visible icon */}
         <>

@@ -3,7 +3,6 @@ import * as Dialog from "@radix-ui/react-dialog";
 
 import Icon from "./react-icons.component";
 import { IoMdClose } from "react-icons/io";
-import useAuthModalState from "../states/auth-modal.state";
 
 type ModalProps = {
   title: string;
@@ -12,6 +11,7 @@ type ModalProps = {
   children: React.ReactNode;
   activeOnChange?: () => void;
   closeBtnDisabled?: boolean;
+  closeModalFn: () => void;
 };
 
 const Modal: React.FC<ModalProps> = ({
@@ -21,15 +21,15 @@ const Modal: React.FC<ModalProps> = ({
   children,
   activeOnChange,
   closeBtnDisabled,
+  closeModalFn,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const { closeAuthModal } = useAuthModalState();
 
   // Close modal when clicked outside
   useEffect(() => {
     const handleModalOnBlur = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        closeAuthModal();
+        closeModalFn();
       }
     };
 
@@ -57,7 +57,6 @@ const Modal: React.FC<ModalProps> = ({
             bg-neutral-900/90
           `}
         />
-
         <Dialog.Content
           ref={modalRef}
           className={`
@@ -108,7 +107,7 @@ const Modal: React.FC<ModalProps> = ({
           {/* Close button */}
           <Dialog.Close asChild>
             <button
-              onClick={closeAuthModal}
+              onClick={closeModalFn}
               disabled={closeBtnDisabled}
               className={`
                 absolute

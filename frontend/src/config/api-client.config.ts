@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
+
 import queryClient from "./query-client.config";
-import { refreshTokens } from "../fetchs/auth.fetch";
 import { navigate } from "../lib/navigate.lib";
 
 const options: AxiosRequestConfig = {
@@ -8,8 +8,15 @@ const options: AxiosRequestConfig = {
   withCredentials: true,
 };
 
-export const RefreshTokensClient = axios.create(options);
+// API for refresh
+const RefreshTokensClient = axios.create(options);
 
+RefreshTokensClient.interceptors.response.use(
+  (res) => res.data,
+  (err) => Promise.reject(err.response.data.message)
+);
+
+// API for axios
 const API = axios.create(options);
 
 // response interceptor (controll return data of the API)
@@ -26,7 +33,7 @@ API.interceptors.response.use(
     if (status === 401 && data?.errorCode === "InvalidAccessToken") {
       try {
         // refresh tokens
-        await refreshTokens();
+        RefreshTokensClient.get("/auth/refresh");
 
         // retry the request to get current page data
         return RefreshTokensClient.request(config);

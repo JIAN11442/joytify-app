@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { IoKey } from "react-icons/io5";
 import { MdAlternateEmail } from "react-icons/md";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
@@ -13,22 +14,14 @@ import Loader from "./loader.component";
 
 import useAuthModalState from "../states/auth-modal.state";
 import AuthForOptions from "../constants/auth-type.constant";
-import getFormData from "../utils/get-form-data.util";
-import MutationKey from "../config/mutation-key.config";
-import { authParams, login, register } from "../fetchs/auth.fetch";
+import MutationKey from "../constants/mutation-key.constant";
+import { authParams, signin, signup } from "../fetchs/auth.fetch";
+import { reqAuth } from "../constants/data-type.constant";
 
 const AuthModal = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const formRef = useRef<HTMLFormElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-  const confirmPasswordRef = useRef<HTMLInputElement>(null);
   const submitBtnRef = useRef<HTMLButtonElement>(null);
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
   const { isActive, authFor, openAuthModal, closeAuthModal } =
     useAuthModalState();
@@ -42,36 +35,14 @@ const AuthModal = () => {
       ? "Login to your account"
       : "Sign up to get own account";
 
-  // submit button disabled state
-  const submitBtnDisabled =
-    authFor === SIGN_IN
-      ? !email || !password
-      : !email || !password || password !== confirmPassword;
-
   // redirect path
   const redirectPath = location.state?.redirectUrl || "/";
-
-  // auth mutation
-  const { mutate: authUser, isPending } = useMutation({
-    mutationKey: [MutationKey.AUTH],
-    mutationFn: authFor === SIGN_IN ? login : register,
-    onError: (error) => {
-      toast.error(error.message);
-    },
-    onSuccess: () => {
-      closeAuthModal();
-
-      toast.success(
-        `${authFor === SIGN_IN ? "Login" : "Registered"} successfully`
-      );
-
-      navigate(redirectPath, { replace: true });
-    },
-  });
 
   // navigate to the other auth modal
   const handleSwitchAuthModal = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    reset();
 
     openAuthModal(authFor === SIGN_IN ? SIGN_UP : SIGN_IN);
   };
@@ -87,45 +58,78 @@ const AuthModal = () => {
   };
 
   // handle input onKeyDown
-  const handleInputOnKeyDown = (
+  const handleMoveToNextElement = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    nextRef:
-      | React.RefObject<HTMLInputElement>
-      | React.RefObject<HTMLButtonElement>,
-    condition: boolean | string = true
+    next: React.RefObject<HTMLButtonElement> | reqAuth,
+    condition: string | boolean = e.currentTarget.value.length > 0
   ) => {
-    if (nextRef.current && e.key === "Enter" && condition) {
-      nextRef.current.focus();
+    if (e.key === "Enter" && condition) {
+      if (typeof next === "string") {
+        setFocus(next);
+      } else if (next?.current) {
+        next.current.focus();
+      }
     }
   };
 
-  // handle input onChange
-  const handleInputOnChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    setData: (val: string) => void
-  ) => {
-    const value = e.target.value;
+  // auth mutation
+  const { mutate: authUser, isPending } = useMutation({
+    mutationKey: [MutationKey.AUTH],
+    mutationFn: authFor === SIGN_IN ? signin : signup,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: () => {
+      closeAuthModal();
 
-    setData(value);
+      toast.success(
+        `${authFor === SIGN_IN ? "Login" : "Registered"} successfully`
+      );
+
+      navigate(redirectPath, { replace: true });
+    },
+  });
+
+  // get form data
+  const defaults = {
+    email: "",
+    password: "",
   };
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    setFocus,
+    formState: { isValid },
+  } = useForm<authParams>({
+    defaultValues:
+      authFor === SIGN_IN ? defaults : { ...defaults, confirmPassword: "" },
+    mode: "onChange",
+  });
+
+  // watch password value(for validate comfirm password)
+  const passwordValue = watch("password");
+
   // handle form submit
-  const handleFormSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    const { formData } = getFormData<authParams>(formRef);
-
-    authUser(formData);
+  const onSubmit: SubmitHandler<authParams> = async (value) => {
+    authUser(value);
   };
 
   return (
-    <Modal title={title} description={description} activeState={isActive}>
+    <Modal
+      title={title}
+      description={description}
+      activeState={isActive}
+      closeModalFn={closeAuthModal}
+    >
       <form
-        ref={formRef}
+        onSubmit={handleSubmit(onSubmit)}
         className={`
           flex
           flex-col
-          gap-5
+          gap-3
         `}
       >
         {/* Email */}
@@ -148,18 +152,10 @@ const AuthModal = () => {
           <InputBox
             id="email"
             type="email"
-            name="email"
-            value={email}
             placeholder="Your email address"
             icon={MdAlternateEmail}
-            onChange={(e) => handleInputOnChange(e, setEmail)}
-            onKeyDown={(e) =>
-              handleInputOnKeyDown(
-                e,
-                passwordRef,
-                e.currentTarget.value.length > 0
-              )
-            }
+            onKeyDown={(e) => handleMoveToNextElement(e, "password")}
+            {...register("email", { required: true })}
           />
         </div>
 
@@ -181,23 +177,17 @@ const AuthModal = () => {
           </p>
 
           <InputBox
-            ref={passwordRef}
             id="password"
             type="password"
-            name="password"
-            value={password}
             placeholder="Your Password"
             icon={IoKey}
-            onChange={(e) => handleInputOnChange(e, setPassword)}
             onKeyDown={(e) =>
-              handleInputOnKeyDown(
+              handleMoveToNextElement(
                 e,
-                (authFor === SIGN_IN
-                  ? submitBtnRef
-                  : confirmPasswordRef) as React.RefObject<HTMLInputElement>,
-                e.currentTarget.value.length > 0
+                authFor === SIGN_IN ? submitBtnRef : "confirmPassword"
               )
             }
+            {...register("password", { required: true })}
           />
 
           <>
@@ -253,21 +243,21 @@ const AuthModal = () => {
               </p>
 
               <InputBox
-                ref={confirmPasswordRef}
                 id="confirm-password"
                 type="password"
-                name="confirmPassword"
-                value={confirmPassword}
                 placeholder="Confirm Password"
                 icon={IoKey}
-                onChange={(e) => handleInputOnChange(e, setConfirmPassword)}
                 onKeyDown={(e) =>
-                  handleInputOnKeyDown(
+                  handleMoveToNextElement(
                     e,
                     submitBtnRef,
-                    e.currentTarget.value === passwordRef.current?.value
+                    e.currentTarget.value === passwordValue
                   )
                 }
+                {...register("confirmPassword", {
+                  required: true,
+                  validate: (value) => value === passwordValue,
+                })}
               />
             </div>
           ) : (
@@ -278,13 +268,14 @@ const AuthModal = () => {
         {/* Submit button */}
         <button
           ref={submitBtnRef}
-          disabled={submitBtnDisabled}
-          onClick={handleFormSubmit}
+          disabled={!isValid}
           className={`
+            mt-2
             submit-btn
             capitalize
             text-sm
             outline-none
+            rounded-full
           `}
         >
           {isPending ? (

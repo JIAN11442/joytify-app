@@ -1,9 +1,14 @@
 import Loader from "./loader.component";
-import useAuthHook from "../hooks/auth.hook";
 import useSidebarState from "../states/sidebar.state";
+import { resUser } from "../constants/data-type.constant";
+import { AxiosResponse } from "axios";
 
-const LibraryBody = () => {
-  const { user, isLoading } = useAuthHook();
+type LibraryBodyProps = {
+  user: AxiosResponse | resUser | undefined;
+  isLoading: boolean;
+};
+
+const LibraryBody: React.FC<LibraryBodyProps> = ({ user, isLoading }) => {
   const { collapse } = useSidebarState();
   const { isCollapsed } = collapse;
 

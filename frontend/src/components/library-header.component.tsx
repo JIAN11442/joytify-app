@@ -1,20 +1,31 @@
+import { useState } from "react";
 import { LuLibrary } from "react-icons/lu";
 import { BiSearch } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
+import { AxiosResponse } from "axios";
 
 import Icon from "./react-icons.component";
 import SidebarItem from "./sidebar-item.component";
-
-import useSidebarState from "../states/sidebar.state";
-import { useState } from "react";
 import InputBox from "./input-box.component";
 import AnimationWrapper from "./animation-wrapper.component";
 
-const LibraryHeader = () => {
+import useSidebarState from "../states/sidebar.state";
+import useAuthModalState from "../states/auth-modal.state";
+import AuthForOptions from "../constants/auth-type.constant";
+import { resUser } from "../constants/data-type.constant";
+import useUploadModalState from "../states/upload-modal.state";
+
+type LibraryHeaderProps = {
+  user: AxiosResponse | resUser | undefined;
+};
+
+const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   const [activeSearchBar, setActiveSearchBar] = useState(false);
 
   const { collapse, setCollapse } = useSidebarState();
   const { isCollapsed } = collapse;
+  const { openAuthModal } = useAuthModalState();
+  const { openUploadModal } = useUploadModalState();
 
   // handle collapse sidebar
   const handleCollapseSidebar = () => {
@@ -28,8 +39,22 @@ const LibraryHeader = () => {
     });
   };
 
+  // handle active library search bar
   const handleActiveSearchBar = () => {
     setActiveSearchBar(!activeSearchBar);
+  };
+
+  // handle active upload music modal
+  const handleActiveUploadMusicModal = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+
+    const timeout = setTimeout(() => {
+      return user ? openUploadModal() : openAuthModal(AuthForOptions.SIGN_IN);
+    }, 0);
+
+    return () => clearTimeout(timeout);
   };
 
   return (
@@ -95,14 +120,15 @@ const LibraryHeader = () => {
 
               {/* Adding music */}
               <button
+                onClick={(e) => handleActiveUploadMusicModal(e)}
                 className={`
-                p-2
-                rounded-full
-                hover:bg-neutral-800
-                hover:scale-110
-                transition
-                group
-              `}
+                  p-2
+                  rounded-full
+                  hover:bg-neutral-800
+                  hover:scale-110
+                  transition
+                  group
+                `}
               >
                 <Icon
                   name={AiOutlinePlus}
