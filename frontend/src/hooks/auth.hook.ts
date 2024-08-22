@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import MutationKey from "../config/mutation-key.config";
+import MutationKey from "../constants/mutation-key.constant";
 import { getUserInfo } from "../fetchs/user.fetch";
 
 const useAuthHook = (opts: object = {}) => {

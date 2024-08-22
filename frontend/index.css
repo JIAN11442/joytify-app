@@ -25,16 +25,16 @@ body,
 @layer components {
   .input-box {
     @apply w-[100%]
-    p-4
-    pl-[3.5rem]
+    p-[15px]
     border
     border-grey-custom/10
     bg-grey-dark
     text-grey-custom/80
     placeholder:text-grey-custom/30
     placeholder:text-sm
-    rounded-sm
-    outline-none;
+    rounded-md
+    outline-none
+    file:hidden;
   }
 
   .input-base-icon {

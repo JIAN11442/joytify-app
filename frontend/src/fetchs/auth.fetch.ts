@@ -1,4 +1,4 @@
-import API, { RefreshTokensClient } from "../config/api-client.config";
+import API from "../config/api-client.config";
 
 export type authParams = {
   email: string;
@@ -7,12 +7,8 @@ export type authParams = {
 };
 
 // login axios
-export const login = async (data: authParams) => API.post("/auth/login", data);
+export const signin = async (data: authParams) => API.post("/auth/login", data);
 
 // register axios
-export const register = async (data: authParams) =>
+export const signup = async (data: authParams) =>
   API.post("/auth/register", data);
-
-// refresh token axios
-export const refreshTokens = async () =>
-  RefreshTokensClient.get("/auth/refresh");

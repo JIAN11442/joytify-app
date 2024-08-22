@@ -10,12 +10,15 @@ import LibraryHeader from "./library-header.component";
 
 import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
+import useAuthHook from "../hooks/auth.hook";
 
 const Sidebar = () => {
   const { collapse, setCollapse } = useSidebarState();
   const { isCollapsed, changeForScreenResize } = collapse;
 
   const { screenWidth } = useProviderState();
+
+  const { user, isLoading } = useAuthHook();
 
   // while changeForScreenSize is true,
   // collapse sidebar while screen is md in tailwindcss
@@ -105,10 +108,10 @@ const Sidebar = () => {
           `}
         >
           {/* Header */}
-          <LibraryHeader />
+          <LibraryHeader user={user} />
 
           {/* Body */}
-          <LibraryBody />
+          <LibraryBody user={user} isLoading={isLoading} />
         </ContentBox>
       </div>
 
