@@ -7,6 +7,7 @@ import authRoute from "./routes/auth.route";
 import ErrorHandler from "./middlewares/error-handler.middleware";
 import userRoute from "./routes/user.route";
 import authenticate from "./middlewares/authenticate.middleware";
+import awsRoute from "./routes/aws.route";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(cookieParser());
 // routes
 app.use("/auth", authRoute);
 app.use("/user", authenticate, userRoute);
+app.use("/aws", awsRoute);
 
 // error handler
 app.use(ErrorHandler);
