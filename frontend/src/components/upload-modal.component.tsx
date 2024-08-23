@@ -5,7 +5,7 @@ import Modal from "./modal.component";
 import InputBox from "./input-box.component";
 import Loader from "./loader.component";
 
-import { uploadMusic } from "../fetchs/upload.fetch";
+import { uploadFileToAws, uploadSong } from "../fetchs/upload.fetch";
 import useUploadModalState from "../states/upload-modal.state";
 import MutationKey from "../constants/mutation-key.constant";
 import { reqUpload } from "../constants/data-type.constant";
@@ -28,10 +28,17 @@ const UploadModal = () => {
     }
   };
 
-  // axios mutation
-  const { mutate, isPending } = useMutation({
-    mutationKey: [MutationKey.UPLOAD],
-    mutationFn: uploadMusic,
+  // upload song mutation
+  const { mutate: uploadSongInfo, isPending } = useMutation({
+    mutationKey: [MutationKey.UPLOAD_SONG_INFO],
+    mutationFn: uploadSong,
+  });
+
+  // upload song file to aws s3 mutation
+  const { mutate: uploadSongFile } = useMutation({
+    mutationKey: [MutationKey.UPLOAD_SONG_FILE],
+    mutationFn: uploadFileToAws,
+    onSuccess: (data) => console.log(data),
   });
 
   // get form data
@@ -50,7 +57,15 @@ const UploadModal = () => {
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async (value) => {
-    console.log(value);
+    const { songTitle, songAuthor, songFile, imageFile } = value;
+
+    // uploadSongFile({
+    //   subfolder: "songs",
+    //   extension: ".mp3",
+    //   file: songFile[0],
+    // });
+
+    console.log(songTitle, songAuthor);
   };
 
   return (
@@ -109,7 +124,7 @@ const UploadModal = () => {
             type="file"
             accept=".mp3"
             onKeyDown={(e) => handleMoveToNextElement(e, "imageFile")}
-            {...register("songFile", { required: true })}
+            {...register("songFile", { required: false })}
           />
         </div>
 

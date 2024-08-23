@@ -9,6 +9,11 @@ const env = cleanEnv(process.env, {
   SENDER_EMAIL: str(),
   ACCESS_SECRET_KEY: str(),
   REFRESH_SECRET_KEY: str(),
+  AWS_REGION: str(),
+  AWS_BUCKET_NAME: str(),
+  AWS_ACCESS_KEY: str(),
+  AWS_SECRET_ACCESS_KEY: str(),
+  AWS_SDK_JS_SUPPRESS_MAINTENANCE_MODE_MESSAGE: str(),
 });
 
 export const {
@@ -20,4 +25,9 @@ export const {
   SENDER_EMAIL,
   ACCESS_SECRET_KEY,
   REFRESH_SECRET_KEY,
+  AWS_REGION,
+  AWS_BUCKET_NAME,
+  AWS_ACCESS_KEY,
+  AWS_SECRET_ACCESS_KEY,
+  AWS_SDK_JS_SUPPRESS_MAINTENANCE_MODE_MESSAGE,
 } = env;
