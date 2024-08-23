@@ -12,11 +12,16 @@ import Modal from "./modal.component";
 import Icon from "./react-icons.component";
 import Loader from "./loader.component";
 
-import useAuthModalState from "../states/auth-modal.state";
 import AuthForOptions from "../constants/auth-type.constant";
 import MutationKey from "../constants/mutation-key.constant";
-import { authParams, signin, signup } from "../fetchs/auth.fetch";
 import { reqAuth } from "../constants/data-type.constant";
+import {
+  DefaultsAuthType,
+  defaultsLoginData,
+  defaultsRegisterData,
+} from "../constants/form-default-data.constant";
+import { signin, signup } from "../fetchs/auth.fetch";
+import useAuthModalState from "../states/auth-modal.state";
 
 const AuthModal = () => {
   const navigate = useNavigate();
@@ -91,11 +96,6 @@ const AuthModal = () => {
   });
 
   // get form data
-  const defaults = {
-    email: "",
-    password: "",
-  };
-
   const {
     register,
     handleSubmit,
@@ -103,9 +103,9 @@ const AuthModal = () => {
     watch,
     setFocus,
     formState: { isValid },
-  } = useForm<authParams>({
+  } = useForm<DefaultsAuthType>({
     defaultValues:
-      authFor === SIGN_IN ? defaults : { ...defaults, confirmPassword: "" },
+      authFor === SIGN_IN ? defaultsLoginData : defaultsRegisterData,
     mode: "onChange",
   });
 
@@ -113,7 +113,7 @@ const AuthModal = () => {
   const passwordValue = watch("password");
 
   // handle form submit
-  const onSubmit: SubmitHandler<authParams> = async (value) => {
+  const onSubmit: SubmitHandler<DefaultsAuthType> = async (value) => {
     authUser(value);
   };
 

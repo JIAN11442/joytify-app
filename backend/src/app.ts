@@ -1,13 +1,15 @@
 import express from "express";
 import cors from "cors";
-import { ORIGIN_APP } from "./constants/env-validate.constant";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+
 import authRoute from "./routes/auth.route";
-import ErrorHandler from "./middlewares/error-handler.middleware";
 import userRoute from "./routes/user.route";
-import authenticate from "./middlewares/authenticate.middleware";
 import awsRoute from "./routes/aws.route";
+import songRoute from "./routes/song.route";
+import ErrorHandler from "./middlewares/error-handler.middleware";
+import authenticate from "./middlewares/authenticate.middleware";
+import { ORIGIN_APP } from "./constants/env-validate.constant";
 
 const app = express();
 
@@ -27,6 +29,7 @@ app.use(cookieParser());
 app.use("/auth", authRoute);
 app.use("/user", authenticate, userRoute);
 app.use("/aws", awsRoute);
+app.use("/song", authenticate, songRoute);
 
 // error handler
 app.use(ErrorHandler);

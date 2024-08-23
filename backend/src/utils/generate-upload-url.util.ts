@@ -10,12 +10,19 @@ import {
 type Params = {
   subfolder?: UploadFolder | undefined;
   extension: FileExtension;
+  nanoID?: string;
 };
 
-const generateUploadUrl = async ({ subfolder, extension }: Params) => {
+const generateUploadUrl = async ({
+  subfolder,
+  extension,
+  nanoID = "",
+}: Params) => {
   try {
     const date = new Date();
-    const fileName = `${nanoid()}-${date.getTime()}${extension}`;
+    const fileName = `${
+      nanoID ? nanoID : nanoid()
+    }-${date.getTime()}${extension}`;
     const uploadFilePath = subfolder ? `${subfolder}/${fileName}` : fileName;
 
     const params = {

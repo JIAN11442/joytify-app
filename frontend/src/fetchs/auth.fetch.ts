@@ -1,14 +1,10 @@
 import API from "../config/api-client.config";
-
-export type authParams = {
-  email: string;
-  password: string;
-  confirmPassword?: string;
-};
+import { DefaultsAuthType } from "../constants/form-default-data.constant";
 
 // login axios
-export const signin = async (data: authParams) => API.post("/auth/login", data);
+export const signin = async (data: DefaultsAuthType) =>
+  API.post("/auth/login", data);
 
 // register axios
-export const signup = async (data: authParams) =>
+export const signup = async (data: DefaultsAuthType) =>
   API.post("/auth/register", data);

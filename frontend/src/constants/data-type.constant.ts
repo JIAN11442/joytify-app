@@ -8,4 +8,12 @@ export type resUser = {
 
 export type reqAuth = "email" | "password" | "confirmPassword";
 
-export type reqUpload = "songTitle" | "songAuthor" | "songFile" | "imageFile";
+export type reqUpload =
+  | "title"
+  | "artist"
+  | "songFile"
+  | "imageFile"
+  | "genre"
+  | "album"
+  | "releaseDate"
+  | "songComposer";

@@ -6,10 +6,10 @@ import { CREATED } from "../constants/http-code.constant";
 
 export const getAwsSignedUrl: RequestHandler = async (req, res, next) => {
   try {
-    const { subfolder, extension } = awsSignedSchema.parse(req.body);
+    const { subfolder, extension, nanoID } = awsSignedSchema.parse(req.body);
 
     // Generate signed URL and return it to the client
-    generateUploadUrl({ subfolder, extension })
+    generateUploadUrl({ subfolder, extension, nanoID })
       .then((url) => res.status(CREATED).json({ uploadUrl: url }))
       .catch((error) => {
         console.log(error.message);

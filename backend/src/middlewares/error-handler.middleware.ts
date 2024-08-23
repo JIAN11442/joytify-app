@@ -15,6 +15,8 @@ const ErrorHandler: ErrorRequestHandler = async (error, req, res, next) => {
       message: err.message,
     }));
 
+    console.log(errors[0]);
+
     return res.status(BAD_REQUEST).json(errors[0]);
   }
 

@@ -4,9 +4,10 @@ import {
   UploadFolder,
 } from "../constants/argument-type.constant";
 
-interface SignedUrlParams {
-  subfolder: UploadFolder;
+export interface SignedUrlParams {
+  subfolder?: UploadFolder;
   extension: FileExtension;
+  nanoID?: string;
 }
 
 interface UploadFileParams extends SignedUrlParams {
@@ -22,12 +23,12 @@ export const getSignedUrl = async (
   data: SignedUrlParams
 ): Promise<{ uploadUrl: string }> => API.post("/aws/get-signed-url", data);
 
-// upload song file to aws s3
+// upload file to aws s3
 export const uploadFileToAws = async (
   data: UploadFileParams
 ): Promise<string | null> => {
   // set default img URL
-  let imgUrl = null;
+  let url = null;
 
   // get data
   const { file, subfolder, extension } = data;
@@ -44,7 +45,7 @@ export const uploadFileToAws = async (
   });
 
   // get the image URL
-  imgUrl = uploadUrl.split("?")[0];
+  url = uploadUrl.split("?")[0];
 
-  return imgUrl;
+  return url;
 };

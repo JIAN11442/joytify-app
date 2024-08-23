@@ -1,20 +1,28 @@
 import { useMutation } from "@tanstack/react-query";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { FaCircleInfo } from "react-icons/fa6";
+import { IoCaretBack } from "react-icons/io5";
 
 import Modal from "./modal.component";
 import InputBox from "./input-box.component";
 import Loader from "./loader.component";
+import Icon from "./react-icons.component";
+import AnimationWrapper from "./animation-wrapper.component";
 
-import { uploadFileToAws, uploadSong } from "../fetchs/upload.fetch";
-import useUploadModalState from "../states/upload-modal.state";
 import MutationKey from "../constants/mutation-key.constant";
 import { reqUpload } from "../constants/data-type.constant";
-import Icon from "./react-icons.component";
-import { FaCircleInfo } from "react-icons/fa6";
-import AnimationWrapper from "./animation-wrapper.component";
-import { IoCaretBack } from "react-icons/io5";
+import {
+  defaultsSongData,
+  DefaultsSongType,
+} from "../constants/form-default-data.constant";
+import useUploadModalState from "../states/upload-modal.state";
+import { createSongData } from "../fetchs/song.fetch";
+import toast from "react-hot-toast";
+import { useRef } from "react";
 
 const UploadModal = () => {
+  const submitBtnRef = useRef<HTMLButtonElement>(null);
+
   const {
     isActiveModal,
     closeUploadModal,
@@ -40,7 +48,7 @@ const UploadModal = () => {
   // handle active advanced settings
   const handleActiveAdvancedSettings = () => {
     const timeout = setTimeout(() => {
-      setIsActiveAdvancedSettings(!isActiveAdvancedSettings);
+      setIsActiveAdvancedSettings(true);
     }, 0);
 
     return () => clearTimeout(timeout);
@@ -55,17 +63,15 @@ const UploadModal = () => {
     return () => clearTimeout(timeout);
   };
 
-  // upload song mutation
-  const { mutate: uploadSongInfo, isPending } = useMutation({
-    mutationKey: [MutationKey.UPLOAD_SONG_INFO],
-    mutationFn: uploadSong,
-  });
-
-  // upload song file to aws s3 mutation
-  const { mutate: uploadSongFile } = useMutation({
-    mutationKey: [MutationKey.UPLOAD_SONG_FILE],
-    mutationFn: uploadFileToAws,
-    onSuccess: (data) => console.log(data),
+  // create song mutation
+  const { mutate: createNewSongData, isPending } = useMutation({
+    mutationKey: [MutationKey.CREATE_NEW_SONG],
+    mutationFn: createSongData,
+    onSuccess: () => {
+      closeUploadModal();
+      reset();
+    },
+    onError: (error) => toast.error(error.message),
   });
 
   // get form data
@@ -73,31 +79,15 @@ const UploadModal = () => {
     register,
     handleSubmit,
     setFocus,
+    reset,
     formState: { isValid },
-  } = useForm({
-    defaultValues: {
-      songTitle: "",
-      songArtist: "",
-      songFile: null,
-      imageFile: null,
-      songComposer: "",
-      album: "",
-      genre: "",
-      language: "",
-      tags: [],
-      lyrics: [],
-      releaseDate: new Date(),
-    },
+  } = useForm<DefaultsSongType>({
+    defaultValues: { ...defaultsSongData },
+    mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = async (value) => {
-    console.log(value);
-
-    // uploadSongFile({
-    //   subfolder: "songs",
-    //   extension: ".mp3",
-    //   file: songFile[0],
-    // });
+  const onSubmit: SubmitHandler<DefaultsSongType> = async (value) => {
+    createNewSongData(value);
   };
 
   return (
@@ -166,8 +156,8 @@ const UploadModal = () => {
               id="song-title"
               type="text"
               placeholder="Song Title"
-              onKeyDown={(e) => handleMoveToNextElement(e, "songAuthor")}
-              {...register("songTitle", { required: true })}
+              onKeyDown={(e) => handleMoveToNextElement(e, "artist")}
+              {...register("title", { required: true })}
             />
 
             {/* Song artist */}
@@ -176,7 +166,7 @@ const UploadModal = () => {
               type="text"
               placeholder="Song Artist"
               onKeyDown={(e) => handleMoveToNextElement(e, "songFile")}
-              {...register("songArtist", { required: true })}
+              {...register("artist", { required: true })}
             />
 
             {/* Song file */}
@@ -202,11 +192,11 @@ const UploadModal = () => {
                 type="file"
                 accept=".mp3"
                 onKeyDown={(e) => handleMoveToNextElement(e, "imageFile")}
-                {...register("songFile", { required: false })}
+                {...register("songFile", { required: true })}
               />
             </div>
 
-            {/* Song image */}
+            {/* Song cover art file */}
             <div
               className={`
                 flex
@@ -228,7 +218,13 @@ const UploadModal = () => {
                 id="song-image"
                 type="file"
                 accept=".png, .jpg, .jpeg"
-                {...register("imageFile", { required: false })}
+                onKeyDown={(e) =>
+                  handleMoveToNextElement(
+                    e,
+                    isActiveAdvancedSettings ? "songComposer" : submitBtnRef
+                  )
+                }
+                {...register("imageFile", { required: true })}
               />
             </div>
 
@@ -246,6 +242,10 @@ const UploadModal = () => {
                   `}
                 >
                   <button
+                    type="button"
+                    // form will recognize the first button as submit button
+                    // so we need to prevent the default behavior
+                    // to avoid the form to submit when the button is clicked
                     onClick={handleActiveAdvancedSettings}
                     className={`
                       flex
@@ -274,7 +274,7 @@ const UploadModal = () => {
               id="song-composer"
               type="text"
               placeholder="Song Composer"
-              onKeyDown={(e) => handleMoveToNextElement(e, "songAuthor")}
+              onKeyDown={(e) => handleMoveToNextElement(e, submitBtnRef)}
               {...register("songComposer", { required: false })}
             />
           </AnimationWrapper>
@@ -289,6 +289,7 @@ const UploadModal = () => {
           `}
         >
           <button
+            ref={submitBtnRef}
             disabled={!isValid}
             className={`
               mt-2
