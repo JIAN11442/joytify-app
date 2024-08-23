@@ -64,4 +64,12 @@ body,
     rounded-sm
     transition;
   }
+
+  .hover-button {
+    @apply outline-none
+    p-2
+    rounded-full
+    hover:bg-neutral-700/50
+    transition;
+  }
 }

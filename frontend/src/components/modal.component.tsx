@@ -3,6 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 
 import Icon from "./react-icons.component";
 import { IoMdClose } from "react-icons/io";
+import { twMerge } from "tailwind-merge";
 
 type ModalProps = {
   title: string;
@@ -12,6 +13,7 @@ type ModalProps = {
   activeOnChange?: () => void;
   closeBtnDisabled?: boolean;
   closeModalFn: () => void;
+  className?: string;
 };
 
 const Modal: React.FC<ModalProps> = ({
@@ -22,6 +24,7 @@ const Modal: React.FC<ModalProps> = ({
   activeOnChange,
   closeBtnDisabled,
   closeModalFn,
+  className,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -59,22 +62,29 @@ const Modal: React.FC<ModalProps> = ({
         />
         <Dialog.Content
           ref={modalRef}
-          className={`
+          className={twMerge(
+            `
             fixed
             -translate-x-1/2
             -translate-y-1/2
             top-1/2
             left-1/2
-            min-w-[450px]
+            w-auto
+            max-md:min-w-[450px]
+            md:min-w-[550px]
             max-w-[90vw]
             h-auto
+            max-h-[80vh]
+            overflow-y-auto
             p-[25px]
             border
             border-neutral-700
             bg-neutral-800 
             rounded-md
             outline-none
-          `}
+          `,
+            className
+          )}
         >
           {/* Title */}
           <Dialog.Title
@@ -114,11 +124,7 @@ const Modal: React.FC<ModalProps> = ({
                 group
                 top-5
                 right-5
-                outline-none
-                p-2
-                rounded-full
-                hover:bg-neutral-700/50
-                transition
+                hover-button
               `}
             >
               <Icon
