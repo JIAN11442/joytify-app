@@ -1,13 +1,7 @@
+import Header from "../components/header.component";
+
 const HomePage = () => {
-  return (
-    <div
-      className={`
-        text-neutral-400
-      `}
-    >
-      this is a homepage
-    </div>
-  );
+  return <Header>homepage</Header>;
 };
 
 export default HomePage;

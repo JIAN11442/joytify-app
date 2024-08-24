@@ -14,6 +14,8 @@ const ScreenMonitor: React.FC<ScreenMonitorProps> = ({ children }) => {
       setScreenHeight(window.innerHeight);
     };
 
+    handleResize();
+
     const timeout = setTimeout(() => {
       window.addEventListener("resize", handleResize);
     }, 0);

@@ -118,7 +118,7 @@ const UploadModal = () => {
                 absolute
                 top-5
                 left-5
-                hover-button
+                hover-btn
               `}
             >
               <Icon name={IoCaretBack} />

@@ -124,7 +124,7 @@ const Modal: React.FC<ModalProps> = ({
                 group
                 top-5
                 right-5
-                hover-button
+                hover-btn
               `}
             >
               <Icon

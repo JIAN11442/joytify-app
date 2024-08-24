@@ -65,7 +65,7 @@ body,
     transition;
   }
 
-  .hover-button {
+  .hover-btn {
     @apply outline-none
     p-2
     rounded-full

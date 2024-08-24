@@ -14,6 +14,7 @@ import useAuthModalState from "../states/auth-modal.state";
 import AuthForOptions from "../constants/auth-type.constant";
 import { resUser } from "../constants/data-type.constant";
 import useUploadModalState from "../states/upload-modal.state";
+import useProviderState from "../states/provider.state";
 
 type LibraryHeaderProps = {
   user: AxiosResponse | resUser | undefined;
@@ -22,21 +23,40 @@ type LibraryHeaderProps = {
 const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   const [activeSearchBar, setActiveSearchBar] = useState(false);
 
-  const { collapse, setCollapse } = useSidebarState();
-  const { isCollapsed } = collapse;
+  const { screenWidth } = useProviderState();
+  const {
+    collapseSideBarState,
+    floating,
+    disabledCollapseFn,
+    setCollapseSideBarState,
+    setFloating,
+  } = useSidebarState();
+  const { isCollapsed } = collapseSideBarState;
   const { openAuthModal } = useAuthModalState();
   const { openUploadModal } = useUploadModalState();
 
   // handle collapse sidebar
   const handleCollapseSidebar = () => {
-    // if sidebar isn't collapsed before click, it will collapse according screen resize after click
-    // otherwise, if sidebar is collapsed before click, it can't collapse according screen resize after click
-    // because collapse is a user behavior action, we don't want to change it automatically
-    setCollapse({
-      ...collapse,
-      isCollapsed: !isCollapsed,
-      changeForScreenResize: isCollapsed,
-    });
+    if (!floating) {
+      // if screen width is between 640 and 768, collapse sidebar continuously
+      if (screenWidth >= 640 && screenWidth <= 768) {
+        setCollapseSideBarState({
+          ...collapseSideBarState,
+          isCollapsed: true,
+          changeForScreenResize: isCollapsed,
+        });
+      }
+      // if screen width is not between 640 and 768, toggle collapse sidebar
+      else {
+        setCollapseSideBarState({
+          ...collapseSideBarState,
+          isCollapsed: !isCollapsed,
+          changeForScreenResize: isCollapsed,
+        });
+      }
+    } else {
+      setFloating(false);
+    }
   };
 
   // handle active library search bar
@@ -51,6 +71,10 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
     e.preventDefault();
 
     const timeout = setTimeout(() => {
+      if (floating) {
+        setFloating(false);
+      }
+
       return user ? openUploadModal() : openAuthModal(AuthForOptions.SIGN_IN);
     }, 0);
 
@@ -70,9 +94,10 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
       <div
         className={`
           flex
+          ${!isCollapsed ? "relative" : !floating && "flex-col"}
+          ${!disabledCollapseFn && "gap-y-4"}
           items-center
           justify-between
-          pr-2
           pt-5
         `}
       >
@@ -84,94 +109,106 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
           collapse={isCollapsed}
           className={`
             w-fit
+            ${disabledCollapseFn && "hidden"}
           `}
         />
 
         {/* Buttons */}
-        <>
-          {!isCollapsed && (
-            <div
+        <div
+          className={`
+            flex 
+            gap-1
+            ${!isCollapsed && "absolute right-0"}
+          `}
+        >
+          {/* Search music */}
+          <button
+            onClick={handleActiveSearchBar}
+            className={`
+              group
+              p-2
+              rounded-full
+              hover:bg-neutral-800
+              hover:scale-110
+              transition
+              ${!isCollapsed || floating ? "flex" : "hidden"} 
+            `}
+          >
+            <Icon
+              name={BiSearch}
+              opts={{ size: 20 }}
               className={`
-                flex
-                gap-1
+                text-neutral-400
+                group-hover:text-white
               `}
-            >
-              {/* Search music */}
-              <button
-                onClick={handleActiveSearchBar}
-                className={`
-                  p-2
-                  rounded-full
-                  hover:bg-neutral-800
-                  hover:scale-110
-                  transition
-                  group
-                `}
-              >
-                <Icon
-                  name={BiSearch}
-                  opts={{ size: 20 }}
-                  className={`
-                    text-neutral-400
-                    group-hover:text-white
-                  `}
-                />
-              </button>
+            />
+          </button>
 
-              {/* Adding music */}
-              <button
-                onClick={(e) => handleActiveUploadMusicModal(e)}
-                className={`
+          {/* Adding music */}
+          <button
+            onClick={(e) => handleActiveUploadMusicModal(e)}
+            className={`
+              group
+              ${
+                (!isCollapsed || floating) &&
+                `
                   p-2
                   rounded-full
                   hover:bg-neutral-800
                   hover:scale-110
                   transition
-                  group
-                `}
-              >
-                <Icon
-                  name={AiOutlinePlus}
-                  opts={{ size: 20 }}
-                  className={`
-                    text-neutral-400
-                    group-hover:text-white  
-                  `}
-                />
-              </button>
-            </div>
-          )}
-        </>
+                `
+              }
+            `}
+          >
+            <Icon
+              name={AiOutlinePlus}
+              opts={{ size: !isCollapsed || floating ? 20 : 28 }}
+              className={`
+                ${
+                  isCollapsed && !floating
+                    ? "text-neutral-700"
+                    : "text-neutral-400"
+                }
+                group-hover:text-white  
+              `}
+            />
+          </button>
+        </div>
       </div>
 
       {/* Search bar */}
-      <AnimationWrapper
-        key="searchbar"
-        initial={{ width: "0%", opacity: 0 }}
-        animate={{ width: "100%", opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        exit={{ width: "20%", opacity: 0 }}
-        visible={activeSearchBar}
-        mode="sync"
-        className={`
-          flex-1
-          py-3
-        `}
-      >
-        <InputBox
-          id="seachbar"
-          type="text"
-          name="searchBar"
-          placeholder="Search your library"
-          icon={BiSearch}
-          autoFocus
-          className={`
-            py-3
-            border-none
-            rounded-md
-          `}
-        />
-      </AnimationWrapper>
+      <>
+        {(!isCollapsed || floating) && (
+          <AnimationWrapper
+            key="searchbar"
+            initial={{ width: "0%", opacity: 0 }}
+            animate={{ width: "100%", opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            exit={{ width: "20%", opacity: 0 }}
+            visible={activeSearchBar}
+            mode="sync"
+            className={`
+              flex-1
+              py-3
+            `}
+          >
+            <InputBox
+              id="seachbar"
+              type="text"
+              name="searchBar"
+              placeholder="Search your library"
+              icon={BiSearch}
+              autoFocus
+              className={`
+                py-3
+                border-none
+                rounded-md
+              `}
+            />
+          </AnimationWrapper>
+        )}
+      </>
     </div>
   );
 };

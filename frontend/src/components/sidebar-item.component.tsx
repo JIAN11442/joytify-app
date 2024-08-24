@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { IconType } from "react-icons";
 
 import Icon from "./react-icons.component";
+import useSidebarState from "../states/sidebar.state";
 
 type SidebarItemProps = {
   icon: IconType;
@@ -24,6 +25,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   const navigate = useNavigate();
   const active = window.location.pathname === href;
 
+  const { floating } = useSidebarState();
+
   const handleOnClick = () => {
     if (href) {
       navigate(href);
@@ -42,9 +45,15 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
           flex
           gap-x-4
           items-center
-          ${active ? "text-white" : "text-neutral-400"}
-          hover:text-white
           cursor-pointer
+          ${
+            active
+              ? "text-white"
+              : collapse && !floating
+              ? "text-neutral-700"
+              : "text-neutral-400"
+          }
+          hover:text-white
           transition
         `,
         className
@@ -55,9 +64,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 
       {/* Label */}
       <>
-        {collapse ? (
-          ""
-        ) : (
+        {!collapse || floating ? (
           <p
             className={`
               text-lgc
@@ -67,6 +74,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
           >
             {label}
           </p>
+        ) : (
+          ""
         )}
       </>
     </div>

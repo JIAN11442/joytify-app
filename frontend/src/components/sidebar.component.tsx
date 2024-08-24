@@ -1,50 +1,77 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom";
-import { HiHome } from "react-icons/hi";
-import { BiSearch } from "react-icons/bi";
 
 import ContentBox from "./content-box.component";
-import SidebarItem from "./sidebar-item.component";
-import LibraryBody from "./library-body.component";
-import LibraryHeader from "./library-header.component";
+import AnimationWrapper from "./animation-wrapper.component";
+import MainNavigateRoutes from "./main-routes.component";
+import Library from "./library.component";
 
 import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
-import useAuthHook from "../hooks/auth.hook";
 
 const Sidebar = () => {
-  const { collapse, setCollapse } = useSidebarState();
-  const { isCollapsed, changeForScreenResize } = collapse;
+  const floatingDivRef = useRef<HTMLDivElement>(null);
+  const {
+    collapseSideBarState,
+    floating,
+    setCollapseSideBarState,
+    setFloating,
+    setDisabledCollapseFn,
+  } = useSidebarState();
+  const { isCollapsed, changeForScreenResize } = collapseSideBarState;
 
   const { screenWidth } = useProviderState();
 
-  const { user, isLoading } = useAuthHook();
-
-  // while changeForScreenSize is true,
-  // collapse sidebar while screen is md in tailwindcss
+  // handle sidebar collapse mode for different screen sizes
   useEffect(() => {
-    if (
-      screenWidth > 0 &&
-      screenWidth <= 768 &&
-      !isCollapsed &&
-      changeForScreenResize
-    ) {
-      setCollapse({
-        ...collapse,
-        isCollapsed: true,
-        changeForScreenResize: true,
-      });
-    } else if (screenWidth > 768 && changeForScreenResize) {
-      setCollapse({
-        ...collapse,
-        isCollapsed: false,
-      });
+    if (screenWidth > 640 && screenWidth <= 768) {
+      if (!isCollapsed && changeForScreenResize) {
+        setCollapseSideBarState({
+          ...collapseSideBarState,
+          isCollapsed: true,
+          changeForScreenResize: true,
+        });
+      }
+
+      setFloating(false);
+      setDisabledCollapseFn(true);
+    } else {
+      if (changeForScreenResize) {
+        setCollapseSideBarState({
+          ...collapseSideBarState,
+          isCollapsed: false,
+        });
+      }
+
+      setFloating(false);
+      setDisabledCollapseFn(false);
     }
   }, [screenWidth]);
+
+  useEffect(() => {
+    const handleOnBlur = (e: MouseEvent) => {
+      if (
+        floatingDivRef.current &&
+        !floatingDivRef.current.contains(e.target as Node)
+      ) {
+        setFloating(false);
+      }
+    };
+
+    const timeout = setTimeout(() => {
+      window.addEventListener("click", handleOnBlur);
+    }, 0);
+
+    return () => {
+      window.removeEventListener("click", handleOnBlur);
+      clearTimeout(timeout);
+    };
+  }, [floatingDivRef]);
 
   return (
     <div
       className={`
+        relative
         flex
         h-screen
         p-2
@@ -57,6 +84,7 @@ const Sidebar = () => {
           flex
           flex-col
           h-full
+          max-sm:hidden
           ${
             isCollapsed
               ? `w-[70px]`
@@ -70,50 +98,48 @@ const Sidebar = () => {
         `}
       >
         {/* Navigate routes */}
-        <ContentBox
-          className={`
-            h-auto
-            p-2
-          `}
-        >
-          <div
-            className={`
-              flex
-              flex-col
-              py-5
-              px-3
-              gap-y-4
-            `}
-          >
-            <SidebarItem
-              href="/"
-              icon={HiHome}
-              label="Home"
-              collapse={isCollapsed}
-            />
-            <SidebarItem
-              href="/search"
-              icon={BiSearch}
-              label="Search"
-              collapse={isCollapsed}
-            />
-          </div>
-        </ContentBox>
+        <MainNavigateRoutes />
 
         {/* Library */}
-        <ContentBox
-          className={`
-            h-full
-            p-2
-          `}
-        >
-          {/* Header */}
-          <LibraryHeader user={user} />
-
-          {/* Body */}
-          <LibraryBody user={user} isLoading={isLoading} />
-        </ContentBox>
+        <Library />
       </div>
+
+      {/* Float sidebars */}
+      <AnimationWrapper
+        ref={floatingDivRef}
+        visible={floating}
+        initial={{ width: "0%", opacity: 0 }}
+        animate={{
+          width:
+            screenWidth > 0 && screenWidth <= 500
+              ? screenWidth <= 430
+                ? "90%"
+                : "70%"
+              : "60%",
+          opacity: 1,
+        }}
+        transition={{ duration: 0.3 }}
+        exit={{ width: "20%", opacity: 0 }}
+        mode="sync"
+        className={`
+          fixed
+          inset-0
+          h-full
+          flex
+          flex-col
+          gap-y-2
+          p-2
+        bg-black
+          border-r
+          border-neutral-800/50
+          shadow-md
+          shadow-neutral-700
+          z-10
+        `}
+      >
+        <MainNavigateRoutes />
+        <Library />
+      </AnimationWrapper>
 
       {/* Main contents */}
       <ContentBox

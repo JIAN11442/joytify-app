@@ -1,16 +1,29 @@
 import { create } from "zustand";
 
 type SidebarState = {
-  collapse: { isCollapsed: boolean; changeForScreenResize: boolean };
-  setCollapse: (state: {
+  collapseSideBarState: {
+    isCollapsed: boolean;
+    changeForScreenResize: boolean;
+  };
+  floating: boolean;
+  disabledCollapseFn: boolean;
+
+  setCollapseSideBarState: (state: {
     isCollapsed: boolean;
     changeForScreenResize: boolean;
   }) => void;
+  setFloating: (state: boolean) => void;
+  setDisabledCollapseFn: (state: boolean) => void;
 };
 
 const useSidebarState = create<SidebarState>((set) => ({
-  collapse: { isCollapsed: false, changeForScreenResize: true },
-  setCollapse: (state) => set({ collapse: state }),
+  collapseSideBarState: { isCollapsed: false, changeForScreenResize: true },
+  floating: false,
+  disabledCollapseFn: false,
+
+  setCollapseSideBarState: (state) => set({ collapseSideBarState: state }),
+  setFloating: (state) => set({ floating: state }),
+  setDisabledCollapseFn: (state) => set({ disabledCollapseFn: state }),
 }));
 
 export default useSidebarState;

@@ -9,15 +9,15 @@ type LibraryBodyProps = {
 };
 
 const LibraryBody: React.FC<LibraryBodyProps> = ({ user, isLoading }) => {
-  const { collapse } = useSidebarState();
-  const { isCollapsed } = collapse;
+  const { collapseSideBarState } = useSidebarState();
+  const { isCollapsed } = collapseSideBarState;
 
   return (
     <>
       {isLoading ? (
         <Loader />
       ) : user ? (
-        "is login"
+        ""
       ) : (
         !isCollapsed && (
           <p
