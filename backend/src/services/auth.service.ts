@@ -1,3 +1,6 @@
+import { Request } from "express";
+import * as admin from "firebase-admin";
+
 import SessionModel from "../models/session.model";
 import UserModel from "../models/user.model";
 import VerificationCodeModel from "../models/verification-code.model";
@@ -25,6 +28,7 @@ import sendEmail from "../utils/send-email.util";
 
 import {
   CONFLICT,
+  FORBIDDEN,
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
   TOO_MANY_REQUESTS,
@@ -33,12 +37,15 @@ import {
 import { ORIGIN_APP } from "../constants/env-validate.constant";
 import VerificationCodeType from "../constants/verification-code.constant";
 import { HashValue } from "../utils/bcrypt.util";
-import { Request } from "express";
+import ErrorCode from "../constants/error-code.constant";
 
 interface AuthDefaults {
   email: string;
-  password: string;
+  password?: string;
   userAgent?: string;
+  profile_img?: string;
+  authForThirdParty?: boolean;
+  firebaseUID?: string;
 }
 
 interface LoginParams extends AuthDefaults {
@@ -46,7 +53,7 @@ interface LoginParams extends AuthDefaults {
 }
 
 interface RegisterParams extends AuthDefaults {
-  confirmPassword: string;
+  confirmPassword?: string;
 }
 
 type resetPasswordParams = {
@@ -65,6 +72,8 @@ export const createAccount = async (data: RegisterParams) => {
   const user = await UserModel.create({
     email: data.email,
     password: data.password,
+    profile_img: data.profile_img,
+    auth_for_third_party: data.authForThirdParty,
   });
 
   // send verification code
@@ -97,7 +106,11 @@ export const createAccount = async (data: RegisterParams) => {
 
   // sign access token and refresh token
   const accessToken = signToken(
-    { userId: user.id, sessionId: session.id },
+    {
+      userId: user.id,
+      sessionId: session.id,
+      firebaseUserId: data.firebaseUID,
+    },
     AccessTokenSignOptions
   );
 
@@ -153,18 +166,19 @@ export const loginUser = async (data: LoginParams) => {
   appAssert(user, UNAUTHORIZED, "Invalid email or password");
 
   // validate password
-  const isPasswordMatch = await user.comparePassword(data.password);
+  if (!data.authForThirdParty && data.password) {
+    const isPasswordMatch = await user.comparePassword(data.password);
 
-  appAssert(isPasswordMatch, UNAUTHORIZED, "Invalid email or password");
+    appAssert(isPasswordMatch, UNAUTHORIZED, "Invalid email or password");
+  }
 
   // return if user is already logged in
   const existAccessToken = data.req?.cookies.accessToken;
 
   if (existAccessToken) {
-    const { payload } = await verifyToken(
-      existAccessToken,
-      AccessTokenSignOptions
-    );
+    const { payload } = await verifyToken(existAccessToken, {
+      secret: AccessTokenSignOptions.secret,
+    });
 
     const sessionIsExist = await SessionModel.exists({
       _id: payload?.sessionId,
@@ -184,7 +198,11 @@ export const loginUser = async (data: LoginParams) => {
 
   // sign access token and refresh token
   const accessToken = signToken(
-    { userId: user.id, sessionId: session.id },
+    {
+      userId: user.id,
+      sessionId: session.id,
+      firebaseUserId: data.firebaseUID,
+    },
     AccessTokenSignOptions
   );
 
@@ -202,7 +220,14 @@ export const loginUser = async (data: LoginParams) => {
 // logout service
 export const logoutUser = async (accessToken: string) => {
   // verify access token
-  const { payload } = await verifyToken(accessToken, AccessTokenSignOptions);
+  const { payload } = await verifyToken(accessToken, {
+    secret: AccessTokenSignOptions.secret,
+  });
+
+  // delete firebase user if firebaseUserId is exist
+  if (payload?.firebaseUserId) {
+    admin.auth().deleteUser(payload?.firebaseUserId);
+  }
 
   // find session by userId and delete it
   return await SessionModel.findByIdAndDelete(payload?.sessionId);
@@ -313,10 +338,9 @@ export const resetUserPassword = async (data: resetPasswordParams) => {
 // refresh tokens service
 export const refreshTokens = async (refreshToken: string) => {
   // verify refresh token
-  const { payload } = await verifyToken<RefreshTokenPayload>(
-    refreshToken,
-    RefreshTokenSignOptions
-  );
+  const { payload } = await verifyToken<RefreshTokenPayload>(refreshToken, {
+    secret: RefreshTokenSignOptions.secret,
+  });
 
   appAssert(payload, UNAUTHORIZED, "Invalid refresh token");
 
@@ -360,6 +384,90 @@ export const refreshTokens = async (refreshToken: string) => {
     newAccessToken,
     newRefreshToken,
   };
+};
 
-  return { session };
+// verify firebase token service
+export const verifyFirebaseAccessToken = async (token: string) => {
+  // verify firebase access token
+  const decodedUser = await admin.auth().verifyIdToken(token);
+
+  const { email, uid, picture } = decodedUser;
+
+  appAssert(
+    decodedUser,
+    UNAUTHORIZED,
+    "Invalid firebase access token",
+    ErrorCode.InvalidFirebaseCredential,
+    uid
+  );
+
+  // if third party not provide email, then return error
+  appAssert(
+    email,
+    INTERNAL_SERVER_ERROR,
+    "Third-party do not provide email",
+    ErrorCode.InvalidFirebaseCredential,
+    uid
+  );
+
+  const generatePicture = picture?.replace("s96-c", "s384-c");
+
+  return { email, generatePicture, uid };
+};
+
+// login with third-party service
+export const loginUserWithThirdParty = async (token: string) => {
+  // verify firebase access token
+  const { email, uid } = await verifyFirebaseAccessToken(token);
+
+  // find user
+  const user = await UserModel.findOne({ email: email });
+
+  // if user is not exist
+  appAssert(
+    user,
+    NOT_FOUND,
+    "User not found",
+    ErrorCode.InvalidFirebaseCredential,
+    uid
+  );
+
+  // if those user is exist but not auth for third party
+  appAssert(
+    user.auth_for_third_party,
+    FORBIDDEN,
+    "This account was signed up without third-party. Please log in with password to access the account.",
+    ErrorCode.InvalidFirebaseCredential,
+    uid
+  );
+
+  // if those user is exist and auth for third party
+  // then execute login service
+  const { accessToken, refreshToken } = await loginUser({
+    email,
+    password: "",
+    authForThirdParty: true,
+    firebaseUID: uid,
+  });
+
+  return { accessToken, refreshToken };
+};
+
+// register with third-party service
+export const registerUserWithThirdParty = async (token: string) => {
+  // verify firebase access token
+  const { email, generatePicture, uid } = await verifyFirebaseAccessToken(
+    token
+  );
+
+  // register service
+  const { user, accessToken, refreshToken } = await createAccount({
+    email,
+    password: "",
+    profile_img: generatePicture,
+    authForThirdParty: true,
+    firebaseUID: uid,
+  });
+
+  return { user, accessToken, refreshToken };
 };

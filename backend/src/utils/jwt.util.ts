@@ -1,4 +1,4 @@
-import jwt, { SignOptions } from "jsonwebtoken";
+import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 
 import { SessionDocument } from "../models/session.model";
 import { UserDocument } from "../models/user.model";
@@ -14,6 +14,7 @@ const defaults: SignOptions = {
 
 // custom options type
 type SignOptionsAndSecret = SignOptions & { secret: string };
+type VerifyOptionsAndSecret = VerifyOptions & { secret: string };
 
 // Payload
 export interface RefreshTokenPayload {
@@ -22,6 +23,7 @@ export interface RefreshTokenPayload {
 
 export interface AccessTokenPayload extends RefreshTokenPayload {
   userId: UserDocument["_id"];
+  firebaseUserId: string;
 }
 
 // Options
@@ -50,7 +52,7 @@ export const signToken = (
 // verify token
 export const verifyToken = async <TPayload extends object = AccessTokenPayload>(
   token: string,
-  options: SignOptionsAndSecret
+  options: VerifyOptionsAndSecret
 ) => {
   try {
     const { secret = ACCESS_SECRET_KEY, ...verifyOpts } = options;

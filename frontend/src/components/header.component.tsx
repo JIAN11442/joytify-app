@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +7,7 @@ import { IoIosMenu } from "react-icons/io";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 import Icon from "./react-icons.component";
+import AnimationWrapper from "./animation-wrapper.component";
 
 import { logout } from "../fetchs/auth.fetch";
 import useSidebarState from "../states/sidebar.state";
@@ -14,8 +16,6 @@ import useAuthModalState from "../states/auth-modal.state";
 import MutationKey from "../constants/mutation-key.constant";
 import AuthForOptions from "../constants/auth-type.constant";
 import queryClient from "../config/query-client.config";
-import AnimationWrapper from "./animation-wrapper.component";
-import { useEffect, useRef } from "react";
 
 type HeaderProps = {
   children: React.ReactNode;
@@ -27,7 +27,8 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const { floating, setFloating } = useSidebarState();
-  const { user, activeUserMenu, setActiveUserMenu } = useUserState();
+  const { queryState, activeUserMenu, setActiveUserMenu } = useUserState();
+  const { user } = queryState;
   const { openAuthModal } = useAuthModalState();
 
   const { mutate: logoutUser } = useMutation({
@@ -81,6 +82,8 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
   useEffect(() => {
     const handleOnBlue = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setActiveUserMenu(false);
+      } else {
         setActiveUserMenu(false);
       }
     };

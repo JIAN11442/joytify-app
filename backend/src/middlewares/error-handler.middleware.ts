@@ -6,31 +6,56 @@ import {
   INTERNAL_SERVER_ERROR,
 } from "../constants/http-code.constant";
 import AppError from "../utils/app-error.util";
+import { clearAuthCookies } from "../utils/cookies.util";
+import admin from "../config/firebase.config";
 
-const ErrorHandler: ErrorRequestHandler = async (error, req, res, next) => {
-  // Zod  Error
-  if (error instanceof ZodError) {
-    const errors = error.issues.map((err) => ({
-      path: err.path,
-      message: err.message,
-    }));
+const errorHandler = (): ErrorRequestHandler => {
+  return async (error, req, res, next) => {
+    // clear the cookies while refresh path throws an error
+    if (req.path === "/auth/refresh") {
+      clearAuthCookies(res);
+    }
 
-    console.log(errors[0]);
+    // Zod  Error
+    if (error instanceof ZodError) {
+      const errors = error.issues.map((err) => ({
+        path: err.path,
+        message: err.message,
+      }));
 
-    return res.status(BAD_REQUEST).json(errors[0]);
-  }
+      console.log(errors[0]);
 
-  // App Error
-  if (error instanceof AppError) {
-    return res
-      .status(error.statusCode)
-      .json({ message: error.message, errorCode: error.errorCode });
-  }
+      return res.status(BAD_REQUEST).json(errors[0]);
+    }
 
-  // Other errors
-  console.log(`PATH: ${req.path}\n\n`, error);
+    // Firebase Error
+    if (error?.errorInfo?.code && error.errorInfo.code.startsWith("auth/")) {
+      return res.status(BAD_REQUEST).json({
+        code: error.errorInfo.code,
+        message: error.errorInfo.message,
+      });
+    }
 
-  return res.status(INTERNAL_SERVER_ERROR).send("Internal Server Error");
+    // App Error
+    if (error instanceof AppError) {
+      // If firebase auth with third-party provider fails, delete the firebase user
+      // to avoid another provider with the same email can't auth again
+      if (error.errorCode === "InvalidFirebaseCredential") {
+        if (error.firebaseUID) {
+          await admin.auth().deleteUser(error.firebaseUID);
+        }
+      }
+
+      return res
+        .status(error.statusCode)
+        .json({ message: error.message, errorCode: error.errorCode });
+    }
+
+    // Other errors
+    console.log(`PATH: ${req.path}\n\n`, error);
+
+    return res.status(INTERNAL_SERVER_ERROR).send("Internal Server Error");
+  };
 };
 
-export default ErrorHandler;
+export default errorHandler;

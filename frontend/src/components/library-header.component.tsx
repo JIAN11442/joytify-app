@@ -124,13 +124,20 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
           {/* Search music */}
           <button
             onClick={handleActiveSearchBar}
+            disabled={!user}
             className={`
-              group
               p-2
-              rounded-full
-              hover:bg-neutral-800
-              hover:scale-110
-              transition
+              ${
+                user
+                  ? `
+                  group
+                  rounded-full
+                  hover:bg-neutral-800
+                  hover:scale-110
+                  transition
+                `
+                  : "opacity-50"
+              }
               ${!isCollapsed || floating ? "flex" : "hidden"} 
             `}
           >

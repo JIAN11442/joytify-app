@@ -70,11 +70,11 @@ const Modal: React.FC<ModalProps> = ({
             top-1/2
             left-1/2
             w-auto
-            max-md:min-w-[450px]
-            md:min-w-[550px]
-            max-w-[90vw]
+            max-sm:w-[90vw]
+            sm:min-w-[500px]
+            sm:max-w-[90vw]
             h-auto
-            max-h-[80vh]
+            max-h-[90vh]
             overflow-y-auto
             p-[25px]
             border

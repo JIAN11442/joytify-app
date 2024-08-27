@@ -87,6 +87,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
         <>
           {type === "password" && (
             <button
+              type="button"
               onClick={handleSwitchPasswordVisibility}
               className={`
                 input-right-icon

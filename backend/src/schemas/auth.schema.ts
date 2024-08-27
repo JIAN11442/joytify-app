@@ -16,6 +16,10 @@ const warningMsg = {
     path: ["confirmPassword"],
     message: "Password and confirm password must be same",
   },
+  firebaseAccessTokenCharater: {
+    path: ["firebaseAccessToken"],
+    message: "Firebase access token is required",
+  },
 };
 
 // Items schema
@@ -37,7 +41,7 @@ export const verificationCodeSchema = z
 // Handler schema
 export const loginSchema = z.object({
   email: emailSchema,
-  password: passwordSchema,
+  password: passwordSchema.optional(),
   userAgent: z.string().optional(),
 });
 
@@ -54,3 +58,7 @@ export const resetPasswordSchema = z.object({
   verificationCode: verificationCodeSchema,
   password: passwordSchema,
 });
+
+export const firebaseAccessTokenSchema = z
+  .string()
+  .min(1, warningMsg.firebaseAccessTokenCharater);

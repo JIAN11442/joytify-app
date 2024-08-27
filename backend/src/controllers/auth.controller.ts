@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import {
   emailSchema,
+  firebaseAccessTokenSchema,
   loginSchema,
   registerSchema,
   resetPasswordSchema,
@@ -9,18 +10,22 @@ import {
 import {
   createAccount,
   loginUser,
+  loginUserWithThirdParty,
   logoutUser,
   refreshTokens,
+  registerUserWithThirdParty,
   resetUserPassword,
   sendResetPasswordEmail,
   verifyEmail,
 } from "../services/auth.service";
 import {
   clearAuthCookies,
+  getAccessTokenCookieOptions,
   getRefreshTokenCookieOptions,
   setAuthCookies,
 } from "../utils/cookies.util";
-import { CREATED, OK } from "../constants/http-code.constant";
+import { CREATED, OK, UNAUTHORIZED } from "../constants/http-code.constant";
+import appAssert from "../utils/app-assert.util";
 
 // register handler
 export const registerHandler: RequestHandler = async (req, res, next) => {
@@ -128,6 +133,8 @@ export const refreshTokensHandler: RequestHandler = async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies;
 
+    appAssert(refreshToken, UNAUTHORIZED, "Missing refresh token");
+
     const { newAccessToken, newRefreshToken } = await refreshTokens(
       refreshToken
     );
@@ -141,13 +148,57 @@ export const refreshTokensHandler: RequestHandler = async (req, res, next) => {
     }
 
     return res
-      .cookie("accessToken", newAccessToken)
+      .cookie("accessToken", newAccessToken, getAccessTokenCookieOptions())
       .status(OK)
       .json({
         message: `Access token ${
           newRefreshToken ? "and refresh token are" : "is"
         } refreshed`,
       });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// third-party login handler
+export const loginWithThirdPartyHandler: RequestHandler = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    // get firebase access token
+    const firebaseAccessToken = firebaseAccessTokenSchema.parse(req.body.token);
+
+    // verify that to get user info
+    const { accessToken, refreshToken } = await loginUserWithThirdParty(
+      firebaseAccessToken
+    );
+
+    return setAuthCookies({ res, refreshToken, accessToken })
+      .status(OK)
+      .json({ message: "Login successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// third-party register handler
+export const registerWithThirdPartyHandler: RequestHandler = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    // get firebase access token
+    const firebaseAccessToken = firebaseAccessTokenSchema.parse(req.body.token);
+
+    const { user, accessToken, refreshToken } =
+      await registerUserWithThirdParty(firebaseAccessToken);
+
+    return setAuthCookies({ res, refreshToken, accessToken })
+      .status(CREATED)
+      .json(user);
   } catch (error) {
     next(error);
   }

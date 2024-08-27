@@ -8,8 +8,9 @@ import {
 export interface UserDocument extends mongoose.Document {
   email: string;
   password: string;
-  verified: boolean;
   profile_img: string;
+  verified: boolean;
+  auth_for_third_party: boolean;
   comparePassword: (password: string) => Promise<boolean>;
   omitPassword(): Omit<this, "password">;
 }
@@ -17,8 +18,7 @@ export interface UserDocument extends mongoose.Document {
 const userSchema = new mongoose.Schema<UserDocument>(
   {
     email: { type: String, unique: true, required: true },
-    password: { type: String, required: true },
-    verified: { type: Boolean, default: false, required: true },
+    password: { type: String },
     profile_img: {
       type: String,
       default: () =>
@@ -30,6 +30,8 @@ const userSchema = new mongoose.Schema<UserDocument>(
           profile_names[Math.floor(Math.random() * profile_names.length)]
         }`,
     },
+    verified: { type: Boolean, default: false, required: true },
+    auth_for_third_party: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

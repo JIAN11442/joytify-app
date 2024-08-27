@@ -7,8 +7,11 @@ import authRoute from "./routes/auth.route";
 import userRoute from "./routes/user.route";
 import awsRoute from "./routes/aws.route";
 import songRoute from "./routes/song.route";
-import ErrorHandler from "./middlewares/error-handler.middleware";
+
 import authenticate from "./middlewares/authenticate.middleware";
+import firebaseInitialize from "./middlewares/firebase.middleware";
+import errorHandler from "./middlewares/error-handler.middleware";
+
 import { ORIGIN_APP } from "./constants/env-validate.constant";
 
 const app = express();
@@ -24,6 +27,7 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use(firebaseInitialize());
 
 // routes
 app.use("/auth", authRoute);
@@ -32,6 +36,6 @@ app.use("/aws", awsRoute);
 app.use("/song", authenticate, songRoute);
 
 // error handler
-app.use(ErrorHandler);
+app.use(errorHandler());
 
 export default app;

@@ -1,8 +1,12 @@
 export type resUser = {
   _id: string;
   email: string;
-  verified: boolean;
   profile_img: string;
+  auth_for_third_party: {
+    google: boolean;
+    github: boolean;
+  };
+  verified: boolean;
   createdAt: Date;
   updatedAt: Date;
 };

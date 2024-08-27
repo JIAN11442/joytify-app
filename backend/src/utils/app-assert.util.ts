@@ -8,16 +8,21 @@ type AppAssertParams = (
   condition: any,
   statusCode: HttpStatusCode,
   message: string,
-  errorCode?: ErrorCode
+  errorCode?: ErrorCode,
+  firebaseUID?: string
 ) => asserts condition;
 
 const appAssert: AppAssertParams = (
   condition,
   statusCode,
   message,
-  errorCode
+  errorCode,
+  firebaseUID
 ) => {
-  return assert(condition, new AppError(statusCode, message, errorCode));
+  return assert(
+    condition,
+    new AppError(statusCode, message, errorCode, firebaseUID)
+  );
 };
 
 export default appAssert;

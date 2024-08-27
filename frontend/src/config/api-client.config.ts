@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios, { AxiosRequestConfig } from "axios";
 
 import queryClient from "./query-client.config";
@@ -25,18 +26,18 @@ API.interceptors.response.use(
     return res.data;
   },
   async (err) => {
-    const { response } = err;
-    const { status, data, config } = response;
+    const { response, config } = err;
+    const { status, data } = response;
 
     // if got an error with status 401 and errorCode is InvalidAccessToken
     // that means the access token is expired, so we need to refresh the tokens to login in back screen
     if (status === 401 && data?.errorCode === "InvalidAccessToken") {
       try {
         // refresh tokens
-        RefreshTokensClient.get("/auth/refresh");
+        await RefreshTokensClient.get("/auth/refresh");
 
         // retry the request to get current page data
-        return RefreshTokensClient.request(config);
+        return RefreshTokensClient(config);
       } catch (error) {
         // if refresh token failed, clear the query cache
         queryClient.clear();
@@ -44,8 +45,6 @@ API.interceptors.response.use(
         // save currrent path to redirect url
         // so we can redirect user to the current page after login
         navigate("/", { state: { redirectUrl: window.location.pathname } });
-
-        console.log(error);
       }
     }
 

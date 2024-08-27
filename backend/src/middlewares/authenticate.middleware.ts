@@ -17,10 +17,9 @@ const authenticate: RequestHandler = async (req, res, next) => {
     );
 
     // if have access token, verify that
-    const { payload, error } = await verifyToken(
-      accessToken,
-      AccessTokenSignOptions
-    );
+    const { payload, error } = await verifyToken(accessToken, {
+      secret: AccessTokenSignOptions.secret,
+    });
 
     appAssert(
       payload,

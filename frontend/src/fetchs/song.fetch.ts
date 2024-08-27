@@ -26,3 +26,6 @@ export const createSongData = async (data: DefaultsSongType) => {
 
   return API.post("/song/create", { ...params, songUrl, imageUrl });
 };
+
+// get all songs
+export const getAllSongs = async () => {};

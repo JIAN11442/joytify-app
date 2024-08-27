@@ -6,20 +6,32 @@ import { getUserInfo } from "../fetchs/user.fetch";
 import useUserState from "../states/user.state";
 
 const useAuthHook = (opts: object = {}) => {
-  const { setUser } = useUserState();
+  const { queryState, setQueryState, isQueryError, setIsQueryError } =
+    useUserState();
 
   const { data: user, ...rest } = useQuery({
-    queryKey: [MutationKey.AUTH],
-    queryFn: getUserInfo,
-    staleTime: Infinity,
+    queryKey: [MutationKey.AUTH], // When this hook is called multiple times with the same key, it will return the same data
+    queryFn: async () => {
+      try {
+        const data = await getUserInfo();
+
+        return data;
+      } catch (error) {
+        if (error) {
+          setIsQueryError(true);
+        }
+      }
+    },
+    staleTime: Infinity, // the query result is never stale unless manually refetched (like refetch() or queryClient.invalidateQueries())
+    enabled: !isQueryError, // if get the query error, then stop the query (for loading)
     ...opts,
   });
 
   useEffect(() => {
     if (user) {
-      setUser(user);
+      setQueryState({ ...queryState, user });
     } else {
-      setUser(null);
+      setQueryState({ ...queryState, user: null });
     }
   }, [user]);
 

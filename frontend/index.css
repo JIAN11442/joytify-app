@@ -12,7 +12,7 @@ body,
   padding: 0;
   height: 100%;
 
-  font-size: 1rem;
+  font-size: 15px;
   font-family: "Poppins", sans-serif;
 
   transition-duration: 100ms;
@@ -25,7 +25,7 @@ body,
 @layer components {
   .input-box {
     @apply w-[100%]
-    p-[15px]
+    p-3
     border
     border-grey-custom/10
     bg-grey-dark
@@ -78,7 +78,6 @@ body,
     px-5
     py-2
     bg-white
-    text-sm
     text-black
     font-bold
     rounded-full
@@ -97,5 +96,49 @@ body,
     hover:bg-neutral-800/50
     hover:text-white
     transition;
+  }
+
+  .third-party-btn {
+    @apply flex
+    p-3
+    gap-5
+    items-center
+    justify-center
+    w-full
+    bg-[#2e2e2e]
+    border
+    border-grey-custom/10
+    hover:bg-grey-custom/10
+    text-sm
+    capitalize
+    rounded-md
+    transition;
+  }
+
+  .separate-line {
+    @apply flex
+    my-5
+    w-full
+    border-grey-custom/5;
+  }
+
+  /* 自定义滚动条的宽度 */
+  ::-webkit-scrollbar {
+    @apply w-1;
+  }
+
+  /* 自定义滚动条轨道的样式 */
+  ::-webkit-scrollbar-track {
+    @apply bg-neutral-700;
+  }
+
+  /* 自定义滚动条滑块的样式 */
+  ::-webkit-scrollbar-thumb {
+    @apply bg-neutral-500/50 rounded-full;
+  }
+
+  /* 当鼠标悬停在滚动条滑块上时，改变滑块的样式 */
+  .ce-popover__items {
+    @apply bg-grey-dark/60;
   }
 }
