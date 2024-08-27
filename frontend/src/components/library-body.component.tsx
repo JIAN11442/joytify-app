@@ -1,7 +1,7 @@
+import { AxiosResponse } from "axios";
 import Loader from "./loader.component";
 import useSidebarState from "../states/sidebar.state";
 import { resUser } from "../constants/data-type.constant";
-import { AxiosResponse } from "axios";
 
 type LibraryBodyProps = {
   user: AxiosResponse | resUser | undefined;

@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoKey } from "react-icons/io5";
 import { MdAlternateEmail } from "react-icons/md";
@@ -22,6 +22,7 @@ import {
 } from "../constants/form-default-data.constant";
 import { signin, signup } from "../fetchs/auth.fetch";
 import useAuthModalState from "../states/auth-modal.state";
+import queryClient from "../config/query-client.config";
 
 const AuthModal = () => {
   const navigate = useNavigate();
@@ -92,6 +93,12 @@ const AuthModal = () => {
       );
 
       navigate(redirectPath, { replace: true });
+
+      // Invalidate the auth query to force it to clear, regardless of the query key,
+      // and then refetch the query.
+      queryClient.invalidateQueries([
+        MutationKey.AUTH,
+      ] as InvalidateQueryFilters);
     },
   });
 

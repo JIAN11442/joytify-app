@@ -2,6 +2,7 @@ export type resUser = {
   _id: string;
   email: string;
   verified: boolean;
+  profile_img: string;
   createdAt: Date;
   updatedAt: Date;
 };

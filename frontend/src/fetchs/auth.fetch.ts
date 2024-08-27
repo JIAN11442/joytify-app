@@ -8,3 +8,6 @@ export const signin = async (data: DefaultsAuthType) =>
 // register axios
 export const signup = async (data: DefaultsAuthType) =>
   API.post("/auth/register", data);
+
+// logout axios
+export const logout = async () => API.get("/auth/logout");

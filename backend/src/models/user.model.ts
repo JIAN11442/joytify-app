@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
 import { CompareHashValue, HashValue } from "../utils/bcrypt.util";
+import {
+  profile_collections,
+  profile_names,
+} from "../constants/profile-img.constant";
 
 export interface UserDocument extends mongoose.Document {
   email: string;
   password: string;
   verified: boolean;
+  profile_img: string;
   comparePassword: (password: string) => Promise<boolean>;
   omitPassword(): Omit<this, "password">;
 }
@@ -14,6 +19,17 @@ const userSchema = new mongoose.Schema<UserDocument>(
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     verified: { type: Boolean, default: false, required: true },
+    profile_img: {
+      type: String,
+      default: () =>
+        `https://api.dicebear.com/6.x/${
+          profile_collections[
+            Math.floor(Math.random() * profile_collections.length)
+          ]
+        }/svg?seed=${
+          profile_names[Math.floor(Math.random() * profile_names.length)]
+        }`,
+    },
   },
   { timestamps: true }
 );

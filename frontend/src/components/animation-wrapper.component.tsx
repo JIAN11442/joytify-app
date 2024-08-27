@@ -19,13 +19,17 @@ const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
       initial = { opacity: 0 },
       animate = { opacity: 1 },
       transition = { duration: 0.5 },
-      exit = { opacity: 0 },
+      exit,
       mode = "wait",
       visible = true,
       className,
     },
     ref
   ) => {
+    const resolvedExit = (
+      exit === undefined ? initial : exit
+    ) as MotionProps["exit"];
+
     return (
       <AnimatePresence mode={mode}>
         {visible && (
@@ -34,7 +38,7 @@ const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
             initial={initial}
             animate={animate}
             transition={transition}
-            exit={exit}
+            exit={resolvedExit}
             className={className}
           >
             {children}

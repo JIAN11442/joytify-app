@@ -72,4 +72,30 @@ body,
     hover:bg-neutral-700/50
     transition;
   }
+
+  .auth-btn {
+    @apply w-fit
+    px-5
+    py-2
+    bg-white
+    text-sm
+    text-black
+    font-bold
+    rounded-full
+    hover:opacity-80
+    hover:scale-105
+    transition;
+  }
+
+  .menu-btn {
+    @apply w-full
+    p-2
+    text-[14.5px]
+    text-start
+    text-neutral-400
+    capitalize
+    hover:bg-neutral-800/50
+    hover:text-white
+    transition;
+  }
 }
