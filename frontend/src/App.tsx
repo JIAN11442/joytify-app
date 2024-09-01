@@ -1,8 +1,10 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 
-import Sidebar from "./components/sidebar.component";
 import HomePage from "./pages/home.page";
-import ForgotPasswordPage from "./pages/forgot-password.page";
+import ResetPasswordPage from "./pages/reset-password.page";
+
+import Sidebar from "./components/sidebar.component";
+
 import { setNavigate } from "./lib/navigate.lib";
 
 function App() {
@@ -15,7 +17,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Sidebar />}>
         <Route index element={<HomePage />} />
-        <Route path="/auth/password/forgot" element={<ForgotPasswordPage />} />
+        <Route path="/password/reset" element={<ResetPasswordPage />} />
       </Route>
     </Routes>
   );

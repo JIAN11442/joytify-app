@@ -22,7 +22,13 @@ export const defaultsRegisterData = {
   confirmPassword: "",
 };
 
+export const defaultsResetPasswordData = {
+  email: "",
+};
+
 export type DefaultsAuthType = typeof defaultsLoginData & {
   confirmPassword?: string;
 };
 export type DefaultsSongType = typeof defaultsSongData;
+
+export type DefaultsResetPasswordType = typeof defaultsResetPasswordData;

@@ -56,8 +56,12 @@ const AuthForm = () => {
   ) => {
     e.preventDefault();
 
-    closeAuthModal();
-    navigate("/auth/password/forgot", { replace: true });
+    const timeout = setTimeout(() => {
+      // change authfor type
+      openAuthModal(AuthForOptions.FORGOT_PASSWORD);
+    }, 0);
+
+    return () => clearTimeout(timeout);
   };
 
   // handle input onKeyDown
@@ -80,6 +84,7 @@ const AuthForm = () => {
     authUserWithThirdParty({ provider, authFor });
   };
 
+  // third-party submit text
   const thirdPartySubmitText =
     authFor === SIGN_IN ? "Continue" : authFor.replace("-", " ");
 
@@ -87,9 +92,6 @@ const AuthForm = () => {
   const { mutate: authUser, isPending } = useMutation({
     mutationKey: [MutationKey.AUTH],
     mutationFn: authFor === SIGN_IN ? signin : signup,
-    onError: (error) => {
-      toast.error(error.message);
-    },
     onSuccess: () => {
       closeAuthModal();
 
@@ -101,15 +103,15 @@ const AuthForm = () => {
 
       refetch();
     },
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   // auth mutation (through third-party)
   const { mutate: authUserWithThirdParty } = useMutation({
     mutationKey: [MutationKey.THIRD_PARTY_AUTH],
     mutationFn: authWithThirdParty,
-    onError: (error) => {
-      toast.error(error.message);
-    },
     onSuccess: () => {
       closeAuthModal();
 
@@ -119,6 +121,9 @@ const AuthForm = () => {
 
       // refetch the auth query to refresh the user data
       refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
@@ -354,13 +359,13 @@ const AuthForm = () => {
         ref={submitBtnRef}
         disabled={!isValid}
         className={`
-            mt-2
-            submit-btn
-            capitalize
-            text-sm
-            outline-none
-            rounded-full
-          `}
+          mt-2
+          submit-btn
+          capitalize
+          text-sm
+          outline-none
+          rounded-full
+        `}
       >
         {isPending ? (
           <Loader loader={{ size: 20 }} />

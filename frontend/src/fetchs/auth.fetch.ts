@@ -39,3 +39,7 @@ export const authWithThirdParty = async (data: authForThirdPartyParams) => {
       throw error;
     });
 };
+
+// send reset password verification email
+export const sendResetPasswordEmail = async (email: string) =>
+  API.post("/auth/password/forgot", { email });
