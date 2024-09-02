@@ -4,6 +4,9 @@ import {
   profile_collections,
   profile_names,
 } from "../constants/profile-img.constant";
+import PlaylistModel from "./playlist.model";
+import appAssert from "../utils/app-assert.util";
+import { INTERNAL_SERVER_ERROR } from "../constants/http-code.constant";
 
 export interface UserDocument extends mongoose.Document {
   email: string;
@@ -11,6 +14,10 @@ export interface UserDocument extends mongoose.Document {
   profile_img: string;
   verified: boolean;
   auth_for_third_party: boolean;
+  account_info: {
+    total_playlists: number;
+    total_songs: number;
+  };
   comparePassword: (password: string) => Promise<boolean>;
   omitPassword(): Omit<this, "password">;
 }
@@ -32,6 +39,10 @@ const userSchema = new mongoose.Schema<UserDocument>(
     },
     verified: { type: Boolean, default: false, required: true },
     auth_for_third_party: { type: Boolean, default: false },
+    account_info: {
+      total_playlists: { type: Number, default: 0 },
+      total_songs: { type: Number, default: 0 },
+    },
   },
   { timestamps: true }
 );
@@ -44,6 +55,43 @@ userSchema.pre("save", async function (next) {
 
   this.password = await HashValue(this.password);
   return next();
+});
+
+// pro (create default playlist for new user)
+userSchema.post("save", async function () {
+  try {
+    // check if default playlist already exists
+    const existDefaultPlaylist = await PlaylistModel.findOne({
+      userId: this._id,
+      default: true,
+    });
+
+    // only create default playlist if it doesn't exist
+    // cause this.save() will trigger this post middleware again -> infinite loop
+    if (!existDefaultPlaylist) {
+      // create default playlist
+      const defaultPlaylist = await PlaylistModel.create({
+        userId: this._id,
+        title: "Liked Songs",
+        description: "All your liked songs will be here",
+        cover_image:
+          "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/liked.png",
+        default: true,
+      });
+
+      appAssert(
+        defaultPlaylist,
+        INTERNAL_SERVER_ERROR,
+        "Failed to create default playlist"
+      );
+
+      // update user account_info
+      this.account_info.total_playlists += 1;
+      await this.save();
+    }
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // custom method (compare password with hashed password from database)

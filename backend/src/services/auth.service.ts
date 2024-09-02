@@ -77,25 +77,25 @@ export const createAccount = async (data: RegisterParams) => {
   });
 
   // send verification code
-  const verificationCode = await VerificationCodeModel.create({
-    userId: user.id,
-    type: VerificationCodeType.EmailVerification,
-    expiresAt: onYearFromNow(),
-  });
+  // const verificationCode = await VerificationCodeModel.create({
+  //   userId: user.id,
+  //   type: VerificationCodeType.EmailVerification,
+  //   expiresAt: onYearFromNow(),
+  // });
 
   // send verification email
-  const url = `${ORIGIN_APP}/email/verify?code=${verificationCode.id}`;
+  // const url = `${ORIGIN_APP}/email/verify?code=${verificationCode.id}`;
 
-  const { data: emailData, error } = await sendEmail({
-    to: user.email,
-    ...getVerifyEmailTemplate(url),
-  });
+  // const { data: emailData, error } = await sendEmail({
+  //   to: user.email,
+  //   ...getVerifyEmailTemplate(url),
+  // });
 
-  appAssert(
-    emailData?.id,
-    INTERNAL_SERVER_ERROR,
-    `${error?.name}-${error?.message}`
-  );
+  // appAssert(
+  //   emailData?.id,
+  //   INTERNAL_SERVER_ERROR,
+  //   `${error?.name}-${error?.message}`
+  // );
 
   // create session
   const session = await SessionModel.create({
