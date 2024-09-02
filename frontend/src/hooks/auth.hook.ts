@@ -1,16 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import MutationKey from "../constants/mutation-key.constant";
+import { QueryKey } from "../constants/query-client-key.constant";
 import { getUserInfo } from "../fetchs/user.fetch";
 import useUserState from "../states/user.state";
 
-const useAuthHook = (opts: object = {}) => {
-  const { queryState, setQueryState, isQueryError, setIsQueryError } =
-    useUserState();
+const useAuth = (opts: object = {}) => {
+  const [isQueryError, setIsQueryError] = useState(false);
+  const { setUser } = useUserState();
 
   const { data: user, ...rest } = useQuery({
-    queryKey: [MutationKey.AUTH], // When this hook is called multiple times with the same key, it will return the same data
+    queryKey: [QueryKey.GET_USER_INFO], // When this hook is called multiple times with the same key, it will return the same data
     queryFn: async () => {
       try {
         const data = await getUserInfo();
@@ -29,13 +29,13 @@ const useAuthHook = (opts: object = {}) => {
 
   useEffect(() => {
     if (user) {
-      setQueryState({ ...queryState, user });
+      setUser(user);
     } else {
-      setQueryState({ ...queryState, user: null });
+      setUser(null);
     }
   }, [user]);
 
   return { user, ...rest };
 };
 
-export default useAuthHook;
+export default useAuth;

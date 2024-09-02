@@ -2,17 +2,18 @@ import { useRef } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MdAlternateEmail } from "react-icons/md";
 
 import Loader from "./loader.component";
 import InputBox from "./input-box.component";
 
-import MutationKey from "../constants/mutation-key.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
 import AuthForOptions from "../constants/auth-type.constant";
+import { DefaultsResetPasswordType } from "../constants/form-default-data.constant";
 import useAuthModalState from "../states/auth-modal.state";
 import { sendResetPasswordEmail } from "../fetchs/auth.fetch";
-import { useLocation, useNavigate } from "react-router-dom";
-import { DefaultsResetPasswordType } from "../constants/form-default-data.constant";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const ForgotPasswordForm = () => {
   const navigate = useNavigate();
@@ -58,10 +59,9 @@ const ForgotPasswordForm = () => {
 
   // handle navigate to sign in modal
   const handleNavigateToSignInModal = () => {
-    const timeout = setTimeout(() => {
+    timeoutForDelay(() => {
       openAuthModal(AuthForOptions.SIGN_IN);
-    }, 0);
-    return () => clearTimeout(timeout);
+    });
   };
 
   // initialize form data

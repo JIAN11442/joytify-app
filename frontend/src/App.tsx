@@ -6,6 +6,8 @@ import ResetPasswordPage from "./pages/reset-password.page";
 import Sidebar from "./components/sidebar.component";
 
 import { setNavigate } from "./lib/navigate.lib";
+import AppContainerPage from "./pages/app-container.page";
+import PlaylistPage from "./pages/playlist.page";
 
 function App() {
   // original navigate function can't be using outside of the component
@@ -18,6 +20,11 @@ function App() {
       <Route path="/" element={<Sidebar />}>
         <Route index element={<HomePage />} />
         <Route path="/password/reset" element={<ResetPasswordPage />} />
+
+        {/* need login to access */}
+        <Route element={<AppContainerPage />}>
+          <Route path="/playlist/:id" element={<PlaylistPage />} />
+        </Route>
       </Route>
     </Routes>
   );

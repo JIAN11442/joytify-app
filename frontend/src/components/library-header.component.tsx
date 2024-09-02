@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { LuLibrary } from "react-icons/lu";
 import { BiSearch } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -8,19 +8,28 @@ import Icon from "./react-icons.component";
 import SidebarItem from "./sidebar-item.component";
 import InputBox from "./input-box.component";
 import AnimationWrapper from "./animation-wrapper.component";
+import Menu from "./menu.component";
 
-import useSidebarState from "../states/sidebar.state";
-import useAuthModalState from "../states/auth-modal.state";
 import AuthForOptions from "../constants/auth-type.constant";
 import { resUser } from "../constants/data-type.constant";
+import useSidebarState from "../states/sidebar.state";
 import useUploadModalState from "../states/upload-modal.state";
 import useProviderState from "../states/provider.state";
+import useAuthModalState from "../states/auth-modal.state";
+import useLibraryState from "../states/library.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
+import { MdLibraryMusic, MdMusicNote } from "react-icons/md";
+import { useMutation } from "@tanstack/react-query";
+import { MutationKey } from "../constants/query-client-key.constant";
+import { createPlaylist } from "../fetchs/playlist.fetch";
+import { usePlaylists } from "../hooks/playlist.hook";
 
 type LibraryHeaderProps = {
   user: AxiosResponse | resUser | undefined;
 };
 
 const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
+  const addingMenuRef = useRef<HTMLDivElement>(null);
   const [activeSearchBar, setActiveSearchBar] = useState(false);
 
   const { screenWidth } = useProviderState();
@@ -34,6 +43,9 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   const { isCollapsed } = collapseSideBarState;
   const { openAuthModal } = useAuthModalState();
   const { openUploadModal } = useUploadModalState();
+  const { activeAddingOptions, setActiveAddingOptions } = useLibraryState();
+
+  const { refetch } = usePlaylists();
 
   // handle collapse sidebar
   const handleCollapseSidebar = () => {
@@ -64,21 +76,43 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
     setActiveSearchBar(!activeSearchBar);
   };
 
+  // handle active adding options
+  const handleActiveAddingOptions = () => {
+    timeoutForDelay(() => {
+      setActiveAddingOptions(!activeAddingOptions);
+    });
+  };
+
   // handle active upload music modal
   const handleActiveUploadMusicModal = (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
 
-    const timeout = setTimeout(() => {
+    timeoutForDelay(() => {
       if (floating) {
         setFloating(false);
       }
 
       return user ? openUploadModal() : openAuthModal(AuthForOptions.SIGN_IN);
-    }, 0);
+    });
+  };
 
-    return () => clearTimeout(timeout);
+  // create playlist mutation
+  const { mutate: createUserPlaylist } = useMutation({
+    mutationKey: [MutationKey.CREATE_USER_PLAYLIST],
+    mutationFn: createPlaylist,
+    onSuccess: () => {
+      refetch();
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  // handle create new playlist
+  const handleCreateNewPlaylist = () => {
+    createUserPlaylist();
   };
 
   return (
@@ -121,7 +155,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
             ${!isCollapsed && "absolute right-0"}
           `}
         >
-          {/* Search music */}
+          {/* Search button */}
           <button
             onClick={handleActiveSearchBar}
             disabled={!user}
@@ -151,36 +185,79 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
             />
           </button>
 
-          {/* Adding music */}
-          <button
-            onClick={(e) => handleActiveUploadMusicModal(e)}
-            className={`
-              group
-              ${
-                (!isCollapsed || floating) &&
-                `
-                  p-2
-                  rounded-full
-                  hover:bg-neutral-800
-                  hover:scale-110
-                  transition
-                `
-              }
-            `}
-          >
-            <Icon
-              name={AiOutlinePlus}
-              opts={{ size: !isCollapsed || floating ? 20 : 28 }}
+          {/* Adding button */}
+          <div className={`relative`}>
+            <button
+              onClick={handleActiveAddingOptions}
               className={`
+                group
                 ${
-                  isCollapsed && !floating
-                    ? "text-neutral-700"
-                    : "text-neutral-400"
+                  (!isCollapsed || floating) &&
+                  `
+                    p-2
+                    rounded-full
+                    hover:bg-neutral-800
+                    hover:scale-110
+                    transition
+                  `
                 }
-                group-hover:text-white  
               `}
-            />
-          </button>
+            >
+              <Icon
+                name={AiOutlinePlus}
+                opts={{ size: !isCollapsed || floating ? 20 : 28 }}
+                className={`
+                  ${
+                    isCollapsed && !floating
+                      ? "text-neutral-700"
+                      : "text-neutral-400"
+                  }
+                  group-hover:text-white  
+                `}
+              />
+            </button>
+
+            {/* Adding options menu */}
+            <Menu
+              ref={addingMenuRef}
+              activeState={{
+                visible: activeAddingOptions,
+                setVisible: setActiveAddingOptions,
+              }}
+              wrapper={{ transformOrigin: "top left" }}
+              className={`w-[210px]`}
+            >
+              {/* Add playlist button */}
+              <button
+                onClick={handleActiveUploadMusicModal}
+                className={`
+                  menu-btn
+                  flex
+                  gap-3
+                  items-center
+                  normal-case
+                `}
+              >
+                <Icon name={MdMusicNote} opts={{ size: 16 }} />
+                <p>Create a new song</p>
+              </button>
+
+              {/* Add playlist button */}
+              <button
+                onClick={handleCreateNewPlaylist}
+                className={`
+                  menu-btn
+                  flex
+                  gap-3
+                  items-center
+                  normal-case
+                `}
+              >
+                <Icon name={MdLibraryMusic} opts={{ size: 16 }} />
+                <p>Create a new playlist</p>
+              </button>
+            </Menu>
+          </div>
         </div>
       </div>
 
@@ -197,7 +274,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
             mode="sync"
             className={`
               flex-1
-              py-3
+              pt-3
             `}
           >
             <InputBox

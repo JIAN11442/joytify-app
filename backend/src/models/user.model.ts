@@ -75,7 +75,7 @@ userSchema.post("save", async function () {
         title: "Liked Songs",
         description: "All your liked songs will be here",
         cover_image:
-          "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/liked.png",
+          "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/liked-song.png",
         default: true,
       });
 

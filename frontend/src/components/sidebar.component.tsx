@@ -8,6 +8,7 @@ import Library from "./library.component";
 
 import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
+import { timeoutForEventListener } from "../lib/timeout.lib";
 
 const Sidebar = () => {
   const floatingDivRef = useRef<HTMLDivElement>(null);
@@ -49,7 +50,7 @@ const Sidebar = () => {
   }, [screenWidth]);
 
   useEffect(() => {
-    const handleOnBlur = (e: MouseEvent) => {
+    const handleOnBlur: EventListener = (e) => {
       if (
         floatingDivRef.current &&
         !floatingDivRef.current.contains(e.target as Node)
@@ -58,14 +59,7 @@ const Sidebar = () => {
       }
     };
 
-    const timeout = setTimeout(() => {
-      window.addEventListener("click", handleOnBlur);
-    }, 0);
-
-    return () => {
-      window.removeEventListener("click", handleOnBlur);
-      clearTimeout(timeout);
-    };
+    timeoutForEventListener("click", handleOnBlur, 0);
   }, [floatingDivRef]);
 
   return (

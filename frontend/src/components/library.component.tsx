@@ -1,17 +1,20 @@
 import ContentBox from "./content-box.component";
 import LibraryBody from "./library-body.component";
 import LibraryHeader from "./library-header.component";
-import useAuthHook from "../hooks/auth.hook";
+import useAuth from "../hooks/auth.hook";
 
 const Library = () => {
-  const { user, isLoading, isFetching } = useAuthHook();
+  const { user, isLoading, isFetching } = useAuth();
   const isInitialLoading = isLoading && isFetching;
 
   return (
     <ContentBox
       className={`
+        flex
+        flex-col
         h-full
         p-2
+        gap-y-4
       `}
     >
       {/* Header */}

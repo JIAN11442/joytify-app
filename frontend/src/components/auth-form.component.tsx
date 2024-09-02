@@ -17,7 +17,7 @@ import InputBox from "./input-box.component";
 import { authWithThirdParty, signin, signup } from "../fetchs/auth.fetch";
 import AuthForOptions from "../constants/auth-type.constant";
 import { reqAuth } from "../constants/data-type.constant";
-import MutationKey from "../constants/mutation-key.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
 import {
   DefaultsAuthType,
   defaultsLoginData,
@@ -25,14 +25,15 @@ import {
 } from "../constants/form-default-data.constant";
 import FirebaseProvider from "../constants/firebase-provider.constant";
 import useAuthModalState from "../states/auth-modal.state";
-import useAuthHook from "../hooks/auth.hook";
+import useAuth from "../hooks/auth.hook";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const AuthForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
-  const { refetch } = useAuthHook();
+  const { refetch } = useAuth();
   const { authFor, openAuthModal, closeAuthModal } = useAuthModalState();
 
   const SIGN_IN = AuthForOptions.SIGN_IN;
@@ -56,12 +57,9 @@ const AuthForm = () => {
   ) => {
     e.preventDefault();
 
-    const timeout = setTimeout(() => {
-      // change authfor type
+    timeoutForDelay(() => {
       openAuthModal(AuthForOptions.FORGOT_PASSWORD);
-    }, 0);
-
-    return () => clearTimeout(timeout);
+    });
   };
 
   // handle input onKeyDown
@@ -88,10 +86,15 @@ const AuthForm = () => {
   const thirdPartySubmitText =
     authFor === SIGN_IN ? "Continue" : authFor.replace("-", " ");
 
+  const mutationKey =
+    authFor === SIGN_IN ? MutationKey.SIGNIN : MutationKey.SIGNUP;
+
+  const authFunc = authFor === SIGN_IN ? signin : signup;
+
   // auth mutation (through email and password)
   const { mutate: authUser, isPending } = useMutation({
-    mutationKey: [MutationKey.AUTH],
-    mutationFn: authFor === SIGN_IN ? signin : signup,
+    mutationKey: [mutationKey],
+    mutationFn: authFunc,
     onSuccess: () => {
       closeAuthModal();
 
@@ -291,6 +294,7 @@ const AuthForm = () => {
                 `}
             >
               <button
+                type="button"
                 onClick={handleNavigateToForgotPasswordPage}
                 className={`
                     flex

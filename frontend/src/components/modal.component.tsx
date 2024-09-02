@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
+import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
+import { IoMdClose } from "react-icons/io";
 
 import Icon from "./react-icons.component";
-import { IoMdClose } from "react-icons/io";
-import { twMerge } from "tailwind-merge";
+
+import { timeoutForEventListener } from "../lib/timeout.lib";
 
 type ModalProps = {
   title: string;
@@ -30,20 +32,13 @@ const Modal: React.FC<ModalProps> = ({
 
   // Close modal when clicked outside
   useEffect(() => {
-    const handleModalOnBlur = (e: MouseEvent) => {
+    const handleModalOnBlur: EventListener = (e) => {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
         closeModalFn();
       }
     };
 
-    const timeout = setTimeout(() => {
-      document.addEventListener("click", handleModalOnBlur);
-    }, 0);
-
-    return () => {
-      clearTimeout(timeout);
-      document.removeEventListener("click", handleModalOnBlur);
-    };
+    timeoutForEventListener("click", handleModalOnBlur, 0);
   }, []);
 
   return (

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import useProviderState from "../states/provider.state";
+import { timeoutForEventListener } from "../lib/timeout.lib";
 
 type ScreenMonitorProps = {
   children: React.ReactNode;
@@ -16,14 +17,7 @@ const ScreenMonitor: React.FC<ScreenMonitorProps> = ({ children }) => {
 
     handleResize();
 
-    const timeout = setTimeout(() => {
-      window.addEventListener("resize", handleResize);
-    }, 0);
-
-    return () => {
-      clearTimeout(timeout);
-      window.removeEventListener("resize", handleResize);
-    };
+    timeoutForEventListener("resize", handleResize, 0);
   }, []);
 
   return <>{children}</>;

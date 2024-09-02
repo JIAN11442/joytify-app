@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 import { useNavigate } from "react-router-dom";
@@ -7,36 +7,44 @@ import { IoIosMenu } from "react-icons/io";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 import Icon from "./react-icons.component";
-import AnimationWrapper from "./animation-wrapper.component";
+import Menu from "./menu.component";
 
 import { logout } from "../fetchs/auth.fetch";
 import useSidebarState from "../states/sidebar.state";
 import useUserState from "../states/user.state";
 import useAuthModalState from "../states/auth-modal.state";
-import MutationKey from "../constants/mutation-key.constant";
 import AuthForOptions from "../constants/auth-type.constant";
+import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import queryClient from "../config/query-client.config";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 type HeaderProps = {
   children: React.ReactNode;
+  cover_image?: string;
+  options?: boolean;
   className?: string;
 };
 
-const Header: React.FC<HeaderProps> = ({ children, className }) => {
+const Header: React.FC<HeaderProps> = ({
+  children,
+  cover_image,
+  options = true,
+  className,
+}) => {
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
 
   const { floating, setFloating } = useSidebarState();
-  const { queryState, activeUserMenu, setActiveUserMenu } = useUserState();
-  const { user } = queryState;
+  const { user, activeUserMenu, setActiveUserMenu } = useUserState();
   const { openAuthModal } = useAuthModalState();
 
   const { mutate: logoutUser } = useMutation({
-    mutationKey: [MutationKey.AUTH],
+    mutationKey: [MutationKey.LOGOUT],
     mutationFn: logout,
     onSuccess: () => {
       // set user to null
-      queryClient.setQueryData([MutationKey.AUTH], null);
+      queryClient.setQueryData([QueryKey.GET_USER_INFO], null);
+      queryClient.setQueryData([QueryKey.GET_USER_PLAYLISTS], null);
 
       toast.success("Logged out successfully");
     },
@@ -44,59 +52,31 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
   // handle active float sidebar
   const handleActiveFloatSidebar = () => {
-    const timeout = setTimeout(() => {
+    timeoutForDelay(() => {
       setFloating(!floating);
-    }, 0);
-
-    return () => clearTimeout(timeout);
+    });
   };
 
   // handle active auth modal(login or register)
   const handleActiveAuthModal = (authFor: AuthForOptions) => {
-    const timeout = setTimeout(() => {
+    timeoutForDelay(() => {
       openAuthModal(authFor);
-    }, 0);
-
-    return () => clearTimeout(timeout);
+    });
   };
 
   // handle user menu
   const handleActiveUserMenu = () => {
-    const timeout = setTimeout(() => {
+    timeoutForDelay(() => {
       setActiveUserMenu(!activeUserMenu);
-    }, 0);
-
-    return () => clearTimeout(timeout);
+    });
   };
 
   // handle logout
   const handleLogoutUser = () => {
-    const timeout = setTimeout(() => {
+    timeoutForDelay(() => {
       logoutUser();
-    }, 0);
-
-    return () => clearTimeout(timeout);
-  };
-
-  // auto close user menu
-  useEffect(() => {
-    const handleOnBlue = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setActiveUserMenu(false);
-      } else {
-        setActiveUserMenu(false);
-      }
-    };
-
-    const timeout = setTimeout(() => {
-      window.addEventListener("click", handleOnBlue);
     });
-
-    return () => {
-      clearTimeout(timeout);
-      window.removeEventListener("click", handleOnBlue);
-    };
-  }, [menuRef]);
+  };
 
   return (
     <div
@@ -106,21 +86,42 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
           flex-col
           h-fit
           p-6
-          bg-gradient-to-b
-          from-emerald-800
-          to-neutral-900
+          ${
+            !cover_image
+              ? `
+              bg-gradient-to-b
+              from-emerald-800
+              to-neutral-900  
+            `
+              : "relative overflow-hidden"
+          }
           rounded-lg
       `,
         className
       )}
     >
+      {/* Image */}
+      <img
+        src={cover_image}
+        className={`
+          absolute
+          top-0
+          left-0
+          w-full
+          h-auto
+          blur-3xl
+          brightness-300
+        `}
+      />
+
       {/* Header */}
       <div
         className={`
-          flex
           mb-4
           items-center
           justify-between
+          z-10
+          ${options ? "flex" : "hidden"}
         `}
       >
         {/* Left side */}
@@ -194,6 +195,8 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                   h-11
                   hover:opacity-80
                   hover:scale-110
+                  shadow-[0px_0px_5px_1px]
+                shadow-neutral-900/30
                   rounded-full
                   overflow-hidden
                   transition
@@ -210,33 +213,15 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
               </button>
 
               {/* Menu panel */}
-              <AnimationWrapper
+              <Menu
                 ref={menuRef}
-                visible={activeUserMenu}
-                initial={{
-                  opacity: 0,
-                  scale: "0%",
-                  transformOrigin: "top right",
+                activeState={{
+                  visible: activeUserMenu,
+                  setVisible: setActiveUserMenu,
                 }}
-                animate={{
-                  opacity: 1,
-                  scale: "100%",
-                  transformOrigin: "top right",
-                }}
-                transition={{ duration: 0.2 }}
                 className={`
-                  absolute
-                  top-0
-                  right-12
-                  p-1
-                  bg-neutral-900
-                  border
-                  border-neutral-700/50
-                  flex
-                  flex-col
-                  w-[200px]
-                  rounded-md
-                  shadow-lg
+                   top-0
+                   right-12
                 `}
               >
                 <button className="menu-btn">profile</button>
@@ -244,7 +229,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
                 <button onClick={handleLogoutUser} className="menu-btn">
                   logout
                 </button>
-              </AnimationWrapper>
+              </Menu>
             </div>
           ) : (
             // Sign up and login button
@@ -282,7 +267,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
       </div>
 
       {/* Content */}
-      <div>{children}</div>
+      <div className="z-10">{children}</div>
     </div>
   );
 };

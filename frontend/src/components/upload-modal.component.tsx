@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaCircleInfo } from "react-icons/fa6";
@@ -9,7 +11,7 @@ import Loader from "./loader.component";
 import Icon from "./react-icons.component";
 import AnimationWrapper from "./animation-wrapper.component";
 
-import MutationKey from "../constants/mutation-key.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
 import { reqUpload } from "../constants/data-type.constant";
 import {
   defaultsSongData,
@@ -17,8 +19,7 @@ import {
 } from "../constants/form-default-data.constant";
 import useUploadModalState from "../states/upload-modal.state";
 import { createSongData } from "../fetchs/song.fetch";
-import toast from "react-hot-toast";
-import { useRef } from "react";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const UploadModal = () => {
   const submitBtnRef = useRef<HTMLButtonElement>(null);
@@ -47,20 +48,16 @@ const UploadModal = () => {
 
   // handle active advanced settings
   const handleActiveAdvancedSettings = () => {
-    const timeout = setTimeout(() => {
+    timeoutForDelay(() => {
       setIsActiveAdvancedSettings(true);
-    }, 0);
-
-    return () => clearTimeout(timeout);
+    });
   };
 
   // handle inactive advanced settings
   const handleInactiveAdvancedSettings = () => {
-    const timeout = setTimeout(() => {
+    timeoutForDelay(() => {
       setIsActiveAdvancedSettings(false);
-    }, 0);
-
-    return () => clearTimeout(timeout);
+    });
   };
 
   // create song mutation

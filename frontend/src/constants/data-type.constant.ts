@@ -11,6 +11,18 @@ export type resUser = {
   updatedAt: Date;
 };
 
+export type resPlaylist = {
+  _id: string;
+  user: string;
+  title: string;
+  description?: string;
+  cover_image: string;
+  songs: string[];
+  default: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type reqAuth = "email" | "password" | "confirmPassword";
 
 export type reqUpload =

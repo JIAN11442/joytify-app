@@ -1,8 +1,11 @@
 import { forwardRef, useState } from "react";
-import Icon from "./react-icons.component";
 import { IconType } from "react-icons";
-import { IoEye, IoEyeOff } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
+import { IoEye, IoEyeOff } from "react-icons/io5";
+
+import Icon from "./react-icons.component";
+
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon?: IconType;
@@ -19,12 +22,9 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       e: React.MouseEvent<HTMLButtonElement>
     ) => {
       e.preventDefault();
-
-      const timeout = setTimeout(() => {
+      timeoutForDelay(() => {
         setIsPasswordVisible(!isPasswordVisible);
-      }, 0);
-
-      return () => clearTimeout(timeout);
+      });
     };
 
     // listening the file change
