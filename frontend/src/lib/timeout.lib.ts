@@ -14,13 +14,14 @@ export const timeoutForDelay = (
 };
 
 export const timeoutForEventListener = (
+  target: Window | Document | HTMLElement,
   action: string = "click",
   listener: EventListenerOrEventListenerObject,
   delay: number = 0
 ) => {
-  const addEventListener = () => window.addEventListener(action, listener);
+  const addEventListener = () => target.addEventListener(action, listener);
   const removeEventListener = () =>
-    window.removeEventListener(action, listener);
+    target.removeEventListener(action, listener);
 
   const timeout = setTimeout(() => {
     addEventListener();

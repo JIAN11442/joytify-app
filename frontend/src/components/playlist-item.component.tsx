@@ -9,7 +9,7 @@ type PlaylistItemProps = {
 const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
   const { _id, title, cover_image, songs } = playlist;
 
-  const { collapseSideBarState } = useSidebarState();
+  const { collapseSideBarState, floating } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
 
   return (
@@ -26,15 +26,15 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
             ? "bg-neutral-800 hover:bg-neutral-700/50"
             : "hover:bg-neutral-800/50"
         }
-        ${isCollapsed ? "p-0 hover:opacity-80" : "p-2"}
+        ${isCollapsed && !floating ? "p-0 hover:opacity-80" : "p-2"}
       `}
     >
       {/* cover image */}
       <img
         src={cover_image}
         className={`
-          w-[3.3rem]
-          h-[3.3rem]
+          w-[3.5rem]
+          h-[3.5rem]
           object-cover
           rounded-md
         `}
@@ -42,15 +42,16 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
 
       {/* content */}
       <>
-        {!isCollapsed && (
+        {(!isCollapsed || floating) && (
           <div
             className={`
               flex
               flex-col
               gap-1
               items-start
-              justify-start
+              justify-center
               text-right
+              text-[14px]
             `}
           >
             <p>{title}</p>
@@ -63,7 +64,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
               `}
             >
               <p>Playlist</p>
-              <p>·</p>
+              <p>•</p>
               <p>{songs.length} songs</p>
             </div>
           </div>

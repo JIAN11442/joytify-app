@@ -8,12 +8,14 @@ export const songSchema = z.object({
   artist: stringSchema,
   songUrl: fileUrlSchema,
   imageUrl: fileUrlSchema,
+  duration: z.number(),
   songComposer: stringSchema.optional(),
   language: stringSchema.optional(),
   album: z.array(stringSchema).optional(),
   genre: z.array(stringSchema).optional(),
   tags: z.array(stringSchema).optional(),
   lyrics: z.array(stringSchema).optional(),
+  playlist_for: z.string(),
   releaseDate: z.union([z.date(), z.string().optional()]),
 });
 

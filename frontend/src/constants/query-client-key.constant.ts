@@ -9,6 +9,10 @@ export enum MutationKey {
   CREATE_NEW_SONG = "create-new-song",
   SEND_RESET_PASSWORD_EMAIL = "send-reset-password-email",
   CREATE_USER_PLAYLIST = "create-user-playlist",
+  UPDATE_PLAYLIST = "update-playlist",
+  DELETE_PLAYLIST = "delete-playlist",
+  REMOVE_PLAYLIST_FROM_PROFILE = "remove-playlist-from-profile",
+  ADD_PLAYLIST_TO_PROFILE = "add-playlist-to-profile",
 }
 
 export enum QueryKey {

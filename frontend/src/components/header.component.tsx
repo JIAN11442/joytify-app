@@ -20,15 +20,15 @@ import { timeoutForDelay } from "../lib/timeout.lib";
 
 type HeaderProps = {
   children: React.ReactNode;
-  cover_image?: string;
   options?: boolean;
+  style?: React.CSSProperties;
   className?: string;
 };
 
 const Header: React.FC<HeaderProps> = ({
   children,
-  cover_image,
   options = true,
+  style,
   className,
 }) => {
   const navigate = useNavigate();
@@ -80,47 +80,26 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <div
+      style={style}
       className={twMerge(
         `
           flex
           flex-col
           h-fit
-          p-6
-          ${
-            !cover_image
-              ? `
-              bg-gradient-to-b
-              from-emerald-800
-              to-neutral-900  
-            `
-              : "relative overflow-hidden"
-          }
+          bg-gradient-to-b
+          from-emerald-800
+          to-neutral-900  
           rounded-lg
       `,
         className
       )}
     >
-      {/* Image */}
-      <img
-        src={cover_image}
-        className={`
-          absolute
-          top-0
-          left-0
-          w-full
-          h-auto
-          blur-3xl
-          brightness-300
-        `}
-      />
-
       {/* Header */}
       <div
         className={`
           mb-4
           items-center
           justify-between
-          z-10
           ${options ? "flex" : "hidden"}
         `}
       >
@@ -267,7 +246,7 @@ const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Content */}
-      <div className="z-10">{children}</div>
+      <div>{children}</div>
     </div>
   );
 };

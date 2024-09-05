@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
+import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaCircleInfo } from "react-icons/fa6";
 import { IoCaretBack } from "react-icons/io5";
@@ -10,19 +10,25 @@ import InputBox from "./input-box.component";
 import Loader from "./loader.component";
 import Icon from "./react-icons.component";
 import AnimationWrapper from "./animation-wrapper.component";
+import SelectInputBox from "./select-input-box.component";
 
-import { MutationKey } from "../constants/query-client-key.constant";
+import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import { reqUpload } from "../constants/data-type.constant";
 import {
   defaultsSongData,
   DefaultsSongType,
 } from "../constants/form-default-data.constant";
+import usePlaylistState from "../states/playlist.state";
 import useUploadModalState from "../states/upload-modal.state";
 import { createSongData } from "../fetchs/song.fetch";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import queryClient from "../config/query-client.config";
 
 const UploadModal = () => {
   const submitBtnRef = useRef<HTMLButtonElement>(null);
+
+  const [songName, setSongName] = useState("");
+  const { userPlaylists } = usePlaylistState();
 
   const {
     isActiveModal,
@@ -65,7 +71,15 @@ const UploadModal = () => {
     mutationKey: [MutationKey.CREATE_NEW_SONG],
     mutationFn: createSongData,
     onSuccess: () => {
+      // refetch user playlists
+      queryClient.invalidateQueries([
+        QueryKey.GET_USER_PLAYLISTS,
+      ] as InvalidateQueryFilters);
+
       closeUploadModal();
+
+      toast.success(`“${songName}” has been created successfully`);
+
       reset();
     },
     onError: (error) => toast.error(error.message),
@@ -76,6 +90,7 @@ const UploadModal = () => {
     register,
     handleSubmit,
     setFocus,
+    setValue,
     reset,
     formState: { isValid },
   } = useForm<DefaultsSongType>({
@@ -85,6 +100,7 @@ const UploadModal = () => {
 
   const onSubmit: SubmitHandler<DefaultsSongType> = async (value) => {
     createNewSongData(value);
+    setSongName(value.title);
   };
 
   return (
@@ -93,9 +109,11 @@ const UploadModal = () => {
       description="upload an mp3 file"
       activeState={isActiveModal}
       closeModalFn={closeUploadModal}
-      className={`
+      className={{
+        wrapper: `
         ${isActiveAdvancedSettings && "lg:min-w-[70vw]"}
-        `}
+        `,
+      }}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -189,6 +207,7 @@ const UploadModal = () => {
                 type="file"
                 accept=".mp3"
                 onKeyDown={(e) => handleMoveToNextElement(e, "imageFile")}
+                className={`p-3`}
                 {...register("songFile", { required: true })}
               />
             </div>
@@ -224,6 +243,19 @@ const UploadModal = () => {
                 {...register("imageFile", { required: true })}
               />
             </div>
+
+            {/* Song Playlist */}
+            <SelectInputBox
+              id="playlist-for"
+              title="Select or create a new playlist"
+              formValueState={{ name: "playlist_for", setFormValue: setValue }}
+              options={
+                userPlaylists?.map((playlist) => ({
+                  id: playlist._id,
+                  title: playlist.title,
+                })) || []
+              }
+            />
 
             {/* Advance setting */}
             <>
@@ -265,10 +297,15 @@ const UploadModal = () => {
           <AnimationWrapper
             key="advance-setting"
             visible={isActiveAdvancedSettings}
+            className={`
+               flex
+               flex-col
+               gap-3 
+            `}
           >
             {/* Song composer */}
             <InputBox
-              id="song-composer"
+              id="songComposer"
               type="text"
               placeholder="Song Composer"
               onKeyDown={(e) => handleMoveToNextElement(e, submitBtnRef)}
@@ -287,7 +324,7 @@ const UploadModal = () => {
         >
           <button
             ref={submitBtnRef}
-            disabled={!isValid}
+            disabled={!isValid || isPending}
             className={`
               mt-2
               submit-btn

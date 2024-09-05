@@ -2,6 +2,7 @@ import { twMerge } from "tailwind-merge";
 import React, { forwardRef, MutableRefObject, useEffect } from "react";
 import AnimationWrapper from "./animation-wrapper.component";
 import { timeoutForEventListener } from "../lib/timeout.lib";
+import { MotionProps } from "framer-motion";
 
 type MenuProps = {
   activeState: {
@@ -9,6 +10,8 @@ type MenuProps = {
     setVisible: (state: boolean) => void;
   };
   wrapper?: {
+    initial?: MotionProps["initial"];
+    animate?: MotionProps["animate"];
     transformOrigin?: string;
     duration?: number;
   };
@@ -33,23 +36,27 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>(
         }
       };
 
-      timeoutForEventListener("click", handleOnBlur, 0);
+      timeoutForEventListener(window, "click", handleOnBlur, 0);
     }, [menuRef]);
 
     return (
       <AnimationWrapper
         ref={menuRef}
         visible={activeState.visible}
-        initial={{
-          opacity: 0,
-          scale: "0%",
-          transformOrigin: transformOrigin,
-        }}
-        animate={{
-          opacity: 1,
-          scale: "100%",
-          transformOrigin: transformOrigin,
-        }}
+        initial={
+          wrapper?.initial || {
+            opacity: 0,
+            scale: "0%",
+            transformOrigin: transformOrigin,
+          }
+        }
+        animate={
+          wrapper?.animate || {
+            opacity: 1,
+            scale: "100%",
+            transformOrigin: transformOrigin,
+          }
+        }
         transition={{ duration: duration }}
         className={twMerge(
           `
@@ -62,8 +69,8 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>(
             flex-col
             w-[200px]
             rounded-md
-            shadow-lg    
-            z-100
+            shadow-lg
+            z-10
           `,
           className
         )}

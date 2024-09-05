@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -29,9 +28,9 @@ body,
     border
     border-grey-custom/10
     bg-grey-dark
+    text-[14px]
     text-grey-custom/80
     placeholder:text-grey-custom/30
-    placeholder:text-sm
     rounded-md
     outline-none
     file:hidden;
@@ -56,6 +55,7 @@ body,
     @apply w-[100%]
     p-3
     bg-green-custom
+    hover:opacity-80
     disabled:bg-[#404040]
     disabled:text-neutral-500
     border
@@ -122,9 +122,17 @@ body,
     border-grey-custom/5;
   }
 
+  th {
+    @apply font-light text-[14px] text-grey-custom/50;
+  }
+
   /* 自定义滚动条的宽度 */
   ::-webkit-scrollbar {
     @apply w-1;
+  }
+
+  ::-webkit-scrollbar.hidden-scrollbar {
+    @apply w-0;
   }
 
   /* 自定义滚动条轨道的样式 */

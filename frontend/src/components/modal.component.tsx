@@ -8,14 +8,18 @@ import Icon from "./react-icons.component";
 import { timeoutForEventListener } from "../lib/timeout.lib";
 
 type ModalProps = {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   activeState: boolean;
   children: React.ReactNode;
   activeOnChange?: () => void;
   closeBtnDisabled?: boolean;
   closeModalFn: () => void;
-  className?: string;
+  className?: {
+    wrapper?: string;
+    title?: string;
+    description?: string;
+  };
 };
 
 const Modal: React.FC<ModalProps> = ({
@@ -33,12 +37,14 @@ const Modal: React.FC<ModalProps> = ({
   // Close modal when clicked outside
   useEffect(() => {
     const handleModalOnBlur: EventListener = (e) => {
+      // console.log(modalRef.current, e.target);
+
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
         closeModalFn();
       }
     };
 
-    timeoutForEventListener("click", handleModalOnBlur, 0);
+    timeoutForEventListener(window, "click", handleModalOnBlur, 0);
   }, []);
 
   return (
@@ -64,7 +70,7 @@ const Modal: React.FC<ModalProps> = ({
             -translate-y-1/2
             top-1/2
             left-1/2
-            w-auto
+            min-w-[350px]
             max-sm:w-[90vw]
             sm:min-w-[500px]
             sm:max-w-[90vw]
@@ -78,30 +84,38 @@ const Modal: React.FC<ModalProps> = ({
             rounded-md
             outline-none
           `,
-            className
+            className?.wrapper
           )}
         >
           {/* Title */}
           <Dialog.Title
-            className={`
-              text-2xl
-              font-bold
-              text-center
-              mb-4
-            `}
+            className={twMerge(
+              `
+                mb-4
+                text-2xl
+                font-bold
+                text-center
+                ${title ? "block" : "hidden"}
+              `,
+              className?.title
+            )}
           >
             {title}
           </Dialog.Title>
 
           {/* Description */}
           <Dialog.Description
-            className={`
-              text-sm
-              font-light
-              text-[#22c55e]
-              text-center
-              mb-5
-            `}
+            className={twMerge(
+              `
+                mb-5
+                text-sm
+                font-light
+                text-[#22c55e]
+                text-center
+                ${description ? "block" : "hidden"}
+              `,
+              className?.description
+            )}
           >
             {description}
           </Dialog.Description>

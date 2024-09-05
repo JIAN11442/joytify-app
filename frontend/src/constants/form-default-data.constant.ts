@@ -9,6 +9,7 @@ export const defaultsSongData = {
   genre: [],
   tags: [],
   lyrics: [],
+  playlist_for: "",
   releaseDate: "",
 };
 
@@ -26,9 +27,18 @@ export const defaultsResetPasswordData = {
   email: "",
 };
 
+export const defaultsPlaylistEditData = {
+  coverImage: undefined,
+  title: "",
+  description: "",
+};
+
+// Types
 export type DefaultsAuthType = typeof defaultsLoginData & {
   confirmPassword?: string;
 };
 export type DefaultsSongType = typeof defaultsSongData;
 
 export type DefaultsResetPasswordType = typeof defaultsResetPasswordData;
+
+export type DefaultsPlaylistEditType = typeof defaultsPlaylistEditData;

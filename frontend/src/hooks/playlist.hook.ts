@@ -54,11 +54,7 @@ export const usePlaylistById = (id: string, opts: object = {}) => {
   const [isQueryError, setIsQueryError] = useState(false);
   const { setTargetPlaylist } = usePlaylistState();
 
-  const {
-    data: playlist,
-    refetch,
-    ...rest
-  } = useQuery({
+  const { data: playlist, ...rest } = useQuery({
     queryKey: [QueryKey.GET_TARGET_PLAYLIST],
     queryFn: async () => {
       try {
@@ -85,10 +81,5 @@ export const usePlaylistById = (id: string, opts: object = {}) => {
     }
   }, [playlist]);
 
-  // if id change, refetch playlist
-  useEffect(() => {
-    refetch();
-  }, [id]);
-
-  return { playlist, refetch, ...rest };
+  return { playlist, ...rest };
 };

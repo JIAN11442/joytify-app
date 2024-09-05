@@ -2,14 +2,11 @@ import { nanoid } from "nanoid";
 
 import s3 from "../config/aws-s3.config";
 import { AWS_BUCKET_NAME } from "../constants/env-validate.constant";
-import {
-  FileExtension,
-  UploadFolder,
-} from "../constants/argument-type.constant";
+import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
 
 type Params = {
   subfolder?: UploadFolder | undefined;
-  extension: FileExtension;
+  extension: FileExtension | undefined;
   nanoID?: string;
 };
 

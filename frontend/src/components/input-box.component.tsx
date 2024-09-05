@@ -10,10 +10,11 @@ import { timeoutForDelay } from "../lib/timeout.lib";
 interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon?: IconType;
   value?: string;
+  className?: string;
 }
 
 const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
-  ({ id, icon, value, type, disabled, className, ...props }, ref) => {
+  ({ id, icon, value, type, disabled, className, onChange, ...props }, ref) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isFileSelected, setIsFileSelected] = useState(false);
 
@@ -31,10 +32,10 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = e.target.files?.length;
 
-      if (files) {
-        setIsFileSelected(true);
-      } else {
-        setIsFileSelected(false);
+      setIsFileSelected(!!files);
+
+      if (onChange) {
+        onChange(e);
       }
     };
 
@@ -51,16 +52,16 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
                 : "password"
               : type
           }
-          disabled={disabled}
           value={value}
-          onChange={(e) => handleFileChange(e)}
+          disabled={disabled}
+          onChange={handleFileChange}
           className={twMerge(
             `
               input-box
               ${icon && "pl-[3.5rem]"}
               ${
                 type === "file" &&
-                `text-sm ${
+                ` ${
                   isFileSelected ? "text-grey-custom/80" : "text-grey-custom/30"
                 }`
               }

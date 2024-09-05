@@ -1,20 +1,43 @@
-import { nanoid } from "nanoid";
-import { INTERNAL_SERVER_ERROR } from "../constants/http-code.constant";
+import {
+  CONFLICT,
+  INTERNAL_SERVER_ERROR,
+} from "../constants/http-code.constant";
+import PlaylistModel from "../models/playlist.model";
 import SongModel from "../models/song.model";
 import { songSchemaType } from "../schemas/song.schema";
 import appAssert from "../utils/app-assert.util";
 
-interface createParams extends songSchemaType {
+interface createParams {
   userId: string;
+  songInfo: songSchemaType;
 }
 
-export const createNewSong = async (data: createParams) => {
-  // const song = await SongModel.create({
-  //   ...data,
-  //   userId: data.userId,
-  // });
+export const createNewSong = async ({ userId, songInfo }: createParams) => {
+  // check if song already exists
+  const songIsExist = await SongModel.exists({
+    userId: userId,
+    title: songInfo.title,
+    artist: songInfo.artist,
+  });
 
-  // appAssert(song, INTERNAL_SERVER_ERROR, "Failed to create song");
+  appAssert(!songIsExist, CONFLICT, "Song already exists");
 
-  return {};
+  // create new song
+  const song = await SongModel.create({ ...songInfo, userId });
+
+  appAssert(song, INTERNAL_SERVER_ERROR, "Failed to create song");
+
+  // update playlist songs list
+  const updatedPlaylist = await PlaylistModel.findByIdAndUpdate(
+    song.playlist_for,
+    { $push: { songs: song._id } }
+  );
+
+  appAssert(
+    updatedPlaylist,
+    INTERNAL_SERVER_ERROR,
+    "Failed to update playlist"
+  );
+
+  return { song };
 };

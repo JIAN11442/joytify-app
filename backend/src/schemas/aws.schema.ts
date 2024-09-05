@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
 
 export const awsSignedSchema = z.object({
-  subfolder: z.enum(["songs", "images"]).optional(),
-  extension: z.enum([".png", ".jpeg", ".jpg", ".mp3", ".gif"]),
+  subfolder: z.nativeEnum(UploadFolder).optional(),
+  extension: z.nativeEnum(FileExtension).optional(),
   nanoID: z.string().length(21).optional(),
 });

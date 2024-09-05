@@ -59,7 +59,7 @@ const Sidebar = () => {
       }
     };
 
-    timeoutForEventListener("click", handleOnBlur, 0);
+    timeoutForEventListener(window, "click", handleOnBlur, 0);
   }, [floatingDivRef]);
 
   return (
@@ -83,6 +83,7 @@ const Sidebar = () => {
             isCollapsed
               ? `w-[70px]`
               : ` 
+                  min-w-[300px]
                   max-md:w-[380px]
                   md:w-[500px]
                 `

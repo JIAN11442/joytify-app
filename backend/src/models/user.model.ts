@@ -18,6 +18,7 @@ export interface UserDocument extends mongoose.Document {
     total_playlists: number;
     total_songs: number;
   };
+  playlists: mongoose.Types.ObjectId[];
   comparePassword: (password: string) => Promise<boolean>;
   omitPassword(): Omit<this, "password">;
 }
@@ -42,6 +43,11 @@ const userSchema = new mongoose.Schema<UserDocument>(
     account_info: {
       total_playlists: { type: Number, default: 0 },
       total_songs: { type: Number, default: 0 },
+    },
+    playlists: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Playlist",
+      index: true,
     },
   },
   { timestamps: true }
@@ -84,10 +90,6 @@ userSchema.post("save", async function () {
         INTERNAL_SERVER_ERROR,
         "Failed to create default playlist"
       );
-
-      // update user account_info
-      this.account_info.total_playlists += 1;
-      await this.save();
     }
   } catch (error) {
     console.log(error);

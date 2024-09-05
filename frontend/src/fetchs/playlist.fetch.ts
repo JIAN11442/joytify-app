@@ -12,3 +12,38 @@ export const getPlaylistById = async (id: string): Promise<resPlaylist> =>
 // create playlist
 export const createPlaylist = async (): Promise<resPlaylist> =>
   API.post("/playlist/create");
+
+// update playlist cover image
+type updatePlaylistParams = {
+  playlistId: string;
+  title?: string;
+  description?: string;
+  awsImageUrl?: string;
+};
+
+export const updatePlaylist = async (
+  data: updatePlaylistParams
+): Promise<resPlaylist> => {
+  const { awsImageUrl, playlistId, ...params } = data;
+
+  return API.patch(`/playlist/update/${playlistId}`, {
+    ...params,
+    imageUrl: awsImageUrl,
+  });
+};
+
+// delete playlist
+export const deletePlaylist = async (playlistId: string) =>
+  API.delete(`/playlist/delete/${playlistId}`);
+
+// change playlist hidden state from user playlists list
+type changePlaylistHiddenStateParams = {
+  playlistId: string;
+  hiddenState: boolean;
+};
+
+export const changePlaylistHiddenState = async ({
+  playlistId,
+  hiddenState,
+}: changePlaylistHiddenStateParams) =>
+  API.patch(`/playlist/change-hidden-state/${playlistId}`, { hiddenState });

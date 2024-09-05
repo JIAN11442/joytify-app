@@ -15,7 +15,8 @@ const Library = () => {
         h-full
         p-2
         gap-y-4
-      `}
+        overflow-hidden
+        `}
     >
       {/* Header */}
       <LibraryHeader user={user} />

@@ -6,6 +6,8 @@ export interface SongDocument extends mongoose.Document {
   artist: string; // 作者
   songUrl: string; // 歌曲連結
   imageUrl: string; //封面連結
+  duration: number;
+  playlist_for: mongoose.Types.ObjectId; // 歌曲所屬歌單
   composer: string; // 作曲者
   releaseDate: Date; // 發行日期
   language: string; // 語言
@@ -33,6 +35,12 @@ const songSchema = new mongoose.Schema<SongDocument>(
     artist: { type: String, required: true },
     songUrl: { type: String, required: true },
     imageUrl: { type: String, required: true },
+    duration: { type: Number, required: true },
+    playlist_for: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Playlist",
+      index: true,
+    },
     composer: { type: String },
     releaseDate: { type: Date },
     album: { type: [String] },

@@ -21,6 +21,8 @@ const LibraryBody: React.FC<LibraryBodyProps> = ({
   return (
     <div
       className={`
+        overflow-y-auto
+        hidden-scrollbar
         ${!isCollapsed && "pl-3 pr-3"}
       `}
     >

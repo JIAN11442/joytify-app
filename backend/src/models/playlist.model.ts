@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import UserModel from "./user.model";
 
 export interface PlaylistDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
@@ -7,6 +8,7 @@ export interface PlaylistDocument extends mongoose.Document {
   cover_image: string;
   songs: mongoose.Types.ObjectId[];
   default: boolean;
+  hidden: boolean;
 }
 
 const playlistSchema = new mongoose.Schema<PlaylistDocument>(
@@ -26,6 +28,7 @@ const playlistSchema = new mongoose.Schema<PlaylistDocument>(
     },
     songs: { type: [mongoose.Schema.Types.ObjectId], ref: "Song", index: true },
     default: { type: Boolean, default: false },
+    hidden: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
@@ -51,6 +54,25 @@ playlistSchema.pre("save", async function (next) {
   }
 
   next();
+});
+
+// post (update user tatol_playlists and push playlist id to user playlists while create playlist)
+playlistSchema.post("save", async function (doc) {
+  // update user total playlists and push playlist id to user playlists
+  await UserModel.findByIdAndUpdate(doc.userId, {
+    $inc: { "account_info.total_playlists": 1 },
+    $push: { playlists: doc._id },
+  });
+});
+
+// post (update user tatol_playlists of accouont_info while delete playlist)
+playlistSchema.post("findOneAndDelete", async function (doc) {
+  await UserModel.findByIdAndUpdate(doc.userId, {
+    $inc: { "account_info.total_playlists": -1 },
+    $pull: {
+      playlists: doc._id,
+    },
+  });
 });
 
 const PlaylistModel = mongoose.model<PlaylistDocument>(

@@ -19,7 +19,7 @@ const LibraryPlaylist = () => {
           className={`
             flex
             flex-col
-            ${isCollapsed ? "gap-y-3" : "gap-y-2"}
+            ${isCollapsed ? "gap-y-3" : "gap-y-1"}
           `}
         >
           {playlists.map((playlist, index) => (
