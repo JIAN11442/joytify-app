@@ -23,6 +23,7 @@ const PlaylistBody: React.FC<PlaylistBodyProps> = ({ playlist, className }) => {
           bg-gradient-to-b
           from-neutral-900/20
           to-neutral-900  
+          overflow-y-auto
         `,
         className
       )}

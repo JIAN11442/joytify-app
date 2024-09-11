@@ -10,6 +10,8 @@ interface AnimationWrapperProps {
   mode?: "sync" | "wait" | "popLayout";
   visible?: boolean;
   className?: string;
+  style?: React.CSSProperties;
+  onClick?: () => void;
 }
 
 const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
@@ -23,6 +25,9 @@ const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
       mode = "wait",
       visible = true,
       className,
+      style,
+      onClick,
+      ...props
     },
     ref
   ) => {
@@ -40,6 +45,9 @@ const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
             transition={transition}
             exit={resolvedExit}
             className={className}
+            style={style}
+            onClick={onClick}
+            {...props}
           >
             {children}
           </motion.div>

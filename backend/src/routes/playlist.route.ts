@@ -3,7 +3,7 @@ import {
   changePlaylistHiddenStateHandler,
   createPlaylistHandler,
   deletePlaylistHandler,
-  getPlaylistHandler,
+  getPlaylistsHandler,
   getTargetPlaylistHandler,
   updatePlaylistHandler,
 } from "../controllers/playlist.controller";
@@ -11,7 +11,7 @@ import {
 const playlistRoute = Router();
 
 // prefix: /playlist
-playlistRoute.get("/", getPlaylistHandler);
+playlistRoute.get("/:search", getPlaylistsHandler);
 playlistRoute.get("/:id", getTargetPlaylistHandler);
 
 playlistRoute.post("/create", createPlaylistHandler);

@@ -251,8 +251,8 @@ const UploadModal = () => {
               formValueState={{ name: "playlist_for", setFormValue: setValue }}
               options={
                 userPlaylists?.map((playlist) => ({
-                  id: playlist._id,
-                  title: playlist.title,
+                  id: playlist?._id,
+                  title: playlist?.title,
                 })) || []
               }
             />

@@ -2,6 +2,7 @@ import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
 } from "../constants/http-code.constant";
+import usePalette from "../hooks/paletee.hook";
 import PlaylistModel from "../models/playlist.model";
 import SongModel from "../models/song.model";
 import { songSchemaType } from "../schemas/song.schema";
@@ -12,6 +13,7 @@ interface createParams {
   songInfo: songSchemaType;
 }
 
+// create new song
 export const createNewSong = async ({ userId, songInfo }: createParams) => {
   // check if song already exists
   const songIsExist = await SongModel.exists({
@@ -38,6 +40,19 @@ export const createNewSong = async ({ userId, songInfo }: createParams) => {
     INTERNAL_SERVER_ERROR,
     "Failed to update playlist"
   );
+
+  return { song };
+};
+
+// get song by id
+export const getSongById = async (id: string) => {
+  const song = await SongModel.findOne({ _id: id });
+
+  appAssert(song, INTERNAL_SERVER_ERROR, "Song not found");
+
+  // const paletee = await usePalette(song.imageUrl);
+
+  // const generateSong = { ...song.toObject(), paletee };
 
   return { song };
 };

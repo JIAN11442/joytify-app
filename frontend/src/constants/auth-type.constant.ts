@@ -4,6 +4,6 @@ const enum AuthForOptions {
   FORGOT_PASSWORD = "forgot-password",
 }
 
-export type AuthForType = "sign-in" | "sign-up" | "forgot-password";
+export type AuthForType = (typeof AuthForOptions)[keyof typeof AuthForOptions];
 
 export default AuthForOptions;

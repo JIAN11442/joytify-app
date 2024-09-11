@@ -4,6 +4,7 @@ const enum ArrangementOptions {
   COMPACT = "compact",
 }
 
-export type ArrangementType = "grid" | "list" | "compact";
+export type ArrangementType =
+  (typeof ArrangementOptions)[keyof typeof ArrangementOptions];
 
 export default ArrangementOptions;

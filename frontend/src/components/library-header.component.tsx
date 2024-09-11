@@ -43,9 +43,14 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   const { isCollapsed } = collapseSideBarState;
   const { openAuthModal } = useAuthModalState();
   const { openUploadModal } = useUploadModalState();
-  const { activeAddingOptions, setActiveAddingOptions } = useLibraryState();
+  const {
+    activeAddingOptions,
+    playlistSearchVal,
+    setActiveAddingOptions,
+    setPlaylistSearchVal,
+  } = useLibraryState();
 
-  const { refetch } = usePlaylists();
+  const { refetch } = usePlaylists(playlistSearchVal);
 
   // handle collapse sidebar
   const handleCollapseSidebar = () => {
@@ -113,6 +118,17 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   // handle create new playlist
   const handleCreateNewPlaylist = () => {
     createUserPlaylist();
+  };
+
+  // handle library playlist search on change
+  const handleOnChangeLibrarySearch = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+
+    timeoutForDelay(() => {
+      setPlaylistSearchVal(value);
+    }, 300);
   };
 
   return (
@@ -225,7 +241,10 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
                 setVisible: setActiveAddingOptions,
               }}
               wrapper={{ transformOrigin: "top left" }}
-              className={`w-[210px]`}
+              className={`
+                fixed
+                w-[210px]
+              `}
             >
               {/* Add playlist button */}
               <button
@@ -281,9 +300,10 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
               id="seachbar"
               type="text"
               name="searchBar"
-              placeholder="Search your library"
+              placeholder="Search your playlist"
               icon={BiSearch}
               autoFocus
+              onChange={(e) => handleOnChangeLibrarySearch(e)}
               className={`
                 py-3
                 border-none

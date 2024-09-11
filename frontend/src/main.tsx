@@ -20,7 +20,7 @@ createRoot(document.getElementById("root")!).render(
         <ToasterProvider>
           <ScreenMonitor>
             <ModalProvider />
-            <ReactQueryDevtools initialIsOpen={false} />
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             <App />
           </ScreenMonitor>
         </ToasterProvider>

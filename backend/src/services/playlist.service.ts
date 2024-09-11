@@ -1,26 +1,42 @@
-import PlaylistModel from "../models/playlist.model";
+import { FilterQuery } from "mongoose";
+import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
 import appAssert from "../utils/app-assert.util";
 import {
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
 } from "../constants/http-code.constant";
-import getImgPaletee from "../utils/get-palette.util";
+import usePalette from "../hooks/paletee.hook";
 
 // get user all playlist service
-export const getUserPlaylist = async (userId: string) => {
-  const defaultPlaylist = await PlaylistModel.findOne({
+export const getUserPlaylist = async (
+  userId: string,
+  searchParams: string | null
+) => {
+  let defaultQueryParams: FilterQuery<PlaylistDocument> = {
     userId,
     default: true,
-  });
-
-  const userPlaylists = await PlaylistModel.find({
+  };
+  let userQueryParams: FilterQuery<PlaylistDocument> = {
     userId,
     default: false,
-  }).sort({
+  };
+
+  if (searchParams !== null && searchParams?.length) {
+    const titleRegex = new RegExp(searchParams, "i");
+    defaultQueryParams.title = titleRegex;
+    userQueryParams.title = titleRegex;
+  }
+
+  const defaultPlaylist = await PlaylistModel.findOne(defaultQueryParams);
+
+  const userPlaylists = await PlaylistModel.find(userQueryParams).sort({
     createdAt: -1,
   });
 
-  const playlists = [defaultPlaylist, ...userPlaylists];
+  const playlists = [
+    ...(defaultPlaylist ? [defaultPlaylist] : []),
+    ...userPlaylists,
+  ].filter(Boolean);
 
   return { playlists };
 };
@@ -38,18 +54,9 @@ export const getUserPlaylistById = async (
   appAssert(playlist, NOT_FOUND, "Playlist not found");
 
   // get paletee from cover image
-  const paletee = await getImgPaletee(playlist.cover_image);
+  const paletee = await usePalette(playlist.cover_image);
 
-  const generatePaletee = {
-    vibrant: paletee?.Vibrant?.hex,
-    darkVibrant: paletee?.DarkVibrant?.hex,
-    lightVibrant: paletee?.LightVibrant?.hex,
-    muted: paletee?.Muted?.hex,
-    darkMuted: paletee?.DarkMuted?.hex,
-    lightMuted: paletee?.LightMuted?.hex,
-  };
-
-  const newPlaylist = { ...playlist.toObject(), paletee: generatePaletee };
+  const newPlaylist = { ...playlist.toObject(), paletee };
 
   return { playlist: newPlaylist };
 };

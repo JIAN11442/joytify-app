@@ -55,10 +55,10 @@ export const getTimeAgo = (timestamp: string) => {
 };
 
 export const getDuration = (second: number) => {
-  const minute = Math.floor(second / 60);
-  const remainingSeconds = Math.floor(second % 60);
+  const min = Math.floor(second / 60);
+  const sec = Math.floor(second % 60);
 
-  return `${minute}:${
-    remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds
-  }`;
+  return `${min.toString().padStart(2, "0")}:${sec
+    .toString()
+    .padStart(2, "0")}`;
 };

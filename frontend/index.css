@@ -115,6 +115,10 @@ body,
     transition;
   }
 
+  .player-btn {
+    @apply text-grey-custom/50 hover:text-white transition;
+  }
+
   .separate-line {
     @apply flex
     my-5
@@ -126,7 +130,44 @@ body,
     @apply font-light text-[14px] text-grey-custom/50;
   }
 
-  /* 自定义滚动条的宽度 */
+  /* Input slider*/
+  .slider-time {
+    @apply text-[14px] text-grey-custom/50 font-inter;
+  }
+
+  .input-slider {
+    @apply appearance-none
+      w-full
+      h-[3px]
+      bg-neutral-800
+      rounded-full
+      cursor-pointer
+      overflow-hidden
+      
+      [&::-webkit-slider-thumb]:appearance-none
+      [&::-webkit-slider-thumb]:w-[1px]
+      [&::-webkit-slider-thumb]:h-[3px]
+      [&::-webkit-slider-thumb]:rounded-lg
+      [&::-webkit-slider-thumb]:bg-[#00fd0a]
+      [&::-webkit-slider-thumb]:shadow-[-400px_10px_3px_400px_#00fd0a];
+  }
+
+  .input-volume {
+    @apply input-slider
+    [&::-webkit-slider-thumb]:bg-white
+    [&::-webkit-slider-thumb]:hover:bg-green-500
+    [&::-webkit-slider-thumb]:shadow-[-400px_10px_3px_400px]
+    [&::-webkit-slider-thumb]:group-hover:shadow-green-500
+    transition;
+  }
+
+  .volume-off {
+    @apply [&::-webkit-slider-thumb]:bg-transparent
+    [&::-webkit-slider-thumb]:shadow-transparent;
+  }
+
+  /* Scrollbar */
+
   ::-webkit-scrollbar {
     @apply w-1;
   }
@@ -148,5 +189,36 @@ body,
   /* 当鼠标悬停在滚动条滑块上时，改变滑块的样式 */
   .ce-popover__items {
     @apply bg-grey-dark/60;
+  }
+
+  /* Animation */
+  @keyframes soundWave {
+    0% {
+      height: var(--min-height);
+    }
+    100% {
+      height: var(--max-height);
+    }
+  }
+
+  @keyframes gradientAnimation {
+    0% {
+      background-position: 100% 50%;
+    }
+    50% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .sound-wave-bar {
+    animation: soundWave 0.5s ease infinite alternate;
+  }
+
+  .gradient-animation {
+    background-size: 200% 200%;
+    animation: gradientAnimation 6s ease infinite alternate;
   }
 }

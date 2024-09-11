@@ -19,4 +19,5 @@ export enum QueryKey {
   GET_USER_INFO = "get-user-info",
   GET_USER_PLAYLISTS = "get-user-playlists",
   GET_TARGET_PLAYLIST = "get-target-playlist",
+  GET_SONG_BY_ID = "get-song-by-id",
 }

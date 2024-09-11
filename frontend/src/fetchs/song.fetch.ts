@@ -5,8 +5,9 @@ import { uploadFileToAws } from "./upload.fetch";
 import { DefaultsSongType } from "../constants/form-default-data.constant";
 import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
 import { timeoutForEventListener } from "../lib/timeout.lib";
+import { resSong } from "../constants/data-type.constant";
 
-// upload song data to mongodb
+// create song data
 export const createSongData = async (data: DefaultsSongType) => {
   const nanoID = nanoid();
 
@@ -39,3 +40,7 @@ export const createSongData = async (data: DefaultsSongType) => {
 
   return API.post("/song/create", { ...params, songUrl, duration, imageUrl });
 };
+
+// get song by id
+export const getSongById = (id: string): Promise<resSong> =>
+  API.get(`/song/${id}`);

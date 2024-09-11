@@ -1,0 +1,59 @@
+import { useCallback, useEffect } from "react";
+import usePlayerState from "../states/player.state";
+import useSoundState from "../states/sound.state";
+import { resSong } from "../constants/data-type.constant";
+
+const useOnPlay = (songs: resSong[]) => {
+  const { setActiveSongId, setSongIds, setOnPlay, setShuffleSongIds } =
+    useSoundState();
+  const { isShuffle } = usePlayerState();
+
+  // shuffle song ids function
+  const shuffleSongIds = useCallback(
+    (id: string) => {
+      const songIds = songs.map((song) => song._id);
+
+      songIds.splice(songIds.indexOf(id), 1);
+
+      const shuffleSongIds = [id, ...songIds.sort(() => Math.random() - 0.5)];
+
+      // console.log(
+      //   songs.map((song) => ({ id: song._id, title: song.title })),
+      //   shuffleSongIds.map((id) => {
+      //     const song = songs.find((s) => s._id === id);
+      //     return { id, title: song?.title };
+      //   })
+      // );
+
+      setSongIds(shuffleSongIds);
+    },
+    [isShuffle, songs]
+  );
+
+  // on play target id song
+  const onPlay = useCallback(
+    (id: string) => {
+      setActiveSongId(id);
+
+      // for to previous or next button
+      if (isShuffle) {
+        shuffleSongIds(id);
+      } else {
+        setSongIds(songs.map((song) => song._id));
+      }
+    },
+    [songs, isShuffle]
+  );
+
+  useEffect(() => {
+    setOnPlay(onPlay);
+  }, [onPlay]);
+
+  useEffect(() => {
+    setShuffleSongIds(shuffleSongIds);
+  }, [shuffleSongIds]);
+
+  return { onPlay, shuffleSongIds };
+};
+
+export default useOnPlay;

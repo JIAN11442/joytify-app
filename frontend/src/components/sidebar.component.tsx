@@ -9,6 +9,8 @@ import Library from "./library.component";
 import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
 import { timeoutForEventListener } from "../lib/timeout.lib";
+import useSoundState from "../states/sound.state";
+import AudioPlayer from "./audio-player.component";
 
 const Sidebar = () => {
   const floatingDivRef = useRef<HTMLDivElement>(null);
@@ -22,6 +24,8 @@ const Sidebar = () => {
   const { isCollapsed, changeForScreenResize } = collapseSideBarState;
 
   const { screenWidth } = useProviderState();
+
+  const { activeSongId } = useSoundState();
 
   // handle sidebar collapse mode for different screen sizes
   useEffect(() => {
@@ -65,85 +69,97 @@ const Sidebar = () => {
   return (
     <div
       className={`
-        relative
         flex
-        h-screen
+        flex-col
         p-2
-        gap-x-2
+        gap-2
       `}
     >
-      {/* Sidebars */}
       <div
         className={`
+          relative
           flex
-          flex-col
-          h-full
-          max-sm:hidden
-          ${
-            isCollapsed
-              ? `w-[70px]`
-              : ` 
-                  min-w-[300px]
-                  max-md:w-[380px]
-                  md:w-[500px]
-                `
-          }
-          gap-2
-          duration-200
+          h-screen
+          gap-x-2
+          ${activeSongId ? "h-[calc(100vh-80px)]" : "h-full"}
         `}
       >
-        {/* Navigate routes */}
-        <MainNavigateRoutes />
+        {/* Sidebars */}
+        <div
+          className={`
+            flex
+            flex-col
+            h-full
+            max-sm:hidden
+            ${
+              isCollapsed
+                ? `w-[70px]`
+                : ` 
+                    min-w-[300px]
+                    max-md:w-[380px]
+                    md:w-[500px]
+                  `
+            }
+            gap-2
+            duration-200
+          `}
+        >
+          {/* Navigate routes */}
+          <MainNavigateRoutes />
 
-        {/* Library */}
-        <Library />
+          {/* Library */}
+          <Library />
+        </div>
+
+        {/* Float sidebars */}
+        <AnimationWrapper
+          ref={floatingDivRef}
+          visible={floating}
+          initial={{ width: "0%", opacity: 0 }}
+          animate={{
+            width:
+              screenWidth > 0 && screenWidth <= 500
+                ? screenWidth <= 430
+                  ? "90%"
+                  : "70%"
+                : "60%",
+            opacity: 1,
+          }}
+          transition={{ duration: 0.3 }}
+          exit={{ width: "20%", opacity: 0 }}
+          mode="sync"
+          className={`
+            fixed
+            inset-0
+            h-full
+            flex
+            flex-col
+            gap-y-2
+            p-2
+          bg-black
+            border-r
+            border-neutral-800/50
+            shadow-md
+            shadow-neutral-700
+            z-10
+          `}
+        >
+          <MainNavigateRoutes />
+          <Library />
+        </AnimationWrapper>
+
+        {/* Main contents */}
+        <ContentBox
+          className={`
+            h-full
+            overflow-hidden
+          `}
+        >
+          <Outlet />
+        </ContentBox>
       </div>
 
-      {/* Float sidebars */}
-      <AnimationWrapper
-        ref={floatingDivRef}
-        visible={floating}
-        initial={{ width: "0%", opacity: 0 }}
-        animate={{
-          width:
-            screenWidth > 0 && screenWidth <= 500
-              ? screenWidth <= 430
-                ? "90%"
-                : "70%"
-              : "60%",
-          opacity: 1,
-        }}
-        transition={{ duration: 0.3 }}
-        exit={{ width: "20%", opacity: 0 }}
-        mode="sync"
-        className={`
-          fixed
-          inset-0
-          h-full
-          flex
-          flex-col
-          gap-y-2
-          p-2
-        bg-black
-          border-r
-          border-neutral-800/50
-          shadow-md
-          shadow-neutral-700
-          z-10
-        `}
-      >
-        <MainNavigateRoutes />
-        <Library />
-      </AnimationWrapper>
-
-      {/* Main contents */}
-      <ContentBox
-        className={`
-          h-full  
-        `}
-      >
-        <Outlet />
-      </ContentBox>
+      {activeSongId && <AudioPlayer songId={activeSongId} />}
     </div>
   );
 };

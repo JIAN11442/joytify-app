@@ -1,14 +1,13 @@
 import { IoTimeOutline } from "react-icons/io5";
 
 import Icon from "./react-icons.component";
-import AnimationWrapper from "./animation-wrapper.component";
+import SongListItem from "./song-list-item.component";
 
-import { resSong } from "../constants/data-type.constant";
-import { getDuration, getTimeAgo } from "../utils/get-time.util";
 import useSidebarState from "../states/sidebar.state";
-import { FaPlay } from "react-icons/fa6";
-import ArrangementOptions from "../constants/arrangement-type.constant";
 import usePlaylistState from "../states/playlist.state";
+import { resSong } from "../constants/data-type.constant";
+import ArrangementOptions from "../constants/arrangement-type.constant";
+import useOnPlay from "../hooks/play.hook";
 
 type songsListProps = {
   songs: resSong[];
@@ -21,6 +20,8 @@ const SongsList: React.FC<songsListProps> = ({ songs }) => {
   const { songArrangementType } = usePlaylistState();
 
   const compact = ArrangementOptions.COMPACT;
+
+  const { onPlay } = useOnPlay(songs);
 
   return (
     <div>
@@ -57,7 +58,15 @@ const SongsList: React.FC<songsListProps> = ({ songs }) => {
         </div>
 
         {/* album */}
-        <div className={`flex-1 min-w-[100px]`}>Album</div>
+        <div
+          className={`
+            flex-1
+            min-w-[100px]
+            ${songArrangementType === compact && "max-sm:hidden"}
+          `}
+        >
+          Album
+        </div>
 
         {/* data added */}
         <div
@@ -78,129 +87,14 @@ const SongsList: React.FC<songsListProps> = ({ songs }) => {
 
       {/* Body */}
       <div>
-        {songs.map((song, index) => {
-          const { title, imageUrl, artist, album, duration, createdAt } = song;
-
-          return (
-            <AnimationWrapper
-              key={index}
-              transition={{ duration: 0.5, delay: 0.1 * index }}
-              className={`
-                group
-                flex
-                py-2
-                px-4
-                gap-5
-                w-full
-                items-center
-                hover:bg-neutral-700/40
-                text-sm
-                font-light
-                text-grey-custom/60
-                rounded-md
-                transition
-              `}
-            >
-              {/* index */}
-              <div
-                className={`
-                  w-5
-                  min-w-[30px]
-                  transition
-                `}
-              >
-                {/* index number */}
-                <p
-                  className={`
-                    group-hover:hidden
-                  `}
-                >
-                  {index + 1}
-                </p>
-
-                {/* play icon */}
-                <Icon
-                  name={FaPlay}
-                  className={`
-                    hidden
-                    group-hover:block
-                    text-white
-                  `}
-                />
-              </div>
-
-              {/* titile */}
-              <div
-                className={`
-                  flex
-                  flex-1
-                  min-w-[150px]
-                  gap-3
-                  items-center
-                `}
-              >
-                <img
-                  src={imageUrl}
-                  className={`
-                    w-[3rem]
-                    h-[3rem]
-                    object-cover
-                    rounded-md
-                    ${songArrangementType === compact ? "hidden" : "block"}
-                  `}
-                />
-
-                <div>
-                  <p className={`text-white line-clamp-1`}>{title}</p>
-                  <p
-                    className={`${
-                      songArrangementType === compact ? "hidden" : "block"
-                    }`}
-                  >
-                    {artist}
-                  </p>
-                </div>
-              </div>
-
-              {/* artist */}
-              <div
-                className={`
-                  flex-1
-                  min-w-[100px]  
-                  ${songArrangementType === compact ? "block" : "hidden"}
-                `}
-              >
-                <p>{artist}</p>
-              </div>
-
-              {/* Album */}
-              <div
-                className={`
-                  flex-1
-                  min-w-[100px]
-                `}
-              >
-                <p className={`line-clamp-1`}>{album.length ? album : "--"}</p>
-              </div>
-
-              {/* Date added */}
-              <div
-                className={`
-                  w-40
-                  min-w-[100px]
-                  ${isCollapsed ? "max-md:hidden" : "max-lg:hidden"}
-                `}
-              >
-                <p className={`line-clamp-1`}>{getTimeAgo(createdAt)}</p>
-              </div>
-
-              {/* Duration */}
-              <div className={`w-20`}>
-                <p className={`line-clamp-1`}>{getDuration(duration)}</p>
-              </div>
-            </AnimationWrapper>
-          );
-        })}
+        {songs.map((song, index) => (
+          <SongListItem
+            key={song._id}
+            index={index}
+            song={song}
+            onPlay={onPlay}
+          />
+        ))}
       </div>
     </div>
   );

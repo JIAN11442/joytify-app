@@ -11,14 +11,18 @@ import Icon from "./react-icons.component";
 import PlayButton from "./play-button.component";
 
 import { changePlaylistHiddenState } from "../fetchs/playlist.fetch";
-import usePlaylistState from "../states/playlist.state";
-import { timeoutForDelay } from "../lib/timeout.lib";
-import queryClient from "../config/query-client.config";
 import { resPlaylist } from "../constants/data-type.constant";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import ArrangementOptions, {
   ArrangementType,
 } from "../constants/arrangement-type.constant";
+import SongLoopOptions from "../constants/song-loop-type.constant";
+import useSoundState from "../states/sound.state";
+import usePlayerState from "../states/player.state";
+import usePlaylistState from "../states/playlist.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
+import queryClient from "../config/query-client.config";
+import useOnPlay from "../hooks/play.hook";
 
 type PlaylistBodyHeaderProps = {
   playlist: resPlaylist;
@@ -39,6 +43,11 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
     setActiveRemovePlaylistModal,
     setSongArrangementType,
   } = usePlaylistState();
+
+  const { sound, isPlaying, activeSongId } = useSoundState();
+  const { setLoopType } = usePlayerState();
+
+  const { onPlay } = useOnPlay(songs);
 
   // add playlist to profile mutation
   const { mutate: addUserPlaylistToProfile } = useMutation({
@@ -107,6 +116,25 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
     });
   };
 
+  const playedSongExistInPlaylist = songs.some(
+    (song) => song._id === activeSongId
+  );
+
+  // handle play button
+  const handleLoopPlaylist = () => {
+    if (!sound || !playedSongExistInPlaylist) {
+      onPlay(playlist.songs[0]._id);
+
+      setLoopType(SongLoopOptions.PLAYLIST);
+    } else {
+      if (isPlaying) {
+        sound.pause();
+      } else {
+        sound.play();
+      }
+    }
+  };
+
   return (
     <div
       className={`
@@ -124,7 +152,14 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
         `}
       >
         {/* play button */}
-        {songs.length ? <PlayButton /> : ""}
+        {songs.length ? (
+          <PlayButton
+            onClick={handleLoopPlaylist}
+            isPlaying={playedSongExistInPlaylist ? isPlaying : false}
+          />
+        ) : (
+          ""
+        )}
 
         {/* options */}
         <>

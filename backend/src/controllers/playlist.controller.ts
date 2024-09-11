@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 
 import { verificationCodeSchema } from "../schemas/auth.schema";
-import { playlistSchame } from "../schemas/playlist.schema";
+import { playlistSchema } from "../schemas/playlist.schema";
 import PlaylistModel from "../models/playlist.model";
 
 import {
@@ -16,13 +16,15 @@ import {
   OK,
 } from "../constants/http-code.constant";
 import appAssert from "../utils/app-assert.util";
+import parseParams from "../utils/parse-params.util";
 
 // get user all playlist handler
-export const getPlaylistHandler: RequestHandler = async (req, res, next) => {
+export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = verificationCodeSchema.parse(req.userId);
+    const searchParams = parseParams(req.params.search);
 
-    const { playlists } = await getUserPlaylist(userId);
+    const { playlists } = await getUserPlaylist(userId, searchParams);
 
     return res.status(OK).json(playlists);
   } catch (error) {
@@ -68,7 +70,7 @@ export const updatePlaylistHandler: RequestHandler = async (req, res, next) => {
   try {
     const playlistId = verificationCodeSchema.parse(req.params.id);
     const userId = verificationCodeSchema.parse(req.userId);
-    const params = playlistSchame.parse(req.body);
+    const params = playlistSchema.parse(req.body);
 
     // update playlist cover image
     const { playlist } = await updatePlaylistById({

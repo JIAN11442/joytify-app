@@ -11,20 +11,22 @@ export type resUser = {
   updatedAt: Date;
 };
 
+export type generatePaletee = {
+  vibrant: string;
+  darkVibrant: string;
+  lightVibrant: string;
+  muted: string;
+  darkMuted: string;
+  lightMuted: string;
+};
+
 export type resPlaylist = {
   _id: string;
   user: string;
   title: string;
   description?: string;
   cover_image: string;
-  paletee: {
-    vibrant: string;
-    darkVibrant: string;
-    lightVibrant: string;
-    muted: string;
-    darkMuted: string;
-    lightMuted: string;
-  };
+  paletee: generatePaletee;
   songs: resSong[];
   default: boolean;
   hidden: boolean;
@@ -54,6 +56,7 @@ export type resSong = {
     average_rating: number;
     average_listening_duration: number;
   };
+  paletee: generatePaletee;
   createdAt: string;
 };
 

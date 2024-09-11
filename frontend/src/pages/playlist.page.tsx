@@ -28,7 +28,7 @@ const PlaylistPage = () => {
   }, [id]);
 
   // If any of these data are not available, show loader
-  if (!playlist)
+  if (!playlist) {
     return (
       <Loader
         className={{
@@ -38,6 +38,7 @@ const PlaylistPage = () => {
         }}
       />
     );
+  }
 
   return (
     <Header
@@ -54,7 +55,7 @@ const PlaylistPage = () => {
         h-full
         pt-10
         rounded-b-none
-        overflow-y-auto
+        overflow-y-hidden
       `}
     >
       {/* Playlist header */}

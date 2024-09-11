@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { QueryKey } from "../constants/query-client-key.constant";
-import { getAllPlaylists, getPlaylistById } from "../fetchs/playlist.fetch";
+import { getPlaylists, getPlaylistById } from "../fetchs/playlist.fetch";
 import usePlaylistState from "../states/playlist.state";
 import useUserState from "../states/user.state";
 
-export const usePlaylists = (opts: object = {}) => {
+export const usePlaylists = (
+  searchParams: string | null,
+  opts: object = {}
+) => {
   const [isQueryError, setIsQueryError] = useState(false);
   const { setUserPlaylists } = usePlaylistState();
   const { user } = useUserState();
@@ -19,7 +22,9 @@ export const usePlaylists = (opts: object = {}) => {
     queryKey: [QueryKey.GET_USER_PLAYLISTS],
     queryFn: async () => {
       try {
-        const data = await getAllPlaylists();
+        const data = await getPlaylists(
+          searchParams?.length ? searchParams : null
+        );
 
         return data;
       } catch (error) {
@@ -45,7 +50,7 @@ export const usePlaylists = (opts: object = {}) => {
   // if user change, refetch playlists
   useEffect(() => {
     refetch();
-  }, [user]);
+  }, [user, searchParams]);
 
   return { playlists, refetch, ...rest };
 };
