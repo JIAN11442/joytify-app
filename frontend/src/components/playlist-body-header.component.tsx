@@ -116,9 +116,8 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
     });
   };
 
-  const playedSongExistInPlaylist = songs.some(
-    (song) => song._id === activeSongId
-  );
+  const playedSongExistInPlaylist =
+    songs && songs.some((song) => song._id === activeSongId);
 
   // handle play button
   const handleLoopPlaylist = () => {
@@ -152,7 +151,7 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
         `}
       >
         {/* play button */}
-        {songs.length ? (
+        {songs && songs.length ? (
           <PlayButton
             onClick={handleLoopPlaylist}
             isPlaying={playedSongExistInPlaylist ? isPlaying : false}

@@ -3,12 +3,12 @@ import { resPlaylist } from "../constants/data-type.constant";
 
 // get all user playlists
 export const getPlaylists = async (
-  searchParams: string | null
-): Promise<resPlaylist[]> => API.get(`/playlist/${searchParams}`);
+  query: string | null
+): Promise<resPlaylist[]> => API.get(`/playlist/search/${query}`);
 
 // get playlist by id
 export const getPlaylistById = async (id: string): Promise<resPlaylist> =>
-  API.get(`/playlist/${id}`);
+  API.get(`/playlist/id/${id}`);
 
 // create playlist
 export const createPlaylist = async (): Promise<resPlaylist> =>

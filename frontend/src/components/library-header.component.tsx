@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AxiosResponse } from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { LuLibrary } from "react-icons/lu";
@@ -14,13 +14,13 @@ import Menu from "./menu.component";
 
 import AuthForOptions from "../constants/auth-type.constant";
 import { resUser } from "../constants/data-type.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
 import useSidebarState from "../states/sidebar.state";
 import useUploadModalState from "../states/upload-modal.state";
 import useProviderState from "../states/provider.state";
 import useAuthModalState from "../states/auth-modal.state";
 import useLibraryState from "../states/library.state";
-import { timeoutForDelay } from "../lib/timeout.lib";
-import { MutationKey } from "../constants/query-client-key.constant";
+import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import { createPlaylist } from "../fetchs/playlist.fetch";
 import { usePlaylists } from "../hooks/playlist.hook";
 
@@ -30,6 +30,7 @@ type LibraryHeaderProps = {
 
 const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   const addingMenuRef = useRef<HTMLDivElement>(null);
+  const searchBarRef = useRef<HTMLInputElement>(null);
   const [activeSearchBar, setActiveSearchBar] = useState(false);
 
   const { screenWidth } = useProviderState();
@@ -50,7 +51,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
     setPlaylistSearchVal,
   } = useLibraryState();
 
-  const { refetch } = usePlaylists(playlistSearchVal);
+  const { refetch, playlists } = usePlaylists(playlistSearchVal);
 
   // handle collapse sidebar
   const handleCollapseSidebar = () => {
@@ -77,7 +78,8 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   };
 
   // handle active library search bar
-  const handleActiveSearchBar = () => {
+  const handleActiveSearchBar = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     setActiveSearchBar(!activeSearchBar);
   };
 
@@ -130,6 +132,29 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
       setPlaylistSearchVal(value);
     }, 300);
   };
+
+  // while sidebar is collapsed, clean search value and close the searchbar
+  useEffect(() => {
+    if (isCollapsed && !playlists?.length) {
+      setPlaylistSearchVal(null);
+      setActiveSearchBar(false);
+    }
+  }, [isCollapsed]);
+
+  // auto close search bar while on blur
+  useEffect(() => {
+    const handleOnBlur: EventListener = (e) => {
+      if (
+        searchBarRef.current &&
+        !searchBarRef.current.contains(e.target as Node)
+      ) {
+        setPlaylistSearchVal(null);
+        setActiveSearchBar(false);
+      }
+    };
+
+    timeoutForEventListener(window, "click", handleOnBlur, 0);
+  }, [searchBarRef]);
 
   return (
     <div
@@ -297,6 +322,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
             `}
           >
             <InputBox
+              ref={searchBarRef}
               id="seachbar"
               type="text"
               name="searchBar"

@@ -22,7 +22,7 @@ import parseParams from "../utils/parse-params.util";
 export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = verificationCodeSchema.parse(req.userId);
-    const searchParams = parseParams(req.params.search);
+    const searchParams = parseParams(req.params.query);
 
     const { playlists } = await getUserPlaylist(userId, searchParams);
 

@@ -87,14 +87,15 @@ const SongsList: React.FC<songsListProps> = ({ songs }) => {
 
       {/* Body */}
       <div>
-        {songs.map((song, index) => (
-          <SongListItem
-            key={song._id}
-            index={index}
-            song={song}
-            onPlay={onPlay}
-          />
-        ))}
+        {songs &&
+          songs.map((song, index) => (
+            <SongListItem
+              key={song._id}
+              index={index}
+              song={song}
+              onPlay={onPlay}
+            />
+          ))}
       </div>
     </div>
   );
