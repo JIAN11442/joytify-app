@@ -22,12 +22,16 @@ const useSound = (url: string) => {
         timeoutForDelay(() => setCurrentPlaybackTime(audio.currentTime));
       };
 
+      // listening duration
       timeoutForEventListener(audio, "loadedmetadata", handleLoadedMetaData);
+
+      // listening current time
       timeoutForEventListener(audio, "timeupdate", handleTimeUpdate);
 
       return () => {
         audio.pause();
         audio.src = "";
+        setIsPlaying(false);
       };
     }
   }, [url]);

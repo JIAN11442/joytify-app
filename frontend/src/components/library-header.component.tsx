@@ -135,9 +135,11 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
 
   // while sidebar is collapsed, clean search value and close the searchbar
   useEffect(() => {
-    if (isCollapsed && !playlists?.length) {
-      setPlaylistSearchVal(null);
-      setActiveSearchBar(false);
+    if (isCollapsed) {
+      if (!playlists?.length) {
+        setActiveSearchBar(false);
+        setPlaylistSearchVal(null);
+      }
     }
   }, [isCollapsed]);
 

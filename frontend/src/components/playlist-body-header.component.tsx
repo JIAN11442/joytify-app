@@ -123,8 +123,6 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
   const handleLoopPlaylist = () => {
     if (!sound || !playedSongExistInPlaylist) {
       onPlay(playlist.songs[0]._id);
-
-      setLoopType(SongLoopOptions.PLAYLIST);
     } else {
       if (isPlaying) {
         sound.pause();
@@ -132,6 +130,7 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
         sound.play();
       }
     }
+    setLoopType(SongLoopOptions.PLAYLIST);
   };
 
   return (
