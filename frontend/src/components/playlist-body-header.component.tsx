@@ -130,7 +130,11 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
         sound.play();
       }
     }
-    setLoopType(SongLoopOptions.PLAYLIST);
+    if (playlist.songs.length > 1) {
+      setLoopType(SongLoopOptions.PLAYLIST);
+    } else {
+      setLoopType(SongLoopOptions.OFF);
+    }
   };
 
   return (

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { QueryKey } from "../constants/query-client-key.constant";
 import { getPlaylists, getPlaylistById } from "../fetchs/playlist.fetch";
 import usePlaylistState from "../states/playlist.state";
 import useUserState from "../states/user.state";
+import { QueryKey } from "../constants/query-client-key.constant";
 
 export const usePlaylists = (
   searchParams: string | null,

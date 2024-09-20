@@ -7,23 +7,25 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import App from "./App.tsx";
 import "../index.css";
 
-import ScreenMonitor from "./providers/screen.provider.tsx";
 import ModalProvider from "./providers/modal.provider.tsx";
+import ToasterProvider from "./providers/toaster.provider.tsx";
+import ScreenMonitorProvider from "./providers/screen.provider.tsx";
+import ShortcutKeysProvider from "./providers/shortcut-keys.provider.tsx";
 
 import queryClient from "./config/query-client.config.ts";
-import ToasterProvider from "./providers/toaster.provider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <ToasterProvider>
-          <ScreenMonitor>
+        <ScreenMonitorProvider>
+          <ShortcutKeysProvider>
+            <ToasterProvider />
             <ModalProvider />
             {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             <App />
-          </ScreenMonitor>
-        </ToasterProvider>
+          </ShortcutKeysProvider>
+        </ScreenMonitorProvider>
       </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>

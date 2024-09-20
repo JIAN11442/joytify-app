@@ -186,7 +186,6 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
           collapse={isCollapsed}
           className={`
             w-fit
-            ${disabledCollapseFn && "hidden"}
           `}
         />
 

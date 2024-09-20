@@ -6,7 +6,7 @@ type ScreenMonitorProps = {
   children: React.ReactNode;
 };
 
-const ScreenMonitor: React.FC<ScreenMonitorProps> = ({ children }) => {
+const ScreenMonitorProvider: React.FC<ScreenMonitorProps> = ({ children }) => {
   const { setScreenWidth, setScreenHeight } = useProviderState();
 
   useEffect(() => {
@@ -23,4 +23,4 @@ const ScreenMonitor: React.FC<ScreenMonitorProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-export default ScreenMonitor;
+export default ScreenMonitorProvider;

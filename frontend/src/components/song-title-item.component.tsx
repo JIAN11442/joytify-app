@@ -7,6 +7,7 @@ type SongTitleItemProps = {
   imageUrl: string;
   artist: string;
   switchFunc?: boolean;
+  onClick?: () => void;
   className?: { wrapper?: string; image?: string };
 };
 
@@ -15,6 +16,7 @@ const SongTitleItem: React.FC<SongTitleItemProps> = ({
   imageUrl,
   artist,
   switchFunc = true,
+  onClick,
   className,
 }) => {
   const { songArrangementType } = usePlaylistState();
@@ -22,6 +24,7 @@ const SongTitleItem: React.FC<SongTitleItemProps> = ({
 
   return (
     <div
+      onClick={onClick}
       className={twMerge(
         `
           flex

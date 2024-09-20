@@ -12,6 +12,7 @@ import { SoundOutputType } from "../hooks/sound.hook";
 import { resSong } from "../constants/data-type.constant";
 import SongLoopOptions from "../constants/song-loop-type.constant";
 import { twMerge } from "tailwind-merge";
+import usePlaylistState from "../states/playlist.state";
 
 type PlayerOperationProps = {
   song: resSong;
@@ -27,6 +28,8 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({
   const { isShuffle, setIsShuffle, loopType, setLoopType } = usePlayerState();
   const { songIds, isPlaying, activeSongId, onPlay, shuffleSongIds } =
     useSoundState();
+
+  const { targetPlaylist } = usePlaylistState();
 
   const currentIndex = songIds.indexOf(activeSongId);
 
@@ -75,8 +78,12 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({
 
   // handle switch loop type
   const handleSwitchLoopState = () => {
+    // prevent switching to playlist loop when only one song is available
     const nextLoopType = {
-      [SongLoopOptions.OFF]: SongLoopOptions.PLAYLIST,
+      [SongLoopOptions.OFF]:
+        (targetPlaylist?.songs.length ?? 0) > 1
+          ? SongLoopOptions.PLAYLIST
+          : SongLoopOptions.TRACK,
       [SongLoopOptions.PLAYLIST]: SongLoopOptions.TRACK,
       [SongLoopOptions.TRACK]: SongLoopOptions.OFF,
     }[loopType];

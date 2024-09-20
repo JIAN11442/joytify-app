@@ -90,18 +90,20 @@ const Sidebar = () => {
             flex
             flex-col
             h-full
+            gap-2
             max-sm:hidden
+            transition-all
+            ease-in-out
+            duration-300 // 增加持续时间以改善打开时的流畅性
             ${
               isCollapsed
                 ? `w-[70px]`
                 : ` 
-                    min-w-[300px]
                     max-md:w-[380px]
                     md:w-[500px]
                   `
             }
-            gap-2
-            duration-200
+           
           `}
         >
           {/* Navigate routes */}
@@ -125,7 +127,7 @@ const Sidebar = () => {
                 : "60%",
             opacity: 1,
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.3 }} // 增加动画持续时间
           exit={{ width: "20%", opacity: 0 }}
           mode="sync"
           className={`

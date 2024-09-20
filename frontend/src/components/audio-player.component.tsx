@@ -8,18 +8,26 @@ import useSound from "../hooks/sound.hook";
 import { useSongById } from "../hooks/song.hook";
 import useSoundState from "../states/sound.state";
 import PlayerVolume from "./player-volume.component";
+import { useNavigate } from "react-router-dom";
 
 type AudioPlayerProps = {
   songId: string;
 };
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
+  const navigate = useNavigate();
+
   const songPlayedRef = useRef<string | null>(null);
 
   const { song, refetch } = useSongById(songId);
-  const { setSound } = useSoundState();
+  const { setSound, songToPlay } = useSoundState();
 
   const sound = useSound(song?.songUrl || "");
+
+  // handle navigate to target song playlist
+  const handleNavigateToPlaylist = () => {
+    navigate(`/playlist/${songToPlay?.playlist_for}`);
+  };
 
   // Refetch song hook when songId changes
   useEffect(() => {
@@ -76,10 +84,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
           imageUrl={imageUrl}
           artist={artist}
           switchFunc={false}
+          onClick={handleNavigateToPlaylist}
           className={{
             wrapper: `
               text-sm
               text-grey-custom/50
+              cursor-pointer
             `,
           }}
         />
