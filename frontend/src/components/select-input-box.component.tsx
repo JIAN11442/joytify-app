@@ -1,10 +1,9 @@
-import { forwardRef, useEffect, useState } from "react";
-import { FaCaretDown, FaCaretUp } from "react-icons/fa6";
-
-import Icon from "./react-icons.component";
-import AnimationWrapper from "./animation-wrapper.component";
-import { timeoutForDelay } from "../lib/timeout.lib";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { UseFormSetValue } from "react-hook-form";
+
+import AnimationWrapper from "./animation-wrapper.component";
+
+import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import { DefaultsSongType } from "../constants/form-default-data.constant";
 import { reqUpload } from "../constants/data-type.constant";
 
@@ -13,7 +12,8 @@ type OptionType = {
   title: string;
 };
 
-type SelectInputBoxProps = {
+interface SelectInputBoxProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   title: string;
   options: OptionType[];
@@ -21,25 +21,25 @@ type SelectInputBoxProps = {
     name: reqUpload;
     setFormValue: UseFormSetValue<DefaultsSongType>;
   };
-};
+  submitBtnRef?: React.RefObject<HTMLButtonElement>;
+}
 
-const SelectInputBox = forwardRef<HTMLButtonElement, SelectInputBoxProps>(
-  ({ id, title, options, formValueState }, ref) => {
-    const [value, setValue] = useState<OptionType>({
-      id: options[0].id,
-      title: options[0].title,
-    });
+const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
+  (
+    { id, title, options, formValueState, placeholder, onChange, ...props },
+    ref
+  ) => {
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const hiddenInputRef = useRef<HTMLInputElement | null>(null);
+
+    const [value, setValue] = useState("");
     const [hoverVal, setHoverVal] = useState<string>("");
     const [activeMenu, setActiveMenu] = useState<boolean>(false);
+    const [filterOptions, setFilterOptions] = useState<OptionType[]>(options);
+    const [focusOptIndex, setFocusOptIndex] = useState(-1);
+    const [selectedOptId, setSelectedOptId] = useState("");
 
     const { name, setFormValue } = formValueState;
-
-    // handle active playlist options menu
-    const handleActivePlaylistOptions = () => {
-      timeoutForDelay(() => {
-        setActiveMenu(!activeMenu);
-      });
-    };
 
     // handle options onMouseEnter
     const handleOptionsOnMouseEnter = (opt: string) => {
@@ -57,17 +57,72 @@ const SelectInputBox = forwardRef<HTMLButtonElement, SelectInputBoxProps>(
 
     // handle options onClick
     const handleOptionsOnClick = (opt: OptionType) => {
-      setValue(opt);
-      setActiveMenu(false);
+      timeoutForDelay(() => {
+        setFormValue(name, opt.id);
+        setSelectedOptId(opt.id);
+        setValue(opt.title);
+        setActiveMenu(false);
+
+        if (onChange) {
+          const syntheticEvent = {
+            target: {
+              name,
+              value: opt.id,
+            },
+          } as React.ChangeEvent<HTMLInputElement>;
+          onChange(syntheticEvent);
+        }
+      });
     };
 
-    const OptionsIcon = activeMenu ? FaCaretUp : FaCaretDown;
+    // handle input onChange
+    const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const eValue = e.target.value;
 
-    // if value change, set to form value,
-    // then useForm will get the value
+      setValue(eValue);
+
+      if (eValue.length) {
+        const newFilterOptions = options.filter((opt) =>
+          opt.title.toLowerCase().includes(eValue.toLowerCase())
+        );
+
+        setFilterOptions(newFilterOptions);
+      } else {
+        setFilterOptions(options);
+      }
+    };
+
+    const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (activeMenu) {
+        const ekey = e.key;
+
+        if (ekey === "ArrowDown" || ekey === "ArrowUp") {
+          e.preventDefault();
+
+          const newFocusOptIndex =
+            ekey === "ArrowDown"
+              ? Math.min(focusOptIndex + 1, options.length - 1)
+              : Math.max(focusOptIndex - 1, 0);
+
+          setFocusOptIndex(newFocusOptIndex);
+        } else if (ekey === "Enter") {
+          const targetOpt = options[focusOptIndex >= 0 ? focusOptIndex : 0];
+          handleOptionsOnClick({ id: targetOpt.id, title: targetOpt.title });
+        }
+      }
+    };
+
     useEffect(() => {
-      setFormValue(name, value.id);
-    }, [value]);
+      const handleOnFocus: EventListener = (e) => {
+        if (inputRef.current && inputRef.current.contains(e.target as Node)) {
+          if (!activeMenu) {
+            setActiveMenu(true);
+          }
+        }
+      };
+
+      timeoutForEventListener(window, "click", handleOnFocus);
+    }, [inputRef]);
 
     return (
       <div
@@ -93,23 +148,39 @@ const SelectInputBox = forwardRef<HTMLButtonElement, SelectInputBoxProps>(
             group
           `}
         >
-          <button
-            id={id}
-            ref={ref}
-            type="button"
-            onClick={handleActivePlaylistOptions}
+          {/* display input value */}
+          <input
+            ref={(node) => {
+              inputRef.current = node;
+              if (typeof ref === "function") {
+                ref(node);
+              } else if (ref) {
+                (
+                  ref as React.MutableRefObject<HTMLInputElement | null>
+                ).current = node;
+              }
+            }}
+            type="text"
+            value={value || hoverVal}
+            placeholder={placeholder}
+            onChange={(e) => handleInputOnChange(e)}
+            onKeyDown={(e) => handleOnKeyDown(e)}
             className={`
               input-box
-              flex
-              items-center
-              justify-between
-              text-white
-              hover:text-grey-custom/80
+              capitalize
+              placeholder:normal-case
             `}
-          >
-            <p>{hoverVal || value.title}</p>
-            <Icon name={OptionsIcon} />
-          </button>
+          />
+
+          {/* submit selected playlist id to useForm */}
+          <input
+            id={id}
+            ref={hiddenInputRef}
+            type="hidden"
+            value={selectedOptId}
+            readOnly
+            {...props}
+          />
         </div>
 
         <AnimationWrapper
@@ -128,7 +199,7 @@ const SelectInputBox = forwardRef<HTMLButtonElement, SelectInputBoxProps>(
             overflow-y-auto
           `}
         >
-          {options.map((opt, index) => (
+          {filterOptions.map((opt, index) => (
             <button
               key={index}
               type="button"
@@ -140,10 +211,10 @@ const SelectInputBox = forwardRef<HTMLButtonElement, SelectInputBoxProps>(
                 p-2
                 rounded-sm
                 ${
-                  opt.title === value.title &&
+                  index === focusOptIndex &&
+                  !hoverVal &&
                   `
-                    bg-green-500/80
-                    hover:bg-green-500
+                    bg-neutral-800/50
                     text-white
                   `
                 }

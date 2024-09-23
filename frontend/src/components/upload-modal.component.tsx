@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -99,8 +99,9 @@ const UploadModal = () => {
   });
 
   const onSubmit: SubmitHandler<DefaultsSongType> = async (value) => {
-    createNewSongData(value);
     setSongName(value.title);
+
+    createNewSongData(value);
   };
 
   return (
@@ -141,7 +142,7 @@ const UploadModal = () => {
           )}
         </>
 
-        {/* form */}
+        {/* input */}
         <div
           className={`
             w-full
@@ -246,15 +247,20 @@ const UploadModal = () => {
 
             {/* Song Playlist */}
             <SelectInputBox
-              id="playlist-for"
-              title="Select or create a new playlist"
+              id="playlist_for"
+              title="Select a playlist"
               formValueState={{ name: "playlist_for", setFormValue: setValue }}
+              placeholder="Click to choose a playlist"
               options={
                 userPlaylists?.map((playlist) => ({
                   id: playlist?._id,
                   title: playlist?.title,
                 })) || []
               }
+              {...register("playlist_for", {
+                required: true,
+              })}
+              onChange={(e) => register("playlist_for").onChange(e)}
             />
 
             {/* Advance setting */}
@@ -311,6 +317,8 @@ const UploadModal = () => {
               onKeyDown={(e) => handleMoveToNextElement(e, submitBtnRef)}
               {...register("songComposer", { required: false })}
             />
+
+            {/* Language */}
           </AnimationWrapper>
         </div>
 
@@ -324,6 +332,7 @@ const UploadModal = () => {
         >
           <button
             ref={submitBtnRef}
+            type="submit"
             disabled={!isValid || isPending}
             className={`
               mt-2
