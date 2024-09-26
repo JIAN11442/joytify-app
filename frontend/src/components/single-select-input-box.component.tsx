@@ -6,13 +6,14 @@ import AnimationWrapper from "./animation-wrapper.component";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import { DefaultsSongType } from "../constants/form-default-data.constant";
 import { reqUpload } from "../constants/data-type.constant";
+import mergeRefs from "../lib/merge-refs.lib";
 
 type OptionType = {
   id: string;
   title: string;
 };
 
-interface SelectInputBoxProps
+interface SingleSelectInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   title: string;
@@ -24,12 +25,25 @@ interface SelectInputBoxProps
   submitBtnRef?: React.RefObject<HTMLButtonElement>;
 }
 
-const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
+const SingleSelectInputBox = forwardRef<
+  HTMLInputElement,
+  SingleSelectInputProps
+>(
   (
-    { id, title, options, formValueState, placeholder, onChange, ...props },
+    {
+      id,
+      title,
+      options,
+      formValueState,
+      placeholder,
+      onChange,
+      required,
+      ...props
+    },
     ref
   ) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const menuRef = useRef<HTMLDivElement | null>(null);
     const hiddenInputRef = useRef<HTMLInputElement | null>(null);
 
     const [value, setValue] = useState("");
@@ -80,6 +94,7 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
       const eValue = e.target.value;
 
       setValue(eValue);
+      setHoverVal("");
 
       if (eValue.length) {
         const newFilterOptions = options.filter((opt) =>
@@ -115,14 +130,24 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
     useEffect(() => {
       const handleOnFocus: EventListener = (e) => {
         if (inputRef.current && inputRef.current.contains(e.target as Node)) {
-          if (!activeMenu) {
+          timeoutForDelay(() => {
             setActiveMenu(true);
-          }
+          });
+        }
+      };
+      const handleOnBlur: EventListener = (e) => {
+        if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+          timeoutForDelay(() => {
+            setActiveMenu(false);
+          });
         }
       };
 
-      timeoutForEventListener(window, "click", handleOnFocus);
-    }, [inputRef]);
+      return () => {
+        timeoutForEventListener(document, "click", handleOnFocus);
+        timeoutForEventListener(document, "click", handleOnBlur);
+      };
+    }, [inputRef, menuRef]);
 
     return (
       <div
@@ -130,7 +155,6 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
           flex
           flex-col
           gap-2
-          mt-2
         `}
       >
         <p
@@ -140,6 +164,7 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
           `}
         >
           {title}
+          {required && <span className={`text-red-500`}> *</span>}
         </p>
 
         <div
@@ -150,25 +175,18 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
         >
           {/* display input value */}
           <input
-            ref={(node) => {
-              inputRef.current = node;
-              if (typeof ref === "function") {
-                ref(node);
-              } else if (ref) {
-                (
-                  ref as React.MutableRefObject<HTMLInputElement | null>
-                ).current = node;
-              }
-            }}
+            ref={mergeRefs(ref, inputRef)}
             type="text"
             value={value || hoverVal}
             placeholder={placeholder}
             onChange={(e) => handleInputOnChange(e)}
             onKeyDown={(e) => handleOnKeyDown(e)}
+            required={required}
             className={`
               input-box
               capitalize
               placeholder:normal-case
+              ${activeMenu && "rounded-b-none"}
             `}
           />
 
@@ -184,6 +202,7 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
         </div>
 
         <AnimationWrapper
+          ref={menuRef}
           visible={activeMenu}
           initial={{ opacity: 0, scaleY: "0%", transformOrigin: "top" }}
           animate={{ opacity: 1, scaleY: "100%", transformOrigin: "top" }}
@@ -201,7 +220,7 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
         >
           {filterOptions.map((opt, index) => (
             <button
-              key={index}
+              key={opt.id}
               type="button"
               onMouseEnter={() => handleOptionsOnMouseEnter(opt.title)}
               onMouseLeave={() => handleOptionsOnMouseLeave()}
@@ -229,4 +248,4 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
   }
 );
 
-export default SelectInputBox;
+export default SingleSelectInputBox;

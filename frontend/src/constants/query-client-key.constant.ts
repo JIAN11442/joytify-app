@@ -13,6 +13,8 @@ export enum MutationKey {
   DELETE_PLAYLIST = "delete-playlist",
   REMOVE_PLAYLIST_FROM_PROFILE = "remove-playlist-from-profile",
   ADD_PLAYLIST_TO_PROFILE = "add-playlist-to-profile",
+  CREATE_LABEL_OPTION = "create-label-option",
+  DELETE_LABEL_OPTION = "delete-label-option",
 }
 
 export enum QueryKey {
@@ -20,4 +22,5 @@ export enum QueryKey {
   GET_USER_PLAYLISTS = "get-user-playlists",
   GET_TARGET_PLAYLIST = "get-target-playlist",
   GET_SONG_BY_ID = "get-song-by-id",
+  GET_ALL_LABELS = "get-all-labels",
 }

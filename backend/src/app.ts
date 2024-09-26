@@ -14,6 +14,7 @@ import errorHandler from "./middlewares/error-handler.middleware";
 
 import { ORIGIN_APP } from "./constants/env-validate.constant";
 import playlistRoute from "./routes/playlist.route";
+import labelRoute from "./routes/label.route";
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use("/user", authenticate, userRoute);
 app.use("/aws", awsRoute);
 app.use("/song", authenticate, songRoute);
 app.use("/playlist", authenticate, playlistRoute);
+app.use("/label", authenticate, labelRoute);
 
 // error handler
 app.use(errorHandler());

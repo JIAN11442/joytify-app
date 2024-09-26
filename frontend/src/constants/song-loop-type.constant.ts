@@ -1,4 +1,4 @@
-const enum SongLoopOptions {
+enum SongLoopOptions {
   OFF = "off",
   TRACK = "track",
   PLAYLIST = "playlist",

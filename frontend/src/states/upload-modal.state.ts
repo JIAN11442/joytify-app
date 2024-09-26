@@ -1,22 +1,38 @@
 import { create } from "zustand";
+import { OptionType } from "../components/multi-select-input-box.component";
+import LabelOptions, { LabelType } from "../constants/label-type.constant";
+
+type LabelModalType = {
+  type: LabelType;
+  active: boolean;
+  options: OptionType | OptionType[] | null;
+};
 
 type UploadModalState = {
-  isActiveModal: boolean;
-  isActiveAdvancedSettings: boolean;
+  activeUploadModal: boolean;
+  activeAdvancedSettings: boolean;
+  activeCreateLabelModal: LabelModalType;
 
   openUploadModal: () => void;
   closeUploadModal: () => void;
-  setIsActiveAdvancedSettings: (active: boolean) => void;
+  setActiveAdvancedSettings: (active: boolean) => void;
+  setActiveCreateLabelModal: (state: LabelModalType) => void;
 };
 
 const useUploadModalState = create<UploadModalState>((set) => ({
-  isActiveModal: false,
-  isActiveAdvancedSettings: false,
+  activeUploadModal: false,
+  activeAdvancedSettings: false,
+  activeCreateLabelModal: {
+    type: LabelOptions.NULL,
+    active: false,
+    options: null,
+  },
 
-  openUploadModal: () => set({ isActiveModal: true }),
-  closeUploadModal: () => set({ isActiveModal: false }),
-  setIsActiveAdvancedSettings: (active) =>
-    set({ isActiveAdvancedSettings: active }),
+  openUploadModal: () => set({ activeUploadModal: true }),
+  closeUploadModal: () => set({ activeUploadModal: false }),
+  setActiveAdvancedSettings: (active) =>
+    set({ activeAdvancedSettings: active }),
+  setActiveCreateLabelModal: (state) => set({ activeCreateLabelModal: state }),
 }));
 
 export default useUploadModalState;

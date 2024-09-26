@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -10,7 +10,10 @@ import InputBox from "./input-box.component";
 import Loader from "./loader.component";
 import Icon from "./react-icons.component";
 import AnimationWrapper from "./animation-wrapper.component";
-import SelectInputBox from "./select-input-box.component";
+import SingleSelectInputBox from "./single-select-input-box.component";
+import MultiSelectInputBox, {
+  OptionType,
+} from "./multi-select-input-box.component";
 
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import { reqUpload } from "../constants/data-type.constant";
@@ -23,6 +26,7 @@ import useUploadModalState from "../states/upload-modal.state";
 import { createSongData } from "../fetchs/song.fetch";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import queryClient from "../config/query-client.config";
+import { useGetLabel } from "../hooks/label.hook";
 
 const UploadModal = () => {
   const submitBtnRef = useRef<HTMLButtonElement>(null);
@@ -31,10 +35,11 @@ const UploadModal = () => {
   const { userPlaylists } = usePlaylistState();
 
   const {
-    isActiveModal,
+    activeUploadModal,
     closeUploadModal,
-    isActiveAdvancedSettings,
-    setIsActiveAdvancedSettings,
+    activeAdvancedSettings,
+    activeCreateLabelModal,
+    setActiveAdvancedSettings,
   } = useUploadModalState();
 
   // handle input onKeyDown
@@ -55,14 +60,14 @@ const UploadModal = () => {
   // handle active advanced settings
   const handleActiveAdvancedSettings = () => {
     timeoutForDelay(() => {
-      setIsActiveAdvancedSettings(true);
+      setActiveAdvancedSettings(true);
     });
   };
 
   // handle inactive advanced settings
   const handleInactiveAdvancedSettings = () => {
     timeoutForDelay(() => {
-      setIsActiveAdvancedSettings(false);
+      setActiveAdvancedSettings(false);
     });
   };
 
@@ -80,7 +85,7 @@ const UploadModal = () => {
 
       toast.success(`“${songName}” has been created successfully`);
 
-      reset();
+      reset(defaultsSongData);
     },
     onError: (error) => toast.error(error.message),
   });
@@ -99,20 +104,34 @@ const UploadModal = () => {
   });
 
   const onSubmit: SubmitHandler<DefaultsSongType> = async (value) => {
-    setSongName(value.title);
+    const { title } = value;
+
+    if (title) {
+      setSongName(title);
+    }
 
     createNewSongData(value);
   };
+
+  const { labels } = useGetLabel();
 
   return (
     <Modal
       title="Add a song"
       description="upload an mp3 file"
-      activeState={isActiveModal}
+      activeState={activeUploadModal}
       closeModalFn={closeUploadModal}
+      autoCloseModalFn={!activeCreateLabelModal.active}
       className={{
         wrapper: `
-        ${isActiveAdvancedSettings && "lg:min-w-[70vw]"}
+          ${
+            activeAdvancedSettings &&
+            `
+              md:min-w-[80vw]  
+              lg:min-w-[70vw] 
+            `
+          }
+          
         `,
       }}
     >
@@ -122,12 +141,12 @@ const UploadModal = () => {
           flex
           flex-col
           w-full
-          gap-3
+          gap-5
         `}
       >
         {/* turn back button */}
         <>
-          {isActiveAdvancedSettings && (
+          {activeAdvancedSettings && (
             <button
               onClick={handleInactiveAdvancedSettings}
               className={`
@@ -147,14 +166,15 @@ const UploadModal = () => {
           className={`
             w-full
             ${
-              isActiveAdvancedSettings &&
+              activeAdvancedSettings &&
               `
-                lg:grid
-                grid-cols-2
-                lg:gap-5
-                max-lg:flex
-                max-lg:flex-col
-                max-lg:gap-3
+                max-md:flex
+                max-md:flex-col
+                max-md:gap-3
+                md:grid
+                md:grid-cols-2
+                md:gap-5
+                
               `
             }
           `}
@@ -164,15 +184,17 @@ const UploadModal = () => {
             className={`
               flex
               flex-col
-              gap-3
+              gap-4
             `}
           >
             {/* Song title */}
             <InputBox
               id="song-title"
               type="text"
-              placeholder="Song Title"
+              title="Enter a song title"
+              placeholder="Song title"
               onKeyDown={(e) => handleMoveToNextElement(e, "artist")}
+              required
               {...register("title", { required: true })}
             />
 
@@ -180,77 +202,48 @@ const UploadModal = () => {
             <InputBox
               id="song-artist"
               type="text"
-              placeholder="Song Artist"
+              title="Enter a song artist"
+              placeholder="Song artist"
               onKeyDown={(e) => handleMoveToNextElement(e, "songFile")}
+              required
               {...register("artist", { required: true })}
             />
 
             {/* Song file */}
-            <div
-              className={`
-                flex
-                flex-col
-                gap-2
-                mt-2
-              `}
-            >
-              <p
-                className={`
-                  text-sm
-                  text-grey-custom/50
-                `}
-              >
-                Select a song file
-              </p>
-
-              <InputBox
-                id="song-file"
-                type="file"
-                accept=".mp3"
-                onKeyDown={(e) => handleMoveToNextElement(e, "imageFile")}
-                className={`p-3`}
-                {...register("songFile", { required: true })}
-              />
-            </div>
+            <InputBox
+              id="song-file"
+              type="file"
+              accept=".mp3"
+              title="Select a song file"
+              onKeyDown={(e) => handleMoveToNextElement(e, "imageFile")}
+              required
+              className={`p-3`}
+              {...register("songFile", { required: true })}
+            />
 
             {/* Song cover art file */}
-            <div
-              className={`
-                flex
-                flex-col
-                gap-2
-                mt-2
-              `}
-            >
-              <p
-                className={`
-                  text-sm
-                  text-grey-custom/50
-                `}
-              >
-                Select an image file
-              </p>
-
-              <InputBox
-                id="song-image"
-                type="file"
-                accept=".png, .jpg, .jpeg"
-                onKeyDown={(e) =>
-                  handleMoveToNextElement(
-                    e,
-                    isActiveAdvancedSettings ? "songComposer" : submitBtnRef
-                  )
-                }
-                {...register("imageFile", { required: true })}
-              />
-            </div>
+            <InputBox
+              id="song-image"
+              type="file"
+              accept=".png, .jpg, .jpeg"
+              title="Select an image file"
+              onKeyDown={(e) =>
+                handleMoveToNextElement(
+                  e,
+                  activeAdvancedSettings ? "composer" : submitBtnRef
+                )
+              }
+              required
+              {...register("imageFile", { required: true })}
+            />
 
             {/* Song Playlist */}
-            <SelectInputBox
+            <SingleSelectInputBox
               id="playlist_for"
               title="Select a playlist"
-              formValueState={{ name: "playlist_for", setFormValue: setValue }}
               placeholder="Click to choose a playlist"
+              required
+              formValueState={{ name: "playlist_for", setFormValue: setValue }}
               options={
                 userPlaylists?.map((playlist) => ({
                   id: playlist?._id,
@@ -263,9 +256,9 @@ const UploadModal = () => {
               onChange={(e) => register("playlist_for").onChange(e)}
             />
 
-            {/* Advance setting */}
+            {/* Advance setting button */}
             <>
-              {!isActiveAdvancedSettings && (
+              {!activeAdvancedSettings && (
                 <div
                   className={`
                     flex
@@ -302,23 +295,46 @@ const UploadModal = () => {
           {/* Advance setting */}
           <AnimationWrapper
             key="advance-setting"
-            visible={isActiveAdvancedSettings}
+            visible={activeAdvancedSettings}
             className={`
                flex
                flex-col
-               gap-3 
+               gap-4
             `}
           >
             {/* Song composer */}
             <InputBox
-              id="songComposer"
+              id="composer"
               type="text"
-              placeholder="Song Composer"
+              title="Enter song composer"
+              placeholder="Song composer"
+              warning={[
+                "If there is more than one composer, please separate them with a comma. [e.g., John, Jason]",
+              ]}
+              toArray={true}
+              formValueState={{ name: "composer", setFormValue: setValue }}
               onKeyDown={(e) => handleMoveToNextElement(e, submitBtnRef)}
-              {...register("songComposer", { required: false })}
             />
 
             {/* Language */}
+            <MultiSelectInputBox
+              id="language"
+              title="Select one or more language of song"
+              placeholder="Click to choose song language"
+              autoCloseMenuFn={!activeCreateLabelModal.active}
+              formValueState={{ name: "language", setFormValue: setValue }}
+              options={
+                {
+                  type: "language",
+                  labels: {
+                    defaults: labels?.default.language,
+                    ...(labels?.created?.language && {
+                      created: labels.created.language,
+                    }),
+                  },
+                } as OptionType
+              }
+            />
           </AnimationWrapper>
         </div>
 
@@ -337,7 +353,7 @@ const UploadModal = () => {
             className={`
               mt-2
               submit-btn
-              ${isActiveAdvancedSettings ? `lg:w-1/2 lg:rounded-full` : ""}
+              ${activeAdvancedSettings ? `lg:w-1/2 lg:rounded-full` : ""}
               capitalize
               text-sm
               outline-none

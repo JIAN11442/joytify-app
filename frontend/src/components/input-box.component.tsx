@@ -1,22 +1,55 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
 import { IconType } from "react-icons";
 import { twMerge } from "tailwind-merge";
+import { UseFormSetValue } from "react-hook-form";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 import Icon from "./react-icons.component";
+import AnimationWrapper from "./animation-wrapper.component";
 
 import { timeoutForDelay } from "../lib/timeout.lib";
+import mergeRefs from "../lib/merge-refs.lib";
+import { reqUpload } from "../constants/data-type.constant";
+import { DefaultsSongType } from "../constants/form-default-data.constant";
 
 interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  title?: string;
   icon?: IconType;
   value?: string;
+  warning?: string[];
+  toArray?: boolean;
+  formValueState?: {
+    name: reqUpload;
+    setFormValue: UseFormSetValue<DefaultsSongType>;
+  };
   className?: string;
 }
 
 const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
-  ({ id, icon, value, type, disabled, className, onChange, ...props }, ref) => {
+  (
+    {
+      id,
+      title,
+      icon,
+      warning,
+      toArray,
+      formValueState,
+      type,
+      disabled,
+      className,
+      onChange,
+      onKeyDown,
+      onBlur,
+      required,
+      ...props
+    },
+    ref
+  ) => {
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const [inputVal, setInputVal] = useState("");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isFileSelected, setIsFileSelected] = useState(false);
+    const [visibleWarning, setVisibleWarning] = useState(false);
 
     // switch password visibility
     const handleSwitchPasswordVisibility = (
@@ -28,23 +61,86 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       });
     };
 
-    // listening the file change
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // handle the file onchange
+    const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = e.target.files?.length;
+      const value = e.target.value;
 
       setIsFileSelected(!!files);
+      setInputVal(value);
+
+      if (formValueState && toArray) {
+        const { name, setFormValue } = formValueState;
+        const generateInputVal = value.split(",").map((val) => val.trim());
+
+        setFormValue(name, generateInputVal);
+      }
 
       if (onChange) {
         onChange(e);
       }
     };
 
+    // handle input keydown
+    const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const ekey = e.key;
+      const isNonAlphanumeric = /[^\w]/.test(ekey);
+
+      // if keydown is not a alphanumeric, display warning content
+      if (isNonAlphanumeric && !visibleWarning && warning) {
+        setVisibleWarning(true);
+      }
+
+      if (onKeyDown) {
+        onKeyDown(e);
+      }
+    };
+
+    // handle input onblur
+    const handleInputOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      timeoutForDelay(() => {
+        setVisibleWarning(false);
+      });
+
+      if (onBlur) {
+        onBlur(e);
+      }
+    };
+
     return (
-      <div className="relative">
+      <div
+        className={`
+          relative
+          w-full
+          ${
+            title &&
+            `
+              flex
+              flex-col
+              gap-2
+            `
+          }
+        `}
+      >
+        {/* title */}
+        <>
+          {title && (
+            <p
+              className={`
+                text-sm
+                text-grey-custom/50
+              `}
+            >
+              {title}
+              {required && <span className={`text-red-500`}> *</span>}
+            </p>
+          )}
+        </>
+
         {/* input */}
         <input
           id={id}
-          ref={ref}
+          ref={mergeRefs(ref, inputRef)}
           type={
             type === "password"
               ? isPasswordVisible
@@ -52,9 +148,12 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
                 : "password"
               : type
           }
-          value={value}
+          value={inputVal}
           disabled={disabled}
-          onChange={handleFileChange}
+          onChange={(e) => handleInputOnChange(e)}
+          onKeyDown={(e) => handleInputKeyDown(e)}
+          onBlur={(e) => handleInputOnBlur(e)}
+          required={required}
           className={twMerge(
             `
               input-box
@@ -78,7 +177,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
               name={icon}
               className={`
                 input-left-icon
-                ${value?.length && "text-green-custom/80"}
+                ${inputVal?.length && "text-green-custom/80"}
               `}
             />
           )}
@@ -98,6 +197,27 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
             >
               <Icon name={isPasswordVisible ? IoEyeOff : IoEye} />
             </button>
+          )}
+        </>
+
+        {/* warning content */}
+        <>
+          {visibleWarning && (
+            <AnimationWrapper
+              className={`
+                flex
+                gap-2
+                text-[14px]
+                text-red-500
+              `}
+            >
+              <p>*</p>
+              <p className={`flex flex-col`}>
+                {warning?.map((content, index) => (
+                  <span key={index}>{content}</span>
+                ))}
+              </p>
+            </AnimationWrapper>
           )}
         </>
       </div>

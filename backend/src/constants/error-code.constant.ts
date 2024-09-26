@@ -1,4 +1,4 @@
-const enum ErrorCode {
+enum ErrorCode {
   "InvalidAccessToken" = "InvalidAccessToken",
   "InvalidFirebaseCredential" = "InvalidFirebaseCredential",
 }

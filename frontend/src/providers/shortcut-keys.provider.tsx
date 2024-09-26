@@ -54,7 +54,7 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
   );
 
   useEffect(() => {
-    return timeoutForEventListener(window, "keydown", handleOnKeyDown);
+    return timeoutForEventListener(document, "keydown", handleOnKeyDown);
   }, [handleOnKeyDown]);
 
   return <>{children}</>;

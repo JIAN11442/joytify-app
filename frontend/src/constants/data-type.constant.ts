@@ -42,13 +42,13 @@ export type resSong = {
   songUrl: string; // 歌曲連結
   imageUrl: string; //封面連結
   duration: number;
-  composer: string; // 作曲者
   releaseDate: Date; // 發行日期
-  language: string; // 語言
-  album: string[]; // 專輯名稱
+  composer: string[]; // 作曲者
+  language: string[]; // 語言
   genre: string[]; // 流派
   tags: string[]; // 標籤
   lyrics: string[]; // 歌詞
+  album: string; // 專輯名稱
   playlist_for: string;
   activity: {
     total_likes: number;
@@ -60,6 +60,25 @@ export type resSong = {
   createdAt: string;
 };
 
+export type Label = {
+  id: string;
+  label: string;
+};
+
+interface defaultLabels {
+  feature: Label[];
+  genre: Label[];
+  tags: Label[];
+  region: Label[];
+  language: Label[];
+  theme: Label[];
+}
+
+export type resLabels = {
+  default: defaultLabels;
+  created: defaultLabels;
+};
+
 export type reqAuth = "email" | "password" | "confirmPassword";
 
 export type reqUpload =
@@ -67,10 +86,11 @@ export type reqUpload =
   | "artist"
   | "songFile"
   | "imageFile"
+  | "language"
   | "genre"
   | "album"
   | "releaseDate"
-  | "songComposer"
+  | "composer"
   | "playlist_for";
 
 export type reqEditPlaylist = "coverImage" | "title" | "description";

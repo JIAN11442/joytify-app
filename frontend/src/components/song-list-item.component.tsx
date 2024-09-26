@@ -157,7 +157,7 @@ const SongListItem: React.FC<SongListItemProps> = ({
           ${switchFunc && songArrangementType === compact && "max-sm:hidden"}
         `}
       >
-        <p className={`line-clamp-1`}>{album.length ? album : "--"}</p>
+        <p className={`line-clamp-1`}>{album?.length ? album : "--"}</p>
       </div>
 
       {/* Date added */}

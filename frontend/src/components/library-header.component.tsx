@@ -155,7 +155,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
       }
     };
 
-    timeoutForEventListener(window, "click", handleOnBlur, 0);
+    return timeoutForEventListener(document, "click", handleOnBlur, 0);
   }, [searchBarRef]);
 
   return (

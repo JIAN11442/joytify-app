@@ -63,7 +63,7 @@ const Sidebar = () => {
       }
     };
 
-    timeoutForEventListener(window, "click", handleOnBlur, 0);
+    return timeoutForEventListener(document, "click", handleOnBlur);
   }, [floatingDivRef]);
 
   return (

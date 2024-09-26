@@ -17,7 +17,7 @@ const ScreenMonitorProvider: React.FC<ScreenMonitorProps> = ({ children }) => {
 
     handleResize();
 
-    timeoutForEventListener(window, "resize", handleResize, 0);
+    return timeoutForEventListener(window, "resize", handleResize, 0);
   }, []);
 
   return <>{children}</>;

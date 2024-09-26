@@ -5,7 +5,7 @@ import { BACKEND_PORT, NODE_ENV } from "./constants/env-validate.constant";
 
 const port = BACKEND_PORT;
 
-ConnectMongoDB().then(() => {
+ConnectMongoDB().then(async () => {
   app.listen(port, () => {
     console.log(
       `Server is running on port ${port} in ${NODE_ENV} environment.`

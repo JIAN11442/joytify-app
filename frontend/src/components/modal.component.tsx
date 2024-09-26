@@ -20,6 +20,7 @@ type ModalProps = {
     title?: string;
     description?: string;
   };
+  autoCloseModalFn?: boolean;
 };
 
 const Modal: React.FC<ModalProps> = ({
@@ -31,21 +32,24 @@ const Modal: React.FC<ModalProps> = ({
   closeBtnDisabled,
   closeModalFn,
   className,
+  autoCloseModalFn = true,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Close modal when clicked outside
+  // while autoCloseModalFn is true, close modal when clicked outside
   useEffect(() => {
     const handleModalOnBlur: EventListener = (e) => {
-      // console.log(modalRef.current, e.target);
-
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+      if (
+        autoCloseModalFn &&
+        modalRef.current &&
+        !modalRef.current.contains(e.target as Node)
+      ) {
         closeModalFn();
       }
     };
 
-    timeoutForEventListener(window, "click", handleModalOnBlur, 0);
-  }, []);
+    return timeoutForEventListener(document, "click", handleModalOnBlur);
+  }, [autoCloseModalFn, modalRef]);
 
   return (
     <Dialog.Root

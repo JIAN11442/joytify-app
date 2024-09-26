@@ -36,7 +36,7 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>(
         }
       };
 
-      timeoutForEventListener(window, "click", handleOnBlur, 0);
+      return timeoutForEventListener(document, "click", handleOnBlur);
     }, [menuRef]);
 
     return (
