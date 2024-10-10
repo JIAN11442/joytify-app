@@ -10,9 +10,9 @@ export interface SongDocument extends mongoose.Document {
   releaseDate: Date; // 發行日期
   playlist_for: mongoose.Types.ObjectId; // 歌曲所屬歌單
   album: mongoose.Types.ObjectId; // 專輯名稱
-  composer: mongoose.Types.ObjectId[]; // 作曲者
-  language: mongoose.Types.ObjectId[]; // 語言
-  genre: mongoose.Types.ObjectId[]; // 流派
+  composers: mongoose.Types.ObjectId[]; // 作曲者
+  languages: mongoose.Types.ObjectId[]; // 語言
+  genres: mongoose.Types.ObjectId[]; // 流派
   tags: mongoose.Types.ObjectId[]; // 標籤
   lyrics: string[]; // 歌詞
   activity: {
@@ -47,17 +47,17 @@ const songSchema = new mongoose.Schema<SongDocument>(
       ref: "Label",
       index: true,
     },
-    composer: {
+    composers: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Label",
       index: true,
     },
-    language: {
+    languages: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Label",
       index: true,
     },
-    genre: {
+    genres: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Label",
       index: true,

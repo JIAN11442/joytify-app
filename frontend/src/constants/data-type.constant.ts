@@ -43,9 +43,9 @@ export type resSong = {
   imageUrl: string; //封面連結
   duration: number;
   releaseDate: Date; // 發行日期
-  composer: string[]; // 作曲者
-  language: string[]; // 語言
-  genre: string[]; // 流派
+  composers: string[]; // 作曲者
+  languages: string[]; // 語言
+  genres: string[]; // 流派
   tags: string[]; // 標籤
   lyrics: string[]; // 歌詞
   album: string; // 專輯名稱
@@ -86,11 +86,12 @@ export type reqUpload =
   | "artist"
   | "songFile"
   | "imageFile"
-  | "language"
-  | "genre"
+  | "composers"
+  | "languages"
+  | "genres"
+  | "tags"
   | "album"
   | "releaseDate"
-  | "composer"
   | "playlist_for";
 
 export type reqEditPlaylist = "coverImage" | "title" | "description";

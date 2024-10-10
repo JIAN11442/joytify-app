@@ -230,7 +230,7 @@ const UploadModal = () => {
               onKeyDown={(e) =>
                 handleMoveToNextElement(
                   e,
-                  activeAdvancedSettings ? "composer" : submitBtnRef
+                  activeAdvancedSettings ? "composers" : submitBtnRef
                 )
               }
               required
@@ -312,7 +312,7 @@ const UploadModal = () => {
                 "If there is more than one composer, please separate them with a comma. [e.g., John, Jason]",
               ]}
               toArray={true}
-              formValueState={{ name: "composer", setFormValue: setValue }}
+              formValueState={{ name: "composers", setFormValue: setValue }}
               onKeyDown={(e) => handleMoveToNextElement(e, submitBtnRef)}
             />
 
@@ -322,7 +322,7 @@ const UploadModal = () => {
               title="Select one or more language of song"
               placeholder="Click to choose song language"
               autoCloseMenuFn={!activeCreateLabelModal.active}
-              formValueState={{ name: "language", setFormValue: setValue }}
+              formValueState={{ name: "languages", setFormValue: setValue }}
               options={
                 {
                   type: "language",

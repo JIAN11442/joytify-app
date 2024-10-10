@@ -18,12 +18,14 @@ export const createSongData = async (data: DefaultsSongType) => {
   const file = songFile?.[0] as File;
   const audio = new Audio(URL.createObjectURL(file));
 
+  // get song duration
   timeoutForEventListener(
     audio,
     "loadedmetadata",
     () => (duration = audio.duration)
   );
 
+  // get song url from aws
   const songUrl = await uploadFileToAws({
     subfolder: UploadFolder.SONGS_MP3,
     extension: FileExtension.MP3,
@@ -31,6 +33,7 @@ export const createSongData = async (data: DefaultsSongType) => {
     nanoID,
   });
 
+  // get song image url from aws
   const imageUrl = await uploadFileToAws({
     subfolder: UploadFolder.SONGS_IMAGE,
     extension: FileExtension.PNG,
