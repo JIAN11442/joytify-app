@@ -5,12 +5,12 @@ import ContentBox from "./content-box.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import MainNavigateRoutes from "./main-routes.component";
 import Library from "./library.component";
+import AudioPlayer from "./audio-player.component";
 
 import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
-import { timeoutForEventListener } from "../lib/timeout.lib";
 import useSoundState from "../states/sound.state";
-import AudioPlayer from "./audio-player.component";
+import { timeoutForEventListener } from "../lib/timeout.lib";
 
 const Sidebar = () => {
   const floatingDivRef = useRef<HTMLDivElement>(null);
@@ -19,7 +19,6 @@ const Sidebar = () => {
     floating,
     setCollapseSideBarState,
     setFloating,
-    setDisabledCollapseFn,
   } = useSidebarState();
   const { isCollapsed, changeForScreenResize } = collapseSideBarState;
 
@@ -39,7 +38,6 @@ const Sidebar = () => {
       }
 
       setFloating(false);
-      setDisabledCollapseFn(true);
     } else {
       if (changeForScreenResize) {
         setCollapseSideBarState({
@@ -49,7 +47,6 @@ const Sidebar = () => {
       }
 
       setFloating(false);
-      setDisabledCollapseFn(false);
     }
   }, [screenWidth]);
 
@@ -94,15 +91,8 @@ const Sidebar = () => {
             max-sm:hidden
             transition-all
             ease-in-out
-            duration-300 // 增加持续时间以改善打开时的流畅性
-            ${
-              isCollapsed
-                ? `w-[70px]`
-                : ` 
-                    max-md:w-[380px]
-                    md:w-[500px]
-                  `
-            }
+            duration-300
+            ${isCollapsed ? `w-[70px]` : `w-[500px]`}
            
           `}
         >

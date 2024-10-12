@@ -121,7 +121,8 @@ const UploadModal = () => {
       description="upload an mp3 file"
       activeState={activeUploadModal}
       closeModalFn={closeUploadModal}
-      autoCloseModalFn={!activeCreateLabelModal.active}
+      closeBtnDisabled={isPending}
+      autoCloseModalFn={!activeCreateLabelModal.active && !isPending}
       className={{
         wrapper: `
           ${
@@ -141,22 +142,32 @@ const UploadModal = () => {
           flex
           flex-col
           w-full
-          gap-5
+          gap-3
         `}
       >
         {/* turn back button */}
         <>
           {activeAdvancedSettings && (
             <button
+              type="button"
               onClick={handleInactiveAdvancedSettings}
+              disabled={isPending}
               className={`
                 absolute
+                group
                 top-5
                 left-5
                 hover-btn
+                ${isPending && "no-hover"}
               `}
             >
-              <Icon name={IoCaretBack} />
+              <Icon
+                name={IoCaretBack}
+                className={`
+                  text-neutral-400
+                  ${!isPending && "group-hover:text-white"}
+                `}
+              />
             </button>
           )}
         </>
@@ -166,16 +177,20 @@ const UploadModal = () => {
           className={`
             w-full
             ${
-              activeAdvancedSettings &&
-              `
-                max-md:flex
-                max-md:flex-col
-                max-md:gap-3
-                md:grid
-                md:grid-cols-2
-                md:gap-5
-                
-              `
+              activeAdvancedSettings
+                ? `
+                    max-md:flex
+                    max-md:flex-col
+                    max-md:gap-3
+                    md:grid
+                    md:grid-cols-2
+                    md:gap-5
+                  `
+                : `
+                    flex
+                    flex-col
+                    gap-3
+                  `
             }
           `}
         >
@@ -194,6 +209,7 @@ const UploadModal = () => {
               title="Enter a song title"
               placeholder="Song title"
               onKeyDown={(e) => handleMoveToNextElement(e, "artist")}
+              disabled={isPending}
               required
               {...register("title", { required: true })}
             />
@@ -205,6 +221,7 @@ const UploadModal = () => {
               title="Enter a song artist"
               placeholder="Song artist"
               onKeyDown={(e) => handleMoveToNextElement(e, "songFile")}
+              disabled={isPending}
               required
               {...register("artist", { required: true })}
             />
@@ -216,6 +233,7 @@ const UploadModal = () => {
               accept=".mp3"
               title="Select a song file"
               onKeyDown={(e) => handleMoveToNextElement(e, "imageFile")}
+              disabled={isPending}
               required
               className={`p-3`}
               {...register("songFile", { required: true })}
@@ -233,6 +251,7 @@ const UploadModal = () => {
                   activeAdvancedSettings ? "composers" : submitBtnRef
                 )
               }
+              disabled={isPending}
               required
               {...register("imageFile", { required: true })}
             />
@@ -254,43 +273,46 @@ const UploadModal = () => {
                 required: true,
               })}
               onChange={(e) => register("playlist_for").onChange(e)}
+              disabled={isPending}
             />
+          </div>
 
-            {/* Advance setting button */}
-            <>
-              {!activeAdvancedSettings && (
-                <div
+          {/* Advance setting button */}
+          <>
+            {!activeAdvancedSettings && (
+              <div
+                className={`
+                  flex
+                  items-center
+                  justify-end
+                  text-sm
+                  ${
+                    isValid && !isPending
+                      ? "text-green-custom"
+                      : "text-neutral-700"
+                  }
+                  ${!isPending && "hover:underline"}
+                `}
+              >
+                <button
+                  type="button"
+                  onClick={handleActiveAdvancedSettings}
+                  disabled={isPending}
                   className={`
                     flex
+                    gap-2
                     items-center
-                    justify-end
-                    text-sm
-                    ${isValid ? "text-green-custom" : "text-neutral-700"}
-                    hover:underline
+                    justify-center
+                    transition
+                    ${isValid && !isPending ? "animate-bounce" : ""}
                   `}
                 >
-                  <button
-                    type="button"
-                    // form will recognize the first button as submit button
-                    // so we need to prevent the default behavior
-                    // to avoid the form to submit when the button is clicked
-                    onClick={handleActiveAdvancedSettings}
-                    className={`
-                      flex
-                      gap-2
-                      items-center
-                      justify-center
-                      transition
-                      ${isValid ? "animate-bounce" : ""}
-                    `}
-                  >
-                    <Icon name={FaCircleInfo} />
-                    <p>Advance Settings</p>
-                  </button>
-                </div>
-              )}
-            </>
-          </div>
+                  <Icon name={FaCircleInfo} />
+                  <p>Advance Settings</p>
+                </button>
+              </div>
+            )}
+          </>
 
           {/* Advance setting */}
           <AnimationWrapper
@@ -314,6 +336,7 @@ const UploadModal = () => {
               toArray={true}
               formValueState={{ name: "composers", setFormValue: setValue }}
               onKeyDown={(e) => handleMoveToNextElement(e, submitBtnRef)}
+              disabled={isPending}
             />
 
             {/* Language */}
@@ -334,6 +357,7 @@ const UploadModal = () => {
                   },
                 } as OptionType
               }
+              disabled={isPending}
             />
           </AnimationWrapper>
         </div>
@@ -353,7 +377,7 @@ const UploadModal = () => {
             className={`
               mt-2
               submit-btn
-              ${activeAdvancedSettings ? `lg:w-1/2 lg:rounded-full` : ""}
+              ${activeAdvancedSettings && `lg:w-1/2 lg:rounded-full`}
               capitalize
               text-sm
               outline-none

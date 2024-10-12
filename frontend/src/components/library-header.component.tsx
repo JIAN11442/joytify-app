@@ -17,7 +17,6 @@ import { resUser } from "../constants/data-type.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
 import useSidebarState from "../states/sidebar.state";
 import useUploadModalState from "../states/upload-modal.state";
-import useProviderState from "../states/provider.state";
 import useAuthModalState from "../states/auth-modal.state";
 import useLibraryState from "../states/library.state";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
@@ -33,11 +32,9 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   const searchBarRef = useRef<HTMLInputElement>(null);
   const [activeSearchBar, setActiveSearchBar] = useState(false);
 
-  const { screenWidth } = useProviderState();
   const {
     collapseSideBarState,
     floating,
-    disabledCollapseFn,
     setCollapseSideBarState,
     setFloating,
   } = useSidebarState();
@@ -56,22 +53,11 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   // handle collapse sidebar
   const handleCollapseSidebar = () => {
     if (!floating) {
-      // if screen width is between 640 and 768, collapse sidebar continuously
-      if (screenWidth >= 640 && screenWidth <= 768) {
-        setCollapseSideBarState({
-          ...collapseSideBarState,
-          isCollapsed: true,
-          changeForScreenResize: isCollapsed,
-        });
-      }
-      // if screen width is not between 640 and 768, toggle collapse sidebar
-      else {
-        setCollapseSideBarState({
-          ...collapseSideBarState,
-          isCollapsed: !isCollapsed,
-          changeForScreenResize: isCollapsed,
-        });
-      }
+      setCollapseSideBarState({
+        ...collapseSideBarState,
+        isCollapsed: !isCollapsed,
+        changeForScreenResize: isCollapsed,
+      });
     } else {
       setFloating(false);
     }
@@ -172,10 +158,10 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
         className={`
           flex
           ${!isCollapsed ? "relative" : !floating && "flex-col"}
-          ${!disabledCollapseFn && "gap-y-4"}
+          pt-5
+          gap-y-4
           items-center
           justify-between
-          pt-5
         `}
       >
         {/* Title */}
@@ -331,6 +317,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
               icon={BiSearch}
               autoFocus
               onChange={(e) => handleOnChangeLibrarySearch(e)}
+              iconHighlight={false}
               className={`
                 py-3
                 border-none

@@ -138,13 +138,14 @@ const Modal: React.FC<ModalProps> = ({
                 top-5
                 right-5
                 hover-btn
+                ${closeBtnDisabled && "no-hover"}
               `}
             >
               <Icon
                 name={IoMdClose}
                 className={`
                   text-neutral-400
-                  group-hover:text-white
+                  ${!closeBtnDisabled && "group-hover:text-white"}
                 `}
               />
             </button>

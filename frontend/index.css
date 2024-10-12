@@ -73,6 +73,10 @@ body,
     transition;
   }
 
+  .no-hover {
+    @apply pointer-events-none;
+  }
+
   .auth-btn {
     @apply w-fit
     px-5

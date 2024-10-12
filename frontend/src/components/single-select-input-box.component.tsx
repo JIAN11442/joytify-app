@@ -38,6 +38,7 @@ const SingleSelectInputBox = forwardRef<
       placeholder,
       onChange,
       required,
+      disabled,
       ...props
     },
     ref
@@ -129,7 +130,11 @@ const SingleSelectInputBox = forwardRef<
 
     useEffect(() => {
       const handleOnFocus: EventListener = (e) => {
-        if (inputRef.current && inputRef.current.contains(e.target as Node)) {
+        if (
+          !disabled &&
+          inputRef.current &&
+          inputRef.current.contains(e.target as Node)
+        ) {
           timeoutForDelay(() => {
             setActiveMenu(true);
           });
@@ -147,7 +152,7 @@ const SingleSelectInputBox = forwardRef<
         timeoutForEventListener(document, "click", handleOnFocus);
         timeoutForEventListener(document, "click", handleOnBlur);
       };
-    }, [inputRef, menuRef]);
+    }, [disabled, inputRef, menuRef]);
 
     return (
       <div
@@ -182,6 +187,7 @@ const SingleSelectInputBox = forwardRef<
             onChange={(e) => handleInputOnChange(e)}
             onKeyDown={(e) => handleOnKeyDown(e)}
             required={required}
+            disabled={disabled}
             className={`
               input-box
               capitalize

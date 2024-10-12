@@ -22,6 +22,7 @@ interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
     name: reqUpload;
     setFormValue: UseFormSetValue<DefaultsSongType>;
   };
+  iconHighlight?: boolean;
   className?: string;
 }
 
@@ -34,6 +35,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       warning,
       toArray,
       formValueState,
+      iconHighlight = true,
       type,
       disabled,
       className,
@@ -177,7 +179,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
               name={icon}
               className={`
                 input-left-icon
-                ${inputVal?.length && "text-green-custom/80"}
+                ${iconHighlight && inputVal?.length && "text-green-custom/80"}
               `}
             />
           )}

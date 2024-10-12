@@ -2,6 +2,7 @@ import { useCallback, useEffect } from "react";
 import useSidebarState from "../states/sidebar.state";
 import useSoundState from "../states/sound.state";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
+import { isEditableElement } from "../lib/element.lib";
 
 type ShortcutKeysProps = {
   children: React.ReactNode;
@@ -43,11 +44,14 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
           toggleSidebar();
         }
       } else if (activeSongId && ekey.key === " ") {
-        // to avoid page scrolling
-        ekey.preventDefault();
+        // if the current element is not editable,
+        if (!isEditableElement(ekey.target)) {
+          // to avoid page scrolling
+          ekey.preventDefault();
 
-        // toggle song play or pause
-        togglePlayPause();
+          // toggle song play or pause
+          togglePlayPause();
+        }
       }
     },
     [activeSongId, togglePlayPause, toggleSidebar]

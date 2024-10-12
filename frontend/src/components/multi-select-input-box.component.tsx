@@ -50,6 +50,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
       placeholder,
       autoCloseMenuFn = true,
       formValueState,
+      disabled = false,
       ...props
     },
     ref
@@ -121,7 +122,11 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
     // close option menu while option menu onBlur
     useEffect(() => {
       const handleOnFocus: EventListener = (e) => {
-        if (inputRef.current && inputRef.current.contains(e.target as Node)) {
+        if (
+          !disabled &&
+          inputRef.current &&
+          inputRef.current.contains(e.target as Node)
+        ) {
           timeoutForDelay(() => {
             setActiveMenu(true);
           });
@@ -142,7 +147,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
       timeoutForEventListener(document, "click", handleOnFocus);
 
       return timeoutForEventListener(document, "click", handleOnBlur);
-    }, [autoCloseMenuFn, inputRef, menuRef]);
+    }, [autoCloseMenuFn, disabled, inputRef, menuRef]);
 
     useEffect(() => {
       const optIds = selectedOpts.map((opt) => opt.id);
@@ -188,6 +193,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
             type="text"
             placeholder={placeholder}
             value={inputVal}
+            disabled={disabled}
             readOnly
             className={`input-box ${activeMenu && "rounded-b-none"}`}
             {...props}
