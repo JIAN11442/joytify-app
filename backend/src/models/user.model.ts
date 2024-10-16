@@ -53,7 +53,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
   { timestamps: true }
 );
 
-// pre (hash password before savings)
+// hash password before savings
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
@@ -63,12 +63,14 @@ userSchema.pre("save", async function (next) {
   return next();
 });
 
-// pro (create default playlist for new user)
-userSchema.post("save", async function () {
+// while created user, ...
+userSchema.post("save", async function (doc) {
+  const { id } = doc;
+
   try {
     // check if default playlist already exists
     const existDefaultPlaylist = await PlaylistModel.findOne({
-      userId: this._id,
+      userId: id,
       default: true,
     });
 
@@ -77,7 +79,7 @@ userSchema.post("save", async function () {
     if (!existDefaultPlaylist) {
       // create default playlist
       const defaultPlaylist = await PlaylistModel.create({
-        userId: this._id,
+        userId: id,
         title: "Liked Songs",
         description: "All your liked songs will be here",
         cover_image:

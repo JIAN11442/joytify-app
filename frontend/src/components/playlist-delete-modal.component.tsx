@@ -1,25 +1,30 @@
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 import Modal from "./modal.component";
 import PlaylistWarningContent from "./playlist-warning-content.component";
+import SingleSelectInputBox from "./single-select-input-box.component";
 
-import usePlaylistState from "../states/playlist.state";
-import { timeoutForDelay } from "../lib/timeout.lib";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
+import {
+  defaultsMovingPlaylistData,
+  DefaultsMovingPlaylistType,
+} from "../constants/form-default-data.constant";
+import usePlaylistState from "../states/playlist.state";
 import { deletePlaylist } from "../fetchs/playlist.fetch";
 import queryClient from "../config/query-client.config";
 
 const PlaylistDeleteModal = () => {
   const navigate = useNavigate();
 
-  const { activeDeletePlaylistModal, setActiveDeletePlaylistModal } =
+  const { activeDeletePlaylistModal, closePlaylistDeleteModal, userPlaylists } =
     usePlaylistState();
   const { active, playlist } = activeDeletePlaylistModal;
 
   // delete playlist mutation
-  const { mutate: deleteUserPlaylist } = useMutation({
+  const { mutate: deleteUserPlaylist, isPending } = useMutation({
     mutationKey: [MutationKey.DELETE_PLAYLIST],
     mutationFn: deletePlaylist,
     onSuccess: () => {
@@ -39,13 +44,26 @@ const PlaylistDeleteModal = () => {
   });
 
   const handleCloseModal = () => {
-    timeoutForDelay(() => {
-      setActiveDeletePlaylistModal({ active: false, playlist: null });
-    });
+    closePlaylistDeleteModal();
+    reset();
   };
 
-  const handleDeleteUserPlaylist = () => {
-    deleteUserPlaylist(playlist?._id || "");
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { isValid },
+  } = useForm<DefaultsMovingPlaylistType>({
+    defaultValues: { ...defaultsMovingPlaylistData },
+    mode: "onChange",
+  });
+
+  const onSubmit: SubmitHandler<DefaultsMovingPlaylistType> = async (value) => {
+    deleteUserPlaylist({
+      currentPlaylistId: playlist?._id || "",
+      targetPlaylistId: value.playlist_for || "",
+    });
   };
 
   return (
@@ -54,21 +72,42 @@ const PlaylistDeleteModal = () => {
         playlist={playlist}
         executeBtnText="Delete"
         closeModalFn={handleCloseModal}
-        executeFn={handleDeleteUserPlaylist}
+        onSubmit={handleSubmit(onSubmit)}
+        isValid={isValid}
+        isPending={isPending}
       >
         {/* Warning text */}
         <p className={`text-red-500/80`}>
-          This will delete playlist{" "}
-          <span
-            className={`
-              font-bold
-             text-white
-             `}
-          >
-            {playlist?.title}
-          </span>{" "}
-          from your library, and you won't be able to restore it.
+          This will delete the playlist{" "}
+          <span className={`font-bold text-white`}>{playlist?.title}</span> from
+          your library, and you won't be able to restore it.
+          {(playlist?.songs.length ?? 0) > 0 &&
+            ` The songs in this playlist will need to be moved to another playlist.`}
         </p>
+
+        {/* Playlist options */}
+        <>
+          {(playlist?.songs.length ?? 0) > 0 && (
+            <SingleSelectInputBox
+              id="playlist_for"
+              placeholder="Click to choose a playlist"
+              required
+              options={
+                userPlaylists
+                  ?.filter((opt) => opt._id !== playlist?._id)
+                  .map((opt) => ({
+                    id: opt._id,
+                    title: opt.title,
+                  })) || []
+              }
+              formValueState={{
+                name: "playlist_for",
+                setFormValue: setValue,
+              }}
+              {...register("playlist_for", { required: true })}
+            />
+          )}
+        </>
       </PlaylistWarningContent>
     </Modal>
   );

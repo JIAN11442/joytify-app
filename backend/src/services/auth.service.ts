@@ -25,6 +25,7 @@ import {
   verifyToken,
 } from "../utils/jwt.util";
 import sendEmail from "../utils/send-email.util";
+import { HashValue } from "../utils/bcrypt.util";
 
 import {
   CONFLICT,
@@ -36,7 +37,6 @@ import {
 } from "../constants/http-code.constant";
 import { ORIGIN_APP } from "../constants/env-validate.constant";
 import VerificationCodeType from "../constants/verification-code.constant";
-import { HashValue } from "../utils/bcrypt.util";
 import ErrorCode from "../constants/error-code.constant";
 
 interface AuthDefaults {

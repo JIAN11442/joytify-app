@@ -29,7 +29,8 @@ const useUploadModalState = create<UploadModalState>((set) => ({
   },
 
   openUploadModal: () => set({ activeUploadModal: true }),
-  closeUploadModal: () => set({ activeUploadModal: false }),
+  closeUploadModal: () =>
+    set({ activeUploadModal: false, activeAdvancedSettings: false }),
   setActiveAdvancedSettings: (active) =>
     set({ activeAdvancedSettings: active }),
   setActiveCreateLabelModal: (state) => set({ activeCreateLabelModal: state }),

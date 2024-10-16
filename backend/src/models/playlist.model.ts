@@ -33,8 +33,9 @@ const playlistSchema = new mongoose.Schema<PlaylistDocument>(
   { timestamps: true }
 );
 
-// pre (generate default playlist title)
+// before create playlist, ...
 playlistSchema.pre("save", async function (next) {
+  // generate default playlist title
   if (this.isNew && !this.default) {
     const baseTitle = "My Playlist";
     let index = 1;
@@ -56,23 +57,36 @@ playlistSchema.pre("save", async function (next) {
   next();
 });
 
-// post (update user tatol_playlists and push playlist id to user playlists while create playlist)
+// after created playlist, ...
 playlistSchema.post("save", async function (doc) {
-  // update user total playlists and push playlist id to user playlists
-  await UserModel.findByIdAndUpdate(doc.userId, {
-    $inc: { "account_info.total_playlists": 1 },
-    $push: { playlists: doc._id },
-  });
+  const { id, userId } = doc;
+
+  try {
+    // update user tatol_playlists and push playlist id to user playlists array
+    await UserModel.findByIdAndUpdate(userId, {
+      $inc: { "account_info.total_playlists": 1 },
+      $push: { playlists: id },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-// post (update user tatol_playlists of accouont_info while delete playlist)
+// after delete playlist, ...
 playlistSchema.post("findOneAndDelete", async function (doc) {
-  await UserModel.findByIdAndUpdate(doc.userId, {
-    $inc: { "account_info.total_playlists": -1 },
-    $pull: {
-      playlists: doc._id,
-    },
-  });
+  const { id, userId } = doc;
+
+  try {
+    // update user tatol_playlists of accouont_info
+    await UserModel.findByIdAndUpdate(userId, {
+      $inc: { "account_info.total_playlists": -1 },
+      $pull: {
+        playlists: id,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 const PlaylistModel = mongoose.model<PlaylistDocument>(

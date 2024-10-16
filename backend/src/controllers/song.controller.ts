@@ -16,9 +16,9 @@ export const createSongHandler: RequestHandler = async (req, res, next) => {
     const songInfo = songSchema.parse(req.body);
 
     // create new song
-    const { song, updatedLabels } = await createNewSong({ userId, songInfo });
+    const { song } = await createNewSong({ userId, songInfo });
 
-    return res.status(CREATED).json({ song, labels: updatedLabels });
+    return res.status(CREATED).json({ song });
   } catch (error) {
     next(error);
   }

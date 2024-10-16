@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { resPlaylist } from "../constants/data-type.constant";
-import { ArrangementType } from "../constants/arrangement-type.constant";
+import ArrangementOptions, {
+  ArrangementType,
+} from "../constants/arrangement-type.constant";
 
 export type PlaylistModalType = {
   active: boolean;
@@ -29,6 +31,7 @@ export type PlaylistState = {
   setSongArrangementType: (type: ArrangementType) => void;
 
   closePlaylistEditModal: () => void;
+  closePlaylistDeleteModal: () => void;
 };
 
 const usePlaylistState = create<PlaylistState>((set) => ({
@@ -40,7 +43,7 @@ const usePlaylistState = create<PlaylistState>((set) => ({
   activePlaylistEditOptionsMenu: false,
   activePlaylistListOptionsMenu: false,
   coverImageSrc: "",
-  songArrangementType: "list",
+  songArrangementType: ArrangementOptions.LIST,
 
   setUserPlaylists: (playlists) => set({ userPlaylists: playlists }),
   setTargetPlaylist: (playlist) => set({ targetPlaylist: playlist }),
@@ -59,6 +62,8 @@ const usePlaylistState = create<PlaylistState>((set) => ({
 
   closePlaylistEditModal: () =>
     set({ activePlaylistEditModal: { active: false, playlist: null } }),
+  closePlaylistDeleteModal: () =>
+    set({ activeDeletePlaylistModal: { active: false, playlist: null } }),
 }));
 
 export default usePlaylistState;

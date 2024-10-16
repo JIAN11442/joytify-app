@@ -30,33 +30,33 @@ const labelSchema = new mongoose.Schema<LabelDocument>(
 );
 
 // while save, check the default label with seed file
-labelSchema.pre("save", async function (next) {
-  try {
-    const existLabels = await LabelModel.find(
-      { default: true },
-      "label type default"
-    );
+// labelSchema.pre("save", async function (next) {
+//   try {
+//     const existLabels = await LabelModel.find(
+//       { default: true },
+//       "label type default"
+//     );
 
-    const generateExistLabels = new Set(
-      existLabels.map((label) => `${label.label}|${label.type}`)
-    );
+//     const generateExistLabels = new Set(
+//       existLabels.map((label) => `${label.label}|${label.type}`)
+//     );
 
-    // If a label from the default file does not exist in the database,
-    // That is the data we want to add.
-    const labelsToInsert = defaultLabels.filter(
-      (defaultLabel) =>
-        !generateExistLabels.has(`${defaultLabel.label}|${defaultLabel.type}`)
-    );
+//     // If a label from the default file does not exist in the database,
+//     // That is the data we want to add.
+//     const labelsToInsert = defaultLabels.filter(
+//       (defaultLabel) =>
+//         !generateExistLabels.has(`${defaultLabel.label}|${defaultLabel.type}`)
+//     );
 
-    if (labelsToInsert.length > 0) {
-      await LabelModel.insertMany(labelsToInsert);
-    }
+//     if (labelsToInsert.length > 0) {
+//       await LabelModel.insertMany(labelsToInsert);
+//     }
 
-    next();
-  } catch (error) {
-    console.log(error);
-  }
-});
+//     next();
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 // export const initializeLabel = async () => {
 //   try {

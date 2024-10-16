@@ -19,6 +19,7 @@ export const getUserPlaylist = async (
   let userQueryParams: FilterQuery<PlaylistDocument> = {
     userId,
     default: false,
+    hidden: false,
   };
 
   if (searchParams !== null && searchParams?.length) {
@@ -48,6 +49,7 @@ export const getUserPlaylistById = async (
 ) => {
   const playlist = await PlaylistModel.findOne({
     _id: playlistId,
+    hidden: false,
     userId,
   }).populate("songs");
 

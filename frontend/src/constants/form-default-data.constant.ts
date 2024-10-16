@@ -37,15 +37,17 @@ export const defaultsCreateLabelData = {
   label: "",
 };
 
+export const defaultsMovingPlaylistData = {
+  playlist_for: "",
+};
+
 // Types
 export type DefaultsAuthType = typeof defaultsLoginData & {
   confirmPassword?: string;
 };
 
 export type DefaultsSongType = typeof defaultsSongData;
-
 export type DefaultsResetPasswordType = typeof defaultsResetPasswordData;
-
 export type DefaultsPlaylistEditType = typeof defaultsPlaylistEditData;
-
 export type DefaultsCreateLabelType = typeof defaultsCreateLabelData;
+export type DefaultsMovingPlaylistType = typeof defaultsMovingPlaylistData;

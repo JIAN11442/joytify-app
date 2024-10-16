@@ -13,10 +13,12 @@ import {
 import {
   CREATED,
   INTERNAL_SERVER_ERROR,
+  NOT_FOUND,
   OK,
 } from "../constants/http-code.constant";
 import appAssert from "../utils/app-assert.util";
 import parseParams from "../utils/parse-params.util";
+import SongModel from "../models/song.model";
 
 // get user all playlist handler
 export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
@@ -85,14 +87,52 @@ export const updatePlaylistHandler: RequestHandler = async (req, res, next) => {
   }
 };
 
+// update songs playlist_for handler
+export const updateSongsPlaylistForHandler = async (data: {
+  currentPlaylistId: string;
+  targetPlaylistId: string;
+}) => {
+  try {
+    const { currentPlaylistId, targetPlaylistId } = data;
+
+    // get target playlist
+    const playlist = await PlaylistModel.findById(currentPlaylistId);
+
+    appAssert(playlist, NOT_FOUND, "The playlist is not found");
+
+    // update song's playlist_for property and playlist's songs array
+    for (const song of playlist.songs) {
+      await SongModel.findByIdAndUpdate(song, {
+        playlist_for: targetPlaylistId,
+      });
+
+      await PlaylistModel.findByIdAndUpdate(targetPlaylistId, {
+        $addToSet: { songs: song },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // delete playlist handler
 export const deletePlaylistHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = verificationCodeSchema.parse(req.userId);
-    const playlistId = verificationCodeSchema.parse(req.params.id);
+    const currentPlaylistId = verificationCodeSchema.parse(req.params.id);
+    const targetPlaylistId = req.query.target as string;
 
+    // if got target playlist ID, update song model and playlist model
+    if (targetPlaylistId) {
+      await updateSongsPlaylistForHandler({
+        currentPlaylistId,
+        targetPlaylistId,
+      });
+    }
+
+    // then, delete target playlist
     const deletePlaylist = await PlaylistModel.findOneAndDelete({
-      _id: playlistId,
+      _id: currentPlaylistId,
       userId,
     });
 

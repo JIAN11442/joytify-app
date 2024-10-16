@@ -12,7 +12,7 @@ const playlistRoute = Router();
 
 // prefix: /playlist
 playlistRoute.get("/search/:query", getPlaylistsHandler);
-playlistRoute.get("/id/:id", getTargetPlaylistHandler);
+playlistRoute.get("/:id", getTargetPlaylistHandler);
 
 playlistRoute.post("/create", createPlaylistHandler);
 

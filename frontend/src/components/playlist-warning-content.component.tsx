@@ -4,7 +4,10 @@ type PlaylistWarningContentProps = {
   playlist: resPlaylist | null;
   executeBtnText: string;
   closeModalFn: () => void;
-  executeFn: () => void;
+  executeFn?: () => void;
+  onSubmit?: React.FormEventHandler<HTMLFormElement>;
+  isValid?: boolean;
+  isPending?: boolean;
   children?: React.ReactNode;
 };
 
@@ -13,12 +16,16 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
   executeBtnText,
   closeModalFn,
   executeFn,
+  onSubmit,
+  isValid = false,
+  isPending = false,
   children,
 }) => {
   const { title, cover_image, description, songs, paletee } = playlist ?? {};
 
   return (
-    <div
+    <form
+      onSubmit={onSubmit}
       className={`
         flex
         flex-col
@@ -104,7 +111,9 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
           justify-center
         `}
       >
+        {/* cancel */}
         <button
+          type="button"
           onClick={closeModalFn}
           className={`
             submit-btn
@@ -119,8 +128,11 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
           Cancel
         </button>
 
+        {/* execute */}
         <button
+          type={executeFn ? "button" : "submit"}
           onClick={executeFn}
+          disabled={!isValid || isPending}
           className={`
             submit-btn
             w-fit
@@ -132,7 +144,7 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
           {executeBtnText}
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 

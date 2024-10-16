@@ -1,11 +1,12 @@
+import toast from "react-hot-toast";
 import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
-import usePlaylistState from "../states/playlist.state";
 import Modal from "./modal.component";
 import PlaylistWarningContent from "./playlist-warning-content.component";
+import usePlaylistState from "../states/playlist.state";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import { changePlaylistHiddenState } from "../fetchs/playlist.fetch";
-import toast from "react-hot-toast";
 import queryClient from "../config/query-client.config";
+import { navigate } from "../lib/navigate.lib";
 
 const PlaylistRemoveModal = () => {
   const { activeRemovePlaylistModal, setActiveRemovePlaylistModal } =
@@ -25,9 +26,11 @@ const PlaylistRemoveModal = () => {
       // close modal
       handleCloseModal();
 
+      navigate("/", { replace: true });
+
       // refetch user playlists
       queryClient.invalidateQueries([
-        QueryKey.GET_TARGET_PLAYLIST,
+        QueryKey.GET_USER_PLAYLISTS,
       ] as InvalidateQueryFilters);
 
       toast.success(`"${playlist?.title}" playlist removed from profile`);
@@ -55,17 +58,10 @@ const PlaylistRemoveModal = () => {
       >
         {/* Warning text */}
         <p className={`text-red-500/80`}>
-          This will remove playlist{" "}
-          <span
-            className={`
-              font-bold
-             text-white
-             `}
-          >
-            “{playlist?.title}”
-          </span>{" "}
-          from your profile, but it will not delete the playlist and you could
-          add it again.
+          This will delete the playlist{" "}
+          <span className={`font-bold text-white`}>{playlist?.title}</span> from
+          your profile, but it will not delete the playlist and you could add it
+          again.
         </p>
       </PlaylistWarningContent>
     </Modal>

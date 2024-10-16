@@ -8,7 +8,7 @@ export const getPlaylists = async (
 
 // get playlist by id
 export const getPlaylistById = async (id: string): Promise<resPlaylist> =>
-  API.get(`/playlist/id/${id}`);
+  API.get(`/playlist/${id}`);
 
 // create playlist
 export const createPlaylist = async (): Promise<resPlaylist> =>
@@ -33,9 +33,19 @@ export const updatePlaylist = async (
   });
 };
 
+type deletePlaylistParams = {
+  currentPlaylistId: string;
+  targetPlaylistId: string;
+};
+
 // delete playlist
-export const deletePlaylist = async (playlistId: string) =>
-  API.delete(`/playlist/delete/${playlistId}`);
+export const deletePlaylist = async (data: deletePlaylistParams) => {
+  const { currentPlaylistId, targetPlaylistId } = data;
+
+  return API.delete(
+    `/playlist/delete/${currentPlaylistId}?target=${targetPlaylistId}`
+  );
+};
 
 // change playlist hidden state from user playlists list
 type changePlaylistHiddenStateParams = {

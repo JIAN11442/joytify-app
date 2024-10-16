@@ -73,7 +73,7 @@ export const usePlaylistById = (id: string, opts: object = {}) => {
       }
     },
     staleTime: Infinity,
-    enabled: !isQueryError,
+    enabled: !!id && !isQueryError,
     ...opts,
   });
 
@@ -86,5 +86,5 @@ export const usePlaylistById = (id: string, opts: object = {}) => {
     }
   }, [playlist]);
 
-  return { playlist, ...rest };
+  return { playlist, isQueryError, ...rest };
 };

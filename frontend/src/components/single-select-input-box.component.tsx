@@ -4,7 +4,6 @@ import { UseFormSetValue } from "react-hook-form";
 import AnimationWrapper from "./animation-wrapper.component";
 
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
-import { DefaultsSongType } from "../constants/form-default-data.constant";
 import { reqUpload } from "../constants/data-type.constant";
 import mergeRefs from "../lib/merge-refs.lib";
 
@@ -16,11 +15,12 @@ type OptionType = {
 interface SingleSelectInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
-  title: string;
+  title?: string;
   options: OptionType[];
   formValueState: {
     name: reqUpload;
-    setFormValue: UseFormSetValue<DefaultsSongType>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setFormValue: UseFormSetValue<any>;
   };
   submitBtnRef?: React.RefObject<HTMLButtonElement>;
 }
@@ -166,6 +166,7 @@ const SingleSelectInputBox = forwardRef<
           className={`
             text-sm
             text-grey-custom/50
+            ${title ? "block" : "hidden"}
           `}
         >
           {title}

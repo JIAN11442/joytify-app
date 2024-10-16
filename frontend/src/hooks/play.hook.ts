@@ -17,14 +17,6 @@ const useOnPlay = (songs: resSong[]) => {
 
       const shuffleSongIds = [id, ...songIds.sort(() => Math.random() - 0.5)];
 
-      // console.log(
-      //   songs.map((song) => ({ id: song._id, title: song.title })),
-      //   shuffleSongIds.map((id) => {
-      //     const song = songs.find((s) => s._id === id);
-      //     return { id, title: song?.title };
-      //   })
-      // );
-
       setSongIds(shuffleSongIds);
     },
     [isShuffle, songs]

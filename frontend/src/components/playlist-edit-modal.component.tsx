@@ -35,6 +35,9 @@ const PlaylistEditModal = () => {
     mutationKey: [MutationKey.UPDATE_PLAYLIST],
     mutationFn: updatePlaylist,
     onSuccess: async (data) => {
+      // close modal
+      handleCloseModal();
+
       // Invalidate target query dependencies to refetch playlist query
       await queryClient.invalidateQueries([
         QueryKey.GET_TARGET_PLAYLIST,
@@ -47,18 +50,18 @@ const PlaylistEditModal = () => {
       // update client cover image
       setCoverImageSrc(data.cover_image);
 
-      // close modal
-      closePlaylistEditModal();
-
-      // reset
-      reset();
-
       toast.success("Playlist updated successfully");
     },
     onError: () => {
       toast.error("Failed to update playlist");
     },
   });
+
+  // handle close modal
+  const handleCloseModal = () => {
+    closePlaylistEditModal();
+    reset();
+  };
 
   // initial form state
   const {
@@ -87,7 +90,7 @@ const PlaylistEditModal = () => {
     <Modal
       title="Edit details"
       activeState={active}
-      closeModalFn={closePlaylistEditModal}
+      closeModalFn={handleCloseModal}
       className={{ wrapper: `w-[600px]`, title: `text-left` }}
     >
       <form

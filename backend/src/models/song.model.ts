@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import PlaylistModel from "./playlist.model";
+import UserModel from "./user.model";
+import LabelModel, { LabelDocument } from "./label.model";
 
 export interface SongDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
@@ -73,6 +76,87 @@ const songSchema = new mongoose.Schema<SongDocument>(
   },
   { timestamps: true }
 );
+
+// update label usages function
+const updateLabelUsages = async (
+  songId: mongoose.Types.ObjectId,
+  labelIds: mongoose.Types.ObjectId[],
+  model: mongoose.Model<LabelDocument>,
+  operation: "$push" | "$pull"
+) => {
+  for (const id of labelIds) {
+    // if the song ID is not present in labelUsages, add it
+    await model.findByIdAndUpdate(id, { [operation]: { labelUsages: songId } });
+  }
+};
+
+// while created song, ...
+songSchema.post("save", async function (doc) {
+  const { id, playlist_for, userId, composers, languages } = doc;
+
+  try {
+    // increase count in user's total_songs
+    if (userId) {
+      await UserModel.findByIdAndUpdate(userId, {
+        $inc: { "account_info.total_songs": 1 },
+      });
+    }
+
+    // adding song ID to target playlist's songs array
+    if (playlist_for) {
+      // $addToSet: similar to $push, but ensures no duplicate entries in the array
+      await PlaylistModel.findByIdAndUpdate(playlist_for, {
+        $addToSet: { songs: id },
+      });
+    }
+
+    // update composer labels
+    if (composers) {
+      // update composer label
+      await updateLabelUsages(id, composers, LabelModel, "$push");
+    }
+
+    // update language labels
+    if (languages) {
+      await updateLabelUsages(id, languages, LabelModel, "$push");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// while delete song, ...
+songSchema.post("findOneAndDelete", async function (doc) {
+  const { id, userId, playlist_for, composers, languages } = doc;
+
+  try {
+    // descrease count in user's total_songs
+    if (userId) {
+      await UserModel.findByIdAndUpdate(userId, {
+        $inc: { "account_info.total_songs": -1 },
+      });
+    }
+
+    // remove song ID to target playlist's songs array
+    if (playlist_for) {
+      await PlaylistModel.findByIdAndUpdate(playlist_for, {
+        $pull: { songs: id },
+      });
+    }
+
+    // update composer labels
+    if (composers) {
+      await updateLabelUsages(id, composers, LabelModel, "$pull");
+    }
+
+    // update language labels
+    if (languages) {
+      await updateLabelUsages(id, languages, LabelModel, "$pull");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 const SongModel = mongoose.model<SongDocument>("Song", songSchema);
 
