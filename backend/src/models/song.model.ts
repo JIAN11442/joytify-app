@@ -4,14 +4,14 @@ import UserModel from "./user.model";
 import LabelModel, { LabelDocument } from "./label.model";
 
 export interface SongDocument extends mongoose.Document {
-  userId: mongoose.Types.ObjectId;
   title: string;
-  artist: string; // 作者
+  userId: mongoose.Types.ObjectId;
+  artist: mongoose.Types.ObjectId[]; // 作者
   songUrl: string; // 歌曲連結
   imageUrl: string; //封面連結
   duration: number;
   releaseDate: Date; // 發行日期
-  playlist_for: mongoose.Types.ObjectId; // 歌曲所屬歌單
+  playlist_for: mongoose.Types.ObjectId[]; // 歌曲所屬歌單
   album: mongoose.Types.ObjectId; // 專輯名稱
   composers: mongoose.Types.ObjectId[]; // 作曲者
   languages: mongoose.Types.ObjectId[]; // 語言
@@ -28,20 +28,25 @@ export interface SongDocument extends mongoose.Document {
 
 const songSchema = new mongoose.Schema<SongDocument>(
   {
+    title: { type: String, required: true },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
       index: true,
     },
-    title: { type: String, required: true },
-    artist: { type: String, required: true },
+    artist: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Label",
+      index: true,
+      required: true,
+    },
     songUrl: { type: String, required: true },
     imageUrl: { type: String, required: true },
     duration: { type: Number, required: true },
     releaseDate: { type: Date },
     playlist_for: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [mongoose.Schema.Types.ObjectId],
       ref: "Playlist",
       index: true,
     },

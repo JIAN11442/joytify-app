@@ -16,7 +16,6 @@ import MultiSelectInputBox, {
 } from "./multi-select-input-box.component";
 
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
-import { reqUpload } from "../constants/data-type.constant";
 import {
   defaultsSongData,
   DefaultsSongType,
@@ -41,21 +40,6 @@ const UploadModal = () => {
     activeCreateLabelModal,
     setActiveAdvancedSettings,
   } = useUploadModalState();
-
-  // handle input onKeyDown
-  const handleMoveToNextElement = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    next: React.RefObject<HTMLButtonElement> | reqUpload,
-    condition: string | boolean = e.currentTarget.value.length > 0
-  ) => {
-    if (e.key === "Enter" && condition) {
-      if (typeof next === "string") {
-        setFocus(next);
-      } else if (next?.current) {
-        next.current.focus();
-      }
-    }
-  };
 
   // handle active advanced settings
   const handleActiveAdvancedSettings = () => {
@@ -94,8 +78,9 @@ const UploadModal = () => {
   const {
     register,
     handleSubmit,
-    setFocus,
     setValue,
+    setError,
+    trigger,
     reset,
     formState: { isValid },
   } = useForm<DefaultsSongType>({
@@ -110,7 +95,9 @@ const UploadModal = () => {
       setSongName(title);
     }
 
-    createNewSongData(value);
+    console.log(value);
+
+    // createNewSongData(value);
   };
 
   const { labels } = useGetLabel();
@@ -204,11 +191,10 @@ const UploadModal = () => {
           >
             {/* Song title */}
             <InputBox
-              id="song-title"
+              id="title"
               type="text"
               title="Enter a song title"
               placeholder="Song title"
-              onKeyDown={(e) => handleMoveToNextElement(e, "artist")}
               disabled={isPending}
               required
               {...register("title", { required: true })}
@@ -216,11 +202,19 @@ const UploadModal = () => {
 
             {/* Song artist */}
             <InputBox
-              id="song-artist"
+              id="artist"
               type="text"
               title="Enter a song artist"
               placeholder="Song artist"
-              onKeyDown={(e) => handleMoveToNextElement(e, "songFile")}
+              warning={[
+                "If there is more than one artist, please separate them with a comma. [e.g., John, Jason]",
+              ]}
+              formValueState={{
+                name: "artist",
+                setFormValue: setValue,
+                trigger,
+              }}
+              toArray={true}
               disabled={isPending}
               required
               {...register("artist", { required: true })}
@@ -228,11 +222,10 @@ const UploadModal = () => {
 
             {/* Song file */}
             <InputBox
-              id="song-file"
+              id="songFile"
               type="file"
               accept=".mp3"
               title="Select a song file"
-              onKeyDown={(e) => handleMoveToNextElement(e, "imageFile")}
               disabled={isPending}
               required
               className={`p-3`}
@@ -241,16 +234,10 @@ const UploadModal = () => {
 
             {/* Song cover art file */}
             <InputBox
-              id="song-image"
+              id="imageFile"
               type="file"
               accept=".png, .jpg, .jpeg"
               title="Select an image file"
-              onKeyDown={(e) =>
-                handleMoveToNextElement(
-                  e,
-                  activeAdvancedSettings ? "composers" : submitBtnRef
-                )
-              }
               disabled={isPending}
               required
               {...register("imageFile", { required: true })}
@@ -261,19 +248,27 @@ const UploadModal = () => {
               id="playlist_for"
               title="Select a playlist"
               placeholder="Click to choose a playlist"
-              required
-              formValueState={{ name: "playlist_for", setFormValue: setValue }}
+              formValueState={{
+                name: "playlist_for",
+                setFormValue: setValue,
+                setFormError: setError,
+                trigger,
+              }}
               options={
                 userPlaylists?.map((playlist) => ({
                   id: playlist?._id,
                   title: playlist?.title,
                 })) || []
               }
+              disabled={isPending}
+              required
               {...register("playlist_for", {
                 required: true,
+                validate: (val) =>
+                  userPlaylists
+                    ?.map((playlist) => playlist._id)
+                    .includes(val ?? ""),
               })}
-              onChange={(e) => register("playlist_for").onChange(e)}
-              disabled={isPending}
             />
           </div>
 
@@ -333,9 +328,12 @@ const UploadModal = () => {
               warning={[
                 "If there is more than one composer, please separate them with a comma. [e.g., John, Jason]",
               ]}
+              formValueState={{
+                name: "composers",
+                setFormValue: setValue,
+                trigger,
+              }}
               toArray={true}
-              formValueState={{ name: "composers", setFormValue: setValue }}
-              onKeyDown={(e) => handleMoveToNextElement(e, submitBtnRef)}
               disabled={isPending}
             />
 

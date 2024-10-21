@@ -6,8 +6,9 @@ enum LabelOptions {
   FEATURE = "feature",
   REGION = "region",
   CREATE = "create",
-  NULL = "null",
   COMPOSER = "composer",
+  ARTIST = "artist",
+  NULL = "null",
 }
 
 export type LabelType = (typeof LabelOptions)[keyof typeof LabelOptions];

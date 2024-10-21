@@ -80,9 +80,9 @@ const PlaylistDeleteModal = () => {
         <p className={`text-red-500/80`}>
           This will delete the playlist{" "}
           <span className={`font-bold text-white`}>{playlist?.title}</span> from
-          your library, and you won't be able to restore it.
+          your library, and you won't be able to restore it again.{" "}
           {(playlist?.songs.length ?? 0) > 0 &&
-            ` The songs in this playlist will need to be moved to another playlist.`}
+            `As an alternative, you can choose to transfer all the songs from this playlist to another one.`}
         </p>
 
         {/* Playlist options */}
@@ -104,7 +104,7 @@ const PlaylistDeleteModal = () => {
                 name: "playlist_for",
                 setFormValue: setValue,
               }}
-              {...register("playlist_for", { required: true })}
+              {...register("playlist_for", { required: false })}
             />
           )}
         </>

@@ -1,10 +1,10 @@
 export const defaultsSongData = {
   title: null as string | null,
-  artist: null as string | null,
+  artist: null as string[] | null,
   songFile: null as FileList | null,
   imageFile: null as FileList | null,
-  playlist_for: null as string | null,
   album: null as string | null,
+  playlist_for: null as string | null,
   composers: null as string[] | null,
   languages: null as string[] | null,
   genres: null as string[] | null,

@@ -36,20 +36,20 @@ export type resPlaylist = {
 
 export type resSong = {
   _id: string;
-  userId: string;
   title: string;
-  artist: string; // 作者
+  userId: string;
+  artist: string[]; // 作者
   songUrl: string; // 歌曲連結
   imageUrl: string; //封面連結
   duration: number;
   releaseDate: Date; // 發行日期
+  album: string; // 專輯名稱
   composers: string[]; // 作曲者
   languages: string[]; // 語言
   genres: string[]; // 流派
   tags: string[]; // 標籤
   lyrics: string[]; // 歌詞
-  album: string; // 專輯名稱
-  playlist_for: string;
+  playlist_for: string[];
   activity: {
     total_likes: number;
     total_plays: number;

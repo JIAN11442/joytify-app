@@ -1,8 +1,8 @@
-import { forwardRef, useRef, useState } from "react";
-import { IconType } from "react-icons";
+import { forwardRef, useEffect, useRef, useState } from "react";
+import { UseFormSetValue, UseFormTrigger } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
-import { UseFormSetValue } from "react-hook-form";
 import { IoEye, IoEyeOff } from "react-icons/io5";
+import { IconType } from "react-icons";
 
 import Icon from "./react-icons.component";
 import AnimationWrapper from "./animation-wrapper.component";
@@ -21,6 +21,7 @@ interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   formValueState?: {
     name: reqUpload;
     setFormValue: UseFormSetValue<DefaultsSongType>;
+    trigger: UseFormTrigger<DefaultsSongType>;
   };
   iconHighlight?: boolean;
   className?: string;
@@ -71,13 +72,6 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       setIsFileSelected(!!files);
       setInputVal(value);
 
-      if (formValueState && toArray) {
-        const { name, setFormValue } = formValueState;
-        const generateInputVal = value.split(",").map((val) => val.trim());
-
-        setFormValue(name, generateInputVal);
-      }
-
       if (onChange) {
         onChange(e);
       }
@@ -86,11 +80,11 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
     // handle input keydown
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       const ekey = e.key;
-      const isNonAlphanumeric = /[^\w]/.test(ekey);
+      const isNonAlphanumeric = /[^\w,]/.test(ekey);
 
       // if keydown is not a alphanumeric, display warning content
-      if (isNonAlphanumeric && !visibleWarning && warning) {
-        setVisibleWarning(true);
+      if (warning) {
+        setVisibleWarning(isNonAlphanumeric);
       }
 
       if (onKeyDown) {
@@ -108,6 +102,21 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
         onBlur(e);
       }
     };
+
+    useEffect(() => {
+      if (formValueState) {
+        const { name, setFormValue, trigger } = formValueState;
+
+        if (toArray) {
+          const generateInputVal = inputVal
+            .split(",")
+            .filter((val) => val.trim().length);
+          setFormValue(name, generateInputVal);
+        }
+
+        trigger(name);
+      }
+    }, [inputVal, toArray, formValueState]);
 
     return (
       <div

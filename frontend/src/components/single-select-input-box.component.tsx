@@ -1,5 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { UseFormSetValue } from "react-hook-form";
+import {
+  UseFormSetError,
+  UseFormSetValue,
+  UseFormTrigger,
+} from "react-hook-form";
 
 import AnimationWrapper from "./animation-wrapper.component";
 
@@ -19,8 +24,9 @@ interface SingleSelectInputProps
   options: OptionType[];
   formValueState: {
     name: reqUpload;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setFormValue: UseFormSetValue<any>;
+    setFormError: UseFormSetError<any>;
+    trigger: UseFormTrigger<any>;
   };
   submitBtnRef?: React.RefObject<HTMLButtonElement>;
 }
@@ -54,7 +60,7 @@ const SingleSelectInputBox = forwardRef<
     const [focusOptIndex, setFocusOptIndex] = useState(-1);
     const [selectedOptId, setSelectedOptId] = useState("");
 
-    const { name, setFormValue } = formValueState;
+    const { name, setFormValue, trigger } = formValueState;
 
     // handle options onMouseEnter
     const handleOptionsOnMouseEnter = (opt: string) => {
@@ -72,32 +78,33 @@ const SingleSelectInputBox = forwardRef<
 
     // handle options onClick
     const handleOptionsOnClick = (opt: OptionType) => {
-      timeoutForDelay(() => {
-        setFormValue(name, opt.id);
-        setSelectedOptId(opt.id);
-        setValue(opt.title);
-        setActiveMenu(false);
+      setFormValue(name, opt.id);
+      setSelectedOptId(opt.id);
+      setValue(opt.title);
+      setActiveMenu(false);
 
-        if (onChange) {
-          const syntheticEvent = {
-            target: {
-              name,
-              value: opt.id,
-            },
-          } as React.ChangeEvent<HTMLInputElement>;
-          onChange(syntheticEvent);
-        }
-      });
+      trigger(name);
     };
 
     // handle input onChange
     const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const eValue = e.target.value;
+      const inputOptionId =
+        options.filter((opt) => opt.title === eValue)[0]?.id || "";
 
+      // setting input value
       setValue(eValue);
       setHoverVal("");
 
+      // setting form submit value
+      setFormValue(name, inputOptionId);
+
+      // validate form value
+      trigger(name);
+
+      // find query options
       if (eValue.length) {
+        // according input value to filter options
         const newFilterOptions = options.filter((opt) =>
           opt.title.toLowerCase().includes(eValue.toLowerCase())
         );
@@ -105,6 +112,10 @@ const SingleSelectInputBox = forwardRef<
         setFilterOptions(newFilterOptions);
       } else {
         setFilterOptions(options);
+      }
+
+      if (onChange) {
+        onChange(e);
       }
     };
 
