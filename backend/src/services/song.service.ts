@@ -3,7 +3,7 @@ import { FilterQuery } from "mongoose";
 import SongModel from "../models/song.model";
 import LabelModel, { LabelDocument } from "../models/label.model";
 import { songSchemaType } from "../schemas/song.schema";
-import LabelOptions from "../constants/label-type.constant";
+import LabelOptions, { LabelType } from "../constants/label-type.constant";
 import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
@@ -11,43 +11,10 @@ import {
 } from "../constants/http-code.constant";
 import appAssert from "../utils/app-assert.util";
 
-type composerParams = {
+type labelParams = {
   userId: string;
-  composer: string;
-};
-
-// create new song composer
-export const createComposer = async ({ userId, composer }: composerParams) => {
-  let composerId;
-
-  const findQuery: FilterQuery<LabelDocument> = {
-    label: composer,
-    default: false,
-    type: LabelOptions.COMPOSER,
-  };
-
-  const songComposer = await LabelModel.findOne(findQuery);
-
-  // if not found, create label and return id
-  if (!songComposer) {
-    const createdComposer = await LabelModel.create({
-      ...findQuery,
-      author: userId,
-    });
-    composerId = createdComposer._id;
-  }
-  // if has found, return target label id
-  else {
-    composerId = songComposer._id;
-  }
-
-  appAssert(
-    composerId,
-    INTERNAL_SERVER_ERROR,
-    "Failed to create or get composer"
-  );
-
-  return { composerId };
+  doc: string;
+  type: LabelType;
 };
 
 type createParams = {
@@ -55,33 +22,59 @@ type createParams = {
   songInfo: songSchemaType;
 };
 
+type deleteParams = {
+  userId: string;
+  songId: string;
+};
+
+// create new label or get label id
+export const getLabelIdFunc = async ({ userId, doc, type }: labelParams) => {
+  let labelId;
+
+  const findQuery: FilterQuery<LabelDocument> = {
+    type,
+    label: doc,
+    default: false,
+  };
+
+  const label = await LabelModel.findOne(findQuery);
+
+  // if not found, create label and return id
+  if (!label) {
+    const createdLabel = await LabelModel.create({
+      ...findQuery,
+      author: userId,
+    });
+    labelId = createdLabel._id;
+  }
+  // if has found, return target label id
+  else {
+    labelId = label._id;
+  }
+
+  appAssert(labelId, INTERNAL_SERVER_ERROR, "Failed to create or get label id");
+
+  return { labelId };
+};
+
 // create new song
 export const createNewSong = async ({ userId, songInfo }: createParams) => {
-  const { title, artist, composers, ...props } = songInfo;
+  const { title, artist, ...props } = songInfo;
 
   // check if song already exists
   const songIsExist = await SongModel.exists({
-    userId,
     title,
     artist,
+    userId,
   });
 
   appAssert(!songIsExist, CONFLICT, "Song already exists");
-
-  // get composers id
-  const composerIds = await Promise.all(
-    composers?.map(async (doc: string) => {
-      const { composerId } = await createComposer({ userId, composer: doc });
-      return composerId;
-    }) || []
-  );
 
   // // create new song
   const song = await SongModel.create({
     title,
     artist,
     userId,
-    composers: composerIds,
     ...props,
   });
 
@@ -92,7 +85,10 @@ export const createNewSong = async ({ userId, songInfo }: createParams) => {
 
 // get song by id
 export const getSongById = async (id: string) => {
-  const song = await SongModel.findOne({ _id: id });
+  const song = await SongModel.findOne({ _id: id })
+    .populate({ path: "artist", select: "label" })
+    .populate({ path: "composers", select: "label" })
+    .populate({ path: "languages", select: "label" });
 
   appAssert(song, INTERNAL_SERVER_ERROR, "Song not found");
 
@@ -100,11 +96,6 @@ export const getSongById = async (id: string) => {
   // const generateSong = { ...song.toObject(), paletee };
 
   return { song };
-};
-
-type deleteParams = {
-  userId: string;
-  songId: string;
 };
 
 // delete song by id

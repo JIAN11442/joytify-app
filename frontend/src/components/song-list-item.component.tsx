@@ -9,12 +9,12 @@ import usePlaylistState from "../states/playlist.state";
 import useSidebarState from "../states/sidebar.state";
 import useSoundState from "../states/sound.state";
 import ArrangementOptions from "../constants/arrangement-type.constant";
-import { resSong } from "../constants/data-type.constant";
+import { generateResSong } from "../constants/data-type.constant";
 import { getDuration, getTimeAgo } from "../utils/get-time.util";
 
 type SongListItemProps = {
   index: number;
-  song: resSong;
+  song: generateResSong;
   switchFunc?: boolean;
   onPlay: (id: string) => void;
 };
@@ -157,7 +157,7 @@ const SongListItem: React.FC<SongListItemProps> = ({
           ${switchFunc && songArrangementType === compact && "max-sm:hidden"}
         `}
       >
-        <p className={`line-clamp-1`}>{album?.length ? album : "--"}</p>
+        <p className={`line-clamp-1`}>{album && album.length ? album : "--"}</p>
       </div>
 
       {/* Date added */}

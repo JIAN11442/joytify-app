@@ -97,7 +97,7 @@ const updateLabelUsages = async (
 
 // while created song, ...
 songSchema.post("save", async function (doc) {
-  const { id, playlist_for, userId, composers, languages } = doc;
+  const { id, playlist_for, userId, artist, composers, languages } = doc;
 
   try {
     // increase count in user's total_songs
@@ -115,9 +115,13 @@ songSchema.post("save", async function (doc) {
       });
     }
 
+    // update artist labels
+    if (artist) {
+      await updateLabelUsages(id, artist, LabelModel, "$push");
+    }
+
     // update composer labels
     if (composers) {
-      // update composer label
       await updateLabelUsages(id, composers, LabelModel, "$push");
     }
 
@@ -132,7 +136,7 @@ songSchema.post("save", async function (doc) {
 
 // while delete song, ...
 songSchema.post("findOneAndDelete", async function (doc) {
-  const { id, userId, playlist_for, composers, languages } = doc;
+  const { id, userId, artist, playlist_for, composers, languages } = doc;
 
   try {
     // descrease count in user's total_songs
@@ -147,6 +151,11 @@ songSchema.post("findOneAndDelete", async function (doc) {
       await PlaylistModel.findByIdAndUpdate(playlist_for, {
         $pull: { songs: id },
       });
+    }
+
+    // update artist labels
+    if (artist) {
+      await updateLabelUsages(id, artist, LabelModel, "$pull");
     }
 
     // update composer labels

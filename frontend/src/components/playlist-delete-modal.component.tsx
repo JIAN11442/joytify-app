@@ -52,7 +52,9 @@ const PlaylistDeleteModal = () => {
     register,
     handleSubmit,
     setValue,
+    setError,
     reset,
+    trigger,
     formState: { isValid },
   } = useForm<DefaultsMovingPlaylistType>({
     defaultValues: { ...defaultsMovingPlaylistData },
@@ -82,7 +84,7 @@ const PlaylistDeleteModal = () => {
           <span className={`font-bold text-white`}>{playlist?.title}</span> from
           your library, and you won't be able to restore it again.{" "}
           {(playlist?.songs.length ?? 0) > 0 &&
-            `As an alternative, you can choose to transfer all the songs from this playlist to another one.`}
+            `Otherwise, you also can choose to transfer all the songs from this playlist to another one, or opt not to transfer them.`}
         </p>
 
         {/* Playlist options */}
@@ -91,7 +93,6 @@ const PlaylistDeleteModal = () => {
             <SingleSelectInputBox
               id="playlist_for"
               placeholder="Click to choose a playlist"
-              required
               options={
                 userPlaylists
                   ?.filter((opt) => opt._id !== playlist?._id)
@@ -103,7 +104,10 @@ const PlaylistDeleteModal = () => {
               formValueState={{
                 name: "playlist_for",
                 setFormValue: setValue,
+                setFormError: setError,
+                trigger,
               }}
+              disabled={isPending}
               {...register("playlist_for", { required: false })}
             />
           )}

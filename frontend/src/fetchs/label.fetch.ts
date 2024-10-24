@@ -2,21 +2,34 @@ import API from "../config/api-client.config";
 import { resLabels } from "../constants/data-type.constant";
 import { LabelType } from "../constants/label-type.constant";
 
-export const getUserLabels = (): Promise<resLabels> => API.get("/label");
-
-interface createLabelProps {
+interface createLabelParams {
   label: string;
   type: LabelType;
 }
 
-export const createLabel = (data: createLabelProps) =>
-  API.post("/label/create", data);
+interface getLabelIdsParams {
+  labels: string[] | null;
+  type: LabelType;
+  createIfAbsent?: boolean;
+}
 
-interface deleteLabelProps extends createLabelProps {
+interface deleteLabelParams extends createLabelParams {
   id: string;
 }
 
-export const deleteLabel = (data: deleteLabelProps) => {
+// get user all labels
+export const getUserLabels = (): Promise<resLabels> => API.get("/label");
+
+// create label
+export const createLabel = (data: createLabelParams) =>
+  API.post("/label/create", data);
+
+// get label ids
+export const getLabelIds = async (data: getLabelIdsParams) =>
+  await API.post("/label/getIds", data);
+
+// delete label
+export const deleteLabel = (data: deleteLabelParams) => {
   const { id, ...props } = data;
 
   return API.delete(`/label/delete/${id}`, { data: props });

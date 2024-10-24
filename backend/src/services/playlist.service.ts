@@ -1,4 +1,4 @@
-import { FilterQuery } from "mongoose";
+import { FilterQuery, UpdateQuery } from "mongoose";
 import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
 import appAssert from "../utils/app-assert.util";
 import {
@@ -6,6 +6,21 @@ import {
   NOT_FOUND,
 } from "../constants/http-code.constant";
 import usePalette from "../hooks/paletee.hook";
+import SongModel, { SongDocument } from "../models/song.model";
+
+type updatePlaylistParams = {
+  playlistId: string;
+  userId: string;
+  title?: string;
+  description?: string;
+  imageUrl?: string;
+};
+
+type deletePlaylistParams = {
+  userId: string;
+  currentPlaylistId: string;
+  targetPlaylistId?: string;
+};
 
 // get user all playlist service
 export const getUserPlaylist = async (
@@ -47,17 +62,24 @@ export const getUserPlaylistById = async (
   playlistId: string,
   userId: string
 ) => {
+  // get playlist info
   const playlist = await PlaylistModel.findOne({
     _id: playlistId,
     hidden: false,
     userId,
-  }).populate("songs");
+  }).populate({
+    path: "songs",
+    populate: [
+      { path: "artist", select: "label" },
+      { path: "composers", select: "label" },
+      { path: "languages", select: "label" },
+    ],
+  });
 
   appAssert(playlist, NOT_FOUND, "Playlist not found");
 
   // get paletee from cover image
   const paletee = await usePalette(playlist.cover_image);
-
   const newPlaylist = { ...playlist.toObject(), paletee };
 
   return { playlist: newPlaylist };
@@ -73,26 +95,11 @@ export const createNewPlaylist = async (userId: string) => {
 };
 
 // update playlist cover image service
-type updatePlaylistType = {
-  playlistId: string;
-  userId: string;
-  title?: string;
-  description?: string;
-  imageUrl?: string;
-};
+export const updatePlaylistById = async (data: updatePlaylistParams) => {
+  const { playlistId, userId, title, description, imageUrl } = data;
 
-export const updatePlaylistById = async ({
-  playlistId,
-  userId,
-  title,
-  description,
-  imageUrl,
-}: updatePlaylistType) => {
   const updatedPlaylist = await PlaylistModel.findOneAndUpdate(
-    {
-      _id: playlistId,
-      userId,
-    },
+    { _id: playlistId, userId },
     { title, description, cover_image: imageUrl },
     { new: true }
   );
@@ -104,4 +111,62 @@ export const updatePlaylistById = async ({
   );
 
   return { playlist: updatedPlaylist };
+};
+
+// delete playlist service
+export const deletePlaylistById = async (data: deletePlaylistParams) => {
+  const { userId, currentPlaylistId, targetPlaylistId } = data;
+
+  // find the playlist to be deleted
+  const playlist = await PlaylistModel.findById(currentPlaylistId);
+
+  appAssert(playlist, NOT_FOUND, "The playlist is not found");
+
+  // if have target playlist ID
+  if (targetPlaylistId) {
+    const [updatedPlaylist, updatedSongs] = await Promise.all([
+      // add all songs ID from delete playlist to target playlist
+      PlaylistModel.findByIdAndUpdate(targetPlaylistId, {
+        $addToSet: { songs: { $each: playlist.songs } },
+      }),
+
+      // add target playlist ID to songs's playlist_for property
+      SongModel.updateMany(
+        { _id: { $in: playlist.songs } },
+        { $addToSet: { playlist_for: targetPlaylistId } }
+      ),
+    ]);
+
+    appAssert(
+      updatedPlaylist,
+      INTERNAL_SERVER_ERROR,
+      "Failed to add songs ID from delete playlist to target playlist"
+    );
+
+    appAssert(
+      updatedSongs.modifiedCount > 0,
+      INTERNAL_SERVER_ERROR,
+      "Failed to add target playlist ID to songs's s playlist_for property "
+    );
+  }
+
+  // // update all songs from playlist to be delete
+  const updatedSongs = await SongModel.updateMany(
+    { _id: { $in: playlist.songs } },
+    { $pull: { playlist_for: currentPlaylistId } }
+  );
+
+  appAssert(
+    updatedSongs.modifiedCount > 0,
+    INTERNAL_SERVER_ERROR,
+    "Failed to remove deleted playlist ID from relate songs"
+  );
+
+  // delete target playlist
+  const deletedPlaylist = await PlaylistModel.findOneAndDelete({
+    _id: currentPlaylistId,
+    userId,
+  });
+
+  return { deletedPlaylist };
 };

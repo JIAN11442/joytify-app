@@ -95,9 +95,7 @@ const UploadModal = () => {
       setSongName(title);
     }
 
-    console.log(value);
-
-    // createNewSongData(value);
+    createNewSongData(value);
   };
 
   const { labels } = useGetLabel();
@@ -204,7 +202,7 @@ const UploadModal = () => {
             <InputBox
               id="artist"
               type="text"
-              title="Enter a song artist"
+              title="Enter song artist"
               placeholder="Song artist"
               warning={[
                 "If there is more than one artist, please separate them with a comma. [e.g., John, Jason]",

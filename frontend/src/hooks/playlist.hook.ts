@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { getPlaylists, getPlaylistById } from "../fetchs/playlist.fetch";
-import usePlaylistState from "../states/playlist.state";
 import useUserState from "../states/user.state";
+import usePlaylistState from "../states/playlist.state";
+import { getPlaylists, getPlaylistById } from "../fetchs/playlist.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
+import mergeLabels from "../lib/merge-labels.lib";
 
 export const usePlaylists = (
   searchParams: string | null,
@@ -64,8 +65,19 @@ export const usePlaylistById = (id: string, opts: object = {}) => {
     queryFn: async () => {
       try {
         const data = await getPlaylistById(id);
+        const generateData = {
+          ...data,
+          songs: data.songs.map((song) => {
+            return {
+              ...song,
+              artist: mergeLabels(song.artist, ", "),
+              composers: mergeLabels(song.composers, ", "),
+              languages: mergeLabels(song.languages, ", "),
+            };
+          }),
+        };
 
-        return data;
+        return generateData;
       } catch (error) {
         if (error) {
           setIsQueryError(true);

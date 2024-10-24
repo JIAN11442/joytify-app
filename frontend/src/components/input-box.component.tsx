@@ -110,7 +110,9 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
         if (toArray) {
           const generateInputVal = inputVal
             .split(",")
-            .filter((val) => val.trim().length);
+            .filter((val) => val.length)
+            .map((val) => val.trim());
+
           setFormValue(name, generateInputVal);
         }
 

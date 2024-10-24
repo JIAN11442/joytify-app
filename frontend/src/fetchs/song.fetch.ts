@@ -1,17 +1,19 @@
 import { nanoid } from "nanoid";
 
-import API from "../config/api-client.config";
+import { getLabelIds } from "./label.fetch";
 import { uploadFileToAws } from "./upload.fetch";
 import { DefaultsSongType } from "../constants/form-default-data.constant";
 import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
 import { resSong } from "../constants/data-type.constant";
+import LabelOptions from "../constants/label-type.constant";
 import { timeoutForEventListener } from "../lib/timeout.lib";
+import API from "../config/api-client.config";
 
 // create song data
 export const createSongData = async (data: DefaultsSongType) => {
   const nanoID = nanoid();
 
-  const { songFile, imageFile, ...params } = data;
+  const { songFile, imageFile, artist, composers, ...params } = data;
 
   let duration = 0;
 
@@ -41,7 +43,28 @@ export const createSongData = async (data: DefaultsSongType) => {
     nanoID,
   });
 
-  return API.post("/song/create", { ...params, songUrl, duration, imageUrl });
+  // get artist ids
+  const artistIds = await getLabelIds({
+    labels: artist,
+    type: LabelOptions.ARTIST,
+    createIfAbsent: true,
+  });
+
+  // get composer ids
+  const composerIds = await getLabelIds({
+    labels: composers,
+    type: LabelOptions.COMPOSER,
+    createIfAbsent: true,
+  });
+
+  return API.post("/song/create", {
+    ...params,
+    artist: artistIds,
+    composers: composerIds,
+    songUrl,
+    duration,
+    imageUrl,
+  });
 };
 
 // get song by id

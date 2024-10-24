@@ -1,17 +1,20 @@
 import { create } from "zustand";
-import { resPlaylist } from "../constants/data-type.constant";
+import {
+  generateResPlaylist,
+  resPlaylist,
+} from "../constants/data-type.constant";
 import ArrangementOptions, {
   ArrangementType,
 } from "../constants/arrangement-type.constant";
 
 export type PlaylistModalType = {
   active: boolean;
-  playlist: resPlaylist | null;
+  playlist: generateResPlaylist | null;
 };
 
 export type PlaylistState = {
   userPlaylists: resPlaylist[] | null;
-  targetPlaylist: resPlaylist | null;
+  targetPlaylist: generateResPlaylist | null;
   activePlaylistEditModal: PlaylistModalType;
   activeDeletePlaylistModal: PlaylistModalType;
   activeRemovePlaylistModal: PlaylistModalType;
@@ -21,7 +24,7 @@ export type PlaylistState = {
   songArrangementType: ArrangementType;
 
   setUserPlaylists: (playlists: resPlaylist[] | null) => void;
-  setTargetPlaylist: (playlist: resPlaylist | null) => void;
+  setTargetPlaylist: (playlist: generateResPlaylist | null) => void;
   setActivePlaylistEditModal: (active: PlaylistModalType) => void;
   setActiveDeletePlaylistModal: (active: PlaylistModalType) => void;
   setActiveRemovePlaylistModal: (active: PlaylistModalType) => void;

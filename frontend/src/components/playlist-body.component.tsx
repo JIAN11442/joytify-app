@@ -1,11 +1,11 @@
 import { twMerge } from "tailwind-merge";
 
 import PlaylistBodyHeader from "./playlist-body-header.component";
-import { resPlaylist } from "../constants/data-type.constant";
 import PlaylistBodyContent from "./playlist-body-content.component";
+import { generateResPlaylist } from "../constants/data-type.constant";
 
 type PlaylistBodyProps = {
-  playlist: resPlaylist;
+  playlist: generateResPlaylist;
   className?: string;
 };
 

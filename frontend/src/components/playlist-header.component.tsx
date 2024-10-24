@@ -2,13 +2,13 @@ import { twMerge } from "tailwind-merge";
 
 import ImageLabel from "./image-label.component";
 
-import { resPlaylist } from "../constants/data-type.constant";
+import { generateResPlaylist } from "../constants/data-type.constant";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import usePlaylistState from "../states/playlist.state";
 import useSidebarState from "../states/sidebar.state";
 
 type PlaylistHeaderProps = {
-  playlist: resPlaylist;
+  playlist: generateResPlaylist;
   className?: string;
 };
 

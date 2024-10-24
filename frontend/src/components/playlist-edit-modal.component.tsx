@@ -12,11 +12,11 @@ import {
   defaultsPlaylistEditData,
   DefaultsPlaylistEditType,
 } from "../constants/form-default-data.constant";
-import { resPlaylist } from "../constants/data-type.constant";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import usePlaylistState from "../states/playlist.state";
 import { updatePlaylist } from "../fetchs/playlist.fetch";
 import queryClient from "../config/query-client.config";
+import { generateResPlaylist } from "../constants/data-type.constant";
 
 const PlaylistEditModal = () => {
   const { activePlaylistEditModal, closePlaylistEditModal, setCoverImageSrc } =
@@ -26,7 +26,7 @@ const PlaylistEditModal = () => {
     _id: playlistId,
     cover_image,
     title,
-  } = (playlist as resPlaylist) ?? {};
+  } = (playlist as generateResPlaylist) ?? {};
 
   const [titleValue, setTitleValue] = useState<string>("");
 

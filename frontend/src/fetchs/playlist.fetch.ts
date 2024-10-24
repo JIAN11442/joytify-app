@@ -1,6 +1,23 @@
 import API from "../config/api-client.config";
 import { resPlaylist } from "../constants/data-type.constant";
 
+type updatePlaylistParams = {
+  playlistId: string;
+  title?: string;
+  description?: string;
+  awsImageUrl?: string;
+};
+
+type deletePlaylistParams = {
+  currentPlaylistId: string;
+  targetPlaylistId: string;
+};
+
+type changePlaylistHiddenStateParams = {
+  playlistId: string;
+  hiddenState: boolean;
+};
+
 // get all user playlists
 export const getPlaylists = async (
   query: string | null
@@ -15,13 +32,6 @@ export const createPlaylist = async (): Promise<resPlaylist> =>
   API.post("/playlist/create");
 
 // update playlist cover image
-type updatePlaylistParams = {
-  playlistId: string;
-  title?: string;
-  description?: string;
-  awsImageUrl?: string;
-};
-
 export const updatePlaylist = async (
   data: updatePlaylistParams
 ): Promise<resPlaylist> => {
@@ -31,11 +41,6 @@ export const updatePlaylist = async (
     ...params,
     imageUrl: awsImageUrl,
   });
-};
-
-type deletePlaylistParams = {
-  currentPlaylistId: string;
-  targetPlaylistId: string;
 };
 
 // delete playlist
@@ -48,11 +53,6 @@ export const deletePlaylist = async (data: deletePlaylistParams) => {
 };
 
 // change playlist hidden state from user playlists list
-type changePlaylistHiddenStateParams = {
-  playlistId: string;
-  hiddenState: boolean;
-};
-
 export const changePlaylistHiddenState = async ({
   playlistId,
   hiddenState,

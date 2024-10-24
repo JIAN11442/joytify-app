@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+
 import { QueryKey } from "../constants/query-client-key.constant";
 import { getSongById } from "../fetchs/song.fetch";
-import { useEffect, useState } from "react";
 import useSoundState from "../states/sound.state";
+import mergeLabels from "../lib/merge-labels.lib";
 
 export const useSongById = (id: string, opts: object = {}) => {
   const [isQueryError, setIsQueryError] = useState(false);
@@ -13,8 +15,14 @@ export const useSongById = (id: string, opts: object = {}) => {
     queryFn: async () => {
       try {
         const song = await getSongById(id);
+        const generateSong = {
+          ...song,
+          artist: mergeLabels(song.artist, ", "),
+          composers: mergeLabels(song.composers, ", "),
+          languages: mergeLabels(song.languages, ", "),
+        };
 
-        return song;
+        return generateSong;
       } catch (error) {
         if (error) {
           setIsQueryError(true);

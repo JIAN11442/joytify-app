@@ -8,6 +8,20 @@ import {
 } from "../constants/http-code.constant";
 import appAssert from "../utils/app-assert.util";
 
+interface createLabelParams {
+  userId: string;
+  label: string;
+  type: LabelType;
+}
+
+interface deleteLabelParams extends createLabelParams {
+  id: string;
+}
+
+interface getLabelIdArrayParams extends createLabelParams {
+  createIfAbsent?: boolean;
+}
+
 // get labels service
 export const getDefaultAndCreatedLabel = async (userId: string) => {
   const groupLabels = (isDefault: boolean, userId?: string) => [
@@ -70,14 +84,8 @@ export const getDefaultAndCreatedLabel = async (userId: string) => {
   return { labels: labels[0] };
 };
 
-interface createLabelProps {
-  userId: string;
-  label: string;
-  type: LabelType;
-}
-
 // create label service
-export const createLabel = async (data: createLabelProps) => {
+export const createLabel = async (data: createLabelParams) => {
   const { userId, label, type } = data;
 
   const findQuery: FilterQuery<LabelDocument> = {
@@ -102,12 +110,37 @@ export const createLabel = async (data: createLabelProps) => {
   return { createdLabel };
 };
 
-interface deleteLabelProps extends createLabelProps {
-  id: string;
-}
+// get label ID service
+export const getLabelId = async (data: getLabelIdArrayParams) => {
+  const { userId, label: doc, type, createIfAbsent } = data;
+
+  const findQuery: FilterQuery<LabelDocument> = {
+    type,
+    label: doc,
+    default: false,
+  };
+
+  // find label if exist
+  let label = await LabelModel.findOne(findQuery);
+
+  // if not found, create and replace label
+  if (!label && createIfAbsent) {
+    label = await LabelModel.create({
+      ...findQuery,
+      author: userId,
+    });
+
+    appAssert(label, INTERNAL_SERVER_ERROR, "Failed to create label ");
+  }
+
+  // if label still not found, return error
+  appAssert(label, NOT_FOUND, "Label is not found");
+
+  return { id: label._id };
+};
 
 // delete label service
-export const deleteLabel = async (data: deleteLabelProps) => {
+export const deleteLabel = async (data: deleteLabelParams) => {
   const { id, userId, label, type } = data;
 
   const findQuery: FilterQuery<LabelDocument> = {

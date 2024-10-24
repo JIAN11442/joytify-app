@@ -5,12 +5,12 @@ import SongListItem from "./song-list-item.component";
 
 import useSidebarState from "../states/sidebar.state";
 import usePlaylistState from "../states/playlist.state";
-import { resSong } from "../constants/data-type.constant";
+import { generateResSong } from "../constants/data-type.constant";
 import ArrangementOptions from "../constants/arrangement-type.constant";
 import useOnPlay from "../hooks/play.hook";
 
 type songsListProps = {
-  songs: resSong[];
+  songs: generateResSong[];
 };
 
 const SongsList: React.FC<songsListProps> = ({ songs }) => {

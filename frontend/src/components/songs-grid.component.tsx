@@ -1,11 +1,11 @@
-import { resSong } from "../constants/data-type.constant";
+import { generateResSong } from "../constants/data-type.constant";
 
 type SongsGridProps = {
-  songs: resSong[];
+  songs: generateResSong[];
 };
 
 const SongsGrid: React.FC<SongsGridProps> = ({ songs }) => {
-  return <div></div>;
+  return <div>{songs.map((song) => song.title)}</div>;
 };
 
 export default SongsGrid;

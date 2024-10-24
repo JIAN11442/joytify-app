@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 
-import { labelSchema } from "../schemas/label.schema";
+import { labelSchema, labelsSchema } from "../schemas/label.schema";
 import { verificationCodeSchema } from "../schemas/auth.schema";
 
 import {
@@ -12,6 +12,7 @@ import {
   createLabel,
   deleteLabel,
   getDefaultAndCreatedLabel,
+  getLabelId,
 } from "../services/label.service";
 import appAssert from "../utils/app-assert.util";
 
@@ -43,6 +44,31 @@ export const createLabelHandler: RequestHandler = async (req, res, next) => {
     const { createdLabel } = await createLabel({ userId, label, type });
 
     return res.status(CREATED).json({ label: createdLabel });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// get label ID handler
+export const getLabelIdsHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = verificationCodeSchema.parse(req.userId);
+    const { labels, type, createIfAbsent } = labelsSchema.parse(req.body);
+
+    const labelIds = await Promise.all(
+      labels?.map(async (label) => {
+        const { id } = await getLabelId({
+          userId,
+          label,
+          type,
+          createIfAbsent,
+        });
+
+        return id;
+      }) || []
+    );
+
+    return res.status(OK).json(labelIds);
   } catch (error) {
     next(error);
   }

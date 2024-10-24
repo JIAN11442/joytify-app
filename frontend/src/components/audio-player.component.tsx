@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 import AnimationWrapper from "./animation-wrapper.component";
 import SongTitleItem from "./song-title-item.component";
 import PlayerOperation from "./player-operation.component";
+import PlayerVolume from "./player-volume.component";
 
 import useSound from "../hooks/sound.hook";
 import { useSongById } from "../hooks/song.hook";
 import useSoundState from "../states/sound.state";
-import PlayerVolume from "./player-volume.component";
-import { useNavigate } from "react-router-dom";
 
 type AudioPlayerProps = {
   songId: string;

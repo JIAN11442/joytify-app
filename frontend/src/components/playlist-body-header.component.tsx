@@ -11,7 +11,7 @@ import Icon from "./react-icons.component";
 import PlayButton from "./play-button.component";
 
 import { changePlaylistHiddenState } from "../fetchs/playlist.fetch";
-import { resPlaylist } from "../constants/data-type.constant";
+import { generateResPlaylist } from "../constants/data-type.constant";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import ArrangementOptions, {
   ArrangementType,
@@ -25,7 +25,7 @@ import queryClient from "../config/query-client.config";
 import useOnPlay from "../hooks/play.hook";
 
 type PlaylistBodyHeaderProps = {
-  playlist: resPlaylist;
+  playlist: generateResPlaylist;
 };
 
 const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({

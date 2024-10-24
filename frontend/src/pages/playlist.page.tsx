@@ -3,11 +3,10 @@ import { useParams } from "react-router-dom";
 
 import Header from "../components/header.component";
 import Loader from "../components/loader.component";
-import PlaylistHeader from "../components/playlist-header";
-import PlaylistBody from "../components/playlist.body";
+import PlaylistHeader from "../components/playlist-header.component";
+import PlaylistBody from "../components/playlist-body.component";
 
 import { QueryKey } from "../constants/query-client-key.constant";
-import { resPlaylist } from "../constants/data-type.constant";
 import queryClient from "../config/query-client.config";
 import { usePlaylistById } from "../hooks/playlist.hook";
 
@@ -59,10 +58,10 @@ const PlaylistPage = () => {
       `}
     >
       {/* Playlist header */}
-      <PlaylistHeader playlist={playlist as resPlaylist} className={`px-6`} />
+      <PlaylistHeader playlist={playlist} className={`px-6`} />
 
       {/* Playlist content */}
-      <PlaylistBody playlist={playlist as resPlaylist} />
+      <PlaylistBody playlist={playlist} />
     </Header>
   );
 };
