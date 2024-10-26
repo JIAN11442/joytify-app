@@ -3,7 +3,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { BsList, BsListTask } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { MdDeleteSweep, MdPlaylistPlay } from "react-icons/md";
-import { FaUserPlus, FaUserXmark } from "react-icons/fa6";
+import { FaCheck, FaUserPlus, FaUserXmark } from "react-icons/fa6";
 import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
 
 import Menu from "./menu.component";
@@ -36,6 +36,7 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
   const {
     activePlaylistEditOptionsMenu,
     activePlaylistListOptionsMenu,
+    songArrangementType,
     setActivePlaylistEditModal,
     setActivePlaylistEditOptionsMenu,
     setActivePlaylistListOptionsMenu,
@@ -116,9 +117,6 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
     });
   };
 
-  const playedSongExistInPlaylist =
-    songs && songs.some((song) => song._id === activeSongId);
-
   // handle play button
   const handleLoopPlaylist = () => {
     if (!sound || !playedSongExistInPlaylist) {
@@ -136,6 +134,11 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
       setLoopType(SongLoopOptions.OFF);
     }
   };
+
+  const playedSongExistInPlaylist =
+    songs && songs.some((song) => song._id === activeSongId);
+
+  const arrangeTypes = [ArrangementOptions.COMPACT, ArrangementOptions.LIST];
 
   return (
     <div
@@ -283,39 +286,43 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
             View as
           </p>
 
-          {/* Compact */}
-          <button
-            onClick={() =>
-              handleChangeSongArrangementType(ArrangementOptions.COMPACT)
-            }
-            className={`
-              menu-btn
-              flex
-              gap-3
-              items-center
-              normal-case
-            `}
-          >
-            <Icon name={BsList} />
-            <p>Compact</p>
-          </button>
+          {/* Arrange option button */}
+          <>
+            {arrangeTypes.map((opt) => (
+              <button
+                key={opt}
+                onClick={() => handleChangeSongArrangementType(opt)}
+                className={`
+                   menu-btn
+                   flex
+                   items-center
+                   justify-between
+                  ${
+                    songArrangementType === opt &&
+                    `text-green-500 hover:text-green-500`
+                  }
+                 `}
+              >
+                <div
+                  className={`
+                    flex
+                    gap-3
+                    items-center
+                    justify-center
+                  `}
+                >
+                  <Icon
+                    name={
+                      opt === ArrangementOptions.COMPACT ? BsList : BsListTask
+                    }
+                  />
+                  <p>{opt}</p>
+                </div>
 
-          {/* List */}
-          <button
-            onClick={() =>
-              handleChangeSongArrangementType(ArrangementOptions.LIST)
-            }
-            className={`
-              menu-btn
-              flex
-              gap-3
-              items-center
-              normal-case
-            `}
-          >
-            <Icon name={BsListTask} />
-            <p>List</p>
-          </button>
+                {songArrangementType === opt && <Icon name={FaCheck} />}
+              </button>
+            ))}
+          </>
         </Menu>
       </div>
     </div>
