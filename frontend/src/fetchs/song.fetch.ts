@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 
 import { getLabelIds } from "./label.fetch";
-import { uploadFileToAws } from "./upload.fetch";
+import { uploadFileToAws } from "./aws.fetch";
 import { DefaultsSongType } from "../constants/form-default-data.constant";
 import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
 import { resSong } from "../constants/data-type.constant";

@@ -10,7 +10,7 @@ type updatePlaylistParams = {
 
 type deletePlaylistParams = {
   currentPlaylistId: string;
-  targetPlaylistId: string;
+  targetPlaylistId?: string;
 };
 
 type changePlaylistHiddenStateParams = {
@@ -47,9 +47,9 @@ export const updatePlaylist = async (
 export const deletePlaylist = async (data: deletePlaylistParams) => {
   const { currentPlaylistId, targetPlaylistId } = data;
 
-  return API.delete(
-    `/playlist/delete/${currentPlaylistId}?target=${targetPlaylistId}`
-  );
+  return API.delete(`/playlist/delete/${currentPlaylistId}`, {
+    data: { targetPlaylistId },
+  });
 };
 
 // change playlist hidden state from user playlists list

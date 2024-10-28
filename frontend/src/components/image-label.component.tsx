@@ -10,7 +10,7 @@ import Loader from "./loader.component";
 import Icon from "./react-icons.component";
 
 import { updatePlaylist } from "../fetchs/playlist.fetch";
-import { uploadFileToAws } from "../fetchs/upload.fetch";
+import { uploadFileToAws } from "../fetchs/aws.fetch";
 import { DefaultsPlaylistEditType } from "../constants/form-default-data.constant";
 import { reqEditPlaylist } from "../constants/data-type.constant";
 import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
@@ -65,44 +65,46 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
     const handleInputOnChange = async (
       e: React.ChangeEvent<HTMLInputElement>
     ) => {
-      // start loading
-      setIsUploading(true);
-
       // get image file
       const imgFile = e.target.files as FileList;
 
-      // get signed url and upload image to aws
-      const nanoID = nanoid();
+      if (imgFile.length) {
+        // start loading
+        setIsUploading(true);
 
-      const awsImageUrl = await uploadFileToAws({
-        subfolder: UploadFolder.PLAYLISTS_IMAGE,
-        extension: FileExtension.PNG,
-        file: imgFile?.[0] as File,
-        nanoID,
-      });
+        // get signed url and upload image to aws
+        const nanoID = nanoid();
 
-      // if form value state exist, means it will be used for form input
-      if (formValueState) {
-        const { name, setValue } = formValueState;
+        const awsImageUrl = await uploadFileToAws({
+          subfolder: UploadFolder.PLAYLISTS_IMAGE,
+          extension: FileExtension.PNG,
+          file: imgFile?.[0] as File,
+          nanoID,
+        });
 
-        if (awsImageUrl) {
-          // then set the value to useForm
-          setValue(name, awsImageUrl);
+        // if form value state exist, means it will be used for form input
+        if (formValueState) {
+          const { name, setValue } = formValueState;
 
-          // update cover image src from client
-          setImageUrl(awsImageUrl);
+          if (awsImageUrl) {
+            // then set the value to useForm
+            setValue(name, awsImageUrl);
+
+            // update cover image src from client
+            setImageUrl(awsImageUrl);
+          }
         }
-      }
-      // if not, means it will be used for playlist cover image
-      else {
-        if (playlistId && awsImageUrl) {
-          // then, update playlist cover image directly
-          updateUserPlaylist({ playlistId, awsImageUrl });
+        // if not, means it will be used for playlist cover image
+        else {
+          if (playlistId && awsImageUrl) {
+            // then, update playlist cover image directly
+            updateUserPlaylist({ playlistId, awsImageUrl });
+          }
         }
-      }
 
-      // clean loading
-      setIsUploading(false);
+        // clean loading
+        setIsUploading(false);
+      }
     };
 
     // save change of image url to zustand
@@ -132,7 +134,6 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
               group
               w-full
               h-full
-              ${!isPending || (!isDefault && "cursor-pointer")}
             `}
           >
             <img
@@ -196,7 +197,7 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
           type="file"
           accept=".png, .jpg, .jpeg"
           hidden
-          disabled={isPending || isDefault}
+          disabled={isPending || isUploading || isDefault}
           onChange={(e) => handleInputOnChange(e)}
           onClick={(e) => {
             // to avoid modal close automatically while clicking the input

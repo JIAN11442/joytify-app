@@ -1,23 +1,24 @@
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import Modal from "./modal.component";
 import PlaylistWarningContent from "./playlist-warning-content.component";
 import SingleSelectInputBox from "./single-select-input-box.component";
 
-import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
 import {
   defaultsMovingPlaylistData,
   DefaultsMovingPlaylistType,
 } from "../constants/form-default-data.constant";
 import usePlaylistState from "../states/playlist.state";
 import { deletePlaylist } from "../fetchs/playlist.fetch";
-import queryClient from "../config/query-client.config";
+import { usePlaylists } from "../hooks/playlist.hook";
 
 const PlaylistDeleteModal = () => {
   const navigate = useNavigate();
+  const { refetch } = usePlaylists(null);
 
   const { activeDeletePlaylistModal, closePlaylistDeleteModal, userPlaylists } =
     usePlaylistState();
@@ -28,15 +29,14 @@ const PlaylistDeleteModal = () => {
     mutationKey: [MutationKey.DELETE_PLAYLIST],
     mutationFn: deletePlaylist,
     onSuccess: () => {
+      // close modal
       handleCloseModal();
-
-      queryClient.invalidateQueries([
-        QueryKey.GET_USER_PLAYLISTS,
-      ] as InvalidateQueryFilters);
+      // navigate to homepage
+      navigate("/");
+      // refetch query of get all user playlists
+      refetch();
 
       toast.success(`Playlist "${playlist?.title}" has been deleted.`);
-
-      navigate("/");
     },
     onError: () => {
       toast.error(`Failed to delete playlist "${playlist?.title}".`);

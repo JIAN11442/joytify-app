@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import PlaylistModel from "./playlist.model";
 import UserModel from "./user.model";
 import LabelModel, { LabelDocument } from "./label.model";
+import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
 export interface SongDocument extends mongoose.Document {
   title: string;
@@ -136,7 +137,16 @@ songSchema.post("save", async function (doc) {
 
 // while delete song, ...
 songSchema.post("findOneAndDelete", async function (doc) {
-  const { id, userId, artist, playlist_for, composers, languages } = doc;
+  const {
+    id,
+    userId,
+    artist,
+    playlist_for,
+    composers,
+    languages,
+    songUrl,
+    imageUrl,
+  } = doc;
 
   try {
     // descrease count in user's total_songs
@@ -166,6 +176,16 @@ songSchema.post("findOneAndDelete", async function (doc) {
     // update language labels
     if (languages) {
       await updateLabelUsages(id, languages, LabelModel, "$pull");
+    }
+
+    // delete song url from AWS
+    if (songUrl) {
+      await deleteAwsFileUrlOnModel(songUrl);
+    }
+
+    // delete image url from AWS
+    if (imageUrl) {
+      await deleteAwsFileUrlOnModel(imageUrl);
     }
   } catch (error) {
     console.log(error);

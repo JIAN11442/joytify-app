@@ -32,5 +32,6 @@ export const getLabelIds = async (data: getLabelIdsParams) =>
 export const deleteLabel = (data: deleteLabelParams) => {
   const { id, ...props } = data;
 
+  // the data parameter must be an object (props is an object here)
   return API.delete(`/label/delete/${id}`, { data: props });
 };

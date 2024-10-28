@@ -1,9 +1,13 @@
 import { Router } from "express";
-import { getAwsSignedUrl } from "../controllers/aws.controller";
+import {
+  deleteAwsFileUrlHandler,
+  getAwsSignedUrlHandler,
+} from "../controllers/aws.controller";
 
 const awsRoute = Router();
 
 // prefix: /aws
-awsRoute.post("/get-signed-url", getAwsSignedUrl);
+awsRoute.post("/get-signed-url", getAwsSignedUrlHandler);
+awsRoute.delete("/delete-file-url", deleteAwsFileUrlHandler);
 
 export default awsRoute;

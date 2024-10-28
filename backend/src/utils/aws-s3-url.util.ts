@@ -3,18 +3,19 @@ import { nanoid } from "nanoid";
 import s3 from "../config/aws-s3.config";
 import { AWS_BUCKET_NAME } from "../constants/env-validate.constant";
 import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
+import awsUrlParser from "./aws-url-parser.util";
 
-type Params = {
+type generateUrlParams = {
   subfolder?: UploadFolder | undefined;
   extension: FileExtension | undefined;
   nanoID?: string;
 };
 
-const generateUploadUrl = async ({
+export const generateUploadUrl = async ({
   subfolder,
   extension,
   nanoID = "",
-}: Params) => {
+}: generateUrlParams) => {
   try {
     const date = new Date();
     const fileName = `${
@@ -36,4 +37,27 @@ const generateUploadUrl = async ({
   }
 };
 
-export default generateUploadUrl;
+export const deleteAwsFileUrl = async (awsS3Key: string) => {
+  try {
+    const params = {
+      Bucket: AWS_BUCKET_NAME,
+      Key: awsS3Key,
+    };
+
+    // delete aws file url
+    await s3.deleteObject(params).promise();
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+export const deleteAwsFileUrlOnModel = async (awsUrl: string) => {
+  const { mainFolder, awsS3Key } = awsUrlParser(awsUrl);
+
+  if (mainFolder !== "defaults") {
+    await deleteAwsFileUrl(awsS3Key);
+  }
+};

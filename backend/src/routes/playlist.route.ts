@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  addSongToPlaylistHandler,
   changePlaylistHiddenStateHandler,
   createPlaylistHandler,
   deletePlaylistHandler,
@@ -15,6 +16,7 @@ playlistRoute.get("/search/:query", getPlaylistsHandler);
 playlistRoute.get("/:id", getTargetPlaylistHandler);
 
 playlistRoute.post("/create", createPlaylistHandler);
+playlistRoute.post("/addSong", addSongToPlaylistHandler);
 
 playlistRoute.patch("/update/:id", updatePlaylistHandler);
 playlistRoute.patch(

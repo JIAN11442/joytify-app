@@ -1,5 +1,12 @@
-import mongoose from "mongoose";
+import mongoose, { UpdateQuery } from "mongoose";
 import UserModel from "./user.model";
+import awsUrlParser from "../utils/aws-url-parser.util";
+import {
+  deleteAwsFileUrl,
+  deleteAwsFileUrlOnModel,
+} from "../utils/aws-s3-url.util";
+import appAssert from "../utils/app-assert.util";
+import { NOT_FOUND } from "../constants/http-code.constant";
 
 export interface PlaylistDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
@@ -57,6 +64,26 @@ playlistSchema.pre("save", async function (next) {
   next();
 });
 
+// before update playlist, ...
+playlistSchema.pre("findOneAndUpdate", async function (next) {
+  // get update data, it can find out which properties have new values
+  const updateDoc = this.getUpdate() as UpdateQuery<PlaylistDocument>;
+  // get query data from "findOneAndUpdate" operation
+  const findQuery = this.getQuery();
+
+  // if the "cover_image" property has a value, it means it will be updated
+  // we need to find the original document, delete the existing cover_image before updating it
+  if (updateDoc.cover_image) {
+    const originalDoc = await PlaylistModel.findById(findQuery);
+
+    if (originalDoc) {
+      await deleteAwsFileUrlOnModel(originalDoc.cover_image);
+    }
+  }
+
+  next();
+});
+
 // after created playlist, ...
 playlistSchema.post("save", async function (doc) {
   const { id, userId } = doc;
@@ -74,7 +101,7 @@ playlistSchema.post("save", async function (doc) {
 
 // after delete playlist, ...
 playlistSchema.post("findOneAndDelete", async function (doc) {
-  const { id, userId } = doc;
+  const { id, userId, cover_image } = doc;
 
   try {
     // update user tatol_playlists of accouont_info
@@ -84,6 +111,9 @@ playlistSchema.post("findOneAndDelete", async function (doc) {
         playlists: id,
       },
     });
+
+    // delete aws url
+    await deleteAwsFileUrlOnModel(cover_image);
   } catch (error) {
     console.log(error);
   }

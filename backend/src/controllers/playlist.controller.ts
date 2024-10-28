@@ -14,13 +14,11 @@ import {
 import {
   CREATED,
   INTERNAL_SERVER_ERROR,
-  NOT_FOUND,
   OK,
 } from "../constants/http-code.constant";
 import appAssert from "../utils/app-assert.util";
 import parseParams from "../utils/parse-params.util";
-import SongModel, { SongDocument } from "../models/song.model";
-import { UpdateQuery } from "mongoose";
+import SongModel from "../models/song.model";
 
 // get user all playlist handler
 export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
@@ -94,7 +92,7 @@ export const deletePlaylistHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = verificationCodeSchema.parse(req.userId);
     const currentPlaylistId = verificationCodeSchema.parse(req.params.id);
-    const targetPlaylistId = req.query.target as string;
+    const { targetPlaylistId } = req.body;
 
     await deletePlaylistById({
       userId,
@@ -104,6 +102,7 @@ export const deletePlaylistHandler: RequestHandler = async (req, res, next) => {
 
     return res.status(OK).json({ message: "Playlist deleted successfully" });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -120,10 +119,7 @@ export const changePlaylistHiddenStateHandler: RequestHandler = async (
     const { hiddenState } = req.body;
 
     const updatedPlaylist = await PlaylistModel.findOneAndUpdate(
-      {
-        _id: playlistId,
-        userId,
-      },
+      { _id: playlistId, userId },
       { hidden: hiddenState }
     );
 
@@ -136,6 +132,42 @@ export const changePlaylistHiddenStateHandler: RequestHandler = async (
     return res
       .status(OK)
       .json({ message: `Playlist hidden state changed to ${hiddenState}` });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// add target song ID to playlist handler
+export const addSongToPlaylistHandler: RequestHandler = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const { playlistId, songId } = req.body;
+    const validatedPlaylistId = verificationCodeSchema.parse(playlistId);
+    const validatedSongId = verificationCodeSchema.parse(songId);
+
+    const updatedPlaylist = await PlaylistModel.findByIdAndUpdate(
+      validatedPlaylistId,
+      {
+        $addToSet: { songs: validatedSongId },
+      }
+    );
+
+    appAssert(
+      updatedPlaylist,
+      INTERNAL_SERVER_ERROR,
+      "Failed to update playlist"
+    );
+
+    const updatedSong = await SongModel.findByIdAndUpdate(validatedSongId, {
+      $addToSet: { playlist_for: validatedPlaylistId },
+    });
+
+    appAssert(updatedSong, INTERNAL_SERVER_ERROR, "Failed to update song");
+
+    return res.status(OK).json({ updatedPlaylist, updatedSong });
   } catch (error) {
     next(error);
   }

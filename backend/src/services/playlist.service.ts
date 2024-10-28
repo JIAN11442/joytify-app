@@ -129,20 +129,17 @@ export const deletePlaylistById = async (data: deletePlaylistParams) => {
       PlaylistModel.findByIdAndUpdate(targetPlaylistId, {
         $addToSet: { songs: { $each: playlist.songs } },
       }),
-
       // add target playlist ID to songs's playlist_for property
       SongModel.updateMany(
         { _id: { $in: playlist.songs } },
         { $addToSet: { playlist_for: targetPlaylistId } }
       ),
     ]);
-
     appAssert(
       updatedPlaylist,
       INTERNAL_SERVER_ERROR,
       "Failed to add songs ID from delete playlist to target playlist"
     );
-
     appAssert(
       updatedSongs.modifiedCount > 0,
       INTERNAL_SERVER_ERROR,
@@ -150,17 +147,19 @@ export const deletePlaylistById = async (data: deletePlaylistParams) => {
     );
   }
 
-  // // update all songs from playlist to be delete
-  const updatedSongs = await SongModel.updateMany(
-    { _id: { $in: playlist.songs } },
-    { $pull: { playlist_for: currentPlaylistId } }
-  );
+  // update all songs from playlist to be delete
+  if (playlist.songs.length) {
+    const updatedSongs = await SongModel.updateMany(
+      { _id: { $in: playlist.songs } },
+      { $pull: { playlist_for: currentPlaylistId } }
+    );
 
-  appAssert(
-    updatedSongs.modifiedCount > 0,
-    INTERNAL_SERVER_ERROR,
-    "Failed to remove deleted playlist ID from relate songs"
-  );
+    appAssert(
+      updatedSongs.modifiedCount > 0,
+      INTERNAL_SERVER_ERROR,
+      "Failed to remove deleted playlist ID from relate songs"
+    );
+  }
 
   // delete target playlist
   const deletedPlaylist = await PlaylistModel.findOneAndDelete({
@@ -168,5 +167,5 @@ export const deletePlaylistById = async (data: deletePlaylistParams) => {
     userId,
   });
 
-  return { deletedPlaylist };
+  return { playlist };
 };
