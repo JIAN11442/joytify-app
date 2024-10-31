@@ -5,6 +5,7 @@ export const defaultsSongData = {
   imageFile: null as FileList | null,
   album: null as string | null,
   playlist_for: null as string | null,
+  lyricists: null as string[] | null,
   composers: null as string[] | null,
   languages: null as string[] | null,
   genres: null as string[] | null,

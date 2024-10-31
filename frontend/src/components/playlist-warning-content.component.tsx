@@ -17,7 +17,7 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
   closeModalFn,
   executeFn,
   onSubmit,
-  isValid = false,
+  isValid = true,
   isPending = false,
   children,
 }) => {

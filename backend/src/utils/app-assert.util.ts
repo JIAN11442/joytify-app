@@ -9,7 +9,8 @@ type AppAssertParams = (
   statusCode: HttpStatusCode,
   message: string,
   errorCode?: ErrorCode,
-  firebaseUID?: string
+  firebaseUID?: string | null,
+  awsUrl?: string[] | null
 ) => asserts condition;
 
 const appAssert: AppAssertParams = (
@@ -17,11 +18,12 @@ const appAssert: AppAssertParams = (
   statusCode,
   message,
   errorCode,
-  firebaseUID
+  firebaseUID,
+  awsUrl
 ) => {
   return assert(
     condition,
-    new AppError(statusCode, message, errorCode, firebaseUID)
+    new AppError(statusCode, message, errorCode, firebaseUID, awsUrl)
   );
 };
 

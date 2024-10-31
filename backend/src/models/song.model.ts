@@ -11,14 +11,15 @@ export interface SongDocument extends mongoose.Document {
   songUrl: string; // 歌曲連結
   imageUrl: string; //封面連結
   duration: number;
-  releaseDate: Date; // 發行日期
+  releaseDate: Date; // 發行日期 *
+  album: mongoose.Types.ObjectId; // 專輯名稱 *
   playlist_for: mongoose.Types.ObjectId[]; // 歌曲所屬歌單
-  album: mongoose.Types.ObjectId; // 專輯名稱
+  lyricists: mongoose.Types.ObjectId[]; // 作詞者
   composers: mongoose.Types.ObjectId[]; // 作曲者
   languages: mongoose.Types.ObjectId[]; // 語言
-  genres: mongoose.Types.ObjectId[]; // 流派
-  tags: mongoose.Types.ObjectId[]; // 標籤
-  lyrics: string[]; // 歌詞
+  genres: mongoose.Types.ObjectId[]; // 流派 *
+  tags: mongoose.Types.ObjectId[]; // 標籤 *
+  lyrics: string[]; // 歌詞 *
   activity: {
     total_likes: number;
     total_plays: number;
@@ -46,13 +47,18 @@ const songSchema = new mongoose.Schema<SongDocument>(
     imageUrl: { type: String, required: true },
     duration: { type: Number, required: true },
     releaseDate: { type: Date },
+    album: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Label",
+      index: true,
+    },
     playlist_for: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Playlist",
       index: true,
     },
-    album: {
-      type: mongoose.Schema.Types.ObjectId,
+    lyricists: {
+      type: [mongoose.Schema.Types.ObjectId],
       ref: "Label",
       index: true,
     },
@@ -98,7 +104,8 @@ const updateLabelUsages = async (
 
 // while created song, ...
 songSchema.post("save", async function (doc) {
-  const { id, playlist_for, userId, artist, composers, languages } = doc;
+  const { id, playlist_for, userId, artist, lyricists, composers, languages } =
+    doc;
 
   try {
     // increase count in user's total_songs
@@ -119,6 +126,11 @@ songSchema.post("save", async function (doc) {
     // update artist labels
     if (artist) {
       await updateLabelUsages(id, artist, LabelModel, "$push");
+    }
+
+    // update lyricist labels
+    if (lyricists) {
+      await updateLabelUsages(id, lyricists, LabelModel, "$push");
     }
 
     // update composer labels
@@ -142,6 +154,7 @@ songSchema.post("findOneAndDelete", async function (doc) {
     userId,
     artist,
     playlist_for,
+    lyricists,
     composers,
     languages,
     songUrl,
@@ -166,6 +179,11 @@ songSchema.post("findOneAndDelete", async function (doc) {
     // update artist labels
     if (artist) {
       await updateLabelUsages(id, artist, LabelModel, "$pull");
+    }
+
+    // update lyricist labels
+    if (lyricists) {
+      await updateLabelUsages(id, lyricists, LabelModel, "$pull");
     }
 
     // update composer labels

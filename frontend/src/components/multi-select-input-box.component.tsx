@@ -269,7 +269,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
                               />
                               <p
                                 className={`
-                                  text-[14px]
+                                  text-sm
                                   text-neutral-400
                                   capitalize
                                   group-hover:text-white

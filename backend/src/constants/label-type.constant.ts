@@ -5,9 +5,10 @@ enum LabelOptions {
   THEME = "theme",
   FEATURE = "feature",
   REGION = "region",
-  CREATE = "create",
   COMPOSER = "composer",
+  LYRICIST = "lyricist",
   ARTIST = "artist",
+  CREATE = "create",
   NULL = "null",
 }
 

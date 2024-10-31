@@ -60,16 +60,19 @@ const UploadModal = () => {
     mutationKey: [MutationKey.CREATE_NEW_SONG],
     mutationFn: createSongData,
     onSuccess: () => {
+      // close modal
+      closeUploadModal();
+
+      // reset form input value
+      reset(defaultsSongData);
+
       // refetch user playlists
       queryClient.invalidateQueries([
         QueryKey.GET_USER_PLAYLISTS,
       ] as InvalidateQueryFilters);
 
-      closeUploadModal();
-
+      // display successfully message
       toast.success(`“${songName}” has been created successfully`);
-
-      reset(defaultsSongData);
     },
     onError: (error) => toast.error(error.message),
   });
@@ -79,6 +82,7 @@ const UploadModal = () => {
     register,
     handleSubmit,
     setValue,
+    watch,
     setError,
     trigger,
     reset,
@@ -94,6 +98,8 @@ const UploadModal = () => {
     if (title) {
       setSongName(title);
     }
+
+    console.log(value);
 
     createNewSongData(value);
   };
@@ -317,6 +323,24 @@ const UploadModal = () => {
                gap-4
             `}
           >
+            {/* Song lyricist */}
+            <InputBox
+              id="lyricist"
+              type="text"
+              title="Enter song lyricist"
+              placeholder="Song lyricist"
+              warning={[
+                "If there is more than one lyricist, please separate them with a comma. [e.g., John, Jason]",
+              ]}
+              formValueState={{
+                name: "lyricists",
+                setFormValue: setValue,
+                trigger,
+              }}
+              toArray={true}
+              disabled={isPending}
+            />
+
             {/* Song composer */}
             <InputBox
               id="composer"
@@ -330,6 +354,10 @@ const UploadModal = () => {
                 name: "composers",
                 setFormValue: setValue,
                 trigger,
+              }}
+              syncWithOtherInput={{
+                active: true,
+                syncVal: watch("lyricists"),
               }}
               toArray={true}
               disabled={isPending}

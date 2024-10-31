@@ -8,6 +8,8 @@ import {
 import AppError from "../utils/app-error.util";
 import { clearAuthCookies } from "../utils/cookies.util";
 import admin from "../config/firebase.config";
+import { deleteAwsFileUrl } from "../utils/aws-s3-url.util";
+import awsUrlParser from "../utils/aws-url-parser.util";
 
 const errorHandler = (): ErrorRequestHandler => {
   return async (error, req, res, next) => {
@@ -43,6 +45,19 @@ const errorHandler = (): ErrorRequestHandler => {
       if (error.errorCode === "InvalidFirebaseCredential") {
         if (error.firebaseUID) {
           await admin.auth().deleteUser(error.firebaseUID);
+        }
+      }
+
+      // if get error from create song API, delete url file from aws
+      if (error.errorCode === "CreateSongError" && error.awsUrl?.length) {
+        const urls = error.awsUrl;
+
+        for (const url of urls) {
+          // parse url to get key
+          const { awsS3Key } = awsUrlParser(url);
+
+          // delete it from aws
+          await deleteAwsFileUrl(awsS3Key);
         }
       }
 

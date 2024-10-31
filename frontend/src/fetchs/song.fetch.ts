@@ -13,7 +13,7 @@ import API from "../config/api-client.config";
 export const createSongData = async (data: DefaultsSongType) => {
   const nanoID = nanoid();
 
-  const { songFile, imageFile, artist, composers, ...params } = data;
+  const { songFile, imageFile, artist, lyricists, composers, ...params } = data;
 
   let duration = 0;
 
@@ -50,6 +50,13 @@ export const createSongData = async (data: DefaultsSongType) => {
     createIfAbsent: true,
   });
 
+  // get lyricists ids
+  const lyricistIds = await getLabelIds({
+    labels: lyricists,
+    type: LabelOptions.LYRICIST,
+    createIfAbsent: true,
+  });
+
   // get composer ids
   const composerIds = await getLabelIds({
     labels: composers,
@@ -60,6 +67,7 @@ export const createSongData = async (data: DefaultsSongType) => {
   return API.post("/song/create", {
     ...params,
     artist: artistIds,
+    lyricists: lyricistIds,
     composers: composerIds,
     songUrl,
     duration,

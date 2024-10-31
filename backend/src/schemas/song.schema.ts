@@ -13,6 +13,7 @@ export const songSchema = z.object({
   duration: z.number(),
   playlist_for: verificationCodeSchema,
   album: verificationCodeSchema.optional().nullable(),
+  lyricists: z.array(verificationCodeSchema).optional().nullable(),
   composers: z.array(verificationCodeSchema).optional().nullable(),
   languages: z.array(verificationCodeSchema).optional().nullable(),
   genres: z.array(verificationCodeSchema).optional().nullable(),

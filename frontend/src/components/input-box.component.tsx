@@ -23,6 +23,10 @@ interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
     setFormValue: UseFormSetValue<DefaultsSongType>;
     trigger: UseFormTrigger<DefaultsSongType>;
   };
+  syncWithOtherInput?: {
+    active: boolean;
+    syncVal: string | string[] | FileList | null;
+  };
   iconHighlight?: boolean;
   className?: string;
 }
@@ -36,6 +40,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       warning,
       toArray,
       formValueState,
+      syncWithOtherInput,
       iconHighlight = true,
       type,
       disabled,
@@ -48,11 +53,16 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
     },
     ref
   ) => {
+    const { active: syncFnActive, syncVal } = syncWithOtherInput ?? {};
+
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const [inputVal, setInputVal] = useState("");
+    const prevFormValRef = useRef<string | null>(null);
+
+    const [inputVal, setInputVal] = useState<string>("");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isFileSelected, setIsFileSelected] = useState(false);
     const [visibleWarning, setVisibleWarning] = useState(false);
+    const [isSyncChecked, setIsSyncChecked] = useState(false);
 
     // switch password visibility
     const handleSwitchPasswordVisibility = (
@@ -77,6 +87,12 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       }
     };
 
+    const handleCheckboxOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const checked = e.target.checked;
+
+      setIsSyncChecked(!!checked);
+    };
+
     // handle input keydown
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       const ekey = e.key;
@@ -92,7 +108,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       }
     };
 
-    // handle input onblur
+    // handle input on blur
     const handleInputOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       timeoutForDelay(() => {
         setVisibleWarning(false);
@@ -120,6 +136,26 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       }
     }, [inputVal, toArray, formValueState]);
 
+    useEffect(() => {
+      // if syncVal is an array, join its elements into a single string
+      const formattedVal = (
+        Array.isArray(syncVal) ? syncVal.join(", ") : syncVal
+      ) as string;
+
+      // syncVal is derived from watch(name), which is a listening function.
+      // this can cause useEffect to trigger repeatedly even if the value hasn't changed.
+      // to prevent that, we check if the formatted value has actually changed.
+      const hasChanged = formattedVal !== prevFormValRef.current;
+
+      // if synchronization is enabled and the value has changed, update the input value
+      if (isSyncChecked && hasChanged) {
+        setInputVal(formattedVal);
+
+        // update the reference to the current formatted value for future comparisons
+        prevFormValRef.current = formattedVal;
+      }
+    }, [isSyncChecked, syncVal]);
+
     return (
       <div
         className={`
@@ -135,20 +171,49 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
           }
         `}
       >
-        {/* title */}
-        <>
-          {title && (
-            <p
-              className={`
-                text-sm
-                text-grey-custom/50
-              `}
-            >
-              {title}
-              {required && <span className={`text-red-500`}> *</span>}
-            </p>
-          )}
-        </>
+        {/* title && sync checkbox */}
+        <div
+          className={`
+            flex
+            items-center
+            justify-between
+            text-sm
+            text-grey-custom/50
+          `}
+        >
+          {/* title */}
+          <>
+            {title && (
+              <p>
+                {title}
+                {required && <span className={`text-red-500`}> *</span>}
+              </p>
+            )}
+          </>
+
+          {/* sync checkbox */}
+          <>
+            {syncFnActive && (
+              <AnimationWrapper>
+                <label
+                  className={`
+                    flex
+                    gap-2
+                    items-center
+                  `}
+                >
+                  <input
+                    type="checkbox"
+                    onChange={(e) => handleCheckboxOnChange(e)}
+                    disabled={disabled}
+                    className={`w-3 h-3`}
+                  />
+                  <p>sync</p>
+                </label>
+              </AnimationWrapper>
+            )}
+          </>
+        </div>
 
         {/* input */}
         <input
@@ -167,6 +232,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
           onKeyDown={(e) => handleInputKeyDown(e)}
           onBlur={(e) => handleInputOnBlur(e)}
           required={required}
+          readOnly={isSyncChecked}
           className={twMerge(
             `
               input-box

@@ -6,7 +6,8 @@ class AppError extends Error {
     public statusCode: HttpStatusCode,
     public message: string,
     public errorCode?: ErrorCode,
-    public firebaseUID?: string
+    public firebaseUID?: string | null,
+    public awsUrl?: string[] | null
   ) {
     super(message);
   }

@@ -44,6 +44,7 @@ export type resSong = {
   duration: number;
   releaseDate: Date; // 發行日期
   album: string; // 專輯名稱
+  lyricists: Label[]; // 作詞者
   composers: Label[]; // 作曲者
   languages: Label[]; // 語言
   genres: string[]; // 流派
@@ -66,11 +67,12 @@ export type generateResPlaylist = Omit<resPlaylist, "songs"> & {
 
 export type generateResSong = Omit<
   resSong,
-  "artist" | "composers" | "languages"
+  "artist" | "composers" | "lyricists" | "languages"
 > & {
   artist: string;
   composers: string;
   languages: string;
+  lyricists: string;
 };
 
 export type Label = {
@@ -99,6 +101,7 @@ export type reqUpload =
   | "artist"
   | "songFile"
   | "imageFile"
+  | "lyricists"
   | "composers"
   | "languages"
   | "genres"
