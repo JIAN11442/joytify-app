@@ -13,5 +13,5 @@ export const labelSchema = defaultLabelSchema.extend({
 });
 
 export const labelsSchema = defaultLabelSchema.extend({
-  labels: z.array(stringSchema).nullable(),
+  labels: z.array(stringSchema).optional(),
 });

@@ -65,12 +65,14 @@ export const usePlaylistById = (id: string, opts: object = {}) => {
     queryFn: async () => {
       try {
         const data = await getPlaylistById(id);
+
         const generateData = {
           ...data,
           songs: data.songs.map((song) => {
             return {
               ...song,
               artist: mergeLabels(song.artist, ", "),
+              lyricists: mergeLabels(song.lyricists, ", "),
               composers: mergeLabels(song.composers, ", "),
               languages: mergeLabels(song.languages, ", "),
             };

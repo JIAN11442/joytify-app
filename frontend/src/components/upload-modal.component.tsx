@@ -99,8 +99,6 @@ const UploadModal = () => {
       setSongName(title);
     }
 
-    console.log(value);
-
     createNewSongData(value);
   };
 
@@ -166,23 +164,10 @@ const UploadModal = () => {
         {/* input */}
         <div
           className={`
+            flex
+            flex-col
             w-full
-            ${
-              activeAdvancedSettings
-                ? `
-                    max-md:flex
-                    max-md:flex-col
-                    max-md:gap-3
-                    md:grid
-                    md:grid-cols-2
-                    md:gap-5
-                  `
-                : `
-                    flex
-                    flex-col
-                    gap-3
-                  `
-            }
+            gap-4
           `}
         >
           {/* Basic setting */}
@@ -190,7 +175,8 @@ const UploadModal = () => {
             className={`
               flex
               flex-col
-              gap-4
+              gap-5
+              ${activeAdvancedSettings && "md:grid md:grid-cols-2"}
             `}
           >
             {/* Song title */}
@@ -229,22 +215,11 @@ const UploadModal = () => {
               id="songFile"
               type="file"
               accept=".mp3"
-              title="Select a song file"
+              title="Select a song file (*.mp3)"
               disabled={isPending}
               required
               className={`p-3`}
               {...register("songFile", { required: true })}
-            />
-
-            {/* Song cover art file */}
-            <InputBox
-              id="imageFile"
-              type="file"
-              accept=".png, .jpg, .jpeg"
-              title="Select an image file"
-              disabled={isPending}
-              required
-              {...register("imageFile", { required: true })}
             />
 
             {/* Song Playlist */}
@@ -320,9 +295,20 @@ const UploadModal = () => {
             className={`
                flex
                flex-col
-               gap-4
+               gap-5
+               ${activeAdvancedSettings && "md:grid md:grid-cols-2"}
             `}
           >
+            {/* Song cover art file */}
+            <InputBox
+              id="imageFile"
+              type="file"
+              accept=".png, .jpg, .jpeg"
+              title="Select an image file (*.png)"
+              disabled={isPending}
+              {...register("imageFile")}
+            />
+
             {/* Song lyricist */}
             <InputBox
               id="lyricist"
@@ -356,7 +342,7 @@ const UploadModal = () => {
                 trigger,
               }}
               syncWithOtherInput={{
-                active: true,
+                active: !!watch("lyricists")?.length,
                 syncVal: watch("lyricists"),
               }}
               toArray={true}
@@ -392,6 +378,7 @@ const UploadModal = () => {
             flex
             items-center
             justify-center
+            ${activeAdvancedSettings && "mt-3"}
           `}
         >
           <button

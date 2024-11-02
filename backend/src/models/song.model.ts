@@ -44,7 +44,11 @@ const songSchema = new mongoose.Schema<SongDocument>(
       required: true,
     },
     songUrl: { type: String, required: true },
-    imageUrl: { type: String, required: true },
+    imageUrl: {
+      type: String,
+      default:
+        "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/default_img.png",
+    },
     duration: { type: Number, required: true },
     releaseDate: { type: Date },
     album: {
@@ -102,7 +106,7 @@ const updateLabelUsages = async (
   }
 };
 
-// while created song, ...
+// after created song, ...
 songSchema.post("save", async function (doc) {
   const { id, playlist_for, userId, artist, lyricists, composers, languages } =
     doc;
@@ -147,7 +151,7 @@ songSchema.post("save", async function (doc) {
   }
 });
 
-// while delete song, ...
+// after delete song, ...
 songSchema.post("findOneAndDelete", async function (doc) {
   const {
     id,

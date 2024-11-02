@@ -4,7 +4,7 @@ import AppError from "./app-error.util";
 import { HttpStatusCode } from "../constants/http-code.constant";
 import ErrorCode from "../constants/error-code.constant";
 
-type AppAssertParams = (
+export type AppAssertParams = (
   condition: any,
   statusCode: HttpStatusCode,
   message: string,

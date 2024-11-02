@@ -8,7 +8,7 @@ interface createLabelParams {
 }
 
 interface getLabelIdsParams {
-  labels: string[] | null;
+  labels: string[] | null | undefined;
   type: LabelType;
   createIfAbsent?: boolean;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import { IoMdClose } from "react-icons/io";
@@ -6,6 +6,7 @@ import { IoMdClose } from "react-icons/io";
 import Icon from "./react-icons.component";
 
 import { timeoutForEventListener } from "../lib/timeout.lib";
+import mergeRefs from "../lib/merge-refs.lib";
 
 type ModalProps = {
   title?: string;
@@ -23,137 +24,142 @@ type ModalProps = {
   autoCloseModalFn?: boolean;
 };
 
-const Modal: React.FC<ModalProps> = ({
-  title,
-  description,
-  activeState,
-  children,
-  activeOnChange,
-  closeBtnDisabled,
-  closeModalFn,
-  className,
-  autoCloseModalFn = true,
-}) => {
-  const modalRef = useRef<HTMLDivElement>(null);
+const Modal = forwardRef<HTMLDivElement, ModalProps>(
+  (
+    {
+      title,
+      description,
+      activeState,
+      children,
+      activeOnChange,
+      closeBtnDisabled,
+      closeModalFn,
+      className,
+      autoCloseModalFn = true,
+    },
+    ref
+  ) => {
+    const modalRef = useRef<HTMLDivElement>(null);
 
-  // while autoCloseModalFn is true, close modal when clicked outside
-  useEffect(() => {
-    const handleModalOnBlur: EventListener = (e) => {
-      if (
-        autoCloseModalFn &&
-        modalRef.current &&
-        !modalRef.current.contains(e.target as Node)
-      ) {
-        closeModalFn();
-      }
-    };
+    // while autoCloseModalFn is true, close modal when clicked outside
+    useEffect(() => {
+      const handleModalOnBlur: EventListener = (e) => {
+        if (
+          autoCloseModalFn &&
+          modalRef.current &&
+          !modalRef.current.contains(e.target as Node)
+        ) {
+          closeModalFn();
+        }
+      };
 
-    return timeoutForEventListener(document, "click", handleModalOnBlur);
-  }, [autoCloseModalFn, modalRef]);
+      return timeoutForEventListener(document, "click", handleModalOnBlur);
+    }, [autoCloseModalFn, modalRef]);
 
-  return (
-    <Dialog.Root
-      open={activeState}
-      defaultOpen={activeState}
-      onOpenChange={activeOnChange}
-    >
-      <Dialog.Portal>
-        <Dialog.Overlay
-          className={`
-            fixed
-            inset-0
-            bg-neutral-900/90
-          `}
-        />
-        <Dialog.Content
-          ref={modalRef}
-          className={twMerge(
-            `
-            fixed
-            -translate-x-1/2
-            -translate-y-1/2
-            top-1/2
-            left-1/2
-            min-w-[350px]
-            max-sm:w-[90vw]
-            sm:min-w-[500px]
-            sm:max-w-[90vw]
-            h-auto
-            max-h-[90vh]
-            overflow-y-auto
-            p-[25px]
-            border
-            border-neutral-700
-            bg-neutral-800 
-            rounded-md
-            outline-none
-          `,
-            className?.wrapper
-          )}
-        >
-          {/* Title */}
-          <Dialog.Title
+    return (
+      <Dialog.Root
+        open={activeState}
+        defaultOpen={activeState}
+        onOpenChange={activeOnChange}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay
+            className={`
+              fixed
+              inset-0
+              bg-neutral-900/90
+            `}
+          />
+          <Dialog.Content
+            ref={mergeRefs(modalRef, ref)}
             className={twMerge(
               `
-                mb-4
-                text-2xl
-                font-bold
-                text-center
-                ${title ? "block" : "hidden"}
-              `,
-              className?.title
+              fixed
+              -translate-x-1/2
+              -translate-y-1/2
+              top-1/2
+              left-1/2
+              min-w-[350px]
+              max-sm:w-[90vw]
+              sm:min-w-[500px]
+              sm:max-w-[90vw]
+              h-auto
+              max-h-[90vh]
+              overflow-y-auto
+              p-[25px]
+              border
+              border-neutral-700
+              bg-neutral-800 
+              rounded-md
+              outline-none
+            `,
+              className?.wrapper
             )}
           >
-            {title}
-          </Dialog.Title>
-
-          {/* Description */}
-          <Dialog.Description
-            className={twMerge(
-              `
-                mb-5
-                text-sm
-                font-light
-                text-[#22c55e]
-                text-center
-                ${description ? "block" : "hidden"}
-              `,
-              className?.description
-            )}
-          >
-            {description}
-          </Dialog.Description>
-
-          {/* Content */}
-          <div>{children}</div>
-
-          {/* Close button */}
-          <Dialog.Close asChild>
-            <button
-              onClick={closeModalFn}
-              disabled={closeBtnDisabled}
-              className={`
-                absolute
-                group
-                top-5
-                right-5
-                hover-btn
-                ${closeBtnDisabled && "no-hover"}
-              `}
+            {/* Title */}
+            <Dialog.Title
+              className={twMerge(
+                `
+                  mb-4
+                  text-2xl
+                  font-bold
+                  text-center
+                  ${title ? "block" : "hidden"}
+                `,
+                className?.title
+              )}
             >
-              <Icon
-                name={IoMdClose}
+              {title}
+            </Dialog.Title>
+
+            {/* Description */}
+            <Dialog.Description
+              className={twMerge(
+                `
+                  mb-5
+                  text-sm
+                  font-light
+                  text-[#22c55e]
+                  text-center
+                  ${description ? "block" : "hidden"}
+                `,
+                className?.description
+              )}
+            >
+              {description}
+            </Dialog.Description>
+
+            {/* Content */}
+            <div>{children}</div>
+
+            {/* Close button */}
+            <Dialog.Close asChild>
+              <button
+                onClick={closeModalFn}
+                disabled={closeBtnDisabled}
                 className={`
-                  text-neutral-400
-                  ${!closeBtnDisabled && "group-hover:text-white"}
+                  absolute
+                  group
+                  top-5
+                  right-5
+                  hover-btn
+                  ${closeBtnDisabled && "no-hover"}
                 `}
-              />
-            </button>
-          </Dialog.Close>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
-  );
-};
+              >
+                <Icon
+                  name={IoMdClose}
+                  className={`
+                    text-neutral-400
+                    ${!closeBtnDisabled && "group-hover:text-white"}
+                  `}
+                />
+              </button>
+            </Dialog.Close>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    );
+  }
+);
 
 export default Modal;

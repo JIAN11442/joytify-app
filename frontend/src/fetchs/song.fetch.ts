@@ -16,6 +16,7 @@ export const createSongData = async (data: DefaultsSongType) => {
   const { songFile, imageFile, artist, lyricists, composers, ...params } = data;
 
   let duration = 0;
+  let imageUrl = null;
 
   const file = songFile?.[0] as File;
   const audio = new Audio(URL.createObjectURL(file));
@@ -36,12 +37,14 @@ export const createSongData = async (data: DefaultsSongType) => {
   });
 
   // get song image url from aws
-  const imageUrl = await uploadFileToAws({
-    subfolder: UploadFolder.SONGS_IMAGE,
-    extension: FileExtension.PNG,
-    file: imageFile?.[0] as File,
-    nanoID,
-  });
+  if (imageFile) {
+    imageUrl = await uploadFileToAws({
+      subfolder: UploadFolder.SONGS_IMAGE,
+      extension: FileExtension.PNG,
+      file: imageFile?.[0] as File,
+      nanoID,
+    });
+  }
 
   // get artist ids
   const artistIds = await getLabelIds({
@@ -71,7 +74,7 @@ export const createSongData = async (data: DefaultsSongType) => {
     composers: composerIds,
     songUrl,
     duration,
-    imageUrl,
+    ...(imageUrl ? { imageUrl } : {}),
   });
 };
 

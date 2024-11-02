@@ -71,7 +71,7 @@ export const createNewSong = async ({ userId, songInfo }: createParams) => {
   const params: appAssertParams = [
     ErrorCode.CreateSongError,
     null,
-    [songUrl, imageUrl],
+    [songUrl, ...(imageUrl ? [imageUrl] : [])],
   ];
 
   // check if song already exists

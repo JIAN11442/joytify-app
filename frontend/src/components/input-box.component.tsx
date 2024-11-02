@@ -25,7 +25,7 @@ interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   };
   syncWithOtherInput?: {
     active: boolean;
-    syncVal: string | string[] | FileList | null;
+    syncVal: string | string[] | FileList | null | undefined;
   };
   iconHighlight?: boolean;
   className?: string;

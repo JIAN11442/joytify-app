@@ -18,6 +18,7 @@ export const useSongById = (id: string, opts: object = {}) => {
         const generateSong = {
           ...song,
           artist: mergeLabels(song.artist, ", "),
+          lyricists: mergeLabels(song.lyricists, ", "),
           composers: mergeLabels(song.composers, ", "),
           languages: mergeLabels(song.languages, ", "),
         };
