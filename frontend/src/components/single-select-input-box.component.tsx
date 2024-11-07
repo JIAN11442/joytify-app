@@ -5,46 +5,52 @@ import {
   UseFormSetValue,
   UseFormTrigger,
 } from "react-hook-form";
+import _ from "lodash";
+import { IoIosClose } from "react-icons/io";
 
+import Icon from "./react-icons.component";
+import CreateNewBtn from "./create-new-button.component";
 import AnimationWrapper from "./animation-wrapper.component";
 
+import mergeRefs from "../lib/merge-refs.lib";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import { reqUpload } from "../constants/data-type.constant";
-import mergeRefs from "../lib/merge-refs.lib";
+import useLabelState from "../states/label.state";
 
-type OptionType = {
+export type InputOptionType = {
   id: string;
   title: string;
 };
 
-interface SingleSelectInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   title?: string;
-  options: OptionType[];
-  formValueState: {
+  options: InputOptionType[];
+  formMethods: {
     name: reqUpload;
     setFormValue: UseFormSetValue<any>;
     setFormError: UseFormSetError<any>;
     trigger: UseFormTrigger<any>;
   };
-  submitBtnRef?: React.RefObject<HTMLButtonElement>;
+  createNewFn?: () => void;
+  deleteOptFn?: (id: string) => void;
+  autoCloseMenuFn?: boolean;
 }
 
-const SingleSelectInputBox = forwardRef<
-  HTMLInputElement,
-  SingleSelectInputProps
->(
+const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       id,
       title,
       options,
-      formValueState,
+      formMethods,
+      createNewFn,
+      deleteOptFn,
+      autoCloseMenuFn = true,
       placeholder,
       onChange,
       required,
-      disabled,
+      disabled = false,
       ...props
     },
     ref
@@ -56,11 +62,14 @@ const SingleSelectInputBox = forwardRef<
     const [value, setValue] = useState("");
     const [hoverVal, setHoverVal] = useState<string>("");
     const [activeMenu, setActiveMenu] = useState<boolean>(false);
-    const [filterOptions, setFilterOptions] = useState<OptionType[]>(options);
+    const [filterOptions, setFilterOptions] =
+      useState<InputOptionType[]>(options);
     const [focusOptIndex, setFocusOptIndex] = useState(-1);
     const [selectedOptId, setSelectedOptId] = useState("");
 
-    const { name, setFormValue, trigger } = formValueState;
+    const { setDeletedLabel } = useLabelState();
+
+    const { name, setFormValue, trigger } = formMethods;
 
     // handle options onMouseEnter
     const handleOptionsOnMouseEnter = (opt: string) => {
@@ -77,7 +86,7 @@ const SingleSelectInputBox = forwardRef<
     };
 
     // handle options onClick
-    const handleOptionsOnClick = (opt: OptionType) => {
+    const handleOptionsOnClick = (opt: InputOptionType) => {
       setFormValue(name, opt.id);
       setSelectedOptId(opt.id);
       setValue(opt.title);
@@ -139,6 +148,28 @@ const SingleSelectInputBox = forwardRef<
       }
     };
 
+    // handle delete option
+    const handleDeleteOption = (
+      e: React.MouseEvent<HTMLButtonElement>,
+      opt: InputOptionType
+    ) => {
+      // avoid parent elemet <div> execute onClick function
+      e.stopPropagation();
+
+      if (deleteOptFn) {
+        // delete option function
+        deleteOptFn(opt.id);
+
+        // save deleted option title for toaster
+        setDeletedLabel(opt.title);
+
+        // clear input value after deleted option
+        setValue("");
+        setHoverVal("");
+      }
+    };
+
+    // open or close the menu when the input is focused or blurred
     useEffect(() => {
       const handleOnFocus: EventListener = (e) => {
         if (
@@ -152,22 +183,33 @@ const SingleSelectInputBox = forwardRef<
         }
       };
       const handleOnBlur: EventListener = (e) => {
-        if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        if (
+          autoCloseMenuFn &&
+          menuRef.current &&
+          !menuRef.current.contains(e.target as Node)
+        ) {
           timeoutForDelay(() => {
             setActiveMenu(false);
           });
         }
       };
 
-      return () => {
-        timeoutForEventListener(document, "click", handleOnFocus);
-        timeoutForEventListener(document, "click", handleOnBlur);
-      };
-    }, [disabled, inputRef, menuRef]);
+      timeoutForEventListener(document, "click", handleOnFocus);
+
+      return timeoutForEventListener(document, "click", handleOnBlur);
+    }, [autoCloseMenuFn, disabled, inputRef, menuRef]);
+
+    // renew filter options while parent options is refetch
+    useEffect(() => {
+      if (!_.isEqual(filterOptions, options)) {
+        setFilterOptions(options);
+      }
+    }, [options]);
 
     return (
       <div
         className={`
+          relative
           flex
           flex-col
           gap-2
@@ -226,7 +268,10 @@ const SingleSelectInputBox = forwardRef<
           animate={{ opacity: 1, scaleY: "100%", transformOrigin: "top" }}
           transition={{ duration: 0.2 }}
           className={`
-            -mt-3
+            absolute
+            z-10
+            top-full
+            w-full
             p-1
             max-h-[150px]
             bg-neutral-900
@@ -236,30 +281,76 @@ const SingleSelectInputBox = forwardRef<
             overflow-y-auto
           `}
         >
-          {filterOptions.map((opt, index) => (
-            <button
-              key={opt.id}
-              type="button"
-              onMouseEnter={() => handleOptionsOnMouseEnter(opt.title)}
-              onMouseLeave={() => handleOptionsOnMouseLeave()}
-              onClick={() => handleOptionsOnClick(opt)}
-              className={`
-                menu-btn
-                p-2
-                rounded-sm
-                ${
-                  index === focusOptIndex &&
-                  !hoverVal &&
-                  `
-                    bg-neutral-800/50
-                    text-white
-                  `
-                }
-            `}
-            >
-              {opt.title}
-            </button>
-          ))}
+          <div>
+            {/* options button */}
+            <>
+              {filterOptions.map((opt, index) => (
+                <div
+                  key={opt.id}
+                  onMouseEnter={() => handleOptionsOnMouseEnter(opt.title)}
+                  onMouseLeave={() => handleOptionsOnMouseLeave()}
+                  onClick={() => handleOptionsOnClick(opt)}
+                  className={`
+                    menu-btn
+                    flex
+                    p-2
+                    items-center
+                    justify-between
+                    rounded-sm
+                     ${
+                       index === focusOptIndex &&
+                       !hoverVal &&
+                       `
+                        bg-neutral-800/50
+                        text-white
+                       `
+                     }
+                  `}
+                >
+                  {/* option title */}
+                  <p>{opt.title}</p>
+
+                  {/* option delete button */}
+                  <>
+                    {deleteOptFn && (
+                      <button
+                        type="button"
+                        onClick={(e) => handleDeleteOption(e, opt)}
+                      >
+                        <Icon
+                          name={IoIosClose}
+                          opts={{ size: 18 }}
+                          className={`
+                            text-red-500
+                            hover:bg-red-500
+                            hover:text-white
+                            rounded-full
+                            transition
+                          `}
+                        />
+                      </button>
+                    )}
+                  </>
+                </div>
+              ))}
+            </>
+
+            {/* create new button */}
+            <>
+              {createNewFn && (
+                <CreateNewBtn
+                  type="button"
+                  tailwindCSS={{
+                    wrapper: `menu-btn p-2 rounded-sm`,
+                    icon: "hidden",
+                  }}
+                  onClick={() => createNewFn()}
+                >
+                  <p className={`normal-case text-sm`}>Create new</p>
+                </CreateNewBtn>
+              )}
+            </>
+          </div>
         </AnimationWrapper>
       </div>
     );

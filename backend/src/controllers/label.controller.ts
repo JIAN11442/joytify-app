@@ -79,9 +79,8 @@ export const deleteLabelHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = verificationCodeSchema.parse(req.userId);
     const id = verificationCodeSchema.parse(req.params.id);
-    const { label, type } = labelSchema.parse(req.body);
 
-    await deleteLabel({ id, userId, label, type });
+    await deleteLabel({ userId, id });
 
     res.status(OK).json({ message: "Label deleted" });
   } catch (error) {

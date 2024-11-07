@@ -13,10 +13,6 @@ interface getLabelIdsParams {
   createIfAbsent?: boolean;
 }
 
-interface deleteLabelParams extends createLabelParams {
-  id: string;
-}
-
 // get user all labels
 export const getUserLabels = (): Promise<resLabels> => API.get("/label");
 
@@ -29,9 +25,4 @@ export const getLabelIds = async (data: getLabelIdsParams) =>
   await API.post("/label/getIds", data);
 
 // delete label
-export const deleteLabel = (data: deleteLabelParams) => {
-  const { id, ...props } = data;
-
-  // the data parameter must be an object (props is an object here)
-  return API.delete(`/label/delete/${id}`, { data: props });
-};
+export const deleteLabel = (id: string) => API.delete(`/label/delete/${id}`);

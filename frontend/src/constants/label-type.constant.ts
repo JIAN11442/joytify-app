@@ -8,6 +8,7 @@ enum LabelOptions {
   COMPOSER = "composer",
   LYRICIST = "lyricist",
   ARTIST = "artist",
+  ALBUM = "album",
   CREATE = "create",
   NULL = "null",
 }

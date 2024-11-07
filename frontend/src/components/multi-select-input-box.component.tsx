@@ -1,18 +1,15 @@
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { UseFormSetValue } from "react-hook-form";
+import {
+  UseFormSetError,
+  UseFormSetValue,
+  UseFormTrigger,
+} from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { AiOutlinePlus } from "react-icons/ai";
-import { IoIosClose } from "react-icons/io";
 
-import Icon from "./react-icons.component";
+import CreateNewBtn from "./create-new-button.component";
 import AnimationWrapper from "./animation-wrapper.component";
+import OptionCheckboxItem from "./option-checkbox-item.component";
 
 import LabelOptions, { LabelType } from "../constants/label-type.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
@@ -23,6 +20,7 @@ import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import useUploadModalState from "../states/upload-modal.state";
 import { deleteLabel } from "../fetchs/label.fetch";
 import { useGetLabel } from "../hooks/label.hook";
+import useLabelState from "../states/label.state";
 
 export type OptionType = {
   type: LabelType;
@@ -35,9 +33,11 @@ interface MultiSelectInputProps
   title?: string;
   options: OptionType | OptionType[];
   autoCloseMenuFn?: boolean;
-  formValueState: {
+  formMethods: {
     name: reqUpload;
     setFormValue: UseFormSetValue<DefaultsSongType>;
+    setFormError?: UseFormSetError<DefaultsSongType>;
+    trigger?: UseFormTrigger<DefaultsSongType>;
   };
 }
 
@@ -49,7 +49,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
       options,
       placeholder,
       autoCloseMenuFn = true,
-      formValueState,
+      formMethods,
       disabled = false,
       ...props
     },
@@ -58,18 +58,16 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
     const inputRef = useRef<HTMLInputElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
 
-    // useImperativeHandle allows us to customize the instance value
-    // that is exposed to parent components when using ref
-    useImperativeHandle(ref, () => {
-      return inputRef.current as HTMLInputElement;
-    });
-
     const [activeMenu, setActiveMenu] = useState<boolean>(false);
     const [selectedOpts, setSelectedOpts] = useState<Label[]>([]);
     const [inputVal, setInputVal] = useState<string>("");
-    const [labelToDeleted, setLabelToDeleted] = useState<string>("");
 
     const { setActiveCreateLabelModal } = useUploadModalState();
+    const { deletedLabel, setDeletedLabel } = useLabelState();
+    const { refetch } = useGetLabel();
+
+    const { name, setFormValue } = formMethods;
+    const labelOpts = Object.values((options as OptionType).labels);
 
     // handle option menu onchange
     const handleOptMenuOnChange = (
@@ -95,14 +93,10 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
     };
 
     // handle delete label
-    const handleDeleteLabel = (opt: Label, type: LabelType) => {
-      setLabelToDeleted(opt.label);
-      deleteTargetLabel({ id: opt.id, label: opt.label, type });
+    const handleDeleteLabel = (opt: Label) => {
+      setDeletedLabel(opt.label);
+      deleteTargetLabel(opt.id);
     };
-
-    const { name, setFormValue } = formValueState;
-
-    const { refetch } = useGetLabel();
 
     const { mutate: deleteTargetLabel } = useMutation({
       mutationKey: [MutationKey.DELETE_LABEL_OPTION],
@@ -111,7 +105,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
         // refetch query label
         refetch();
         // display deleted successfully message
-        toast.success(`${labelToDeleted} already deleted`);
+        toast.success(`"${deletedLabel}" already deleted`);
       },
       onError: (error) => {
         toast.error(error.message);
@@ -184,8 +178,8 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
           )}
         </>
 
-        {/* input box && option menu */}
-        <div>
+        {/* input box && options menu */}
+        <div className={`relative`}>
           {/* input box */}
           <input
             id={id}
@@ -199,7 +193,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
             {...props}
           />
 
-          {/* Options */}
+          {/* Options menu*/}
           <AnimationWrapper
             ref={menuRef}
             visible={activeMenu}
@@ -207,6 +201,10 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
             animate={{ opacity: 1, scaleY: "100%", transformOrigin: "top" }}
             transition={{ duration: 0.2 }}
             className={`
+              absolute
+              z-10
+              top-full
+              w-full
               p-2
               max-h-[150px]
               bg-neutral-900
@@ -218,8 +216,8 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
           >
             {/* Label options */}
             <>
-              {Object.values((options as OptionType).labels).map(
-                (labelType, index) => (
+              {labelOpts &&
+                labelOpts.map((labelType, index) => (
                   <div
                     key={index}
                     className={`
@@ -239,115 +237,47 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
                     {/* options */}
                     <div
                       className={`
-                        pb-2
+                        pb-3
                         grid
                         grid-cols-2
                       `}
                     >
                       {/* options */}
                       <>
-                        {labelType.map((opt) => {
-                          return (
-                            <label
-                              key={opt.id}
-                              className={`
-                                group
-                                flex
-                                gap-2
-                                px-2
-                                py-0.5
-                                items-center
-                              `}
-                            >
-                              <input
-                                type="checkbox"
-                                name={opt.label}
+                        {labelType &&
+                          labelType.map((opt) => {
+                            return (
+                              <OptionCheckboxItem
+                                key={opt.id}
+                                opt={opt}
                                 checked={selectedOpts.includes(opt)}
-                                onChange={(e) => {
-                                  handleOptMenuOnChange(opt, e);
+                                onChange={(e) => handleOptMenuOnChange(opt, e)}
+                                deleteFunc={() => handleDeleteLabel(opt)}
+                                tailwindCss={{
+                                  deleteBtn: `
+                                  ${index === 1 ? "flex" : "hidden"}
+                                `,
                                 }}
                               />
-                              <p
-                                className={`
-                                  text-sm
-                                  text-neutral-400
-                                  capitalize
-                                  group-hover:text-white
-                                `}
-                              >
-                                {opt.label}
-                              </p>
-
-                              {/* delete button */}
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleDeleteLabel(
-                                    opt,
-                                    (options as OptionType).type
-                                  )
-                                }
-                                className={`${index === 1 ? "flex" : "hidden"}`}
-                              >
-                                <Icon
-                                  name={IoIosClose}
-                                  opts={{ size: 18 }}
-                                  className={`
-                                      text-red-500
-                                      p-[0.5px]
-                                      rounded-full
-                                      hover:bg-red-500
-                                      hover:text-white
-                                      transition
-                                    `}
-                                />
-                              </button>
-                            </label>
-                          );
-                        })}
+                            );
+                          })}
                       </>
 
                       {/* create new button */}
-                      <>
-                        {index === 0 && (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleActiveCreateLabelModal(
-                                LabelOptions.LANGUAGE
-                              )
-                            }
-                            className={`
-                              group
-                              flex
-                              gap-2
-                              px-2
-                              text-[14px]
-                              text-green-500/50
-                              hover:text-green-500
-                              items-center
-                              transition
-                            `}
-                          >
-                            <Icon
-                              name={AiOutlinePlus}
-                              opts={{ size: 12 }}
-                              className={`
-                                p-0.5
-                                rounded-full
-                                bg-green-500/50
-                                group-hover:bg-green-500
-                                text-black
-                              `}
-                            />
-                            <p>Create new</p>
-                          </button>
-                        )}
-                      </>
+                      <CreateNewBtn
+                        type="button"
+                        onClick={() =>
+                          handleActiveCreateLabelModal(LabelOptions.LANGUAGE)
+                        }
+                        tailwindCSS={{
+                          wrapper: `${index === 0 ? "flex" : "hidden"}`,
+                        }}
+                      >
+                        <p>Create new</p>
+                      </CreateNewBtn>
                     </div>
                   </div>
-                )
-              )}
+                ))}
             </>
           </AnimationWrapper>
         </div>

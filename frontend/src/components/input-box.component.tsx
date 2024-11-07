@@ -1,5 +1,9 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { UseFormSetValue, UseFormTrigger } from "react-hook-form";
+import {
+  UseFormSetError,
+  UseFormSetValue,
+  UseFormTrigger,
+} from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { IconType } from "react-icons";
@@ -15,12 +19,12 @@ import { DefaultsSongType } from "../constants/form-default-data.constant";
 interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
   icon?: IconType;
-  value?: string;
   warning?: string[];
   toArray?: boolean;
-  formValueState?: {
+  formMethods?: {
     name: reqUpload;
     setFormValue: UseFormSetValue<DefaultsSongType>;
+    setFormError?: UseFormSetError<DefaultsSongType>;
     trigger: UseFormTrigger<DefaultsSongType>;
   };
   syncWithOtherInput?: {
@@ -39,7 +43,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       icon,
       warning,
       toArray,
-      formValueState,
+      formMethods,
       syncWithOtherInput,
       iconHighlight = true,
       type,
@@ -120,8 +124,8 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
     };
 
     useEffect(() => {
-      if (formValueState) {
-        const { name, setFormValue, trigger } = formValueState;
+      if (formMethods) {
+        const { name, setFormValue, trigger } = formMethods;
 
         if (toArray) {
           const generateInputVal = inputVal
@@ -134,7 +138,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
 
         trigger(name);
       }
-    }, [inputVal, toArray, formValueState]);
+    }, [inputVal, toArray, formMethods]);
 
     useEffect(() => {
       // if syncVal is an array, join its elements into a single string
@@ -286,7 +290,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
               className={`
                 flex
                 gap-2
-                text-[14px]
+                text-sm
                 text-red-500
               `}
             >

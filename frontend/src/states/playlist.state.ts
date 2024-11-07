@@ -12,7 +12,7 @@ export type PlaylistModalType = {
   playlist: generateResPlaylist | null;
 };
 
-export type PlaylistState = {
+type PlaylistState = {
   userPlaylists: resPlaylist[] | null;
   targetPlaylist: generateResPlaylist | null;
   activePlaylistEditModal: PlaylistModalType;

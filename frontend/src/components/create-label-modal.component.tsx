@@ -2,14 +2,10 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { BsFillSendFill } from "react-icons/bs";
 
-import Modal from "./modal.component";
-import InputBox from "./input-box.component";
-import Icon from "./react-icons.component";
 import { OptionType } from "./multi-select-input-box.component";
+import OptionCreateModal from "./option-create-modal.component";
 
-import useUploadModalState from "../states/upload-modal.state";
 import {
   defaultsCreateLabelData,
   DefaultsCreateLabelType,
@@ -19,9 +15,10 @@ import LabelOptions from "../constants/label-type.constant";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { createLabel } from "../fetchs/label.fetch";
 import { useGetLabel } from "../hooks/label.hook";
+import useUploadModalState from "../states/upload-modal.state";
 
 const CreateLabelModal = () => {
-  const [formLabel, setFormLabel] = useState("");
+  const [formVal, setFormVal] = useState("");
   const { activeCreateLabelModal, setActiveCreateLabelModal } =
     useUploadModalState();
   const { type, active, options } = activeCreateLabelModal;
@@ -29,7 +26,7 @@ const CreateLabelModal = () => {
   const { refetch } = useGetLabel();
 
   // handle close modal
-  const closeLabelModal = () => {
+  const handleCloseModal = () => {
     timeoutForDelay(() => {
       setActiveCreateLabelModal({
         type: LabelOptions.NULL,
@@ -46,11 +43,11 @@ const CreateLabelModal = () => {
     mutationFn: createLabel,
     onSuccess: () => {
       // display success message
-      toast.success(`${formLabel} label is created`);
+      toast.success(`"${formVal}" ${type} is created`);
       // refetch label query
       refetch();
       // close modal
-      closeLabelModal();
+      handleCloseModal();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -70,68 +67,30 @@ const CreateLabelModal = () => {
   const onSubmit: SubmitHandler<DefaultsCreateLabelType> = async (value) => {
     const { label } = value;
 
-    setFormLabel(label);
+    setFormVal(label);
     createUserLabel({ label, type });
   };
 
   return (
-    <Modal
-      title={`Create new ${type} option`}
-      activeState={active}
-      closeModalFn={closeLabelModal}
+    <OptionCreateModal
+      type="label"
+      active={active}
+      closeModalFn={handleCloseModal}
       autoCloseModalFn={false}
-    >
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className={`
-          relative
-          flex
-          gap-3
-          items-center
-        `}
-      >
-        {/* input box */}
-        <InputBox
-          id="label"
-          placeholder={`new ${type} option`}
-          {...register("label", {
-            required: true,
-            validate: (value) => {
-              const labels = (options as OptionType).labels;
-              const allLabels = [
-                ...labels.defaults,
-                ...(labels.created ? labels.created : []),
-              ];
-              return !allLabels.some((label) => label.label === value);
-            },
-          })}
-          className={`capitalize pr-[3rem]`}
-        />
-
-        {/* submit button */}
-        <button
-          disabled={!isValid}
-          className={`
-            absolute
-            -translate-y-1/2
-            top-1/2
-            right-4
-            text-[14px]
-            disabled:text-neutral-500
-          `}
-        >
-          <Icon
-            name={BsFillSendFill}
-            className={`${
-              isValid &&
-              `
-                text-green-500
-              `
-            }`}
-          />
-        </button>
-      </form>
-    </Modal>
+      formOnSubmit={handleSubmit(onSubmit)}
+      registerValidState={isValid}
+      {...register("label", {
+        required: true,
+        validate: (value) => {
+          const labels = (options as OptionType).labels;
+          const allLabels = [
+            ...(labels.defaults ? labels.defaults : []),
+            ...(labels.created ? labels.created : []),
+          ];
+          return !allLabels.some((label) => label.label === value);
+        },
+      })}
+    />
   );
 };
 

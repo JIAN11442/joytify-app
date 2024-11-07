@@ -7,7 +7,7 @@ import PlaylistModel from "../models/playlist.model";
 import {
   createNewPlaylist,
   deletePlaylistById,
-  getUserPlaylist,
+  getUserPlaylists,
   getUserPlaylistById,
   updatePlaylistById,
 } from "../services/playlist.service";
@@ -26,7 +26,7 @@ export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
     const userId = verificationCodeSchema.parse(req.userId);
     const searchParams = parseParams(req.params.query);
 
-    const { playlists } = await getUserPlaylist(userId, searchParams);
+    const { playlists } = await getUserPlaylists(userId, searchParams);
 
     return res.status(OK).json(playlists);
   } catch (error) {
@@ -38,9 +38,10 @@ export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
 export const createPlaylistHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = verificationCodeSchema.parse(req.userId);
+    const { title } = playlistSchema.parse(req.body);
 
     // create playlist
-    const { playlist } = await createNewPlaylist(userId);
+    const { playlist } = await createNewPlaylist({ userId, title });
 
     res.status(CREATED).json(playlist);
   } catch (error) {

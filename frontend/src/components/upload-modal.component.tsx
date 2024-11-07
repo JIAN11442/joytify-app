@@ -20,40 +20,35 @@ import {
   defaultsSongData,
   DefaultsSongType,
 } from "../constants/form-default-data.constant";
-import usePlaylistState from "../states/playlist.state";
 import useUploadModalState from "../states/upload-modal.state";
 import { createSongData } from "../fetchs/song.fetch";
-import { timeoutForDelay } from "../lib/timeout.lib";
-import queryClient from "../config/query-client.config";
 import { useGetLabel } from "../hooks/label.hook";
+import { usePlaylists } from "../hooks/playlist.hook";
+import queryClient from "../config/query-client.config";
+import { timeoutForDelay } from "../lib/timeout.lib";
+import LabelOptions from "../constants/label-type.constant";
+import { deleteLabel } from "../fetchs/label.fetch";
+import useLabelState from "../states/label.state";
 
 const UploadModal = () => {
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
   const [songName, setSongName] = useState("");
-  const { userPlaylists } = usePlaylistState();
 
   const {
     activeUploadModal,
     closeUploadModal,
     activeAdvancedSettings,
     activeCreateLabelModal,
+    activeCreatePlaylistModal,
+    setActiveCreateLabelModal,
     setActiveAdvancedSettings,
+    setActiveCreatePlaylistModal,
   } = useUploadModalState();
+  const { deletedLabel } = useLabelState();
 
-  // handle active advanced settings
-  const handleActiveAdvancedSettings = () => {
-    timeoutForDelay(() => {
-      setActiveAdvancedSettings(true);
-    });
-  };
-
-  // handle inactive advanced settings
-  const handleInactiveAdvancedSettings = () => {
-    timeoutForDelay(() => {
-      setActiveAdvancedSettings(false);
-    });
-  };
+  const { playlists } = usePlaylists();
+  const { labels, refetch } = useGetLabel();
 
   // create song mutation
   const { mutate: createNewSongData, isPending } = useMutation({
@@ -77,6 +72,64 @@ const UploadModal = () => {
     onError: (error) => toast.error(error.message),
   });
 
+  // delete label mutation
+  const { mutate: deleteTargetLabel } = useMutation({
+    mutationKey: [MutationKey.DELETE_LABEL_OPTION],
+    mutationFn: deleteLabel,
+    onSuccess: () => {
+      // refetch get labels query
+      refetch();
+      // display successfully message
+      toast.success(`"${deletedLabel}" already deleted`);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  // handle active advanced settings
+  const handleActiveAdvancedSettings = () => {
+    timeoutForDelay(() => {
+      setActiveAdvancedSettings(true);
+    });
+  };
+
+  // handle inactive advanced settings
+  const handleInactiveAdvancedSettings = () => {
+    timeoutForDelay(() => {
+      setActiveAdvancedSettings(false);
+    });
+  };
+
+  // handle active create playlist modal
+  const handleActiveCreatePlaylistModal = () => {
+    timeoutForDelay(() => {
+      setActiveCreatePlaylistModal({
+        active: true,
+        options: playlists?.map((playlist) => playlist.title) || null,
+      });
+    });
+  };
+
+  // handle active create album modal
+  const handleActiveCreateAlbumModal = () => {
+    timeoutForDelay(() => {
+      setActiveCreateLabelModal({
+        type: LabelOptions.ALBUM,
+        active: true,
+        options: {
+          type: LabelOptions.ALBUM,
+          labels: labels
+            ? {
+                defaults: labels.default?.album || null,
+                created: labels.created?.album || null,
+              }
+            : null,
+        } as OptionType,
+      });
+    });
+  };
+
   // get form data
   const {
     register,
@@ -92,6 +145,12 @@ const UploadModal = () => {
     mode: "onChange",
   });
 
+  const defaultFormMethods = {
+    setFormValue: setValue,
+    setFormError: setError,
+    trigger,
+  };
+
   const onSubmit: SubmitHandler<DefaultsSongType> = async (value) => {
     const { title } = value;
 
@@ -102,8 +161,6 @@ const UploadModal = () => {
     createNewSongData(value);
   };
 
-  const { labels } = useGetLabel();
-
   return (
     <Modal
       title="Add a song"
@@ -111,7 +168,11 @@ const UploadModal = () => {
       activeState={activeUploadModal}
       closeModalFn={closeUploadModal}
       closeBtnDisabled={isPending}
-      autoCloseModalFn={!activeCreateLabelModal.active && !isPending}
+      autoCloseModalFn={
+        !activeCreateLabelModal.active &&
+        !activeCreatePlaylistModal.active &&
+        !isPending
+      }
       className={{
         wrapper: `
           ${
@@ -199,11 +260,7 @@ const UploadModal = () => {
               warning={[
                 "If there is more than one artist, please separate them with a comma. [e.g., John, Jason]",
               ]}
-              formValueState={{
-                name: "artist",
-                setFormValue: setValue,
-                trigger,
-              }}
+              formMethods={{ ...defaultFormMethods, name: "artist" }}
               toArray={true}
               disabled={isPending}
               required
@@ -227,24 +284,21 @@ const UploadModal = () => {
               id="playlist_for"
               title="Select a playlist"
               placeholder="Click to choose a playlist"
-              formValueState={{
-                name: "playlist_for",
-                setFormValue: setValue,
-                setFormError: setError,
-                trigger,
-              }}
+              formMethods={{ ...defaultFormMethods, name: "playlist_for" }}
               options={
-                userPlaylists?.map((playlist) => ({
-                  id: playlist?._id,
-                  title: playlist?.title,
+                playlists?.map((playlist) => ({
+                  id: playlist._id,
+                  title: playlist.title,
                 })) || []
               }
+              createNewFn={handleActiveCreatePlaylistModal}
+              autoCloseMenuFn={!activeCreatePlaylistModal.active}
               disabled={isPending}
               required
               {...register("playlist_for", {
                 required: true,
                 validate: (val) =>
-                  userPlaylists
+                  playlists
                     ?.map((playlist) => playlist._id)
                     .includes(val ?? ""),
               })}
@@ -318,11 +372,7 @@ const UploadModal = () => {
               warning={[
                 "If there is more than one lyricist, please separate them with a comma. [e.g., John, Jason]",
               ]}
-              formValueState={{
-                name: "lyricists",
-                setFormValue: setValue,
-                trigger,
-              }}
+              formMethods={{ ...defaultFormMethods, name: "lyricists" }}
               toArray={true}
               disabled={isPending}
             />
@@ -336,11 +386,7 @@ const UploadModal = () => {
               warning={[
                 "If there is more than one composer, please separate them with a comma. [e.g., John, Jason]",
               ]}
-              formValueState={{
-                name: "composers",
-                setFormValue: setValue,
-                trigger,
-              }}
+              formMethods={{ ...defaultFormMethods, name: "composers" }}
               syncWithOtherInput={{
                 active: !!watch("lyricists")?.length,
                 syncVal: watch("lyricists"),
@@ -354,20 +400,39 @@ const UploadModal = () => {
               id="language"
               title="Select one or more language of song"
               placeholder="Click to choose song language"
-              autoCloseMenuFn={!activeCreateLabelModal.active}
-              formValueState={{ name: "languages", setFormValue: setValue }}
+              formMethods={{ ...defaultFormMethods, name: "languages" }}
               options={
                 {
-                  type: "language",
-                  labels: {
-                    defaults: labels?.default.language,
-                    ...(labels?.created?.language && {
-                      created: labels.created.language,
-                    }),
-                  },
+                  type: LabelOptions.LANGUAGE,
+                  labels: labels
+                    ? {
+                        defaults: labels.default?.language || null,
+                        created: labels.created?.language || null,
+                      }
+                    : null,
                 } as OptionType
               }
+              autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}
+            />
+
+            {/* Album */}
+            <SingleSelectInputBox
+              id="album"
+              title="Select or create an album"
+              placeholder="Click to choose an album"
+              formMethods={{ ...defaultFormMethods, name: "album" }}
+              options={
+                labels?.created?.album
+                  ? labels?.created?.album.map((opt) => ({
+                      id: opt.id,
+                      title: opt.label,
+                    }))
+                  : []
+              }
+              createNewFn={handleActiveCreateAlbumModal}
+              deleteOptFn={deleteTargetLabel}
+              autoCloseMenuFn={!activeCreateLabelModal.active}
             />
           </AnimationWrapper>
         </div>

@@ -43,7 +43,7 @@ const playlistSchema = new mongoose.Schema<PlaylistDocument>(
 // before create playlist, ...
 playlistSchema.pre("save", async function (next) {
   // generate default playlist title
-  if (this.isNew && !this.default) {
+  if (this.isNew && !this.default && !this.title) {
     const baseTitle = "My Playlist";
     let index = 1;
     let title = `${baseTitle} #${index}`;

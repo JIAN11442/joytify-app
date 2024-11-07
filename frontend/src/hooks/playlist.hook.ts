@@ -8,7 +8,7 @@ import { QueryKey } from "../constants/query-client-key.constant";
 import mergeLabels from "../lib/merge-labels.lib";
 
 export const usePlaylists = (
-  searchParams: string | null,
+  searchParams?: string | null,
   opts: object = {}
 ) => {
   const [isQueryError, setIsQueryError] = useState(false);
@@ -75,6 +75,7 @@ export const usePlaylistById = (id: string, opts: object = {}) => {
               lyricists: mergeLabels(song.lyricists, ", "),
               composers: mergeLabels(song.composers, ", "),
               languages: mergeLabels(song.languages, ", "),
+              album: song.album.label,
             };
           }),
         };

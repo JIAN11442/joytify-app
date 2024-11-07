@@ -258,7 +258,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
                 w-[210px]
               `}
             >
-              {/* Add playlist button */}
+              {/* Add new song button */}
               <button
                 onClick={handleActiveUploadMusicModal}
                 className={`
@@ -273,7 +273,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
                 <p>Create a new song</p>
               </button>
 
-              {/* Add playlist button */}
+              {/* Add new playlist button */}
               <button
                 onClick={handleCreateNewPlaylist}
                 className={`

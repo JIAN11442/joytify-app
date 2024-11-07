@@ -93,7 +93,7 @@ body,
   .menu-btn {
     @apply w-full
     p-2
-    text-[14px]
+    text-sm
     text-start
     text-neutral-400
     capitalize

@@ -8,13 +8,16 @@ import {
 import usePalette from "../hooks/paletee.hook";
 import SongModel, { SongDocument } from "../models/song.model";
 
-type updatePlaylistParams = {
-  playlistId: string;
+type createPlaylistParams = {
   userId: string;
   title?: string;
+};
+
+interface updatePlaylistParams extends createPlaylistParams {
+  playlistId: string;
   description?: string;
   imageUrl?: string;
-};
+}
 
 type deletePlaylistParams = {
   userId: string;
@@ -23,7 +26,7 @@ type deletePlaylistParams = {
 };
 
 // get user all playlist service
-export const getUserPlaylist = async (
+export const getUserPlaylists = async (
   userId: string,
   searchParams: string | null
 ) => {
@@ -72,7 +75,9 @@ export const getUserPlaylistById = async (
     populate: [
       { path: "artist", select: "label" },
       { path: "composers", select: "label" },
+      { path: "lyricists", select: "label" },
       { path: "languages", select: "label" },
+      { path: "album", select: "label" },
     ],
   });
 
@@ -86,8 +91,8 @@ export const getUserPlaylistById = async (
 };
 
 // create new playlist service
-export const createNewPlaylist = async (userId: string) => {
-  const playlist = await PlaylistModel.create({ userId });
+export const createNewPlaylist = async (data: createPlaylistParams) => {
+  const playlist = await PlaylistModel.create({ ...data });
 
   appAssert(playlist, INTERNAL_SERVER_ERROR, "Failed to create playlist");
 

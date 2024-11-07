@@ -8,14 +8,14 @@ import {
 } from "../constants/http-code.constant";
 import appAssert from "../utils/app-assert.util";
 
-interface createLabelParams {
+type deleteLabelParams = {
+  id?: string;
   userId: string;
+};
+
+interface createLabelParams extends deleteLabelParams {
   label: string;
   type: LabelType;
-}
-
-interface deleteLabelParams extends createLabelParams {
-  id: string;
 }
 
 interface getLabelIdArrayParams extends createLabelParams {
@@ -141,12 +141,10 @@ export const getLabelId = async (data: getLabelIdArrayParams) => {
 
 // delete label service
 export const deleteLabel = async (data: deleteLabelParams) => {
-  const { id, userId, label, type } = data;
+  const { id, userId } = data;
 
   const findQuery: FilterQuery<LabelDocument> = {
     _id: id,
-    label,
-    type,
     author: userId,
     default: false,
   };

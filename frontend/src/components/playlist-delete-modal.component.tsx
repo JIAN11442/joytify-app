@@ -18,7 +18,7 @@ import { usePlaylists } from "../hooks/playlist.hook";
 
 const PlaylistDeleteModal = () => {
   const navigate = useNavigate();
-  const { refetch } = usePlaylists(null);
+  const { refetch } = usePlaylists();
 
   const { activeDeletePlaylistModal, closePlaylistDeleteModal, userPlaylists } =
     usePlaylistState();

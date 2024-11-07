@@ -43,7 +43,7 @@ export type resSong = {
   imageUrl: string; //封面連結
   duration: number;
   releaseDate: Date; // 發行日期
-  album: string; // 專輯名稱
+  album: Label; // 專輯名稱
   lyricists: Label[]; // 作詞者
   composers: Label[]; // 作曲者
   languages: Label[]; // 語言
@@ -67,12 +67,13 @@ export type generateResPlaylist = Omit<resPlaylist, "songs"> & {
 
 export type generateResSong = Omit<
   resSong,
-  "artist" | "composers" | "lyricists" | "languages"
+  "artist" | "composers" | "lyricists" | "languages" | "album"
 > & {
   artist: string;
   composers: string;
   languages: string;
   lyricists: string;
+  album: string;
 };
 
 export type Label = {
@@ -87,6 +88,7 @@ interface defaultLabels {
   region: Label[];
   language: Label[];
   theme: Label[];
+  album: Label[];
 }
 
 export type resLabels = {
