@@ -13,10 +13,19 @@ import API from "../config/api-client.config";
 export const createSongData = async (data: DefaultsSongType) => {
   const nanoID = nanoid();
 
-  const { songFile, imageFile, artist, lyricists, composers, ...params } = data;
+  const {
+    songFile,
+    imageFile,
+    artist,
+    lyricists,
+    composers,
+    genres,
+    tags,
+    ...params
+  } = data;
 
   let duration = 0;
-  let imageUrl = null;
+  let imageUrl = undefined;
 
   const file = songFile?.[0] as File;
   const audio = new Audio(URL.createObjectURL(file));
@@ -37,7 +46,7 @@ export const createSongData = async (data: DefaultsSongType) => {
   });
 
   // get song image url from aws
-  if (imageFile) {
+  if (imageFile?.length) {
     imageUrl = await uploadFileToAws({
       subfolder: UploadFolder.SONGS_IMAGE,
       extension: FileExtension.PNG,
@@ -46,35 +55,38 @@ export const createSongData = async (data: DefaultsSongType) => {
     });
   }
 
-  // get artist ids
-  const artistIds = await getLabelIds({
-    labels: artist,
-    type: LabelOptions.ARTIST,
-    createIfAbsent: true,
-  });
+  // collect label IDs for various categories
+  const labelsNeedGetIds = [
+    { name: "artist", labels: artist, type: LabelOptions.ARTIST },
+    { name: "lyricists", labels: lyricists, type: LabelOptions.LYRICIST },
+    { name: "composers", labels: composers, type: LabelOptions.COMPOSER },
+    { name: "genres", labels: genres, type: LabelOptions.GENRE },
+    { name: "tags", labels: tags, type: LabelOptions.TAG },
+  ];
 
-  // get lyricists ids
-  const lyricistIds = await getLabelIds({
-    labels: lyricists,
-    type: LabelOptions.LYRICIST,
-    createIfAbsent: true,
-  });
+  // and return them as a single object.
+  const labelParams = await Promise.all(
+    labelsNeedGetIds.map(async ({ name, labels, type }) => {
+      if (labels && labels.length) {
+        try {
+          const ids = await getLabelIds({ labels, type, createIfAbsent: true });
+          return { [name]: ids };
+        } catch (error) {
+          console.error(`failed to get ${name} label IDs:`, error);
+          return {};
+        }
+      }
+      return {};
+    })
+  ).then((results) => Object.assign({}, ...results));
 
-  // get composer ids
-  const composerIds = await getLabelIds({
-    labels: composers,
-    type: LabelOptions.COMPOSER,
-    createIfAbsent: true,
-  });
-
+  // finally, fetch the request API
   return API.post("/song/create", {
     ...params,
-    artist: artistIds,
-    lyricists: lyricistIds,
-    composers: composerIds,
+    ...labelParams,
+    ...(imageUrl ? { imageUrl } : {}),
     songUrl,
     duration,
-    ...(imageUrl ? { imageUrl } : {}),
   });
 };
 

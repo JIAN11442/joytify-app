@@ -20,7 +20,8 @@ const CreateNewBtn = forwardRef<HTMLButtonElement, CreateNewBtnProps>(
             group
             flex
             px-2
-            gap-3
+            py-[1.5px]
+            gap-2
             text-sm
             text-green-500/50
             hover:text-green-500

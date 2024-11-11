@@ -34,13 +34,13 @@ const defaultGenreLabel = [
 ];
 
 const defaultTagLabel = [
-  { label: "Happy", type: LabelOptions.TAGS, default: true },
-  { label: "Sad", type: LabelOptions.TAGS, default: true },
-  { label: "Energetic", type: LabelOptions.TAGS, default: true },
-  { label: "Melancholic", type: LabelOptions.TAGS, default: true },
-  { label: "Romantic", type: LabelOptions.TAGS, default: true },
-  { label: "Chill", type: LabelOptions.TAGS, default: true },
-  { label: "Uplifting", type: LabelOptions.TAGS, default: true },
+  { label: "Happy", type: LabelOptions.TAG, default: true },
+  { label: "Sad", type: LabelOptions.TAG, default: true },
+  { label: "Energetic", type: LabelOptions.TAG, default: true },
+  { label: "Melancholic", type: LabelOptions.TAG, default: true },
+  { label: "Romantic", type: LabelOptions.TAG, default: true },
+  { label: "Chill", type: LabelOptions.TAG, default: true },
+  { label: "Uplifting", type: LabelOptions.TAG, default: true },
 ];
 
 const defaultThemeLabel = [

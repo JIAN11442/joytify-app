@@ -25,8 +25,9 @@ const OptionCheckboxItem = forwardRef<HTMLInputElement, CheckBoxItemProps>(
           `
             group
             flex
-            gap-3
+            gap-2
             px-2
+            py-[1.5px]
             items-center
           `,
           tailwindCss?.wrapper

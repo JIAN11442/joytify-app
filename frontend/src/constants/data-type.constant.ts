@@ -84,7 +84,7 @@ export type Label = {
 interface defaultLabels {
   feature: Label[];
   genre: Label[];
-  tags: Label[];
+  tag: Label[];
   region: Label[];
   language: Label[];
   theme: Label[];

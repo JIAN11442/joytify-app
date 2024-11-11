@@ -29,7 +29,6 @@ export type OptionType = {
 
 interface MultiSelectInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  id: string;
   title?: string;
   options: OptionType | OptionType[];
   autoCloseMenuFn?: boolean;
@@ -225,19 +224,9 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
                       flex-col
                     `}
                   >
-                    {/* separate line */}
-                    <hr
-                      className={`
-                        my-2
-                        ${index === 1 ? "flex" : "hidden"}
-                        border-neutral-800
-                      `}
-                    />
-
                     {/* options */}
                     <div
                       className={`
-                        pb-3
                         grid
                         grid-cols-2
                       `}
@@ -276,6 +265,15 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
                         <p>Create new</p>
                       </CreateNewBtn>
                     </div>
+
+                    {/* separate line */}
+                    <hr
+                      className={`
+                        my-2
+                        ${labelOpts[index + 1]?.length ?? 0 ? "flex" : "hidden"}
+                        border-neutral-800
+                      `}
+                    />
                   </div>
                 ))}
             </>

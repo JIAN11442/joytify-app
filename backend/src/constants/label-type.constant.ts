@@ -1,6 +1,6 @@
 enum LabelOptions {
   LANGUAGE = "language",
-  TAGS = "tags",
+  TAG = "tag",
   GENRE = "genre",
   THEME = "theme",
   FEATURE = "feature",

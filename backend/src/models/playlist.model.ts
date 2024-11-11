@@ -1,12 +1,6 @@
 import mongoose, { UpdateQuery } from "mongoose";
 import UserModel from "./user.model";
-import awsUrlParser from "../utils/aws-url-parser.util";
-import {
-  deleteAwsFileUrl,
-  deleteAwsFileUrlOnModel,
-} from "../utils/aws-s3-url.util";
-import appAssert from "../utils/app-assert.util";
-import { NOT_FOUND } from "../constants/http-code.constant";
+import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
 export interface PlaylistDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId;

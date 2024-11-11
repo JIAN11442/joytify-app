@@ -14,21 +14,22 @@ import SingleSelectInputBox from "./single-select-input-box.component";
 import MultiSelectInputBox, {
   OptionType,
 } from "./multi-select-input-box.component";
+import CalendarInputBox from "./calendar-input-box.component";
 
-import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import {
   defaultsSongData,
   DefaultsSongType,
 } from "../constants/form-default-data.constant";
-import useUploadModalState from "../states/upload-modal.state";
-import { createSongData } from "../fetchs/song.fetch";
+import LabelOptions from "../constants/label-type.constant";
+import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import { useGetLabel } from "../hooks/label.hook";
 import { usePlaylists } from "../hooks/playlist.hook";
-import queryClient from "../config/query-client.config";
-import { timeoutForDelay } from "../lib/timeout.lib";
-import LabelOptions from "../constants/label-type.constant";
+import { createSongData } from "../fetchs/song.fetch";
 import { deleteLabel } from "../fetchs/label.fetch";
 import useLabelState from "../states/label.state";
+import useUploadModalState from "../states/upload-modal.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
+import queryClient from "../config/query-client.config";
 
 const UploadModal = () => {
   const submitBtnRef = useRef<HTMLButtonElement>(null);
@@ -51,7 +52,7 @@ const UploadModal = () => {
   const { labels, refetch } = useGetLabel();
 
   // create song mutation
-  const { mutate: createNewSongData, isPending } = useMutation({
+  const { mutate: createNewSong, isPending } = useMutation({
     mutationKey: [MutationKey.CREATE_NEW_SONG],
     mutationFn: createSongData,
     onSuccess: () => {
@@ -158,7 +159,7 @@ const UploadModal = () => {
       setSongName(title);
     }
 
-    createNewSongData(value);
+    createNewSong(value);
   };
 
   return (
@@ -395,10 +396,29 @@ const UploadModal = () => {
               disabled={isPending}
             />
 
+            {/* Album */}
+            <SingleSelectInputBox
+              id="album"
+              title="Select an album"
+              placeholder="Click to choose an album"
+              formMethods={{ ...defaultFormMethods, name: "album" }}
+              options={
+                labels?.created?.album
+                  ? labels?.created?.album.map((opt) => ({
+                      id: opt.id,
+                      title: opt.label,
+                    }))
+                  : []
+              }
+              createNewFn={handleActiveCreateAlbumModal}
+              deleteOptFn={deleteTargetLabel}
+              autoCloseMenuFn={!activeCreateLabelModal.active}
+            />
+
             {/* Language */}
             <MultiSelectInputBox
               id="language"
-              title="Select one or more language of song"
+              title="Select one or more languages for the song"
               placeholder="Click to choose song language"
               formMethods={{ ...defaultFormMethods, name: "languages" }}
               options={
@@ -416,23 +436,53 @@ const UploadModal = () => {
               disabled={isPending}
             />
 
-            {/* Album */}
-            <SingleSelectInputBox
-              id="album"
-              title="Select or create an album"
-              placeholder="Click to choose an album"
-              formMethods={{ ...defaultFormMethods, name: "album" }}
+            {/* Genres */}
+            <MultiSelectInputBox
+              id="genre"
+              title="Select one or more genres for the song"
+              placeholder="Click to choose song genre"
+              formMethods={{ ...defaultFormMethods, name: "genres" }}
               options={
-                labels?.created?.album
-                  ? labels?.created?.album.map((opt) => ({
-                      id: opt.id,
-                      title: opt.label,
-                    }))
-                  : []
+                {
+                  type: LabelOptions.GENRE,
+                  labels: labels
+                    ? {
+                        defaults: labels.default?.genre || null,
+                        created: labels.created?.genre || null,
+                      }
+                    : null,
+                } as OptionType
               }
-              createNewFn={handleActiveCreateAlbumModal}
-              deleteOptFn={deleteTargetLabel}
               autoCloseMenuFn={!activeCreateLabelModal.active}
+              disabled={isPending}
+            />
+
+            {/* Tags */}
+            <MultiSelectInputBox
+              id="tag"
+              title="Select one or more tags for the song"
+              placeholder="Click to choose song tags"
+              formMethods={{ ...defaultFormMethods, name: "tags" }}
+              options={
+                {
+                  type: LabelOptions.TAG,
+                  labels: labels
+                    ? {
+                        defaults: labels.default?.tag || null,
+                        created: labels.created?.tag || null,
+                      }
+                    : null,
+                } as OptionType
+              }
+              autoCloseMenuFn={!activeCreateLabelModal.active}
+              disabled={isPending}
+            />
+
+            {/* Release Date */}
+            <CalendarInputBox
+              id="releaseDate"
+              title="Select the release date of song"
+              {...register("releaseDate")}
             />
           </AnimationWrapper>
         </div>
