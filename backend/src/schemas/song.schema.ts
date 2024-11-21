@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { verificationCodeSchema } from "./auth.schema";
 
-export const stringSchema = z.string().min(0).max(255);
+export const stringSchema = z.string().max(255);
 export const fileUrlSchema = z.string().url();
 export const arrayStringSchema = z.array(stringSchema);
 

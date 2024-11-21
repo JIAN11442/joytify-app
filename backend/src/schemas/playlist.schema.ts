@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { stringSchema } from "./song.schema";
 
 export const playlistSchema = z.object({
-  title: z.string().optional(),
-  description: z.string().optional(),
-  imageUrl: z.string().optional(),
+  title: stringSchema.min(1).optional(),
+  description: stringSchema.optional(),
+  imageUrl: stringSchema.optional(),
 });

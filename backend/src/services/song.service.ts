@@ -78,7 +78,6 @@ export const createNewSong = async ({ userId, songInfo }: createParams) => {
   const songIsExist = await SongModel.exists({
     title,
     artist,
-    userId,
   });
 
   appAssert(!songIsExist, CONFLICT, "Song already exists", ...params);

@@ -6,7 +6,7 @@ export interface LabelDocument extends mongoose.Document {
   label: string;
   type: LabelOptions;
   author: mongoose.Types.ObjectId;
-  labelUsages: mongoose.Types.ObjectId[];
+  songs: mongoose.Types.ObjectId[];
   default: boolean;
 }
 
@@ -19,7 +19,7 @@ const labelSchema = new mongoose.Schema<LabelDocument>(
       ref: "User",
       index: true,
     },
-    labelUsages: {
+    songs: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Song",
       index: true,

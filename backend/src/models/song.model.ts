@@ -1,25 +1,28 @@
 import mongoose from "mongoose";
-import PlaylistModel from "./playlist.model";
 import UserModel from "./user.model";
-import LabelModel, { LabelDocument } from "./label.model";
+import LabelModel from "./label.model";
+import MusicianModel from "./musician.model";
+import PlaylistModel from "./playlist.model";
+import AlbumModel from "./album.model";
+import { updateArrRefToProp } from "../services/util.service";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
 export interface SongDocument extends mongoose.Document {
   title: string;
   userId: mongoose.Types.ObjectId;
   artist: mongoose.Types.ObjectId[]; // 作者
+  lyricists: mongoose.Types.ObjectId[]; // 作詞者
+  composers: mongoose.Types.ObjectId[]; // 作曲者
   songUrl: string; // 歌曲連結
   imageUrl: string; //封面連結
   duration: number;
-  releaseDate: Date; // 發行日期 *
-  album: mongoose.Types.ObjectId; // 專輯名稱
   playlist_for: mongoose.Types.ObjectId[]; // 歌曲所屬歌單
-  lyricists: mongoose.Types.ObjectId[]; // 作詞者
-  composers: mongoose.Types.ObjectId[]; // 作曲者
   languages: mongoose.Types.ObjectId[]; // 語言
   genres: mongoose.Types.ObjectId[]; // 流派
   tags: mongoose.Types.ObjectId[]; // 標籤
+  album: mongoose.Types.ObjectId; // 專輯名稱
   lyrics: string[]; // 歌詞 *
+  releaseDate: Date; // 發行日期
   activity: {
     total_likes: number;
     total_plays: number;
@@ -39,36 +42,30 @@ const songSchema = new mongoose.Schema<SongDocument>(
     },
     artist: {
       type: [mongoose.Schema.Types.ObjectId],
-      ref: "Label",
+      ref: "Musician",
       index: true,
       required: true,
+    },
+    lyricists: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Musician",
+      index: true,
+    },
+    composers: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Musician",
+      index: true,
     },
     songUrl: { type: String, required: true },
     imageUrl: {
       type: String,
       default:
-        "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/default_img.png",
+        "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/default_song_image.png",
     },
     duration: { type: Number, required: true },
-    releaseDate: { type: Date },
-    album: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Label",
-      index: true,
-    },
     playlist_for: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Playlist",
-      index: true,
-    },
-    lyricists: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "Label",
-      index: true,
-    },
-    composers: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "Label",
       index: true,
     },
     languages: {
@@ -82,7 +79,13 @@ const songSchema = new mongoose.Schema<SongDocument>(
       index: true,
     },
     tags: { type: [mongoose.Schema.Types.ObjectId], ref: "Label", index: true },
+    album: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Album",
+      index: true,
+    },
     lyrics: { type: [String] },
+    releaseDate: { type: Date },
     activity: {
       total_likes: { type: Number, default: 0 },
       total_plays: { type: Number, default: 0 },
@@ -93,66 +96,57 @@ const songSchema = new mongoose.Schema<SongDocument>(
   { timestamps: true }
 );
 
-// update label usages function
-const updateLabelUsagesFn = async (
-  songId: mongoose.Types.ObjectId,
-  labelIds: mongoose.Types.ObjectId[],
-  model: mongoose.Model<LabelDocument>,
-  operation: "$push" | "$pull" | "$addToSet"
-) => {
-  for (const id of labelIds) {
-    // if the song ID is not present in labelUsages, add it
-    await model.findByIdAndUpdate(id, { [operation]: { labelUsages: songId } });
-  }
-};
-
-// update label usages by ref
-const updateLabelUsageByRef = async (
-  song: SongDocument,
-  ref: string,
-  songId: mongoose.Types.ObjectId,
-  model: mongoose.Model<LabelDocument>,
-  operation: "$push" | "$pull" | "$addToSet"
-) => {
-  Object.entries(song).map(async ([key, value]) => {
-    const schemaPath = SongModel.schema.path(key);
-
-    // only execute for properties that are arrays, have a length greater than 0,
-    // reference the "Label" model, and contain valid ObjectId items.
-    if (
-      Array.isArray(value) &&
-      value.length &&
-      schemaPath.options.ref === ref &&
-      value.every((item) => mongoose.Types.ObjectId.isValid(item))
-    ) {
-      await updateLabelUsagesFn(songId, value, model, operation);
-    }
-  });
-};
-
 // after created song, ...
 songSchema.post("save", async function (doc) {
-  const { id, playlist_for, userId } = doc;
-  const song = await SongModel.findById(id).lean();
+  const { id, playlist_for, userId, album } = doc;
+  const song = await SongModel.findById(id);
 
   try {
-    // increase count in user's total_songs
-    if (userId) {
-      await UserModel.findByIdAndUpdate(userId, {
-        $inc: { "account_info.total_songs": 1 },
-      });
-    }
-
-    // adding song ID to target playlist's songs array
-    if (playlist_for) {
-      await PlaylistModel.findByIdAndUpdate(playlist_for, {
-        $addToSet: { songs: id },
-      });
-    }
-
-    // push created song ID to each relate label's labelUsage
     if (song) {
-      await updateLabelUsageByRef(song, "Label", id, LabelModel, "$addToSet");
+      // increase count in user's total_songs
+      if (userId) {
+        await UserModel.findByIdAndUpdate(userId, {
+          $inc: { "account_info.total_songs": 1 },
+        });
+      }
+
+      // adding song ID to target playlist's songs array
+      if (playlist_for) {
+        await PlaylistModel.findByIdAndUpdate(playlist_for, {
+          $addToSet: { songs: id },
+        });
+      }
+
+      // increate song duration to album's total_duration
+      if (album) {
+        await AlbumModel.findByIdAndUpdate(album, {
+          $inc: { total_duration: song.duration },
+        });
+      }
+
+      // push created song ID to each relate label's "songs" property
+      await updateArrRefToProp(song, id, LabelModel, "songs", "$addToSet");
+
+      // push created song ID to each relate musician's "usages.songs" property
+      await updateArrRefToProp(
+        song,
+        id,
+        MusicianModel,
+        "usages.songs",
+        "$addToSet"
+      );
+
+      // push user ID to each relate musician's "usages.users" property
+      await updateArrRefToProp(
+        song,
+        userId,
+        MusicianModel,
+        "usages.users",
+        "$addToSet"
+      );
+
+      // push created song ID to relate album's songs property
+      await updateArrRefToProp(song, id, AlbumModel, "songs", "$addToSet");
     }
   } catch (error) {
     console.log(error);
@@ -164,10 +158,10 @@ songSchema.pre("findOneAndDelete", async function (next) {
   try {
     const findQuery = this.getQuery();
     const id = findQuery._id;
-    const song = await SongModel.findById(findQuery).lean();
+    const song = await SongModel.findById(findQuery);
 
     if (song) {
-      const { userId, playlist_for, songUrl, imageUrl } = song;
+      const { userId, playlist_for, songUrl, imageUrl, album } = song;
 
       // decrease count in user's total_songs
       if (userId) {
@@ -193,8 +187,36 @@ songSchema.pre("findOneAndDelete", async function (next) {
         await deleteAwsFileUrlOnModel(imageUrl);
       }
 
-      // remove song ID from related label's labelUsages
-      await updateLabelUsageByRef(song, "Label", id, LabelModel, "$pull");
+      // decrease song duration to album's total_duration
+      if (album) {
+        await AlbumModel.findByIdAndUpdate(album, {
+          $inc: { total_duration: song.duration * -1 },
+        });
+      }
+
+      // // remove song ID from each relate label's "songs" property
+      await updateArrRefToProp(song, id, LabelModel, "songs", "$pull");
+
+      // // push created song ID from each relate musician's "usages.songs" property
+      await updateArrRefToProp(
+        song,
+        id,
+        MusicianModel,
+        "usages.songs",
+        "$pull"
+      );
+
+      // remove user ID from each relate musician's "usages.users" property
+      await updateArrRefToProp(
+        song,
+        userId,
+        MusicianModel,
+        "usages.users",
+        "$pull"
+      );
+
+      // remove created song ID from relate album's songs property
+      await updateArrRefToProp(song, id, AlbumModel, "songs", "$pull");
     }
 
     next();

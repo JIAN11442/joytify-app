@@ -18,7 +18,7 @@ interface createLabelParams extends deleteLabelParams {
   type: LabelType;
 }
 
-interface getLabelIdArrayParams extends createLabelParams {
+interface getLabelIdParams extends createLabelParams {
   createIfAbsent?: boolean;
 }
 
@@ -111,7 +111,7 @@ export const createLabel = async (data: createLabelParams) => {
 };
 
 // get label ID service
-export const getLabelId = async (data: getLabelIdArrayParams) => {
+export const getLabelId = async (data: getLabelIdParams) => {
   const { userId, label: doc, type, createIfAbsent } = data;
 
   const findQuery: FilterQuery<LabelDocument> = {
@@ -130,7 +130,7 @@ export const getLabelId = async (data: getLabelIdArrayParams) => {
       author: userId,
     });
 
-    appAssert(label, INTERNAL_SERVER_ERROR, "Failed to create label ");
+    appAssert(label, INTERNAL_SERVER_ERROR, "Failed to create label");
   }
 
   // if label still not found, return error

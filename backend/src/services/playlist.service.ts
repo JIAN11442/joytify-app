@@ -77,7 +77,7 @@ export const getUserPlaylistById = async (
       { path: "composers", select: "label" },
       { path: "lyricists", select: "label" },
       { path: "languages", select: "label" },
-      { path: "album", select: "label" },
+      { path: "album", select: "title" },
     ],
   });
 

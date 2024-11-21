@@ -41,7 +41,10 @@ export const createPlaylistHandler: RequestHandler = async (req, res, next) => {
     const { title } = playlistSchema.parse(req.body);
 
     // create playlist
-    const { playlist } = await createNewPlaylist({ userId, title });
+    const { playlist } = await createNewPlaylist({
+      userId,
+      ...(title ? { title } : {}),
+    });
 
     res.status(CREATED).json(playlist);
   } catch (error) {

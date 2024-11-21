@@ -25,7 +25,7 @@ const playlistSchema = new mongoose.Schema<PlaylistDocument>(
     cover_image: {
       type: String,
       default:
-        "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/default_img.png",
+        "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/default_song-image.png",
     },
     songs: { type: [mongoose.Schema.Types.ObjectId], ref: "Song", index: true },
     default: { type: Boolean, default: false },
