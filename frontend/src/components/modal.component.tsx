@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, memo, useEffect, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import { IoMdClose } from "react-icons/io";
@@ -162,4 +162,4 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
   }
 );
 
-export default Modal;
+export default memo(Modal);

@@ -19,7 +19,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
 
   const songPlayedRef = useRef<string | null>(null);
 
-  const { song, refetch } = useSongById(songId);
+  const { song, refetch: songRefetch } = useSongById(songId);
   const { setSound, songToPlay } = useSoundState();
 
   const sound = useSound(song?.songUrl || "");
@@ -31,8 +31,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
 
   // Refetch song hook when songId changes
   useEffect(() => {
-    refetch();
-  }, [songId, refetch]);
+    songRefetch();
+  }, [songId, songRefetch]);
 
   // while sound is ready, play audio
   useEffect(() => {

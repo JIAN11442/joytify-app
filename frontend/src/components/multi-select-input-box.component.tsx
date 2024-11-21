@@ -1,26 +1,20 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
 import {
   UseFormSetError,
   UseFormSetValue,
   UseFormTrigger,
 } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
 
 import CreateNewBtn from "./create-new-button.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import OptionCheckboxItem from "./option-checkbox-item.component";
 
 import LabelOptions, { LabelType } from "../constants/label-type.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
-import { Label, reqUpload } from "../constants/data-type.constant";
+import { Label, reqUpload, resLabels } from "../constants/data-type.constant";
 import { DefaultsSongType } from "../constants/form-default-data.constant";
 import mergeRefs from "../lib/merge-refs.lib";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
-import useUploadModalState from "../states/upload-modal.state";
-import { deleteLabel } from "../fetchs/label.fetch";
-import { useGetLabel } from "../hooks/label.hook";
-import useLabelState from "../states/label.state";
+import useUploadModalState, { RefetchType } from "../states/upload-modal.state";
 
 export type OptionType = {
   type: LabelType;
@@ -32,6 +26,11 @@ interface MultiSelectInputProps
   title?: string;
   options: OptionType | OptionType[];
   autoCloseMenuFn?: boolean;
+  deleteOptFn: {
+    deleteFn: (id: string) => void;
+    setDeleteTitle: (title: string) => void;
+  };
+  queryRefetch: RefetchType<resLabels>;
   formMethods: {
     name: reqUpload;
     setFormValue: UseFormSetValue<DefaultsSongType>;
@@ -48,6 +47,8 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
       options,
       placeholder,
       autoCloseMenuFn = true,
+      deleteOptFn,
+      queryRefetch,
       formMethods,
       disabled = false,
       ...props
@@ -62,8 +63,6 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
     const [inputVal, setInputVal] = useState<string>("");
 
     const { setActiveCreateLabelModal } = useUploadModalState();
-    const { deletedLabel, setDeletedLabel } = useLabelState();
-    const { refetch } = useGetLabel();
 
     const { name, setFormValue } = formMethods;
     const labelOpts = Object.values((options as OptionType).labels);
@@ -87,29 +86,26 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
     // handle active create label modal
     const handleActiveCreateLabelModal = (type: LabelType) => {
       timeoutForDelay(() => {
-        setActiveCreateLabelModal({ type, active: true, options });
+        setActiveCreateLabelModal({
+          type,
+          active: true,
+          options,
+          labelRefetch: queryRefetch,
+        });
       });
     };
 
     // handle delete label
     const handleDeleteLabel = (opt: Label) => {
-      setDeletedLabel(opt.label);
-      deleteTargetLabel(opt.id);
-    };
+      // deleteTargetLabel(opt.id);
 
-    const { mutate: deleteTargetLabel } = useMutation({
-      mutationKey: [MutationKey.DELETE_LABEL_OPTION],
-      mutationFn: deleteLabel,
-      onSuccess: () => {
-        // refetch query label
-        refetch();
-        // display deleted successfully message
-        toast.success(`"${deletedLabel}" already deleted`);
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    });
+      if (deleteOptFn) {
+        const { deleteFn, setDeleteTitle } = deleteOptFn;
+
+        deleteFn(opt.id);
+        setDeleteTitle(opt.label);
+      }
+    };
 
     // open option menu while focus input box,
     // close option menu while option menu onBlur

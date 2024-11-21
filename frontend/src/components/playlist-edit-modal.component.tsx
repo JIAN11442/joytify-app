@@ -13,10 +13,11 @@ import {
   DefaultsPlaylistEditType,
 } from "../constants/form-default-data.constant";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
+import { generateResPlaylist } from "../constants/data-type.constant";
 import usePlaylistState from "../states/playlist.state";
 import { updatePlaylist } from "../fetchs/playlist.fetch";
 import queryClient from "../config/query-client.config";
-import { generateResPlaylist } from "../constants/data-type.constant";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const PlaylistEditModal = () => {
   const { activePlaylistEditModal, closePlaylistEditModal, setCoverImageSrc } =
@@ -35,9 +36,6 @@ const PlaylistEditModal = () => {
     mutationKey: [MutationKey.UPDATE_PLAYLIST],
     mutationFn: updatePlaylist,
     onSuccess: async (data) => {
-      // close modal
-      handleCloseModal();
-
       // Invalidate target query dependencies to refetch playlist query
       await queryClient.invalidateQueries([
         QueryKey.GET_TARGET_PLAYLIST,
@@ -51,6 +49,9 @@ const PlaylistEditModal = () => {
       setCoverImageSrc(data.cover_image);
 
       toast.success("Playlist updated successfully");
+
+      // close modal
+      handleCloseModal();
     },
     onError: () => {
       toast.error("Failed to update playlist");
@@ -59,8 +60,10 @@ const PlaylistEditModal = () => {
 
   // handle close modal
   const handleCloseModal = () => {
-    closePlaylistEditModal();
-    reset();
+    timeoutForDelay(() => {
+      closePlaylistEditModal();
+      reset();
+    });
   };
 
   // initial form state
@@ -132,6 +135,7 @@ const PlaylistEditModal = () => {
             type="text"
             placeholder="Title"
             value={titleValue || ""}
+            disabled={isPending}
             {...register("title", {
               required: true,
               validate: (value) => value !== playlist?.title,
@@ -146,6 +150,7 @@ const PlaylistEditModal = () => {
           <textarea
             id="description"
             placeholder="Description"
+            disabled={isPending}
             className={`
               input-box
               h-full
@@ -156,7 +161,7 @@ const PlaylistEditModal = () => {
 
           {/* Submit button */}
           <button
-            disabled={!isValid}
+            disabled={!isValid || isPending}
             className={`
               mt-2
               submit-btn

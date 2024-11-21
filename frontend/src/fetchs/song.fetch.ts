@@ -1,11 +1,11 @@
 import { nanoid } from "nanoid";
 
-import { getLabelIds } from "./label.fetch";
-import { uploadFileToAws } from "./aws.fetch";
 import { DefaultsSongType } from "../constants/form-default-data.constant";
 import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
+import MusicianOptions from "../constants/musician-type.constant";
 import { resSong } from "../constants/data-type.constant";
-import LabelOptions from "../constants/label-type.constant";
+import { getMusicianIds } from "./musician.fetch";
+import { uploadFileToAws } from "./aws.fetch";
 import { timeoutForEventListener } from "../lib/timeout.lib";
 import API from "../config/api-client.config";
 
@@ -13,19 +13,11 @@ import API from "../config/api-client.config";
 export const createSongData = async (data: DefaultsSongType) => {
   const nanoID = nanoid();
 
-  const {
-    songFile,
-    imageFile,
-    artist,
-    lyricists,
-    composers,
-    genres,
-    tags,
-    ...params
-  } = data;
+  const { songFile, imageFile, artist, lyricists, composers, ...params } = data;
 
+  let imageUrl;
   let duration = 0;
-  let imageUrl = undefined;
+  const musicianParams: { [key: string]: string[] } = {};
 
   const file = songFile?.[0] as File;
   const audio = new Audio(URL.createObjectURL(file));
@@ -55,35 +47,34 @@ export const createSongData = async (data: DefaultsSongType) => {
     });
   }
 
-  // collect label IDs for various categories
-  const labelsNeedGetIds = [
-    { name: "artist", labels: artist, type: LabelOptions.ARTIST },
-    { name: "lyricists", labels: lyricists, type: LabelOptions.LYRICIST },
-    { name: "composers", labels: composers, type: LabelOptions.COMPOSER },
-    { name: "genres", labels: genres, type: LabelOptions.GENRE },
-    { name: "tags", labels: tags, type: LabelOptions.TAG },
+  // collect musician IDs for various categories
+  const propsNeedGetIds = [
+    { name: "artist", musicians: artist, type: MusicianOptions.ARTIST },
+    { name: "lyricists", musicians: lyricists, type: MusicianOptions.LYRICIST },
+    { name: "composers", musicians: composers, type: MusicianOptions.COMPOSER },
   ];
 
   // and return them as a single object.
-  const labelParams = await Promise.all(
-    labelsNeedGetIds.map(async ({ name, labels, type }) => {
-      if (labels && labels.length) {
-        try {
-          const ids = await getLabelIds({ labels, type, createIfAbsent: true });
-          return { [name]: ids };
-        } catch (error) {
-          console.error(`failed to get ${name} label IDs:`, error);
-          return {};
-        }
+  for (const { name, musicians, type } of propsNeedGetIds) {
+    if (musicians && musicians.length) {
+      try {
+        const ids = await getMusicianIds({
+          musicians,
+          type,
+          createIfAbsent: true,
+        });
+
+        musicianParams[name] = ids;
+      } catch (error) {
+        console.error(`failed to get ${name} IDs:`, error);
       }
-      return {};
-    })
-  ).then((results) => Object.assign({}, ...results));
+    }
+  }
 
   // finally, fetch the request API
   return API.post("/song/create", {
     ...params,
-    ...labelParams,
+    ...musicianParams,
     ...(imageUrl ? { imageUrl } : {}),
     songUrl,
     duration,

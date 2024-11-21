@@ -28,8 +28,10 @@ export const getPlaylistById = async (id: string): Promise<resPlaylist> =>
   API.get(`/playlist/${id}`);
 
 // create playlist
-export const createPlaylist = async (title?: string): Promise<resPlaylist> =>
-  API.post("/playlist/create", { title });
+export const createPlaylist = async (
+  title: string | null
+): Promise<resPlaylist> =>
+  API.post("/playlist/create", { ...(title ? { title } : {}) });
 
 // update playlist cover image
 export const updatePlaylist = async (

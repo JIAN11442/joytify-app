@@ -1,11 +1,18 @@
 import { create } from "zustand";
 import { OptionType } from "../components/multi-select-input-box.component";
 import LabelOptions, { LabelType } from "../constants/label-type.constant";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import { resAlbum, resLabels } from "../constants/data-type.constant";
+
+export type RefetchType<T> = (
+  options?: RefetchOptions
+) => Promise<QueryObserverResult<T | undefined, Error>>;
 
 type LabelModalType = {
   type: LabelType;
   active: boolean;
   options: OptionType | OptionType[] | null;
+  labelRefetch: RefetchType<resLabels> | null;
 };
 
 type PlaylistModalType = {
@@ -13,17 +20,25 @@ type PlaylistModalType = {
   options: string[] | null;
 };
 
+type AlbumModalType = {
+  active: boolean;
+  options: string[] | null;
+  albumRefetch: RefetchType<resAlbum[]> | null;
+};
+
 type UploadModalState = {
   activeUploadModal: boolean;
   activeAdvancedSettings: boolean;
   activeCreateLabelModal: LabelModalType;
   activeCreatePlaylistModal: PlaylistModalType;
+  activeCreateAlbumModal: AlbumModalType;
 
   openUploadModal: () => void;
   closeUploadModal: () => void;
   setActiveAdvancedSettings: (active: boolean) => void;
   setActiveCreateLabelModal: (state: LabelModalType) => void;
   setActiveCreatePlaylistModal: (state: PlaylistModalType) => void;
+  setActiveCreateAlbumModal: (state: AlbumModalType) => void;
 };
 
 const useUploadModalState = create<UploadModalState>((set) => ({
@@ -33,8 +48,10 @@ const useUploadModalState = create<UploadModalState>((set) => ({
     type: LabelOptions.NULL,
     active: false,
     options: null,
+    labelRefetch: null,
   },
   activeCreatePlaylistModal: { active: false, options: null },
+  activeCreateAlbumModal: { active: false, options: null, albumRefetch: null },
 
   openUploadModal: () => set({ activeUploadModal: true }),
   closeUploadModal: () =>
@@ -44,6 +61,7 @@ const useUploadModalState = create<UploadModalState>((set) => ({
   setActiveCreateLabelModal: (state) => set({ activeCreateLabelModal: state }),
   setActiveCreatePlaylistModal: (state) =>
     set({ activeCreatePlaylistModal: state }),
+  setActiveCreateAlbumModal: (state) => set({ activeCreateAlbumModal: state }),
 }));
 
 export default useUploadModalState;

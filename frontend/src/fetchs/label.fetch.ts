@@ -14,10 +14,10 @@ interface getLabelIdsParams {
 }
 
 // get user all labels
-export const getUserLabels = (): Promise<resLabels> => API.get("/label");
+export const getUserLabels = async (): Promise<resLabels> => API.get("/label");
 
 // create label
-export const createLabel = (data: createLabelParams) =>
+export const createLabel = async (data: createLabelParams) =>
   API.post("/label/create", data);
 
 // get label ids
@@ -25,4 +25,5 @@ export const getLabelIds = async (data: getLabelIdsParams) =>
   await API.post("/label/getIds", data);
 
 // delete label
-export const deleteLabel = (id: string) => API.delete(`/label/delete/${id}`);
+export const deleteLabel = async (id: string) =>
+  API.delete(`/label/delete/${id}`);

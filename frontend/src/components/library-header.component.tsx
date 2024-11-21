@@ -48,7 +48,8 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
     setPlaylistSearchVal,
   } = useLibraryState();
 
-  const { refetch, playlists } = usePlaylists(playlistSearchVal);
+  const { refetch: playlistRefetch, playlists } =
+    usePlaylists(playlistSearchVal);
 
   // handle collapse sidebar
   const handleCollapseSidebar = () => {
@@ -96,7 +97,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
     mutationKey: [MutationKey.CREATE_USER_PLAYLIST],
     mutationFn: createPlaylist,
     onSuccess: () => {
-      refetch();
+      playlistRefetch();
     },
     onError: (error) => {
       console.log(error);
@@ -105,7 +106,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
 
   // handle create new playlist
   const handleCreateNewPlaylist = () => {
-    createUserPlaylist();
+    createUserPlaylist(null);
   };
 
   // handle library playlist search on change

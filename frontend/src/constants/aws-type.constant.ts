@@ -2,6 +2,7 @@ export enum UploadFolder {
   SONGS_MP3 = "songs/mp3",
   SONGS_IMAGE = "songs/image",
   PLAYLISTS_IMAGE = "playlists/image",
+  ALBUMS_IMAGE = "albums/image",
 }
 
 export enum FileExtension {

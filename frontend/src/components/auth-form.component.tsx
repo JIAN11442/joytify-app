@@ -33,7 +33,7 @@ const AuthForm = () => {
   const location = useLocation();
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
-  const { refetch } = useAuth();
+  const { refetch: authRefetch } = useAuth();
   const { authFor, openAuthModal, closeAuthModal } = useAuthModalState();
 
   const SIGN_IN = AuthForOptions.SIGN_IN;
@@ -104,7 +104,7 @@ const AuthForm = () => {
 
       navigate(redirectPath, { replace: true });
 
-      refetch();
+      authRefetch();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -123,7 +123,7 @@ const AuthForm = () => {
       navigate(redirectPath, { replace: true });
 
       // refetch the auth query to refresh the user data
-      refetch();
+      authRefetch();
     },
     onError: (error) => {
       toast.error(error.message);

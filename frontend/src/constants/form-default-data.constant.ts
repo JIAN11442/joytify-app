@@ -46,6 +46,13 @@ export const defaultsCreatePlaylistData = {
   playlist: "",
 };
 
+export const defaultsCreateAlbumData = {
+  title: null as string | null,
+  description: undefined as string | undefined,
+  imageFile: undefined as FileList | undefined,
+  artist: undefined as string | undefined,
+};
+
 // Types
 export type DefaultsAuthType = typeof defaultsLoginData & {
   confirmPassword?: string;
@@ -57,3 +64,4 @@ export type DefaultsPlaylistEditType = typeof defaultsPlaylistEditData;
 export type DefaultsCreateLabelType = typeof defaultsCreateLabelData;
 export type DefaultsMovingPlaylistType = typeof defaultsMovingPlaylistData;
 export type DefaultsCreatePlaylistType = typeof defaultsCreatePlaylistData;
+export type defaultsCreateAlbumType = typeof defaultsCreateAlbumData;

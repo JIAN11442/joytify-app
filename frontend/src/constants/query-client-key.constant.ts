@@ -15,6 +15,8 @@ export enum MutationKey {
   ADD_PLAYLIST_TO_PROFILE = "add-playlist-to-profile",
   CREATE_LABEL_OPTION = "create-label-option",
   DELETE_LABEL_OPTION = "delete-label-option",
+  CREATE_ALBUM_OPTION = "create-album-option",
+  DELETE_ALBUM_OPTION = "delete-album-option",
 }
 
 export enum QueryKey {
@@ -23,4 +25,5 @@ export enum QueryKey {
   GET_TARGET_PLAYLIST = "get-target-playlist",
   GET_SONG_BY_ID = "get-song-by-id",
   GET_ALL_LABELS = "get-all-labels",
+  GET_USER_ALBUMS = "get-user-albums",
 }

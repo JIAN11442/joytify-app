@@ -15,7 +15,6 @@ import AnimationWrapper from "./animation-wrapper.component";
 import mergeRefs from "../lib/merge-refs.lib";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import { reqUpload } from "../constants/data-type.constant";
-import useLabelState from "../states/label.state";
 
 export type InputOptionType = {
   id: string;
@@ -33,7 +32,10 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     trigger: UseFormTrigger<any>;
   };
   createNewFn?: () => void;
-  deleteOptFn?: (id: string) => void;
+  deleteOptFn?: {
+    deleteFn: (id: string) => void;
+    setDeleteTitle: (title: string) => void;
+  };
   autoCloseMenuFn?: boolean;
 }
 
@@ -66,8 +68,6 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
       useState<InputOptionType[]>(options);
     const [focusOptIndex, setFocusOptIndex] = useState(-1);
     const [selectedOptId, setSelectedOptId] = useState("");
-
-    const { setDeletedLabel } = useLabelState();
 
     const { name, setFormValue, trigger } = formMethods;
 
@@ -157,11 +157,13 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
       e.stopPropagation();
 
       if (deleteOptFn) {
+        const { deleteFn, setDeleteTitle } = deleteOptFn;
+
         // delete option function
-        deleteOptFn(opt.id);
+        deleteFn(opt.id);
 
         // save deleted option title for toaster
-        setDeletedLabel(opt.title);
+        setDeleteTitle(opt.title);
 
         // clear input value after deleted option
         setValue("");

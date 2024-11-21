@@ -34,6 +34,7 @@ body,
     rounded-md
     outline-none
     file:hidden;
+    /* capitalize; */
   }
 
   .input-base-icon {

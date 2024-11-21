@@ -18,7 +18,7 @@ import { usePlaylists } from "../hooks/playlist.hook";
 
 const PlaylistDeleteModal = () => {
   const navigate = useNavigate();
-  const { refetch } = usePlaylists();
+  const { refetch: playlistRefetch } = usePlaylists();
 
   const { activeDeletePlaylistModal, closePlaylistDeleteModal, userPlaylists } =
     usePlaylistState();
@@ -34,7 +34,7 @@ const PlaylistDeleteModal = () => {
       // navigate to homepage
       navigate("/");
       // refetch query of get all user playlists
-      refetch();
+      playlistRefetch();
 
       toast.success(`Playlist "${playlist?.title}" has been deleted.`);
     },
@@ -101,7 +101,7 @@ const PlaylistDeleteModal = () => {
                     title: opt.title,
                   })) || []
               }
-              formValueState={{
+              formMethods={{
                 name: "playlist_for",
                 setFormValue: setValue,
                 setFormError: setError,

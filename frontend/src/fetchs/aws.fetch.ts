@@ -14,7 +14,8 @@ interface UploadFileParams extends SignedUrlParams {
 // get signed url for upload
 export const getSignedUrl = async (
   data: SignedUrlParams
-): Promise<{ uploadUrl: string }> => API.post("/aws/get-signed-url", data);
+): Promise<{ uploadUrl: string }> =>
+  await API.post("/aws/get-signed-url", data);
 
 // upload file to aws s3
 export const uploadFileToAws = async (
@@ -47,4 +48,4 @@ export const uploadFileToAws = async (
 // the request payload must be wrapped in a 'data' object
 // because the DELETE method in Axios requires it for sending a request body
 export const deleteFileFromAws = async (awsUrl: string) =>
-  API.delete("/aws/delete-file-url", { data: awsUrl });
+  await API.delete("/aws/delete-file-url", { data: awsUrl });

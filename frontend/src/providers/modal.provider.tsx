@@ -1,4 +1,5 @@
 import AuthModal from "../components/auth-modal.component";
+import CreateAlbumModal from "../components/create-album-modal.component";
 import CreateLabelModal from "../components/create-label-modal.component";
 import CreatePlaylistModal from "../components/create-playlist-modal.component";
 import PlaylistDeleteModal from "../components/playlist-delete-modal.component";
@@ -16,6 +17,7 @@ const ModalProvider = () => {
       <PlaylistRemoveModal />
       <CreateLabelModal />
       <CreatePlaylistModal />
+      <CreateAlbumModal />
     </>
   );
 };

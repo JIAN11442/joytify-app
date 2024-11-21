@@ -43,7 +43,7 @@ export type resSong = {
   imageUrl: string; //封面連結
   duration: number;
   releaseDate: Date; // 發行日期
-  album: Label; // 專輯名稱
+  album: Album; // 專輯名稱
   lyricists: Label[]; // 作詞者
   composers: Label[]; // 作曲者
   languages: Label[]; // 語言
@@ -59,6 +59,17 @@ export type resSong = {
   };
   paletee: generatePaletee;
   createdAt: string;
+};
+
+export type resAlbum = {
+  _id: string;
+  title: string;
+  description: string;
+  artist: string;
+  songs: string[];
+  users: string[];
+  total_duration: number;
+  createdAt: Date;
 };
 
 export type generateResPlaylist = Omit<resPlaylist, "songs"> & {
@@ -79,6 +90,11 @@ export type generateResSong = Omit<
 export type Label = {
   id: string;
   label: string;
+};
+
+export type Album = {
+  id: string;
+  title: string;
 };
 
 interface defaultLabels {

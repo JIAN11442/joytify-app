@@ -14,16 +14,13 @@ import { MutationKey } from "../constants/query-client-key.constant";
 import LabelOptions from "../constants/label-type.constant";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { createLabel } from "../fetchs/label.fetch";
-import { useGetLabel } from "../hooks/label.hook";
 import useUploadModalState from "../states/upload-modal.state";
 
 const CreateLabelModal = () => {
   const [formVal, setFormVal] = useState("");
   const { activeCreateLabelModal, setActiveCreateLabelModal } =
     useUploadModalState();
-  const { type, active, options } = activeCreateLabelModal;
-
-  const { refetch } = useGetLabel();
+  const { type, active, options, labelRefetch } = activeCreateLabelModal;
 
   // handle close modal
   const handleCloseModal = () => {
@@ -32,6 +29,7 @@ const CreateLabelModal = () => {
         type: LabelOptions.NULL,
         active: false,
         options: null,
+        labelRefetch: null,
       });
       reset();
     });
@@ -45,7 +43,9 @@ const CreateLabelModal = () => {
       // display success message
       toast.success(`"${formVal}" ${type} is created`);
       // refetch label query
-      refetch();
+      if (labelRefetch) {
+        labelRefetch();
+      }
       // close modal
       handleCloseModal();
     },

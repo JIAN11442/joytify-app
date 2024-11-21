@@ -13,12 +13,12 @@ import { usePlaylistById } from "../hooks/playlist.hook";
 const PlaylistPage = () => {
   const { id } = useParams();
 
-  const { playlist, refetch } = usePlaylistById(String(id));
+  const { playlist, refetch: playlistRefetch } = usePlaylistById(String(id));
   const { paletee } = playlist ?? {};
 
   useEffect(() => {
     // refetch query playlist while id changed
-    refetch();
+    playlistRefetch();
 
     // clean up query data while unmount
     return () => {

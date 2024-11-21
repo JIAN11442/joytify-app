@@ -15,7 +15,7 @@ import { useState } from "react";
 
 const CreatePlaylistModal = () => {
   const [formVal, setFormVal] = useState("");
-  const { refetch } = usePlaylists();
+  const { refetch: playlistRefetch } = usePlaylists();
 
   const { activeCreatePlaylistModal, setActiveCreatePlaylistModal } =
     useUploadModalState();
@@ -37,7 +37,7 @@ const CreatePlaylistModal = () => {
       // display success message
       toast.success(`"${formVal}" playlist is created`);
       // refetch playlist query
-      refetch();
+      playlistRefetch();
       // close create playlist modal
       handleCloseModal();
     },
