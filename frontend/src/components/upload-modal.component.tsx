@@ -515,6 +515,7 @@ const UploadModal = () => {
             <CalendarInputBox
               id="releaseDate"
               title="Select the release date of song"
+              disabled={isPending}
               {...register("releaseDate")}
             />
           </AnimationWrapper>

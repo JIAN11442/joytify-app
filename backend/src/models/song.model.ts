@@ -9,7 +9,7 @@ import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
 export interface SongDocument extends mongoose.Document {
   title: string;
-  userId: mongoose.Types.ObjectId;
+  creator: mongoose.Types.ObjectId;
   artist: mongoose.Types.ObjectId[]; // 作者
   lyricists: mongoose.Types.ObjectId[]; // 作詞者
   composers: mongoose.Types.ObjectId[]; // 作曲者
@@ -23,6 +23,7 @@ export interface SongDocument extends mongoose.Document {
   album: mongoose.Types.ObjectId; // 專輯名稱
   lyrics: string[]; // 歌詞 *
   releaseDate: Date; // 發行日期
+  followers: mongoose.Types.ObjectId[];
   activity: {
     total_likes: number;
     total_plays: number;
@@ -34,7 +35,7 @@ export interface SongDocument extends mongoose.Document {
 const songSchema = new mongoose.Schema<SongDocument>(
   {
     title: { type: String, required: true },
-    userId: {
+    creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -86,6 +87,11 @@ const songSchema = new mongoose.Schema<SongDocument>(
     },
     lyrics: { type: [String] },
     releaseDate: { type: Date },
+    followers: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      index: true,
+    },
     activity: {
       total_likes: { type: Number, default: 0 },
       total_plays: { type: Number, default: 0 },
@@ -98,14 +104,14 @@ const songSchema = new mongoose.Schema<SongDocument>(
 
 // after created song, ...
 songSchema.post("save", async function (doc) {
-  const { id, playlist_for, userId, album } = doc;
+  const { id, playlist_for, creator, album } = doc;
   const song = await SongModel.findById(id);
 
   try {
     if (song) {
       // increase count in user's total_songs
-      if (userId) {
-        await UserModel.findByIdAndUpdate(userId, {
+      if (creator) {
+        await UserModel.findByIdAndUpdate(creator, {
           $inc: { "account_info.total_songs": 1 },
         });
       }
@@ -139,7 +145,7 @@ songSchema.post("save", async function (doc) {
       // push user ID to each relate musician's "usages.users" property
       await updateArrRefToProp(
         song,
-        userId,
+        creator,
         MusicianModel,
         "usages.users",
         "$addToSet"
@@ -161,11 +167,11 @@ songSchema.pre("findOneAndDelete", async function (next) {
     const song = await SongModel.findById(findQuery);
 
     if (song) {
-      const { userId, playlist_for, songUrl, imageUrl, album } = song;
+      const { creator, playlist_for, songUrl, imageUrl, album } = song;
 
-      // decrease count in user's total_songs
-      if (userId) {
-        await UserModel.findByIdAndUpdate(userId, {
+      // reduce count in user's total_songs
+      if (creator) {
+        await UserModel.findByIdAndUpdate(creator, {
           $inc: { "account_info.total_songs": -1 },
         });
       }
@@ -209,7 +215,7 @@ songSchema.pre("findOneAndDelete", async function (next) {
       // remove user ID from each relate musician's "usages.users" property
       await updateArrRefToProp(
         song,
-        userId,
+        creator,
         MusicianModel,
         "usages.users",
         "$pull"

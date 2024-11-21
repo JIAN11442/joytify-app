@@ -37,7 +37,7 @@ export type resPlaylist = {
 export type resSong = {
   _id: string;
   title: string;
-  userId: string;
+  creator: string;
   artist: Label[]; // 作者
   songUrl: string; // 歌曲連結
   imageUrl: string; //封面連結
@@ -51,6 +51,7 @@ export type resSong = {
   tags: string[]; // 標籤
   lyrics: string[]; // 歌詞
   playlist_for: string[];
+  followers: string[];
   activity: {
     total_likes: number;
     total_plays: number;
