@@ -1,6 +1,5 @@
 import SongModel from "../models/song.model";
 import { songSchemaType } from "../schemas/song.schema";
-import { LabelType } from "../constants/label-type.constant";
 import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
@@ -8,12 +7,6 @@ import {
 } from "../constants/http-code.constant";
 import ErrorCode from "../constants/error-code.constant";
 import appAssert from "../utils/app-assert.util";
-
-type labelParams = {
-  userId: string;
-  doc: string;
-  type: LabelType;
-};
 
 type createParams = {
   userId: string;

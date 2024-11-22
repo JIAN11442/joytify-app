@@ -133,25 +133,10 @@ songSchema.post("save", async function (doc) {
       // push created song ID to each relate label's "songs" property
       await updateArrRefToProp(song, id, LabelModel, "songs", "$addToSet");
 
-      // push created song ID to each relate musician's "usages.songs" property
-      await updateArrRefToProp(
-        song,
-        id,
-        MusicianModel,
-        "usages.songs",
-        "$addToSet"
-      );
+      // push created song ID to each relate musician's "songs" property
+      await updateArrRefToProp(song, id, MusicianModel, "songs", "$addToSet");
 
-      // push user ID to each relate musician's "usages.users" property
-      await updateArrRefToProp(
-        song,
-        creator,
-        MusicianModel,
-        "usages.users",
-        "$addToSet"
-      );
-
-      // push created song ID to relate album's songs property
+      // push created song ID to relate album's "songs" property
       await updateArrRefToProp(song, id, AlbumModel, "songs", "$addToSet");
     }
   } catch (error) {
@@ -203,25 +188,10 @@ songSchema.pre("findOneAndDelete", async function (next) {
       // // remove song ID from each relate label's "songs" property
       await updateArrRefToProp(song, id, LabelModel, "songs", "$pull");
 
-      // // push created song ID from each relate musician's "usages.songs" property
-      await updateArrRefToProp(
-        song,
-        id,
-        MusicianModel,
-        "usages.songs",
-        "$pull"
-      );
+      // // push created song ID from each relate musician's "songs" property
+      await updateArrRefToProp(song, id, MusicianModel, "songs", "$pull");
 
-      // remove user ID from each relate musician's "usages.users" property
-      await updateArrRefToProp(
-        song,
-        creator,
-        MusicianModel,
-        "usages.users",
-        "$pull"
-      );
-
-      // remove created song ID from relate album's songs property
+      // remove created song ID from relate album's "songs" property
       await updateArrRefToProp(song, id, AlbumModel, "songs", "$pull");
     }
 
