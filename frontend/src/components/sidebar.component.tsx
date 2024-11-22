@@ -14,6 +14,7 @@ import { timeoutForEventListener } from "../lib/timeout.lib";
 
 const Sidebar = () => {
   const floatingDivRef = useRef<HTMLDivElement>(null);
+
   const {
     collapseSideBarState,
     floating,
@@ -23,7 +24,6 @@ const Sidebar = () => {
   const { isCollapsed, changeForScreenResize } = collapseSideBarState;
 
   const { screenWidth } = useProviderState();
-
   const { activeSongId } = useSoundState();
 
   // handle sidebar collapse mode for different screen sizes

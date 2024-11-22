@@ -1,7 +1,7 @@
-import Header from "../components/header.component";
+import ContentBoxHeader from "../components/content-box-header.component";
 
 const HomePage = () => {
-  return <Header className={`p-6`}>homepage</Header>;
+  return <ContentBoxHeader className={`p-6`}>homepage</ContentBoxHeader>;
 };
 
 export default HomePage;

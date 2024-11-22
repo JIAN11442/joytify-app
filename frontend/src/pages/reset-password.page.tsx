@@ -1,10 +1,10 @@
-import Header from "../components/header.component";
+import ContentBoxHeader from "../components/content-box-header.component";
 
 const ResetPasswordPage = () => {
   return (
-    <Header>
+    <ContentBoxHeader>
       <div>this is a reset password page</div>
-    </Header>
+    </ContentBoxHeader>
   );
 };
 

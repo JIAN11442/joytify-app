@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import Header from "../components/header.component";
+import ContentBoxHeader from "../components/content-box-header.component";
 import Loader from "../components/loader.component";
 import PlaylistHeader from "../components/playlist-header.component";
 import PlaylistBody from "../components/playlist-body.component";
@@ -40,7 +40,7 @@ const PlaylistPage = () => {
   }
 
   return (
-    <Header
+    <ContentBoxHeader
       options={false}
       style={{
         backgroundImage: `linear-gradient(
@@ -62,7 +62,7 @@ const PlaylistPage = () => {
 
       {/* Playlist content */}
       <PlaylistBody playlist={playlist} />
-    </Header>
+    </ContentBoxHeader>
   );
 };
 

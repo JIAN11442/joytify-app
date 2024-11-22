@@ -18,14 +18,14 @@ import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import queryClient from "../config/query-client.config";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
-type HeaderProps = {
+type ContentBoxHeaderProps = {
   children: React.ReactNode;
   options?: boolean;
   style?: React.CSSProperties;
   className?: string;
 };
 
-const Header: React.FC<HeaderProps> = ({
+const ContentBoxHeader: React.FC<ContentBoxHeaderProps> = ({
   children,
   options = true,
   style,
@@ -94,7 +94,7 @@ const Header: React.FC<HeaderProps> = ({
         className
       )}
     >
-      {/* Header */}
+      {/* header */}
       <div
         className={`
           mb-4
@@ -251,4 +251,4 @@ const Header: React.FC<HeaderProps> = ({
   );
 };
 
-export default Header;
+export default ContentBoxHeader;
