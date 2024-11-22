@@ -31,8 +31,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
 
   // Refetch song hook when songId changes
   useEffect(() => {
-    songRefetch();
-  }, [songId, songRefetch]);
+    if (songId && songPlayedRef.current !== songId) {
+      songRefetch();
+    }
+  }, [songId, songPlayedRef, songRefetch]);
 
   // while sound is ready, play audio
   useEffect(() => {
@@ -54,6 +56,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
 
   return (
     <AnimationWrapper
+      visible={Boolean(song)}
       initial={{ opacity: 0, transformOrigin: "bottom" }}
       animate={{ opacity: 1, transformOrigin: "bottom" }}
       className={`

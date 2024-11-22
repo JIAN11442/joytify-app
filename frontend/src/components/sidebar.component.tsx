@@ -151,7 +151,7 @@ const Sidebar = () => {
         </ContentBox>
       </div>
 
-      {activeSongId && <AudioPlayer songId={activeSongId} />}
+      <AudioPlayer songId={activeSongId} />
     </div>
   );
 };
