@@ -133,9 +133,10 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
         }
       };
 
-      timeoutForEventListener(document, "click", handleOnFocus);
-
-      return timeoutForEventListener(document, "click", handleOnBlur);
+      return () => {
+        timeoutForEventListener(document, "click", handleOnFocus);
+        timeoutForEventListener(document, "click", handleOnBlur);
+      };
     }, [autoCloseMenuFn, disabled, inputRef, menuRef]);
 
     useEffect(() => {
@@ -238,10 +239,10 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
                                 checked={selectedOpts.includes(opt)}
                                 onChange={(e) => handleOptMenuOnChange(opt, e)}
                                 deleteFunc={() => handleDeleteLabel(opt)}
-                                tailwindCss={{
-                                  deleteBtn: `
-                                  ${index === 1 ? "flex" : "hidden"}
-                                `,
+                                tw={{
+                                  deleteBtn: `${
+                                    index === 1 ? "flex" : "hidden"
+                                  }`,
                                 }}
                               />
                             );
@@ -254,9 +255,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
                         onClick={() =>
                           handleActiveCreateLabelModal(LabelOptions.LANGUAGE)
                         }
-                        tailwindCSS={{
-                          wrapper: `${index === 0 ? "flex" : "hidden"}`,
-                        }}
+                        className={`${index === 0 ? "flex" : "hidden"}`}
                       >
                         <p>Create new</p>
                       </CreateNewBtn>

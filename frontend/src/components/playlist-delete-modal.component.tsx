@@ -15,6 +15,7 @@ import {
 import usePlaylistState from "../states/playlist.state";
 import { deletePlaylist } from "../fetchs/playlist.fetch";
 import { usePlaylists } from "../hooks/playlist.hook";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const PlaylistDeleteModal = () => {
   const navigate = useNavigate();
@@ -44,8 +45,10 @@ const PlaylistDeleteModal = () => {
   });
 
   const handleCloseModal = () => {
-    closePlaylistDeleteModal();
-    reset();
+    timeoutForDelay(() => {
+      closePlaylistDeleteModal();
+      reset();
+    });
   };
 
   const {

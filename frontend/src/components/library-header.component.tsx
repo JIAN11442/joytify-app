@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { AxiosResponse } from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { LuLibrary } from "react-icons/lu";
@@ -8,9 +8,8 @@ import { MdLibraryMusic, MdMusicNote } from "react-icons/md";
 
 import Icon from "./react-icons.component";
 import SidebarItem from "./sidebar-item.component";
-import InputBox from "./input-box.component";
-import AnimationWrapper from "./animation-wrapper.component";
 import Menu from "./menu.component";
+import InputSearchBar from "./input-searchbar.component";
 
 import AuthForOptions from "../constants/auth-type.constant";
 import { resUser } from "../constants/data-type.constant";
@@ -19,7 +18,7 @@ import useSidebarState from "../states/sidebar.state";
 import useUploadModalState from "../states/upload-modal.state";
 import useAuthModalState from "../states/auth-modal.state";
 import useLibraryState from "../states/library.state";
-import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
+import { timeoutForDelay } from "../lib/timeout.lib";
 import { createPlaylist } from "../fetchs/playlist.fetch";
 import { usePlaylists } from "../hooks/playlist.hook";
 
@@ -29,8 +28,6 @@ type LibraryHeaderProps = {
 
 const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   const addingMenuRef = useRef<HTMLDivElement>(null);
-  const searchBarRef = useRef<HTMLInputElement>(null);
-  const [activeSearchBar, setActiveSearchBar] = useState(false);
 
   const {
     collapseSideBarState,
@@ -43,13 +40,15 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   const { openUploadModal } = useUploadModalState();
   const {
     activeAddingOptions,
-    playlistSearchVal,
+    activeLibrarySearchBar,
+    librarySearchVal,
     setActiveAddingOptions,
-    setPlaylistSearchVal,
+    setActiveLibrarySearchBar,
+    setLibrarySearchVal,
   } = useLibraryState();
 
   const { refetch: playlistRefetch, playlists } =
-    usePlaylists(playlistSearchVal);
+    usePlaylists(librarySearchVal);
 
   // handle collapse sidebar
   const handleCollapseSidebar = () => {
@@ -65,9 +64,18 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   };
 
   // handle active library search bar
-  const handleActiveSearchBar = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    setActiveSearchBar(!activeSearchBar);
+  const handleActiveSearchBar = () => {
+    timeoutForDelay(() => {
+      setActiveLibrarySearchBar(!activeLibrarySearchBar);
+    });
+  };
+
+  // handle close library search bar
+  const handleCloseSearchBar = () => {
+    timeoutForDelay(() => {
+      setActiveLibrarySearchBar(false);
+      setLibrarySearchVal(null);
+    });
   };
 
   // handle active adding options
@@ -116,7 +124,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
     const value = e.target.value;
 
     timeoutForDelay(() => {
-      setPlaylistSearchVal(value);
+      setLibrarySearchVal(value);
     }, 300);
   };
 
@@ -124,26 +132,10 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   useEffect(() => {
     if (isCollapsed) {
       if (!playlists?.length) {
-        setActiveSearchBar(false);
-        setPlaylistSearchVal(null);
+        handleCloseSearchBar();
       }
     }
   }, [isCollapsed]);
-
-  // auto close search bar while on blur
-  useEffect(() => {
-    const handleOnBlur: EventListener = (e) => {
-      if (
-        searchBarRef.current &&
-        !searchBarRef.current.contains(e.target as Node)
-      ) {
-        setPlaylistSearchVal(null);
-        setActiveSearchBar(false);
-      }
-    };
-
-    return timeoutForEventListener(document, "click", handleOnBlur, 0);
-  }, [searchBarRef]);
 
   return (
     <div
@@ -159,7 +151,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
         className={`
           flex
           ${!isCollapsed ? "relative" : !floating && "flex-col"}
-          pt-5
+          pt-4
           gap-y-4
           items-center
           justify-between
@@ -167,13 +159,11 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
       >
         {/* Title */}
         <SidebarItem
-          icon={LuLibrary}
+          icon={{ name: LuLibrary }}
           label="Your Library"
           onClick={handleCollapseSidebar}
           collapse={isCollapsed}
-          className={`
-            w-fit
-          `}
+          className={`w-fit`}
         />
 
         {/* Buttons */}
@@ -220,6 +210,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
               onClick={handleActiveAddingOptions}
               className={`
                 group
+                outline-none
                 ${
                   (!isCollapsed || floating) &&
                   `
@@ -234,7 +225,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
             >
               <Icon
                 name={AiOutlinePlus}
-                opts={{ size: !isCollapsed || floating ? 20 : 28 }}
+                opts={{ size: !isCollapsed || floating ? 20 : 24 }}
                 className={`
                   ${
                     isCollapsed && !floating
@@ -294,40 +285,18 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
       </div>
 
       {/* Search bar */}
-      <>
-        {(!isCollapsed || floating) && (
-          <AnimationWrapper
-            key="searchbar"
-            initial={{ width: "0%", opacity: 0 }}
-            animate={{ width: "100%", opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            exit={{ width: "20%", opacity: 0 }}
-            visible={activeSearchBar}
-            mode="sync"
-            className={`
-              flex-1
-              pt-3
-            `}
-          >
-            <InputBox
-              ref={searchBarRef}
-              id="seachbar"
-              type="text"
-              name="searchBar"
-              placeholder="Search your playlist"
-              icon={BiSearch}
-              autoFocus
-              onChange={(e) => handleOnChangeLibrarySearch(e)}
-              iconHighlight={false}
-              className={`
-                py-3
-                border-none
-                rounded-md
-              `}
-            />
-          </AnimationWrapper>
-        )}
-      </>
+      <InputSearchBar
+        id="library-searchbar"
+        placeholder="Search your playlist"
+        visible={activeLibrarySearchBar && (!isCollapsed || floating)}
+        icon={{ name: BiSearch }}
+        autoCloseFn={{
+          active: true,
+          closeFn: handleCloseSearchBar,
+        }}
+        onChange={(e) => handleOnChangeLibrarySearch(e)}
+        tw={{ wrapper: `pt-3` }}
+      />
     </div>
   );
 };

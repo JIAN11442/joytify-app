@@ -62,8 +62,8 @@ export const createNewSong = async ({ userId, songInfo }: createParams) => {
 // get song by id
 export const getSongById = async (id: string) => {
   const song = await SongModel.findOne({ _id: id })
-    .populate({ path: "artist", select: "label" })
-    .populate({ path: "composers", select: "label" })
+    .populate({ path: "artist", select: "name" })
+    .populate({ path: "composers", select: "name" })
     .populate({ path: "languages", select: "label" })
     .populate({ path: "album", select: "title" });
 

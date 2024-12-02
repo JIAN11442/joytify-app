@@ -1,47 +1,46 @@
-import { useNavigate } from "react-router-dom";
+import { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
-import { IconType } from "react-icons";
+import { useNavigate } from "react-router-dom";
+import { IconBaseProps } from "react-icons";
 
-import Icon from "./react-icons.component";
+import Icon, { IconName } from "./react-icons.component";
 import useSidebarState from "../states/sidebar.state";
 
-type SidebarItemProps = {
-  icon: IconType;
-  label: string;
+interface SidebarItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  icon: { name: IconName; opts?: IconBaseProps };
+  label?: string;
   href?: string;
   collapse?: boolean;
-  className?: string;
-  onClick?: () => void;
-};
-
-const SidebarItem: React.FC<SidebarItemProps> = ({
-  icon,
-  label,
-  href,
-  collapse = false,
-  className,
-  onClick,
-}) => {
-  const navigate = useNavigate();
-  const active = window.location.pathname === href;
-
-  const { floating } = useSidebarState();
-
-  const handleOnClick = () => {
-    if (href) {
-      navigate(href);
-    }
-
-    if (onClick) {
-      onClick();
-    }
+  tw?: {
+    label?: string;
   };
+}
 
-  return (
-    <div
-      onClick={handleOnClick}
-      className={twMerge(
-        `
+const SidebarItem = forwardRef<HTMLDivElement, SidebarItemProps>(
+  ({ icon, label, href, collapse, onClick, className, tw }, ref) => {
+    const { name, opts } = icon;
+
+    const navigate = useNavigate();
+    const active = window.location.pathname === href;
+
+    const { floating } = useSidebarState();
+
+    const handleOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (href) {
+        navigate(href);
+      }
+
+      if (onClick) {
+        onClick(e);
+      }
+    };
+
+    return (
+      <div
+        ref={ref}
+        onClick={(e) => handleOnClick(e)}
+        className={twMerge(
+          `
           flex
           gap-x-4
           items-center
@@ -56,30 +55,34 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
           hover:text-white
           transition
         `,
-        className
-      )}
-    >
-      {/* Icon */}
-      <Icon name={icon} opts={{ size: 28 }} />
-
-      {/* Label */}
-      <>
-        {!collapse || floating ? (
-          <p
-            className={`
-              text-lgc
-              font-bold
-              truncate
-            `}
-          >
-            {label}
-          </p>
-        ) : (
-          ""
+          className
         )}
-      </>
-    </div>
-  );
-};
+      >
+        {/* Icon */}
+        <Icon name={name} opts={{ size: 24, ...opts }} />
+
+        {/* Label */}
+        <>
+          {(label?.length && !collapse) || floating ? (
+            <p
+              className={twMerge(
+                `
+                text-lgc
+                font-bold
+                truncate
+                `,
+                tw?.label
+              )}
+            >
+              {label}
+            </p>
+          ) : (
+            ""
+          )}
+        </>
+      </div>
+    );
+  }
+);
 
 export default SidebarItem;

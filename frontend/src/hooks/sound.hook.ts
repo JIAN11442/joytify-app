@@ -22,16 +22,27 @@ const useSound = (url: string) => {
         timeoutForDelay(() => setCurrentPlaybackTime(audio.currentTime));
       };
 
-      // listening duration
-      timeoutForEventListener(audio, "loadedmetadata", handleLoadedMetaData);
+      // listening duration and return cleanup function
+      const cleanupLoaded = timeoutForEventListener(
+        audio,
+        "loadedmetadata",
+        handleLoadedMetaData
+      );
 
-      // listening current time
-      timeoutForEventListener(audio, "timeupdate", handleTimeUpdate);
+      // listening current time and return cleanup function
+      const cleanupTime = timeoutForEventListener(
+        audio,
+        "timeupdate",
+        handleTimeUpdate
+      );
 
       return () => {
         audio.pause();
         audio.src = "";
         setIsPlaying(false);
+
+        cleanupLoaded();
+        cleanupTime();
       };
     }
   }, [url]);

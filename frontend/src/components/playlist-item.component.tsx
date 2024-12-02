@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { resPlaylist } from "../constants/data-type.constant";
 import useSidebarState from "../states/sidebar.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 type PlaylistItemProps = {
   playlist: resPlaylist;
@@ -9,12 +10,22 @@ type PlaylistItemProps = {
 const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
   const { _id, title, cover_image, songs } = playlist;
 
-  const { collapseSideBarState, floating } = useSidebarState();
+  const { collapseSideBarState, floating, setFloating } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
+
+  // handle close floating menu
+  const handleCloseFloatingMenu = () => {
+    if (floating) {
+      timeoutForDelay(() => {
+        setFloating(false);
+      });
+    }
+  };
 
   return (
     <NavLink
       to={`/playlist/${_id}`}
+      onClick={handleCloseFloatingMenu}
       className={({ isActive }) => `
         flex
         w-full
@@ -33,8 +44,8 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
       <img
         src={cover_image}
         className={`
-          w-[3.5rem]
-          h-[3.5rem]
+          w-[3.3rem]
+          h-[3.3rem]
           object-cover
           rounded-md
         `}

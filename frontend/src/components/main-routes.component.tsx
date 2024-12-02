@@ -26,13 +26,13 @@ const MainNavigateRoutes = () => {
       >
         <SidebarItem
           href="/"
-          icon={HiHome}
+          icon={{ name: HiHome }}
           label="Home"
           collapse={isCollapsed}
         />
         <SidebarItem
           href="/search"
-          icon={BiSearch}
+          icon={{ name: BiSearch }}
           label="Search"
           collapse={isCollapsed}
         />

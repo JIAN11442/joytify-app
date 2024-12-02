@@ -8,8 +8,7 @@ interface CheckBoxItemProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   opt: Label;
   deleteFunc: () => void;
-  tailwindCss?: {
-    wrapper?: string;
+  tw?: {
     input?: string;
     title?: string;
     deleteBtn?: string;
@@ -18,7 +17,7 @@ interface CheckBoxItemProps
 }
 
 const OptionCheckboxItem = forwardRef<HTMLInputElement, CheckBoxItemProps>(
-  ({ opt, deleteFunc, tailwindCss, ...props }, ref) => {
+  ({ opt, deleteFunc, tw, className, ...props }, ref) => {
     return (
       <label
         className={twMerge(
@@ -30,7 +29,7 @@ const OptionCheckboxItem = forwardRef<HTMLInputElement, CheckBoxItemProps>(
             py-[1.5px]
             items-center
           `,
-          tailwindCss?.wrapper
+          className
         )}
       >
         {/* input */}
@@ -45,18 +44,14 @@ const OptionCheckboxItem = forwardRef<HTMLInputElement, CheckBoxItemProps>(
               text-neutral-400
               group-hover:text-white
             `,
-            tailwindCss?.title
+            tw?.title
           )}
         >
           {opt.label}
         </p>
 
         {/* delete button */}
-        <button
-          type="button"
-          onClick={deleteFunc}
-          className={tailwindCss?.deleteBtn}
-        >
+        <button type="button" onClick={deleteFunc} className={tw?.deleteBtn}>
           <Icon
             name={IoIosClose}
             opts={{ size: 18 }}
@@ -68,7 +63,7 @@ const OptionCheckboxItem = forwardRef<HTMLInputElement, CheckBoxItemProps>(
                 rounded-full
                 transition
               `,
-              tailwindCss?.icon
+              tw?.icon
             )}
           />
         </button>

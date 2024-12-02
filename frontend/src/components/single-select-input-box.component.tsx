@@ -196,9 +196,10 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
         }
       };
 
-      timeoutForEventListener(document, "click", handleOnFocus);
-
-      return timeoutForEventListener(document, "click", handleOnBlur);
+      return () => {
+        timeoutForEventListener(document, "click", handleOnFocus);
+        timeoutForEventListener(document, "click", handleOnBlur);
+      };
     }, [autoCloseMenuFn, disabled, inputRef, menuRef]);
 
     // renew filter options while parent options is refetch
@@ -342,11 +343,9 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
               {createNewFn && (
                 <CreateNewBtn
                   type="button"
-                  tailwindCSS={{
-                    wrapper: `menu-btn p-2 rounded-sm`,
-                    icon: "hidden",
-                  }}
                   onClick={() => createNewFn()}
+                  className={`menu-btn p-2 rounded-sm`}
+                  tw={{ icon: `hidden` }}
                 >
                   <p className={`normal-case text-sm`}>Create new</p>
                 </CreateNewBtn>

@@ -172,7 +172,7 @@ const UploadModal = () => {
       setSongName(title);
     }
 
-    console.log(value);
+    // console.log(value);
 
     createNewSong(value);
   };
@@ -190,18 +190,14 @@ const UploadModal = () => {
         !activeCreateAlbumModal.active &&
         !isPending
       }
-      className={{
-        wrapper: `
-          ${
-            activeAdvancedSettings &&
-            `
-              md:min-w-[80vw]  
-              lg:min-w-[70vw] 
-            `
-          }
-          
-        `,
-      }}
+      className={`
+        ${
+          activeAdvancedSettings &&
+          `
+            md:min-w-[80vw]  
+            lg:min-w-[70vw] 
+          `
+        }`}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}

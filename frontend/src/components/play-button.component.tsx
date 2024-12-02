@@ -4,11 +4,10 @@ import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 
 import Icon from "./react-icons.component";
 
-type PlayButtonProps = {
-  onClick?: () => void;
+interface PlayButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isPlaying: boolean;
-  className?: string;
-};
+}
 
 const PlayButton = forwardRef<HTMLButtonElement, PlayButtonProps>(
   ({ isPlaying, onClick, className, ...props }, ref) => {

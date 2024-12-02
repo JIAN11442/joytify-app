@@ -52,6 +52,37 @@ body,
     @apply input-base-icon right-5;
   }
 
+  .floating-menu {
+    @apply absolute
+    flex
+    flex-col
+    h-full
+    gap-y-2
+    border-r
+    bg-black
+    border-neutral-900
+    shadow-md
+    shadow-black
+    rounded-lg
+    z-10;
+  }
+
+  .navbar-link {
+    @apply flex 
+    p-2.5
+    bg-neutral-800/80
+    text-neutral-400
+    hover:text-white
+    hover:scale-105
+    items-center
+    justify-center
+    rounded-full;
+  }
+
+  .navbar-link.active {
+    @apply text-white;
+  }
+
   .submit-btn {
     @apply w-[100%]
     p-3
@@ -84,6 +115,7 @@ body,
     py-2
     bg-white
     text-black
+    text-nowrap
     font-bold
     rounded-full
     hover:opacity-80

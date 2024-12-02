@@ -43,7 +43,7 @@ const IconModules = {
   Pi,
 };
 
-type IconName = keyof typeof IconModules | IconType;
+export type IconName = keyof typeof IconModules | IconType;
 
 type IconProps = {
   name: IconName;

@@ -109,7 +109,7 @@ const ForgotPasswordForm = () => {
           id="email"
           type="email"
           placeholder="Your email address"
-          icon={MdAlternateEmail}
+          icon={{ name: MdAlternateEmail }}
           onKeyDown={(e) => handleMoveToNextElement(e, submitBtnRef)}
           {...register("email", { required: true })}
         />

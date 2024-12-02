@@ -38,14 +38,14 @@ export type resSong = {
   _id: string;
   title: string;
   creator: string;
-  artist: Label[]; // 作者
+  artist: Musician[]; // 作者
   songUrl: string; // 歌曲連結
   imageUrl: string; //封面連結
   duration: number;
   releaseDate: Date; // 發行日期
   album: Album; // 專輯名稱
-  lyricists: Label[]; // 作詞者
-  composers: Label[]; // 作曲者
+  lyricists: Musician[]; // 作詞者
+  composers: Musician[]; // 作曲者
   languages: Label[]; // 語言
   genres: string[]; // 流派
   tags: string[]; // 標籤
@@ -91,6 +91,11 @@ export type generateResSong = Omit<
 export type Label = {
   id: string;
   label: string;
+};
+
+export type Musician = {
+  id: string;
+  name: string;
 };
 
 export type Album = {

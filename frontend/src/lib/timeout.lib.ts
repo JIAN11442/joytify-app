@@ -16,19 +16,11 @@ export const timeoutForDelay = (
 export const timeoutForEventListener = (
   target: Window | Document | HTMLElement,
   action: string = "click",
-  listener: EventListenerOrEventListenerObject,
-  delay: number = 0
+  listener: EventListenerOrEventListenerObject
 ) => {
-  const addEventListener = () => target.addEventListener(action, listener);
-  const removeEventListener = () =>
-    target.removeEventListener(action, listener);
-
-  const timeout = setTimeout(() => {
-    addEventListener();
-  }, delay);
+  target.addEventListener(action, listener);
 
   return () => {
-    clearTimeout(timeout);
-    removeEventListener();
+    target.removeEventListener(action, listener);
   };
 };

@@ -18,20 +18,28 @@ import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import queryClient from "../config/query-client.config";
 import usePlaylistState from "../states/playlist.state";
 
-type ImageLabelProps = {
-  id?: string;
+interface ImageLabelProps extends React.HTMLAttributes<HTMLDivElement> {
   imgSrc: string;
   playlistId: string;
   formValueState?: {
-    setValue: UseFormSetValue<DefaultsPlaylistEditType>;
     name: reqEditPlaylist;
+    setFormValue: UseFormSetValue<DefaultsPlaylistEditType>;
   };
   isDefault?: boolean;
-  className?: string;
-};
+  tw?: {
+    label?: string;
+    img?: string;
+    loader?: { container?: string; text?: string };
+    icon?: string;
+    input?: string;
+  };
+}
 
 const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
-  ({ id, imgSrc, playlistId, formValueState, isDefault, className }, ref) => {
+  (
+    { id, imgSrc, playlistId, formValueState, isDefault, className, tw },
+    ref
+  ) => {
     const [imageUrl, setImageUrl] = useState(imgSrc);
     const [isUploading, setIsUploading] = useState(false);
 
@@ -84,11 +92,11 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
 
         // if form value state exist, means it will be used for form input
         if (formValueState) {
-          const { name, setValue } = formValueState;
+          const { name, setFormValue } = formValueState;
 
           if (awsImageUrl) {
             // then set the value to useForm
-            setValue(name, awsImageUrl);
+            setFormValue(name, awsImageUrl);
 
             // update cover image src from client
             setImageUrl(awsImageUrl);
@@ -127,7 +135,7 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
         )}
       >
         {/* label */}
-        <label htmlFor={id || "playlist-cover-image"}>
+        <label htmlFor={id || "playlist-cover-image"} className={tw?.label}>
           <div
             className={`
               relative
@@ -138,7 +146,8 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
           >
             <img
               src={coverImageSrc}
-              className={`
+              className={twMerge(
+                `
                 w-full
                 h-full
                 rounded-md
@@ -147,7 +156,9 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
                 border-none
                 object-cover
                 overflow-hidden
-              `}
+              `,
+                tw?.img
+              )}
             />
 
             {/* Upload content */}
@@ -179,10 +190,14 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
               `}
             >
               {isPending || isUploading ? (
-                <Loader />
+                <Loader className={tw?.loader} />
               ) : (
                 <>
-                  <Icon name={AiFillEdit} opts={{ size: 30 }} />
+                  <Icon
+                    name={AiFillEdit}
+                    opts={{ size: 30 }}
+                    className={tw?.icon}
+                  />
                   <p>Choose photo</p>
                 </>
               )}
@@ -199,10 +214,8 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
           hidden
           disabled={isPending || isUploading || isDefault}
           onChange={(e) => handleInputOnChange(e)}
-          onClick={(e) => {
-            // to avoid modal close automatically while clicking the input
-            e.stopPropagation();
-          }}
+          onClick={(e) => e.stopPropagation()}
+          className={tw?.input}
         />
       </div>
     );

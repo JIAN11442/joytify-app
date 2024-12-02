@@ -6,9 +6,9 @@ import {
 } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { IoEye, IoEyeOff } from "react-icons/io5";
-import { IconType } from "react-icons";
+import { IconBaseProps } from "react-icons";
 
-import Icon from "./react-icons.component";
+import Icon, { IconName } from "./react-icons.component";
 import AnimationWrapper from "./animation-wrapper.component";
 
 import { timeoutForDelay } from "../lib/timeout.lib";
@@ -16,9 +16,10 @@ import mergeRefs from "../lib/merge-refs.lib";
 import { reqUpload } from "../constants/data-type.constant";
 import { DefaultsSongType } from "../constants/form-default-data.constant";
 
-interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputBoxProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
-  icon?: IconType;
+  icon?: { name: IconName; opts?: IconBaseProps };
   warning?: string[];
   toArray?: boolean;
   formMethods?: {
@@ -33,6 +34,7 @@ interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   };
   iconHighlight?: boolean;
   className?: string;
+  tw?: { icon?: string };
 }
 
 const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
@@ -53,6 +55,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       onKeyDown,
       onBlur,
       required,
+      tw,
       ...props
     },
     ref
@@ -257,11 +260,15 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
         <>
           {icon && (
             <Icon
-              name={icon}
-              className={`
+              name={icon.name}
+              opts={icon?.opts}
+              className={twMerge(
+                `
                 input-left-icon
                 ${iconHighlight && inputVal?.length && "text-green-custom/80"}
-              `}
+              `,
+                tw?.icon
+              )}
             />
           )}
         </>

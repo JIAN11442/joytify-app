@@ -1,16 +1,18 @@
 import { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
+import { IconBaseProps } from "react-icons";
 import { AiOutlinePlus } from "react-icons/ai";
-import Icon from "./react-icons.component";
+import Icon, { IconName } from "./react-icons.component";
 
 interface CreateNewBtnProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  tailwindCSS?: { wrapper?: string; icon?: string };
+  icon?: { name?: IconName; opts?: IconBaseProps };
+  tw?: { icon?: string };
 }
 
 const CreateNewBtn = forwardRef<HTMLButtonElement, CreateNewBtnProps>(
-  ({ type, children, tailwindCSS, ...props }, ref) => {
+  ({ type, icon, className, children, tw, ...props }, ref) => {
     return (
       <button
         ref={ref}
@@ -28,13 +30,13 @@ const CreateNewBtn = forwardRef<HTMLButtonElement, CreateNewBtnProps>(
             items-center
             transition
         `,
-          tailwindCSS?.wrapper
+          className
         )}
         {...props}
       >
         <Icon
-          name={AiOutlinePlus}
-          opts={{ size: 12 }}
+          name={AiOutlinePlus || icon?.name}
+          opts={{ size: 12, ...icon?.opts }}
           className={twMerge(
             `
             p-0.5
@@ -43,7 +45,7 @@ const CreateNewBtn = forwardRef<HTMLButtonElement, CreateNewBtnProps>(
             bg-green-500/50
             group-hover:bg-green-500
             `,
-            tailwindCSS?.icon
+            tw?.icon
           )}
         />
         {children}

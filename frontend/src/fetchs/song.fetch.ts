@@ -6,8 +6,8 @@ import MusicianOptions from "../constants/musician-type.constant";
 import { resSong } from "../constants/data-type.constant";
 import { getMusicianIds } from "./musician.fetch";
 import { uploadFileToAws } from "./aws.fetch";
-import { timeoutForEventListener } from "../lib/timeout.lib";
 import API from "../config/api-client.config";
+import getAudioDuration from "../utils/get-audio-duration.util";
 
 // create song data
 export const createSongData = async (data: DefaultsSongType) => {
@@ -15,7 +15,7 @@ export const createSongData = async (data: DefaultsSongType) => {
 
   const { songFile, imageFile, artist, lyricists, composers, ...params } = data;
 
-  let imageUrl;
+  let imageUrl = undefined;
   let duration = 0;
   const musicianParams: { [key: string]: string[] } = {};
 
@@ -23,11 +23,11 @@ export const createSongData = async (data: DefaultsSongType) => {
   const audio = new Audio(URL.createObjectURL(file));
 
   // get song duration
-  timeoutForEventListener(
-    audio,
-    "loadedmetadata",
-    () => (duration = audio.duration)
-  );
+  try {
+    duration = await getAudioDuration(audio);
+  } catch (error) {
+    console.log("Failed to get audio duration", error);
+  }
 
   // get song url from aws
   const songUrl = await uploadFileToAws({

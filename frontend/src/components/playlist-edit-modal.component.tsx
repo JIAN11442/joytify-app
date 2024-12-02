@@ -94,7 +94,8 @@ const PlaylistEditModal = () => {
       title="Edit details"
       activeState={active}
       closeModalFn={handleCloseModal}
-      className={{ wrapper: `w-[600px]`, title: `text-left` }}
+      className={`w-[600px]`}
+      tw={{ title: `text-left` }}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -111,7 +112,7 @@ const PlaylistEditModal = () => {
           id="coverImage"
           imgSrc={cover_image}
           playlistId={playlistId}
-          formValueState={{ name: "coverImage", setValue }}
+          formValueState={{ name: "coverImage", setFormValue: setValue }}
           className={`
             w-[15rem]
             h-[15rem]

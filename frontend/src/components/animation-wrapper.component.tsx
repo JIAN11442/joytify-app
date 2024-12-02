@@ -1,16 +1,19 @@
-import { AnimatePresence, motion, MotionProps } from "framer-motion";
 import { forwardRef } from "react";
+import { AnimatePresence, motion, MotionProps } from "framer-motion";
 
-interface AnimationWrapperProps {
-  children: React.ReactNode;
+export type DefaultAnimationWrapperProps = {
   initial?: MotionProps["initial"];
   animate?: MotionProps["animate"];
   transition?: MotionProps["transition"];
   exit?: MotionProps["exit"];
   mode?: "sync" | "wait" | "popLayout";
   visible?: boolean;
-  className?: string;
   style?: React.CSSProperties;
+};
+
+interface AnimationWrapperProps extends DefaultAnimationWrapperProps {
+  children: React.ReactNode;
+  className?: string;
   onClick?: () => void;
 }
 

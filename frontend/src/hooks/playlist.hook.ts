@@ -5,7 +5,7 @@ import useUserState from "../states/user.state";
 import usePlaylistState from "../states/playlist.state";
 import { getPlaylists, getPlaylistById } from "../fetchs/playlist.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
-import mergeLabels from "../lib/merge-labels.lib";
+import mergeProperties from "../lib/merge-labels.lib";
 
 export const usePlaylists = (
   searchParams?: string | null,
@@ -71,11 +71,11 @@ export const usePlaylistById = (id: string, opts: object = {}) => {
           songs: data.songs.map((song) => {
             return {
               ...song,
-              artist: mergeLabels(song.artist, ", "),
-              lyricists: mergeLabels(song.lyricists, ", "),
-              composers: mergeLabels(song.composers, ", "),
-              languages: mergeLabels(song.languages, ", "),
-              album: song.album.title || "",
+              artist: mergeProperties(song.artist, "name"),
+              lyricists: mergeProperties(song.lyricists, "name"),
+              composers: mergeProperties(song.composers, "name"),
+              languages: mergeProperties(song.languages, "label"),
+              album: song.album?.title || "",
             };
           }),
         };

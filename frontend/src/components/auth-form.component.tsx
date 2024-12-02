@@ -245,7 +245,7 @@ const AuthForm = () => {
           id="email"
           type="email"
           placeholder="Your email address"
-          icon={MdAlternateEmail}
+          icon={{ name: MdAlternateEmail }}
           onKeyDown={(e) => handleMoveToNextElement(e, "password")}
           {...register("email", { required: true })}
         />
@@ -272,7 +272,7 @@ const AuthForm = () => {
           id="password"
           type="password"
           placeholder="Your Password"
-          icon={IoKey}
+          icon={{ name: IoKey }}
           onKeyDown={(e) =>
             handleMoveToNextElement(
               e,
@@ -339,7 +339,7 @@ const AuthForm = () => {
               id="confirm-password"
               type="password"
               placeholder="Confirm Password"
-              icon={IoKey}
+              icon={{ name: IoKey }}
               onKeyDown={(e) =>
                 handleMoveToNextElement(
                   e,

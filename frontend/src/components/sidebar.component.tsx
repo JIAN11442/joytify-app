@@ -3,9 +3,9 @@ import { Outlet } from "react-router-dom";
 
 import ContentBox from "./content-box.component";
 import AnimationWrapper from "./animation-wrapper.component";
-import MainNavigateRoutes from "./main-routes.component";
 import Library from "./library.component";
 import AudioPlayer from "./audio-player.component";
+import Navbar from "./navbar.component";
 
 import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
@@ -70,18 +70,22 @@ const Sidebar = () => {
         flex-col
         p-2
         gap-2
+        w-full
+        h-screen
       `}
     >
+      {/* navbar */}
+      <Navbar />
+
       <div
         className={`
           relative
           flex
-          h-screen
           gap-x-2
           ${activeSongId ? "h-[calc(100vh-80px)]" : "h-full"}
         `}
       >
-        {/* Sidebars */}
+        {/* sidebar */}
         <div
           className={`
             flex
@@ -96,14 +100,11 @@ const Sidebar = () => {
            
           `}
         >
-          {/* Navigate routes */}
-          <MainNavigateRoutes />
-
           {/* Library */}
           <Library />
         </div>
 
-        {/* Float sidebars */}
+        {/* float sidebar */}
         <AnimationWrapper
           ref={floatingDivRef}
           visible={floating}
@@ -120,27 +121,12 @@ const Sidebar = () => {
           transition={{ duration: 0.3 }} // 增加动画持续时间
           exit={{ width: "20%", opacity: 0 }}
           mode="sync"
-          className={`
-            fixed
-            inset-0
-            h-full
-            flex
-            flex-col
-            gap-y-2
-            p-2
-          bg-black
-            border-r
-            border-neutral-800/50
-            shadow-md
-            shadow-neutral-700
-            z-10
-          `}
+          className={`floating-menu`}
         >
-          <MainNavigateRoutes />
           <Library />
         </AnimationWrapper>
 
-        {/* Main contents */}
+        {/* content */}
         <ContentBox
           className={`
             h-full

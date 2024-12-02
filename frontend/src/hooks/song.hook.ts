@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { QueryKey } from "../constants/query-client-key.constant";
 import { getSongById } from "../fetchs/song.fetch";
 import useSoundState from "../states/sound.state";
-import mergeLabels from "../lib/merge-labels.lib";
+import mergeProperties from "../lib/merge-labels.lib";
 
 export const useSongById = (id: string, opts: object = {}) => {
   const [isQueryError, setIsQueryError] = useState(false);
@@ -17,10 +17,10 @@ export const useSongById = (id: string, opts: object = {}) => {
         const song = await getSongById(id);
         const generateSong = {
           ...song,
-          artist: mergeLabels(song.artist, ", "),
-          lyricists: mergeLabels(song.lyricists, ", "),
-          composers: mergeLabels(song.composers, ", "),
-          languages: mergeLabels(song.languages, ", "),
+          artist: mergeProperties(song.artist, "name"),
+          lyricists: mergeProperties(song.lyricists, "name"),
+          composers: mergeProperties(song.composers, "name"),
+          languages: mergeProperties(song.languages, "label"),
           album: song.album?.title || "",
         };
 

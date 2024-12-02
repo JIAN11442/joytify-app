@@ -73,9 +73,9 @@ export const getUserPlaylistById = async (
   }).populate({
     path: "songs",
     populate: [
-      { path: "artist", select: "label" },
-      { path: "composers", select: "label" },
-      { path: "lyricists", select: "label" },
+      { path: "artist", select: "name" },
+      { path: "composers", select: "name" },
+      { path: "lyricists", select: "name" },
       { path: "languages", select: "label" },
       { path: "album", select: "title" },
     ],

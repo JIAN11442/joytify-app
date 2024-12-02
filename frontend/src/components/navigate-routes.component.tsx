@@ -5,8 +5,8 @@ import SidebarItem from "./sidebar-item.component";
 import useSidebarState from "../states/sidebar.state";
 
 const NavigateRoutes = () => {
-  const { collapse } = useSidebarState();
-  const { isCollapsed } = collapse;
+  const { collapseSideBarState } = useSidebarState();
+  const { isCollapsed } = collapseSideBarState;
 
   return (
     <ContentBox
@@ -26,13 +26,13 @@ const NavigateRoutes = () => {
       >
         <SidebarItem
           href="/"
-          icon={HiHome}
+          icon={{ name: HiHome }}
           label="Home"
           collapse={isCollapsed}
         />
         <SidebarItem
           href="/search"
-          icon={BiSearch}
+          icon={{ name: BiSearch }}
           label="Search"
           collapse={isCollapsed}
         />

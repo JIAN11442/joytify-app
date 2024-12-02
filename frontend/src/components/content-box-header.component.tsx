@@ -1,21 +1,12 @@
-import { useRef } from "react";
-import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
 import { IoIosMenu } from "react-icons/io";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 import Icon from "./react-icons.component";
-import Menu from "./menu.component";
+import AuthOperation from "./auth-operation.component";
 
-import { logout } from "../fetchs/auth.fetch";
 import useSidebarState from "../states/sidebar.state";
-import useUserState from "../states/user.state";
-import useAuthModalState from "../states/auth-modal.state";
-import AuthForOptions from "../constants/auth-type.constant";
-import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
-import queryClient from "../config/query-client.config";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type ContentBoxHeaderProps = {
@@ -32,49 +23,13 @@ const ContentBoxHeader: React.FC<ContentBoxHeaderProps> = ({
   className,
 }) => {
   const navigate = useNavigate();
-  const menuRef = useRef<HTMLDivElement>(null);
 
   const { floating, setFloating } = useSidebarState();
-  const { user, activeUserMenu, setActiveUserMenu } = useUserState();
-  const { openAuthModal } = useAuthModalState();
-
-  const { mutate: logoutUser } = useMutation({
-    mutationKey: [MutationKey.LOGOUT],
-    mutationFn: logout,
-    onSuccess: () => {
-      // set user to null
-      queryClient.setQueryData([QueryKey.GET_USER_INFO], null);
-      queryClient.setQueryData([QueryKey.GET_USER_PLAYLISTS], null);
-
-      toast.success("Logged out successfully");
-    },
-  });
 
   // handle active float sidebar
   const handleActiveFloatSidebar = () => {
     timeoutForDelay(() => {
       setFloating(!floating);
-    });
-  };
-
-  // handle active auth modal(login or register)
-  const handleActiveAuthModal = (authFor: AuthForOptions) => {
-    timeoutForDelay(() => {
-      openAuthModal(authFor);
-    });
-  };
-
-  // handle user menu
-  const handleActiveUserMenu = () => {
-    timeoutForDelay(() => {
-      setActiveUserMenu(!activeUserMenu);
-    });
-  };
-
-  // handle logout
-  const handleLogoutUser = () => {
-    timeoutForDelay(() => {
-      logoutUser();
     });
   };
 
@@ -162,87 +117,7 @@ const ContentBoxHeader: React.FC<ContentBoxHeaderProps> = ({
         </>
 
         {/* Right side */}
-        <>
-          {user ? (
-            // Avatar & Menu
-            <div className={`flex relative`}>
-              {/* User avatar */}
-              <button
-                onClick={handleActiveUserMenu}
-                className="
-                  w-11
-                  h-11
-                  hover:opacity-80
-                  hover:scale-110
-                  shadow-[0px_0px_5px_1px]
-                shadow-neutral-900/30
-                  rounded-full
-                  overflow-hidden
-                  transition
-                "
-              >
-                <img
-                  src={user.profile_img}
-                  className="
-                    w-full
-                    h-full
-                    object-cover
-                  "
-                />
-              </button>
-
-              {/* Menu panel */}
-              <Menu
-                ref={menuRef}
-                activeState={{
-                  visible: activeUserMenu,
-                  setVisible: setActiveUserMenu,
-                }}
-                className={`
-                   top-0
-                   right-12
-                `}
-              >
-                <button className="menu-btn">profile</button>
-                <button className="menu-btn">setting</button>
-                <button onClick={handleLogoutUser} className="menu-btn">
-                  logout
-                </button>
-              </Menu>
-            </div>
-          ) : (
-            // Sign up and login button
-            <div
-              className={`
-                flex
-                gap-5
-                items-center
-              `}
-            >
-              {/* Sign up button */}
-              <button
-                onClick={() => handleActiveAuthModal(AuthForOptions.SIGN_UP)}
-                className={`
-                  text-[15px]
-                  text-neutral-400
-                  hover:text-white
-                  hover:scale-105
-                  transition
-                `}
-              >
-                Sign up
-              </button>
-
-              {/* login button */}
-              <button
-                onClick={() => handleActiveAuthModal(AuthForOptions.SIGN_IN)}
-                className={`auth-btn`}
-              >
-                Log in
-              </button>
-            </div>
-          )}
-        </>
+        <AuthOperation />
       </div>
 
       {/* Content */}

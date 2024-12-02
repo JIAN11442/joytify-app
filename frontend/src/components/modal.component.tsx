@@ -16,8 +16,8 @@ type ModalProps = {
   activeOnChange?: () => void;
   closeBtnDisabled?: boolean;
   closeModalFn: () => void;
-  className?: {
-    wrapper?: string;
+  className?: string;
+  tw?: {
     title?: string;
     description?: string;
   };
@@ -35,13 +35,14 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       closeBtnDisabled,
       closeModalFn,
       className,
+      tw,
       autoCloseModalFn = true,
     },
     ref
   ) => {
     const modalRef = useRef<HTMLDivElement>(null);
 
-    // while autoCloseModalFn is true, close modal when clicked outside
+    // auto close modal while click outside
     useEffect(() => {
       const handleModalOnBlur: EventListener = (e) => {
         if (
@@ -93,7 +94,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               rounded-md
               outline-none
             `,
-              className?.wrapper
+              className
             )}
           >
             {/* Title */}
@@ -106,7 +107,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                   text-center
                   ${title ? "block" : "hidden"}
                 `,
-                className?.title
+                tw?.title
               )}
             >
               {title}
@@ -123,7 +124,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                   text-center
                   ${description ? "block" : "hidden"}
                 `,
-                className?.description
+                tw?.description
               )}
             >
               {description}
