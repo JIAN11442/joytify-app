@@ -30,7 +30,7 @@ const errorHandler = (): ErrorRequestHandler => {
       return res.status(BAD_REQUEST).json(errors[0]);
     }
 
-    // Firebase Error
+    // Auth Error
     if (error?.errorInfo?.code && error.errorInfo.code.startsWith("auth/")) {
       return res.status(BAD_REQUEST).json({
         code: error.errorInfo.code,
