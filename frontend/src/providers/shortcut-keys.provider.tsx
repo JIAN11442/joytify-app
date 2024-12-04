@@ -6,6 +6,7 @@ import { isEditableElement } from "../lib/element.lib";
 import { navigate } from "../lib/navigate.lib";
 import useNavbarState from "../states/navbar.state";
 import useLibraryState from "../states/library.state";
+import usePlaylistState from "../states/playlist.state";
 
 type ShortcutKeysProps = {
   children: React.ReactNode;
@@ -18,6 +19,8 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
   const { activeNavSearchBar, setActiveNavSearchBar } = useNavbarState();
   const { setActiveAddingOptions, setActiveLibrarySearchBar } =
     useLibraryState();
+  const { setActivePlaylistEditOptionsMenu, setActivePlaylistListOptionsMenu } =
+    usePlaylistState();
 
   const toggleSidebar = useCallback(() => {
     timeoutForDelay(() => {
@@ -72,9 +75,16 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
           togglePlayPause();
         }
       } else if (key === "Escape") {
+        // navbar
         setActiveNavSearchBar(false);
+
+        // library
         setActiveAddingOptions(false);
         setActiveLibrarySearchBar(false);
+
+        // playlist
+        setActivePlaylistEditOptionsMenu(false);
+        setActivePlaylistListOptionsMenu(false);
       }
     },
     [activeSongId, togglePlayPause, toggleSidebar]

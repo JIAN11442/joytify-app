@@ -1,17 +1,17 @@
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { timeoutForDelay } from "../lib/timeout.lib";
-import useUploadModalState from "../states/upload-modal.state";
 import OptionCreateModal from "./option-create-modal.component";
 import {
   defaultsCreatePlaylistData,
   DefaultsCreatePlaylistType,
 } from "../constants/form-default-data.constant";
-import { useMutation } from "@tanstack/react-query";
 import { MutationKey } from "../constants/query-client-key.constant";
 import { createPlaylist } from "../fetchs/playlist.fetch";
+import useUploadModalState from "../states/upload-modal.state";
 import { usePlaylists } from "../hooks/playlist.hook";
-import toast from "react-hot-toast";
-import { useState } from "react";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const CreatePlaylistModal = () => {
   const [formVal, setFormVal] = useState("");

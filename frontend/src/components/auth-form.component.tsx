@@ -361,7 +361,7 @@ const AuthForm = () => {
       {/* Submit button */}
       <button
         ref={submitBtnRef}
-        disabled={!isValid}
+        disabled={!isValid || isPending}
         className={`
           mt-2
           submit-btn

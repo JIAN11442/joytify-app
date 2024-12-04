@@ -149,7 +149,7 @@ songSchema.pre("findOneAndDelete", async function (next) {
   try {
     const findQuery = this.getQuery();
     const id = findQuery._id;
-    const song = await SongModel.findById(findQuery);
+    const song = await SongModel.findById(id);
 
     if (song) {
       const { creator, playlist_for, songUrl, imageUrl, album } = song;

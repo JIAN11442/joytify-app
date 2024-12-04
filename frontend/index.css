@@ -41,7 +41,8 @@ body,
     @apply absolute 
     -translate-y-1/2 
     top-1/2
-    text-grey-custom/50;
+    text-grey-custom/50
+    outline-none;
   }
 
   .input-left-icon {
@@ -64,6 +65,7 @@ body,
     shadow-md
     shadow-black
     rounded-lg
+    outline-none
     z-10;
   }
 
@@ -114,6 +116,7 @@ body,
     px-5
     py-2
     bg-white
+    text-sm
     text-black
     text-nowrap
     font-bold
@@ -124,14 +127,17 @@ body,
   }
 
   .menu-btn {
-    @apply w-full
+    @apply flex
+    w-full
     p-2
+    gap-3
     text-sm
     text-start
     text-neutral-400
     capitalize
     hover:bg-neutral-800/50
     hover:text-white
+    items-center
     transition;
   }
 

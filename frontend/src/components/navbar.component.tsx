@@ -102,7 +102,7 @@ const Navbar = () => {
               transition
             `}
           >
-            <img src={JoytifyLogo} className={`w-8 h-8`} />
+            <img src={JoytifyLogo} className={`w-6 h-6`} />
           </NavbarLink>
 
           {/* floating menu & home & search */}

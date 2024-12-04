@@ -41,9 +41,6 @@ const ContentBoxHeader: React.FC<ContentBoxHeaderProps> = ({
           flex
           flex-col
           h-fit
-          bg-gradient-to-b
-          from-emerald-800
-          to-neutral-900  
           rounded-lg
       `,
         className

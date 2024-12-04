@@ -172,10 +172,12 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
             <div className={`relative`}>
               {/* options button */}
               <button
+                type="button"
                 onClick={handleActivePlaylistEditOptionsMenu}
                 className={`
                   text-grey-custom/50   
                   hover:text-white
+                  outline-none
                   transition 
                 `}
               >
@@ -193,14 +195,9 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
               >
                 {/* Edit details */}
                 <button
+                  type="button"
                   onClick={handleActivePlaylistEditModal}
-                  className={`
-                    menu-btn
-                    flex
-                    gap-3
-                    items-center
-                    normal-case
-                  `}
+                  className={`menu-btn normal-case`}
                 >
                   <Icon name={AiFillEdit} opts={{ size: 18 }} />
                   <p>Edit details</p>
@@ -209,13 +206,7 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
                 {/* Delete playlist */}
                 <button
                   onClick={handleActiveDeleteWarningModal}
-                  className={`
-                    menu-btn
-                    flex
-                    gap-3
-                    items-center
-                    normal-case
-                  `}
+                  className={`menu-btn normal-case`}
                 >
                   <Icon name={MdDeleteSweep} opts={{ size: 18 }} />
                   <p>Delete playlist</p>
@@ -228,13 +219,7 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
                       ? handleAddPlaylistToProfile
                       : handleActiveRemoveWarningModal
                   }
-                  className={`
-                    menu-btn
-                    flex
-                    gap-3
-                    items-center
-                    normal-case
-                  `}
+                  className={`menu-btn normal-case`}
                 >
                   <Icon
                     name={hidden ? FaUserPlus : FaUserXmark}
@@ -294,9 +279,6 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
                 onClick={() => handleChangeSongArrangementType(opt)}
                 className={`
                    menu-btn
-                   flex
-                   items-center
-                   justify-between
                   ${
                     songArrangementType === opt &&
                     `text-green-500 hover:text-green-500`

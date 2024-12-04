@@ -7,6 +7,9 @@ import {
 import PlaylistModel from "./playlist.model";
 import appAssert from "../utils/app-assert.util";
 import { INTERNAL_SERVER_ERROR } from "../constants/http-code.constant";
+import usePalette from "../hooks/paletee.hook";
+import { deletePlaylistById } from "../services/playlist.service";
+import SessionModel from "./session.model";
 
 export interface UserDocument extends mongoose.Document {
   email: string;
@@ -63,7 +66,7 @@ userSchema.pre("save", async function (next) {
   return next();
 });
 
-// while created user, ...
+// after created user, ...
 userSchema.post("save", async function (doc) {
   const { id } = doc;
 
@@ -77,13 +80,18 @@ userSchema.post("save", async function (doc) {
     // only create default playlist if it doesn't exist
     // cause this.save() will trigger this post middleware again -> infinite loop
     if (!existDefaultPlaylist) {
+      const defaultCoverImg =
+        "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/liked-song.png";
+
+      const paletee = await usePalette(defaultCoverImg);
+
       // create default playlist
       const defaultPlaylist = await PlaylistModel.create({
         userId: id,
         title: "Liked Songs",
         description: "All your liked songs will be here",
-        cover_image:
-          "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/liked-song.png",
+        cover_image: defaultCoverImg,
+        paletee,
         default: true,
       });
 
@@ -93,6 +101,33 @@ userSchema.post("save", async function (doc) {
         "Failed to create default playlist"
       );
     }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// before deleted user, ...
+userSchema.pre("findOneAndDelete", async function (next) {
+  try {
+    const findQuery = this.getQuery();
+    const user = await UserModel.findById(findQuery);
+    const playlists = await PlaylistModel.find({ userId: user?._id });
+
+    // delete all user playlists and relate properties,
+    // exp: songs, labels, albums, musicians
+    if (playlists) {
+      await Promise.all(
+        playlists.map((playlist) =>
+          deletePlaylistById({
+            userId: user?._id as string,
+            currentPlaylistId: playlist._id as string,
+          })
+        )
+      );
+    }
+
+    // delete all relative sessions
+    await SessionModel.deleteMany({ userId: user?.id });
   } catch (error) {
     console.log(error);
   }

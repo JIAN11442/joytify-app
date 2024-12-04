@@ -4,3 +4,6 @@ import { resUser } from "../constants/data-type.constant";
 
 // get user
 export const getUserInfo = async (): Promise<resUser> => API.get("/user");
+
+// deregister user account
+export const deregisterUserAccount = async () => API.delete("/user/deregister");

@@ -17,6 +17,7 @@ export enum MutationKey {
   DELETE_LABEL_OPTION = "delete-label-option",
   CREATE_ALBUM_OPTION = "create-album-option",
   DELETE_ALBUM_OPTION = "delete-album-option",
+  DEREGISTER_USER = "deregister-user",
 }
 
 export enum QueryKey {

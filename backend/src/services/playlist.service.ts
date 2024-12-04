@@ -1,12 +1,12 @@
-import { FilterQuery, UpdateQuery } from "mongoose";
+import { FilterQuery } from "mongoose";
+
+import SongModel from "../models/song.model";
 import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
 import appAssert from "../utils/app-assert.util";
 import {
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
 } from "../constants/http-code.constant";
-import usePalette from "../hooks/paletee.hook";
-import SongModel, { SongDocument } from "../models/song.model";
 
 type createPlaylistParams = {
   userId: string;
@@ -66,7 +66,7 @@ export const getUserPlaylistById = async (
   userId: string
 ) => {
   // get playlist info
-  const playlist = await PlaylistModel.findOne({
+  let playlist = await PlaylistModel.findOne({
     _id: playlistId,
     hidden: false,
     userId,
@@ -83,11 +83,7 @@ export const getUserPlaylistById = async (
 
   appAssert(playlist, NOT_FOUND, "Playlist not found");
 
-  // get paletee from cover image
-  const paletee = await usePalette(playlist.cover_image);
-  const newPlaylist = { ...playlist.toObject(), paletee };
-
-  return { playlist: newPlaylist };
+  return { playlist };
 };
 
 // create new playlist service
@@ -152,22 +148,8 @@ export const deletePlaylistById = async (data: deletePlaylistParams) => {
     );
   }
 
-  // update all songs from playlist to be delete
-  if (playlist.songs.length) {
-    const updatedSongs = await SongModel.updateMany(
-      { _id: { $in: playlist.songs } },
-      { $pull: { playlist_for: currentPlaylistId } }
-    );
-
-    appAssert(
-      updatedSongs.modifiedCount > 0,
-      INTERNAL_SERVER_ERROR,
-      "Failed to remove deleted playlist ID from relate songs"
-    );
-  }
-
   // delete target playlist
-  const deletedPlaylist = await PlaylistModel.findOneAndDelete({
+  await PlaylistModel.findOneAndDelete({
     _id: currentPlaylistId,
     userId,
   });

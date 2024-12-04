@@ -38,6 +38,8 @@ import {
 import { ORIGIN_APP } from "../constants/env-validate.constant";
 import VerificationCodeType from "../constants/verification-code.constant";
 import ErrorCode from "../constants/error-code.constant";
+import PlaylistModel from "../models/playlist.model";
+import { deletePlaylistById } from "./playlist.service";
 
 interface AuthDefaults {
   email: string;

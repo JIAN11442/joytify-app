@@ -1,6 +1,7 @@
+import { HexPaletee } from "../constants/paletee-type.constant";
 import getImgPaletee from "../utils/get-palette.util";
 
-const usePalette = async (imgSrc: string) => {
+const usePalette = async (imgSrc: string): Promise<HexPaletee> => {
   const paletee = await getImgPaletee(imgSrc);
 
   const generatePaletee = {
@@ -10,7 +11,7 @@ const usePalette = async (imgSrc: string) => {
     muted: paletee?.Muted?.hex,
     darkMuted: paletee?.DarkMuted?.hex,
     lightMuted: paletee?.LightMuted?.hex,
-  };
+  } as HexPaletee;
 
   return generatePaletee;
 };
