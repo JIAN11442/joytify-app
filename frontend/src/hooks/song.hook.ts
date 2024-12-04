@@ -15,6 +15,7 @@ export const useSongById = (id: string, opts: object = {}) => {
     queryFn: async () => {
       try {
         const song = await getSongById(id);
+
         const generateSong = {
           ...song,
           artist: mergeProperties(song.artist, "name"),

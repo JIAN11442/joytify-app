@@ -73,7 +73,9 @@ const CreatePlaylistModal = () => {
       {...register("playlist", {
         required: true,
         validate: (value) => {
-          return !options?.some((opt) => opt === value);
+          return !options?.some(
+            (opt) => opt.toLowerCase() === value.toLowerCase()
+          );
         },
       })}
     />

@@ -196,9 +196,21 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
         }
       };
 
+      // listening click events and return cleanup function
+      const cleanupOnFocusFn = timeoutForEventListener(
+        document,
+        "click",
+        handleOnFocus
+      );
+      const cleanupOnBlurFn = timeoutForEventListener(
+        document,
+        "click",
+        handleOnBlur
+      );
+
       return () => {
-        timeoutForEventListener(document, "click", handleOnFocus);
-        timeoutForEventListener(document, "click", handleOnBlur);
+        cleanupOnFocusFn();
+        cleanupOnBlurFn();
       };
     }, [autoCloseMenuFn, disabled, inputRef, menuRef]);
 
