@@ -47,10 +47,7 @@ export const removeUserAlbumHandler: RequestHandler = async (
 
     const { updatedAlbum } = await removeAlbum({ userId, albumId });
 
-    return res.status(OK).json({
-      message: "User has been successfully removed from album",
-      updatedAlbum,
-    });
+    return res.status(OK).json(updatedAlbum);
   } catch (error) {
     next(error);
   }

@@ -9,12 +9,12 @@ import usePlaylistState from "../states/playlist.state";
 import useSidebarState from "../states/sidebar.state";
 import useSoundState from "../states/sound.state";
 import ArrangementOptions from "../constants/arrangement-type.constant";
-import { generateResSong } from "../constants/data-type.constant";
+import { refactorResSong } from "../constants/data-type.constant";
 import { getDuration, getTimeAgo } from "../utils/get-time.util";
 
 type SongListItemProps = {
   index: number;
-  song: generateResSong;
+  song: refactorResSong;
   switchFunc?: boolean;
   onPlay: (id: string) => void;
 };

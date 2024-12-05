@@ -1,7 +1,7 @@
-import { generateResSong } from "../constants/data-type.constant";
+import { refactorResSong } from "../constants/data-type.constant";
 
 type SongsGridProps = {
-  songs: generateResSong[];
+  songs: refactorResSong[];
 };
 
 const SongsGrid: React.FC<SongsGridProps> = ({ songs }) => {

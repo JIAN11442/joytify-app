@@ -1,8 +1,8 @@
 import SongsList from "./songs-list.component";
-import { generateResPlaylist } from "../constants/data-type.constant";
+import { refactorResPlaylist } from "../constants/data-type.constant";
 
 type PlaylistBodyContentProps = {
-  playlist: generateResPlaylist;
+  playlist: refactorResPlaylist;
 };
 
 const PlaylistBodyContent: React.FC<PlaylistBodyContentProps> = ({

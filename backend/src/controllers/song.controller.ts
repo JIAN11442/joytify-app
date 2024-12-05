@@ -16,7 +16,7 @@ export const createSongHandler: RequestHandler = async (req, res, next) => {
 
     const { song } = await createNewSong({ userId, songInfo });
 
-    return res.status(CREATED).json({ song });
+    return res.status(CREATED).json(song);
   } catch (error) {
     next(error);
   }

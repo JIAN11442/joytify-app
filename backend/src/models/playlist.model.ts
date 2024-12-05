@@ -64,11 +64,14 @@ playlistSchema.pre("save", async function (next) {
       title = `${baseTitle} #${existedIndex + 1}`;
     }
 
-    // get paletee
-    const paletee = await usePalette(this.cover_image);
-
     this.title = title;
     this.description = title;
+  }
+
+  // parser image to get relate paletee
+  if (this.cover_image) {
+    const paletee = await usePalette(this.cover_image);
+
     this.paletee = paletee;
   }
 

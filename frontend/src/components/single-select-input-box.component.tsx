@@ -32,10 +32,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     trigger: UseFormTrigger<any>;
   };
   createNewFn?: () => void;
-  deleteOptFn?: {
-    deleteFn: (id: string) => void;
-    setDeleteTitle: (title: string) => void;
-  };
+  deleteOptFn?: (id: string) => void;
   autoCloseMenuFn?: boolean;
 }
 
@@ -157,13 +154,8 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
       e.stopPropagation();
 
       if (deleteOptFn) {
-        const { deleteFn, setDeleteTitle } = deleteOptFn;
-
         // delete option function
-        deleteFn(opt.id);
-
-        // save deleted option title for toaster
-        setDeleteTitle(opt.title);
+        deleteOptFn(opt.id);
 
         // clear input value after deleted option
         setValue("");

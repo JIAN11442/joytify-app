@@ -3,6 +3,7 @@ import { RequestHandler } from "express";
 import { verificationCodeSchema } from "../schemas/auth.schema";
 import { playlistSchema } from "../schemas/playlist.schema";
 import PlaylistModel from "../models/playlist.model";
+import SongModel from "../models/song.model";
 
 import {
   createNewPlaylist,
@@ -18,7 +19,6 @@ import {
 } from "../constants/http-code.constant";
 import appAssert from "../utils/app-assert.util";
 import parseParams from "../utils/parse-params.util";
-import SongModel from "../models/song.model";
 
 // get user all playlist handler
 export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
@@ -98,13 +98,13 @@ export const deletePlaylistHandler: RequestHandler = async (req, res, next) => {
     const currentPlaylistId = verificationCodeSchema.parse(req.params.id);
     const { targetPlaylistId } = req.body;
 
-    await deletePlaylistById({
+    const deletedPlaylist = await deletePlaylistById({
       userId,
       currentPlaylistId,
       targetPlaylistId,
     });
 
-    return res.status(OK).json({ message: "Playlist deleted successfully" });
+    return res.status(OK).json(deletedPlaylist);
   } catch (error) {
     console.log(error);
     next(error);
@@ -133,9 +133,7 @@ export const changePlaylistHiddenStateHandler: RequestHandler = async (
       `Failed to change playlist hidden state to ${hiddenState}`
     );
 
-    return res
-      .status(OK)
-      .json({ message: `Playlist hidden state changed to ${hiddenState}` });
+    return res.status(OK).json(updatedPlaylist);
   } catch (error) {
     next(error);
   }

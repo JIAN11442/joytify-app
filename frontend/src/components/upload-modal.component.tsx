@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import toast from "react-hot-toast";
-import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaCircleInfo } from "react-icons/fa6";
 import { IoCaretBack } from "react-icons/io5";
@@ -16,28 +16,26 @@ import MultiSelectInputBox, {
 } from "./multi-select-input-box.component";
 import CalendarInputBox from "./calendar-input-box.component";
 
-import {
-  defaultsSongData,
-  DefaultsSongType,
-} from "../constants/form-default-data.constant";
-import LabelOptions from "../constants/label-type.constant";
-import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import { useGetLabels } from "../hooks/label.hook";
 import { usePlaylists } from "../hooks/playlist.hook";
 import { useGetAlbums } from "../hooks/album.hook";
 import { createSongData } from "../fetchs/song.fetch";
 import { removeAlbum } from "../fetchs/album.fetch";
-import useAlbumState from "../states/album.state";
-import useUploadModalState from "../states/upload-modal.state";
-import queryClient from "../config/query-client.config";
-import { timeoutForDelay } from "../lib/timeout.lib";
 import { deleteLabel } from "../fetchs/label.fetch";
-import useLabelState from "../states/label.state";
+
+import {
+  defaultsSongData,
+  DefaultsSongType,
+} from "../constants/form-default-data.constant";
+import LabelOptions from "../constants/label-type.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
+import useUploadModalState from "../states/upload-modal.state";
+
+import { navigate } from "../lib/navigate.lib";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const UploadModal = () => {
   const submitBtnRef = useRef<HTMLButtonElement>(null);
-
-  const [songName, setSongName] = useState("");
 
   const {
     activeUploadModal,
@@ -51,10 +49,7 @@ const UploadModal = () => {
     setActiveCreatePlaylistModal,
   } = useUploadModalState();
 
-  const { deletedLabel, setDeletedLabel } = useLabelState();
-  const { deleteAlbum, setDeletedAlbum } = useAlbumState();
-
-  const { playlists } = usePlaylists();
+  const { playlists, refetch: playlistRefetch } = usePlaylists();
   const { labels, refetch: labelRefetch } = useGetLabels();
   const { albums, refetch: albumRefetch } = useGetAlbums();
 
@@ -62,7 +57,9 @@ const UploadModal = () => {
   const { mutate: createNewSong, isPending } = useMutation({
     mutationKey: [MutationKey.CREATE_NEW_SONG],
     mutationFn: createSongData,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const { title, playlist_for } = data;
+
       // close modal
       closeUploadModal();
 
@@ -70,12 +67,13 @@ const UploadModal = () => {
       reset(defaultsSongData);
 
       // refetch user playlists
-      queryClient.invalidateQueries([
-        QueryKey.GET_USER_PLAYLISTS,
-      ] as InvalidateQueryFilters);
+      playlistRefetch();
 
-      // display successfully message
-      toast.success(`“${songName}” has been created successfully`);
+      // display success message
+      toast.success(`“${title}” has been created successfully`);
+
+      // navigate to playlist
+      navigate(`/playlist/${playlist_for}`);
     },
     onError: (error) => toast.error(error.message),
   });
@@ -84,11 +82,14 @@ const UploadModal = () => {
   const { mutate: deleteTargetLabel } = useMutation({
     mutationKey: [MutationKey.DELETE_LABEL_OPTION],
     mutationFn: deleteLabel,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const { label } = data;
+
       // refetch query label
       labelRefetch();
-      // display deleted successfully message
-      toast.success(`"${deletedLabel}" already deleted`);
+
+      // display deleted success message
+      toast.success(`"${label}" already deleted`);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -99,11 +100,14 @@ const UploadModal = () => {
   const { mutate: deleteTargetAlbum } = useMutation({
     mutationKey: [MutationKey.DELETE_ALBUM_OPTION],
     mutationFn: removeAlbum,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const { title } = data;
+
       // refetch get albums query
       albumRefetch();
-      // display successfully message
-      toast.success(`"${deleteAlbum}" already deleted`);
+
+      // display success message
+      toast.success(`"${title}" already deleted`);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -166,14 +170,6 @@ const UploadModal = () => {
   };
 
   const onSubmit: SubmitHandler<DefaultsSongType> = async (value) => {
-    const { title } = value;
-
-    if (title) {
-      setSongName(title);
-    }
-
-    // console.log(value);
-
     createNewSong(value);
   };
 
@@ -421,10 +417,7 @@ const UploadModal = () => {
                 })) || []
               }
               createNewFn={handleActiveCreateAlbumModal}
-              deleteOptFn={{
-                deleteFn: deleteTargetAlbum,
-                setDeleteTitle: setDeletedAlbum,
-              }}
+              deleteOptFn={deleteTargetAlbum}
               autoCloseMenuFn={!activeCreateAlbumModal.active}
               disabled={isPending}
             />
@@ -446,10 +439,7 @@ const UploadModal = () => {
                     : null,
                 } as OptionType
               }
-              deleteOptFn={{
-                deleteFn: deleteTargetLabel,
-                setDeleteTitle: setDeletedLabel,
-              }}
+              deleteOptFn={deleteTargetLabel}
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}
@@ -472,10 +462,7 @@ const UploadModal = () => {
                     : null,
                 } as OptionType
               }
-              deleteOptFn={{
-                deleteFn: deleteTargetLabel,
-                setDeleteTitle: setDeletedLabel,
-              }}
+              deleteOptFn={deleteTargetLabel}
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}
@@ -498,10 +485,7 @@ const UploadModal = () => {
                     : null,
                 } as OptionType
               }
-              deleteOptFn={{
-                deleteFn: deleteTargetLabel,
-                setDeleteTitle: setDeletedLabel,
-              }}
+              deleteOptFn={deleteTargetLabel}
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}

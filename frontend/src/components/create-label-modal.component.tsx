@@ -1,4 +1,3 @@
-import { useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -10,14 +9,13 @@ import {
   defaultsCreateLabelData,
   DefaultsCreateLabelType,
 } from "../constants/form-default-data.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
 import LabelOptions from "../constants/label-type.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
+import useUploadModalState from "../states/upload-modal.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { createLabel } from "../fetchs/label.fetch";
-import useUploadModalState from "../states/upload-modal.state";
 
 const CreateLabelModal = () => {
-  const [formVal, setFormVal] = useState("");
   const { activeCreateLabelModal, setActiveCreateLabelModal } =
     useUploadModalState();
   const { type, active, options, labelRefetch } = activeCreateLabelModal;
@@ -39,15 +37,19 @@ const CreateLabelModal = () => {
   const { mutate: createUserLabel } = useMutation({
     mutationKey: [MutationKey.CREATE_LABEL_OPTION],
     mutationFn: createLabel,
-    onSuccess: () => {
-      // display success message
-      toast.success(`"${formVal}" ${type} is created`);
+    onSuccess: (data) => {
+      const { label, type } = data;
+
       // refetch label query
       if (labelRefetch) {
         labelRefetch();
       }
+
       // close modal
       handleCloseModal();
+
+      // display success message
+      toast.success(`"${label}" ${type} is created`);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -67,7 +69,6 @@ const CreateLabelModal = () => {
   const onSubmit: SubmitHandler<DefaultsCreateLabelType> = async (value) => {
     const { label } = value;
 
-    setFormVal(label);
     createUserLabel({ label, type });
   };
 

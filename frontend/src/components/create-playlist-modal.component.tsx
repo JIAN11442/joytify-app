@@ -1,4 +1,3 @@
-import { useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -14,7 +13,6 @@ import { usePlaylists } from "../hooks/playlist.hook";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const CreatePlaylistModal = () => {
-  const [formVal, setFormVal] = useState("");
   const { refetch: playlistRefetch } = usePlaylists();
 
   const { activeCreatePlaylistModal, setActiveCreatePlaylistModal } =
@@ -33,13 +31,17 @@ const CreatePlaylistModal = () => {
   const { mutate: createUserPlaylist } = useMutation({
     mutationKey: [MutationKey.CREATE_USER_PLAYLIST],
     mutationFn: createPlaylist,
-    onSuccess: () => {
-      // display success message
-      toast.success(`"${formVal}" playlist is created`);
+    onSuccess: (data) => {
+      const { title } = data;
+
       // refetch playlist query
       playlistRefetch();
+
       // close create playlist modal
       handleCloseModal();
+
+      // display success message
+      toast.success(`"${title}" playlist is created`);
     },
     onError: (error) => {
       console.log(error);
@@ -58,7 +60,6 @@ const CreatePlaylistModal = () => {
   const onSubmit: SubmitHandler<DefaultsCreatePlaylistType> = async (value) => {
     const { playlist } = value;
 
-    setFormVal(playlist);
     createUserPlaylist(playlist);
   };
 

@@ -10,7 +10,9 @@ import API from "../config/api-client.config";
 import getAudioDuration from "../utils/get-audio-duration.util";
 
 // create song data
-export const createSongData = async (data: DefaultsSongType) => {
+export const createSongData = async (
+  data: DefaultsSongType
+): Promise<resSong> => {
   const nanoID = nanoid();
 
   const { songFile, imageFile, artist, lyricists, composers, ...params } = data;

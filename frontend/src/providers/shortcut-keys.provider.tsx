@@ -45,6 +45,7 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
     (e: Event) => {
       const ekey = e as KeyboardEvent;
       const key = ekey.key;
+      const isEditing = isEditableElement(ekey.target);
 
       // if ctrl or command
       if (ekey.metaKey || ekey.ctrlKey) {
@@ -54,7 +55,7 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
         }
       } else if (ekey.shiftKey) {
         // navigate to home route
-        if (key === "H") {
+        if (!isEditing && !activeNavSearchBar && key === "H") {
           navigate("/");
         }
         // navigate to search route
@@ -68,7 +69,7 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
         }
       } else if (activeSongId && key === " ") {
         // if the current element is not editable,
-        if (!isEditableElement(ekey.target)) {
+        if (!isEditing) {
           // to avoid page scrolling
           ekey.preventDefault();
           // toggle song play or pause
@@ -87,7 +88,7 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
         setActivePlaylistListOptionsMenu(false);
       }
     },
-    [activeSongId, togglePlayPause, toggleSidebar]
+    [activeSongId, activeNavSearchBar, togglePlayPause, toggleSidebar]
   );
 
   useEffect(() => {

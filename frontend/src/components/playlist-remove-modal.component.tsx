@@ -1,42 +1,45 @@
 import toast from "react-hot-toast";
-import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import Modal from "./modal.component";
 import PlaylistWarningContent from "./playlist-warning-content.component";
+
 import usePlaylistState from "../states/playlist.state";
-import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
 import { changePlaylistHiddenState } from "../fetchs/playlist.fetch";
-import queryClient from "../config/query-client.config";
-import { navigate } from "../lib/navigate.lib";
+import { usePlaylistById } from "../hooks/playlist.hook";
 
 const PlaylistRemoveModal = () => {
   const { activeRemovePlaylistModal, setActiveRemovePlaylistModal } =
     usePlaylistState();
   const { active, playlist } = activeRemovePlaylistModal;
 
+  const { refetch: targetPlaylistRefetch } = usePlaylistById(
+    playlist?._id || ""
+  );
+
   // handle close modal
   const handleCloseModal = () => {
     setActiveRemovePlaylistModal({ active: false, playlist: null });
   };
 
-  // hander remove playlist mutation
+  // handle remove playlist mutation
   const { mutate: removeUserPlaylistFromProfile } = useMutation({
     mutationKey: [MutationKey.REMOVE_PLAYLIST_FROM_PROFILE],
     mutationFn: changePlaylistHiddenState,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const { title } = data;
+
       // close modal
       handleCloseModal();
 
-      navigate("/", { replace: true });
+      // refetch target playlist
+      targetPlaylistRefetch();
 
-      // refetch user playlists
-      queryClient.invalidateQueries([
-        QueryKey.GET_USER_PLAYLISTS,
-      ] as InvalidateQueryFilters);
-
-      toast.success(`"${playlist?.title}" playlist removed from profile`);
+      // display success message
+      toast.success(`"${title}" playlist removed from profile`);
     },
-    onError: () => {
-      toast.error(`Failed to remove "${playlist?.title}" playlist`);
+    onError: (error) => {
+      console.log(error);
     },
   });
 

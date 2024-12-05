@@ -22,6 +22,7 @@ export interface UserDocument extends mongoose.Document {
     total_songs: number;
   };
   playlists: mongoose.Types.ObjectId[];
+  songs: mongoose.Types.ObjectId[];
   comparePassword: (password: string) => Promise<boolean>;
   omitPassword(): Omit<this, "password">;
 }
@@ -50,6 +51,11 @@ const userSchema = new mongoose.Schema<UserDocument>(
     playlists: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Playlist",
+      index: true,
+    },
+    songs: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Song",
       index: true,
     },
   },

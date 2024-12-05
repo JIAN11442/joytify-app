@@ -21,6 +21,7 @@ import useLibraryState from "../states/library.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { createPlaylist } from "../fetchs/playlist.fetch";
 import { usePlaylists } from "../hooks/playlist.hook";
+import { navigate } from "../lib/navigate.lib";
 
 type LibraryHeaderProps = {
   user: AxiosResponse | resUser | undefined;
@@ -104,8 +105,15 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   const { mutate: createUserPlaylist } = useMutation({
     mutationKey: [MutationKey.CREATE_USER_PLAYLIST],
     mutationFn: createPlaylist,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const { _id: id } = data;
+      const route = `/playlist/${id}`;
+
+      // refetch playlist query
       playlistRefetch();
+
+      // navigate to target playlist page
+      navigate(route);
     },
     onError: (error) => {
       console.log(error);

@@ -22,7 +22,10 @@ const AuthOperation = () => {
     mutationKey: [MutationKey.LOGOUT],
     mutationFn: logout,
     onSuccess: () => {
+      // clear user query data
       clearUserQueryData();
+
+      // display success message
       toast.success("Logged out successfully");
     },
     onError: (error) => {

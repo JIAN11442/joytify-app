@@ -10,7 +10,11 @@ import AnimationWrapper from "./animation-wrapper.component";
 import OptionCheckboxItem from "./option-checkbox-item.component";
 
 import LabelOptions, { LabelType } from "../constants/label-type.constant";
-import { Label, reqUpload, resLabels } from "../constants/data-type.constant";
+import {
+  Label,
+  refactorResLabel,
+  reqUpload,
+} from "../constants/data-type.constant";
 import { DefaultsSongType } from "../constants/form-default-data.constant";
 import mergeRefs from "../lib/merge-refs.lib";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
@@ -26,11 +30,8 @@ interface MultiSelectInputProps
   title?: string;
   options: OptionType | OptionType[];
   autoCloseMenuFn?: boolean;
-  deleteOptFn: {
-    deleteFn: (id: string) => void;
-    setDeleteTitle: (title: string) => void;
-  };
-  queryRefetch: RefetchType<resLabels>;
+  deleteOptFn?: (id: string) => void;
+  queryRefetch: RefetchType<refactorResLabel>;
   formMethods: {
     name: reqUpload;
     setFormValue: UseFormSetValue<DefaultsSongType>;
@@ -97,13 +98,8 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
 
     // handle delete label
     const handleDeleteLabel = (opt: Label) => {
-      // deleteTargetLabel(opt.id);
-
       if (deleteOptFn) {
-        const { deleteFn, setDeleteTitle } = deleteOptFn;
-
-        deleteFn(opt.id);
-        setDeleteTitle(opt.label);
+        deleteOptFn(opt.id);
       }
     };
 

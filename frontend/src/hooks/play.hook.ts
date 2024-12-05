@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
 import usePlayerState from "../states/player.state";
 import useSoundState from "../states/sound.state";
-import { generateResSong } from "../constants/data-type.constant";
+import { refactorResSong } from "../constants/data-type.constant";
 
-const useOnPlay = (songs: generateResSong[]) => {
+const useOnPlay = (songs: refactorResSong[]) => {
   const { setActiveSongId, setSongIds, setOnPlay, setShuffleSongIds } =
     useSoundState();
   const { isShuffle } = usePlayerState();

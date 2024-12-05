@@ -12,9 +12,9 @@ type CreateAlbumType = {
 export const getUserAlbums = async (): Promise<resAlbum[]> => API.get("/album");
 
 // create album
-export const createAlbum = async (data: CreateAlbumType) =>
+export const createAlbum = async (data: CreateAlbumType): Promise<resAlbum> =>
   API.post("/album/create", data);
 
 // delete album
-export const removeAlbum = async (id: string) =>
+export const removeAlbum = async (id: string): Promise<resAlbum> =>
   API.delete(`/album/delete/${id}`);

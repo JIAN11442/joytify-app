@@ -1,5 +1,4 @@
 import toast from "react-hot-toast";
-import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 
@@ -14,8 +13,6 @@ import useUploadModalState from "../states/upload-modal.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const CreateAlbumModal = () => {
-  const [albumTitle, setAlbumTitle] = useState("");
-
   const { activeCreateAlbumModal, setActiveCreateAlbumModal } =
     useUploadModalState();
   const { active, options, albumRefetch } = activeCreateAlbumModal;
@@ -37,15 +34,19 @@ const CreateAlbumModal = () => {
   const { mutate: createUserAlbum } = useMutation({
     mutationKey: [MutationKey.CREATE_ALBUM_OPTION],
     mutationFn: createAlbum,
-    onSuccess: () => {
-      // display success message
-      toast.success(`"${albumTitle}" album is created`);
+    onSuccess: (data) => {
+      const { title } = data;
+
       // refetch album query
       if (albumRefetch) {
         albumRefetch();
       }
+
       // close modal
       handleCloseModal();
+
+      // display success message
+      toast.success(`"${title}" album is created`);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -66,7 +67,6 @@ const CreateAlbumModal = () => {
     const { title } = value;
 
     if (title) {
-      setAlbumTitle(title);
       createUserAlbum({ title });
     }
   };

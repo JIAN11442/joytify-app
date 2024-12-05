@@ -4,15 +4,15 @@ import { BsList, BsListTask } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { MdDeleteSweep, MdPlaylistPlay } from "react-icons/md";
 import { FaCheck, FaUserPlus, FaUserXmark } from "react-icons/fa6";
-import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import Menu from "./menu.component";
 import Icon from "./react-icons.component";
 import PlayButton from "./play-button.component";
 
 import { changePlaylistHiddenState } from "../fetchs/playlist.fetch";
-import { generateResPlaylist } from "../constants/data-type.constant";
-import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
+import { refactorResPlaylist } from "../constants/data-type.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
 import ArrangementOptions, {
   ArrangementType,
 } from "../constants/arrangement-type.constant";
@@ -21,11 +21,11 @@ import useSoundState from "../states/sound.state";
 import usePlayerState from "../states/player.state";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import queryClient from "../config/query-client.config";
 import useOnPlay from "../hooks/play.hook";
+import { usePlaylistById } from "../hooks/playlist.hook";
 
 type PlaylistBodyHeaderProps = {
-  playlist: generateResPlaylist;
+  playlist: refactorResPlaylist;
 };
 
 const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
@@ -49,24 +49,25 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
   const { setLoopType } = usePlayerState();
 
   const { onPlay } = useOnPlay(songs);
+  const { refetch: targetPlaylistRefetch } = usePlaylistById(playlist._id);
 
   // add playlist to profile mutation
   const { mutate: addUserPlaylistToProfile } = useMutation({
     mutationKey: [MutationKey.ADD_PLAYLIST_TO_PROFILE],
     mutationFn: changePlaylistHiddenState,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const { title } = data;
+
       // close edit options menu
       setActivePlaylistEditOptionsMenu(false);
 
-      // refetch user playlists
-      queryClient.invalidateQueries([
-        QueryKey.GET_TARGET_PLAYLIST,
-      ] as InvalidateQueryFilters);
+      // refetch target playlist
+      targetPlaylistRefetch();
 
-      toast.success(`"${playlist?.title}" playlist added to profile`);
+      toast.success(`"${title}" playlist added to profile`);
     },
-    onError: () => {
-      toast.error(`Failed to add "${playlist?.title}" playlist to profile`);
+    onError: (error) => {
+      console.log(error);
     },
   });
 

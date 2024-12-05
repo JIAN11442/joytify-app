@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import useSoundState from "../states/sound.state";
 import usePlayerState from "../states/player.state";
 import usePlaylistState from "../states/playlist.state";
-import { generateResSong } from "../constants/data-type.constant";
+import { refactorResSong } from "../constants/data-type.constant";
 import SongLoopOptions from "../constants/song-loop-type.constant";
 import { SoundOutputType } from "../hooks/sound.hook";
 import { getDuration } from "../utils/get-time.util";
 
 type PlayerSliderProps = {
-  song: generateResSong;
+  song: refactorResSong;
   sound: SoundOutputType;
 };
 

@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { SoundOutputType } from "../hooks/sound.hook";
-import { generateResSong } from "../constants/data-type.constant";
+import { refactorResSong } from "../constants/data-type.constant";
 
 type SoundState = {
   activeSongId: string;
-  songToPlay: generateResSong | null;
+  songToPlay: refactorResSong | null;
   songIds: string[];
   sound: SoundOutputType | null;
   currentPlaybackTime: number;
@@ -13,7 +13,7 @@ type SoundState = {
   shuffleSongIds: ((id: string) => void) | null;
 
   setActiveSongId: (id: string) => void;
-  setSongToPlay: (song: generateResSong | null) => void;
+  setSongToPlay: (song: refactorResSong | null) => void;
   setSongIds: (ids: string[]) => void;
   setSound: (sound: SoundOutputType | null) => void;
   setCurrentPlaybackTime: (seconds: number) => void;

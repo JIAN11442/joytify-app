@@ -29,21 +29,26 @@ const PlaylistDeleteModal = () => {
   const { mutate: deleteUserPlaylist, isPending } = useMutation({
     mutationKey: [MutationKey.DELETE_PLAYLIST],
     mutationFn: deletePlaylist,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const { title } = data;
+
       // close modal
       handleCloseModal();
+
       // navigate to homepage
       navigate("/");
+
       // refetch query of get all user playlists
       playlistRefetch();
 
-      toast.success(`Playlist "${playlist?.title}" has been deleted.`);
+      toast.success(`Playlist "${title}" has been deleted.`);
     },
-    onError: () => {
-      toast.error(`Failed to delete playlist "${playlist?.title}".`);
+    onError: (error) => {
+      console.log(error);
     },
   });
 
+  // handle close modal
   const handleCloseModal = () => {
     timeoutForDelay(() => {
       closePlaylistDeleteModal();

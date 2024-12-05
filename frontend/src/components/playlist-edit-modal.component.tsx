@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import Modal from "./modal.component";
 import InputBox from "./input-box.component";
@@ -12,12 +12,12 @@ import {
   defaultsPlaylistEditData,
   DefaultsPlaylistEditType,
 } from "../constants/form-default-data.constant";
-import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
-import { generateResPlaylist } from "../constants/data-type.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
+import { refactorResPlaylist } from "../constants/data-type.constant";
 import usePlaylistState from "../states/playlist.state";
 import { updatePlaylist } from "../fetchs/playlist.fetch";
-import queryClient from "../config/query-client.config";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import { usePlaylistById, usePlaylists } from "../hooks/playlist.hook";
 
 const PlaylistEditModal = () => {
   const { activePlaylistEditModal, closePlaylistEditModal, setCoverImageSrc } =
@@ -27,31 +27,33 @@ const PlaylistEditModal = () => {
     _id: playlistId,
     cover_image,
     title,
-  } = (playlist as generateResPlaylist) ?? {};
+  } = (playlist as refactorResPlaylist) ?? {};
 
   const [titleValue, setTitleValue] = useState<string>("");
+
+  const { refetch: playlistsRefetch } = usePlaylists();
+  const { refetch: targetPlaylistRefetch } = usePlaylistById(playlistId);
 
   // update playlist mutation
   const { mutate: updateUserPlaylist, isPending } = useMutation({
     mutationKey: [MutationKey.UPDATE_PLAYLIST],
     mutationFn: updatePlaylist,
     onSuccess: async (data) => {
-      // Invalidate target query dependencies to refetch playlist query
-      await queryClient.invalidateQueries([
-        QueryKey.GET_TARGET_PLAYLIST,
-      ] as InvalidateQueryFilters);
-
-      await queryClient.invalidateQueries([
-        QueryKey.GET_USER_PLAYLISTS,
-      ] as InvalidateQueryFilters);
-
-      // update client cover image
-      setCoverImageSrc(data.cover_image);
-
-      toast.success("Playlist updated successfully");
+      const { cover_image } = data;
 
       // close modal
       handleCloseModal();
+
+      // update client cover image
+      setCoverImageSrc(cover_image);
+
+      // refetch user playlists query
+      playlistsRefetch();
+
+      // refetch target playlist query
+      targetPlaylistRefetch();
+
+      toast.success("Playlist updated successfully");
     },
     onError: () => {
       toast.error("Failed to update playlist");

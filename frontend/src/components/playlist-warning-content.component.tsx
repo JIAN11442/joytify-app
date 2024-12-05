@@ -1,7 +1,7 @@
-import { generateResPlaylist } from "../constants/data-type.constant";
+import { refactorResPlaylist } from "../constants/data-type.constant";
 
 type PlaylistWarningContentProps = {
-  playlist: generateResPlaylist | null;
+  playlist: refactorResPlaylist | null;
   executeBtnText: string;
   closeModalFn: () => void;
   executeFn?: () => void;

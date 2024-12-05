@@ -46,7 +46,9 @@ export const updatePlaylist = async (
 };
 
 // delete playlist
-export const deletePlaylist = async (data: deletePlaylistParams) => {
+export const deletePlaylist = async (
+  data: deletePlaylistParams
+): Promise<resPlaylist> => {
   const { currentPlaylistId, targetPlaylistId } = data;
 
   return API.delete(`/playlist/delete/${currentPlaylistId}`, {
@@ -58,5 +60,5 @@ export const deletePlaylist = async (data: deletePlaylistParams) => {
 export const changePlaylistHiddenState = async ({
   playlistId,
   hiddenState,
-}: changePlaylistHiddenStateParams) =>
+}: changePlaylistHiddenStateParams): Promise<resPlaylist> =>
   API.patch(`/playlist/change-hidden-state/${playlistId}`, { hiddenState });

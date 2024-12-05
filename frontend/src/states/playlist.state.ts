@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import {
-  generateResPlaylist,
+  refactorResPlaylist,
   resPlaylist,
 } from "../constants/data-type.constant";
 import ArrangementOptions, {
@@ -9,12 +9,12 @@ import ArrangementOptions, {
 
 export type PlaylistModalType = {
   active: boolean;
-  playlist: generateResPlaylist | null;
+  playlist: refactorResPlaylist | null;
 };
 
 type PlaylistState = {
   userPlaylists: resPlaylist[] | null;
-  targetPlaylist: generateResPlaylist | null;
+  targetPlaylist: refactorResPlaylist | null;
   activePlaylistEditModal: PlaylistModalType;
   activeDeletePlaylistModal: PlaylistModalType;
   activeRemovePlaylistModal: PlaylistModalType;
@@ -24,7 +24,7 @@ type PlaylistState = {
   songArrangementType: ArrangementType;
 
   setUserPlaylists: (playlists: resPlaylist[] | null) => void;
-  setTargetPlaylist: (playlist: generateResPlaylist | null) => void;
+  setTargetPlaylist: (playlist: refactorResPlaylist | null) => void;
   setActivePlaylistEditModal: (active: PlaylistModalType) => void;
   setActiveDeletePlaylistModal: (active: PlaylistModalType) => void;
   setActiveRemovePlaylistModal: (active: PlaylistModalType) => void;

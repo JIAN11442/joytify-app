@@ -9,13 +9,13 @@ import PlayerSlider from "./player-slider.component";
 import useSoundState from "../states/sound.state";
 import usePlayerState from "../states/player.state";
 import { SoundOutputType } from "../hooks/sound.hook";
-import { generateResSong } from "../constants/data-type.constant";
+import { refactorResSong } from "../constants/data-type.constant";
 import SongLoopOptions from "../constants/song-loop-type.constant";
 import { twMerge } from "tailwind-merge";
 import usePlaylistState from "../states/playlist.state";
 
 type PlayerOperationProps = {
-  song: generateResSong;
+  song: refactorResSong;
   sound: SoundOutputType;
   className?: string;
 };

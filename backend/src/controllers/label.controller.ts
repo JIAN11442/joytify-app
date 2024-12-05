@@ -43,7 +43,7 @@ export const createLabelHandler: RequestHandler = async (req, res, next) => {
 
     const { createdLabel } = await createLabel({ userId, label, type });
 
-    return res.status(CREATED).json({ label: createdLabel });
+    return res.status(CREATED).json(createdLabel);
   } catch (error) {
     next(error);
   }
@@ -80,9 +80,9 @@ export const deleteLabelHandler: RequestHandler = async (req, res, next) => {
     const userId = verificationCodeSchema.parse(req.userId);
     const id = verificationCodeSchema.parse(req.params.id);
 
-    await deleteLabel({ userId, id });
+    const { deletedLabel } = await deleteLabel({ userId, id });
 
-    res.status(OK).json({ message: "Label deleted" });
+    return res.status(OK).json(deletedLabel);
   } catch (error) {
     next(error);
   }

@@ -27,6 +27,7 @@ export interface SongDocument extends mongoose.Document {
   activity: {
     total_likes: number;
     total_plays: number;
+    total_ratings: number;
     average_rating: number;
     average_listening_duration: number;
   };
@@ -95,6 +96,7 @@ const songSchema = new mongoose.Schema<SongDocument>(
     activity: {
       total_likes: { type: Number, default: 0 },
       total_plays: { type: Number, default: 0 },
+      total_ratings: { type: Number, default: 0 },
       average_rating: { type: Number, default: 0 },
       average_listening_duration: { type: Number, default: 0 },
     },
@@ -109,10 +111,14 @@ songSchema.post("save", async function (doc) {
 
   try {
     if (song) {
-      // increase count in user's total_songs
+      // increase count in user's total_songs and push id to songs
       if (creator) {
         await UserModel.findByIdAndUpdate(creator, {
           $inc: { "account_info.total_songs": 1 },
+        });
+
+        await UserModel.findByIdAndUpdate(creator, {
+          $addToSet: { songs: id },
         });
       }
 
@@ -154,10 +160,14 @@ songSchema.pre("findOneAndDelete", async function (next) {
     if (song) {
       const { creator, playlist_for, songUrl, imageUrl, album } = song;
 
-      // reduce count in user's total_songs
+      // reduce count in user's total_songs and remove id from songs
       if (creator) {
         await UserModel.findByIdAndUpdate(creator, {
           $inc: { "account_info.total_songs": -1 },
+        });
+
+        await UserModel.findByIdAndUpdate(creator, {
+          $pull: { songs: id },
         });
       }
 
