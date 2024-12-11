@@ -1,5 +1,5 @@
 import { z } from "zod";
-import LabelOptions from "../constants/label-type.constant";
+import LabelOptions from "../constants/label.constant";
 
 export const stringSchema = z.string().min(0).max(255);
 

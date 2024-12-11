@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -23,12 +23,13 @@ import { createSongData } from "../fetchs/song.fetch";
 import { removeAlbum } from "../fetchs/album.fetch";
 import { deleteLabel } from "../fetchs/label.fetch";
 
-import {
-  defaultsSongData,
-  DefaultsSongType,
-} from "../constants/form-default-data.constant";
-import LabelOptions from "../constants/label-type.constant";
+import LabelOptions from "../constants/label.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
+import {
+  defaultSongData,
+  FormMethods,
+  SongForm,
+} from "../constants/form.constant";
 import useUploadModalState from "../states/upload-modal.state";
 
 import { navigate } from "../lib/navigate.lib";
@@ -64,7 +65,7 @@ const UploadModal = () => {
       closeUploadModal();
 
       // reset form input value
-      reset(defaultsSongData);
+      reset(defaultSongData);
 
       // refetch user playlists
       playlistRefetch();
@@ -153,23 +154,26 @@ const UploadModal = () => {
     register,
     handleSubmit,
     setValue,
-    watch,
     setError,
     trigger,
     reset,
+    watch,
     formState: { isValid },
-  } = useForm<DefaultsSongType>({
-    defaultValues: { ...defaultsSongData },
+  } = useForm<SongForm>({
+    defaultValues: { ...defaultSongData },
     mode: "onChange",
   });
 
-  const defaultFormMethods = {
-    setFormValue: setValue,
-    setFormError: setError,
-    trigger,
-  };
+  const formMethods: FormMethods<SongForm> = useMemo(
+    () => ({
+      setFormValue: setValue,
+      setFormError: setError,
+      trigger,
+    }),
+    []
+  );
 
-  const onSubmit: SubmitHandler<DefaultsSongType> = async (value) => {
+  const onSubmit: SubmitHandler<SongForm> = async (value) => {
     createNewSong(value);
   };
 
@@ -251,7 +255,6 @@ const UploadModal = () => {
           >
             {/* Song title */}
             <InputBox
-              id="title"
               type="text"
               title="Enter a song title"
               placeholder="Song title"
@@ -262,38 +265,35 @@ const UploadModal = () => {
 
             {/* Song artist */}
             <InputBox
-              id="artist"
               type="text"
               title="Enter song artist"
               placeholder="Song artist"
               warning={[
                 "If there is more than one artist, please separate them with a comma. [e.g., John, Jason]",
               ]}
-              formMethods={{ ...defaultFormMethods, name: "artist" }}
-              toArray={true}
+              formMethods={formMethods}
               disabled={isPending}
+              toArray={true}
               required
               {...register("artist", { required: true })}
             />
 
             {/* Song file */}
             <InputBox
-              id="songFile"
               type="file"
               accept=".mp3"
               title="Select a song file (*.mp3)"
               disabled={isPending}
-              required
               className={`p-3`}
+              required
               {...register("songFile", { required: true })}
             />
 
             {/* Song Playlist */}
             <SingleSelectInputBox
-              id="playlist_for"
               title="Select a playlist"
               placeholder="Click to choose a playlist"
-              formMethods={{ ...defaultFormMethods, name: "playlist_for" }}
+              formMethods={formMethods}
               options={
                 playlists?.map((playlist) => ({
                   id: playlist._id,
@@ -364,7 +364,6 @@ const UploadModal = () => {
           >
             {/* Song cover art file */}
             <InputBox
-              id="imageFile"
               type="file"
               accept=".png, .jpg, .jpeg"
               title="Select an image file (*.png)"
@@ -374,42 +373,41 @@ const UploadModal = () => {
 
             {/* Song lyricist */}
             <InputBox
-              id="lyricist"
               type="text"
               title="Enter song lyricist"
               placeholder="Song lyricist"
               warning={[
                 "If there is more than one lyricist, please separate them with a comma. [e.g., John, Jason]",
               ]}
-              formMethods={{ ...defaultFormMethods, name: "lyricists" }}
-              toArray={true}
+              formMethods={formMethods}
               disabled={isPending}
+              toArray={true}
+              {...register("lyricists")}
             />
 
             {/* Song composer */}
             <InputBox
-              id="composer"
               type="text"
               title="Enter song composer"
               placeholder="Song composer"
               warning={[
                 "If there is more than one composer, please separate them with a comma. [e.g., John, Jason]",
               ]}
-              formMethods={{ ...defaultFormMethods, name: "composers" }}
               syncWithOtherInput={{
                 active: !!watch("lyricists")?.length,
                 syncVal: watch("lyricists"),
               }}
-              toArray={true}
+              formMethods={formMethods}
               disabled={isPending}
+              toArray={true}
+              {...register("composers")}
             />
 
             {/* Album */}
             <SingleSelectInputBox
-              id="album"
               title="Select an album"
               placeholder="Click to choose an album"
-              formMethods={{ ...defaultFormMethods, name: "album" }}
+              formMethods={formMethods}
               options={
                 albums?.map((album) => ({
                   id: album._id,
@@ -420,6 +418,7 @@ const UploadModal = () => {
               deleteOptFn={deleteTargetAlbum}
               autoCloseMenuFn={!activeCreateAlbumModal.active}
               disabled={isPending}
+              {...register("album")}
             />
 
             {/* Language */}
@@ -427,7 +426,7 @@ const UploadModal = () => {
               id="language"
               title="Select one or more languages for the song"
               placeholder="Click to choose song language"
-              formMethods={{ ...defaultFormMethods, name: "languages" }}
+              formMethods={formMethods}
               options={
                 {
                   type: LabelOptions.LANGUAGE,
@@ -443,6 +442,7 @@ const UploadModal = () => {
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}
+              {...register("languages")}
             />
 
             {/* Genres */}
@@ -450,7 +450,7 @@ const UploadModal = () => {
               id="genre"
               title="Select one or more genres for the song"
               placeholder="Click to choose song genre"
-              formMethods={{ ...defaultFormMethods, name: "genres" }}
+              formMethods={formMethods}
               options={
                 {
                   type: LabelOptions.GENRE,
@@ -466,6 +466,7 @@ const UploadModal = () => {
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}
+              {...register("genres")}
             />
 
             {/* Tags */}
@@ -473,7 +474,7 @@ const UploadModal = () => {
               id="tag"
               title="Select one or more tags for the song"
               placeholder="Click to choose song tags"
-              formMethods={{ ...defaultFormMethods, name: "tags" }}
+              formMethods={formMethods}
               options={
                 {
                   type: LabelOptions.TAG,
@@ -489,6 +490,7 @@ const UploadModal = () => {
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}
+              {...register("tags")}
             />
 
             {/* Release Date */}

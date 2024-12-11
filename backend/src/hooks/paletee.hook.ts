@@ -1,4 +1,4 @@
-import { HexPaletee } from "../constants/paletee-type.constant";
+import { HexPaletee } from "../constants/paletee.constant";
 import getImgPaletee from "../utils/get-palette.util";
 
 const usePalette = async (imgSrc: string): Promise<HexPaletee> => {

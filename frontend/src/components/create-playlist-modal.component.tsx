@@ -3,9 +3,9 @@ import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 import OptionCreateModal from "./option-create-modal.component";
 import {
-  defaultsCreatePlaylistData,
-  DefaultsCreatePlaylistType,
-} from "../constants/form-default-data.constant";
+  CreatePlaylistForm,
+  defaultCreatePlaylistData,
+} from "../constants/form.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
 import { createPlaylist } from "../fetchs/playlist.fetch";
 import useUploadModalState from "../states/upload-modal.state";
@@ -54,10 +54,10 @@ const CreatePlaylistModal = () => {
     handleSubmit,
     formState: { isValid },
   } = useForm({
-    defaultValues: { ...defaultsCreatePlaylistData },
+    defaultValues: { ...defaultCreatePlaylistData },
   });
 
-  const onSubmit: SubmitHandler<DefaultsCreatePlaylistType> = async (value) => {
+  const onSubmit: SubmitHandler<CreatePlaylistForm> = async (value) => {
     const { playlist } = value;
 
     createUserPlaylist(playlist);

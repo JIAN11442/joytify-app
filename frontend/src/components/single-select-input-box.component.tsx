@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { forwardRef, useEffect, useRef, useState } from "react";
-import {
-  UseFormSetError,
-  UseFormSetValue,
-  UseFormTrigger,
-} from "react-hook-form";
 import _ from "lodash";
+import { forwardRef, useEffect, useRef, useState } from "react";
+import { FieldValues } from "react-hook-form";
 import { IoIosClose } from "react-icons/io";
 
 import Icon from "./react-icons.component";
@@ -14,23 +10,18 @@ import AnimationWrapper from "./animation-wrapper.component";
 
 import mergeRefs from "../lib/merge-refs.lib";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
-import { reqUpload } from "../constants/data-type.constant";
+import { FormMethods } from "../constants/form.constant";
 
 export type InputOptionType = {
   id: string;
   title: string;
 };
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  id: string;
+interface InputProps<T extends FieldValues = any>
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
   options: InputOptionType[];
-  formMethods: {
-    name: reqUpload;
-    setFormValue: UseFormSetValue<any>;
-    setFormError: UseFormSetError<any>;
-    trigger: UseFormTrigger<any>;
-  };
+  formMethods: FormMethods<T>;
   createNewFn?: () => void;
   deleteOptFn?: (id: string) => void;
   autoCloseMenuFn?: boolean;
@@ -39,21 +30,23 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
   (
     {
-      id,
       title,
       options,
       formMethods,
       createNewFn,
       deleteOptFn,
       autoCloseMenuFn = true,
+      name,
       placeholder,
       onChange,
       required,
-      disabled = false,
+      disabled,
       ...props
     },
     ref
   ) => {
+    const { setFormValue, trigger } = formMethods;
+
     const inputRef = useRef<HTMLInputElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const hiddenInputRef = useRef<HTMLInputElement | null>(null);
@@ -65,8 +58,6 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
       useState<InputOptionType[]>(options);
     const [focusOptIndex, setFocusOptIndex] = useState(-1);
     const [selectedOptId, setSelectedOptId] = useState("");
-
-    const { name, setFormValue, trigger } = formMethods;
 
     // handle options onMouseEnter
     const handleOptionsOnMouseEnter = (opt: string) => {
@@ -84,12 +75,14 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
 
     // handle options onClick
     const handleOptionsOnClick = (opt: InputOptionType) => {
-      setFormValue(name, opt.id);
+      if (name) {
+        setFormValue(name, opt.id);
+        trigger(name);
+      }
+
       setSelectedOptId(opt.id);
       setValue(opt.title);
       setActiveMenu(false);
-
-      trigger(name);
     };
 
     // handle input onChange
@@ -102,11 +95,10 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
       setValue(eValue);
       setHoverVal("");
 
-      // setting form submit value
-      setFormValue(name, inputOptionId);
-
-      // validate form value
-      trigger(name);
+      if (name) {
+        setFormValue(name, inputOptionId);
+        trigger(name);
+      }
 
       // find query options
       if (eValue.length) {
@@ -259,7 +251,6 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
 
           {/* submit selected playlist id to useForm */}
           <input
-            id={id}
             ref={hiddenInputRef}
             type="hidden"
             value={selectedOptId}

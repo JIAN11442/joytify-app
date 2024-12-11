@@ -1,21 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { forwardRef, useEffect, useRef, useState } from "react";
-import {
-  UseFormSetError,
-  UseFormSetValue,
-  UseFormTrigger,
-} from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 
 import CreateNewBtn from "./create-new-button.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import OptionCheckboxItem from "./option-checkbox-item.component";
 
-import LabelOptions, { LabelType } from "../constants/label-type.constant";
-import {
-  Label,
-  refactorResLabel,
-  reqUpload,
-} from "../constants/data-type.constant";
-import { DefaultsSongType } from "../constants/form-default-data.constant";
+import LabelOptions, { LabelType } from "../constants/label.constant";
+import { Label, refactorResLabel } from "../constants/axios-response.constant";
+import { FormMethods } from "../constants/form.constant";
 import mergeRefs from "../lib/merge-refs.lib";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import useUploadModalState, { RefetchType } from "../states/upload-modal.state";
@@ -25,37 +18,34 @@ export type OptionType = {
   labels: { defaults: Label[]; created: Label[] };
 };
 
-interface MultiSelectInputProps
+interface MultiSelectInputProps<T extends FieldValues = any>
   extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
   options: OptionType | OptionType[];
+  formMethods: FormMethods<T>;
   autoCloseMenuFn?: boolean;
   deleteOptFn?: (id: string) => void;
   queryRefetch: RefetchType<refactorResLabel>;
-  formMethods: {
-    name: reqUpload;
-    setFormValue: UseFormSetValue<DefaultsSongType>;
-    setFormError?: UseFormSetError<DefaultsSongType>;
-    trigger?: UseFormTrigger<DefaultsSongType>;
-  };
 }
 
 const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
   (
     {
-      id,
       title,
       options,
-      placeholder,
       autoCloseMenuFn = true,
       deleteOptFn,
       queryRefetch,
       formMethods,
+      name,
+      placeholder,
       disabled = false,
       ...props
     },
     ref
   ) => {
+    const { setFormValue, trigger } = formMethods;
+
     const inputRef = useRef<HTMLInputElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -65,7 +55,6 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
 
     const { setActiveCreateLabelModal } = useUploadModalState();
 
-    const { name, setFormValue } = formMethods;
     const labelOpts = Object.values((options as OptionType).labels);
 
     // handle option menu onchange
@@ -103,8 +92,6 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
       }
     };
 
-    // open option menu while focus input box,
-    // close option menu while option menu onBlur
     useEffect(() => {
       const handleOnFocus: EventListener = (e) => {
         if (
@@ -150,9 +137,13 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
       const optIds = selectedOpts.map((opt) => opt.id);
       const optsContent = selectedOpts.map((opt) => opt.label).join(", ");
 
-      setFormValue(name, optIds);
+      if (name) {
+        setFormValue(name, optIds);
+        trigger(name);
+      }
+
       setInputVal(optsContent);
-    }, [selectedOpts, name]);
+    }, [selectedOpts, name, setFormValue]);
 
     return (
       <div
@@ -185,7 +176,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
         <div className={`relative`}>
           {/* input box */}
           <input
-            id={id}
+            name={name}
             ref={mergeRefs(ref, inputRef)}
             type="text"
             placeholder={placeholder}

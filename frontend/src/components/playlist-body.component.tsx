@@ -2,7 +2,7 @@ import { twMerge } from "tailwind-merge";
 
 import PlaylistBodyHeader from "./playlist-body-header.component";
 import PlaylistBodyContent from "./playlist-body-content.component";
-import { refactorResPlaylist } from "../constants/data-type.constant";
+import { refactorResPlaylist } from "../constants/axios-response.constant";
 
 type PlaylistBodyProps = {
   playlist: refactorResPlaylist;

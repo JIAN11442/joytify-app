@@ -2,10 +2,10 @@ import { create } from "zustand";
 import {
   refactorResPlaylist,
   resPlaylist,
-} from "../constants/data-type.constant";
+} from "../constants/axios-response.constant";
 import ArrangementOptions, {
   ArrangementType,
-} from "../constants/arrangement-type.constant";
+} from "../constants/arrangement.constant";
 
 export type PlaylistModalType = {
   active: boolean;
@@ -20,7 +20,6 @@ type PlaylistState = {
   activeRemovePlaylistModal: PlaylistModalType;
   activePlaylistEditOptionsMenu: boolean;
   activePlaylistListOptionsMenu: boolean;
-  coverImageSrc: string;
   songArrangementType: ArrangementType;
 
   setUserPlaylists: (playlists: resPlaylist[] | null) => void;
@@ -30,7 +29,6 @@ type PlaylistState = {
   setActiveRemovePlaylistModal: (active: PlaylistModalType) => void;
   setActivePlaylistEditOptionsMenu: (state: boolean) => void;
   setActivePlaylistListOptionsMenu: (state: boolean) => void;
-  setCoverImageSrc: (src: string) => void;
   setSongArrangementType: (type: ArrangementType) => void;
 
   closePlaylistEditModal: () => void;
@@ -45,7 +43,6 @@ const usePlaylistState = create<PlaylistState>((set) => ({
   activeRemovePlaylistModal: { active: false, playlist: null },
   activePlaylistEditOptionsMenu: false,
   activePlaylistListOptionsMenu: false,
-  coverImageSrc: "",
   songArrangementType: ArrangementOptions.LIST,
 
   setUserPlaylists: (playlists) => set({ userPlaylists: playlists }),
@@ -60,7 +57,6 @@ const usePlaylistState = create<PlaylistState>((set) => ({
     set({ activePlaylistEditOptionsMenu: state }),
   setActivePlaylistListOptionsMenu: (state) =>
     set({ activePlaylistListOptionsMenu: state }),
-  setCoverImageSrc: (src) => set({ coverImageSrc: src }),
   setSongArrangementType: (type) => set({ songArrangementType: type }),
 
   closePlaylistEditModal: () =>

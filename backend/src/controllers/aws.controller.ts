@@ -11,7 +11,7 @@ import appAssert from "../utils/app-assert.util";
 import awsUrlParser from "../utils/aws-url-parser.util";
 import { deleteAwsFileUrl, generateUploadUrl } from "../utils/aws-s3-url.util";
 
-// get aws signed url
+// get AWS signed url
 export const getAwsSignedUrlHandler: RequestHandler = async (
   req,
   res,
@@ -31,7 +31,7 @@ export const getAwsSignedUrlHandler: RequestHandler = async (
   }
 };
 
-// delete aws file url
+// delete AWS file url
 export const deleteAwsFileUrlHandler: RequestHandler = async (
   req,
   res,
@@ -41,16 +41,16 @@ export const deleteAwsFileUrlHandler: RequestHandler = async (
     const { awsUrl } = req.body;
     const validatedAwsUrl = awsFileUrlSchema.parse(awsUrl);
 
-    // get aws s3 key
+    // get AWS S3 key
     const { awsS3Key } = awsUrlParser(validatedAwsUrl);
 
-    // delete aws file
+    // delete AWS file
     const deletedAwsUrl = await deleteAwsFileUrl(awsS3Key);
 
     appAssert(
       deletedAwsUrl,
       INTERNAL_SERVER_ERROR,
-      "Failed to delete aws file"
+      "Failed to delete AWS file"
     );
 
     return res.status(OK).json({ message: "AWS file deleted successfully" });

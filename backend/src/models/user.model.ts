@@ -87,7 +87,7 @@ userSchema.post("save", async function (doc) {
     // cause this.save() will trigger this post middleware again -> infinite loop
     if (!existDefaultPlaylist) {
       const defaultCoverImg =
-        "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/liked-song.png";
+        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/liked-song.png";
 
       const paletee = await usePalette(defaultCoverImg);
 

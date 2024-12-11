@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import usePlayerState from "../states/player.state";
 import useSoundState from "../states/sound.state";
-import { refactorResSong } from "../constants/data-type.constant";
+import { refactorResSong } from "../constants/axios-response.constant";
 
 const useOnPlay = (songs: refactorResSong[]) => {
   const { setActiveSongId, setSongIds, setOnPlay, setShuffleSongIds } =

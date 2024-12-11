@@ -17,7 +17,7 @@ const albumSchema = new mongoose.Schema<AlbumDocument>(
     cover_image: {
       type: String,
       default:
-        "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/default-song-album.png",
+        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-song-album.png",
     },
     artist: {
       type: mongoose.Schema.Types.ObjectId,

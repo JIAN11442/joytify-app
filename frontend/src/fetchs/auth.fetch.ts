@@ -1,19 +1,8 @@
 import { AuthProvider, getIdToken } from "firebase/auth";
 import API from "../config/api-client.config";
-import { DefaultsAuthType } from "../constants/form-default-data.constant";
 import { authWithThirdPartyUsingPopup } from "../config/firebase.config";
-import AuthForOptions, { AuthForType } from "../constants/auth-type.constant";
-
-// login axios
-export const signin = async (data: DefaultsAuthType) =>
-  API.post("/auth/login", data);
-
-// register axios
-export const signup = async (data: DefaultsAuthType) =>
-  API.post("/auth/register", data);
-
-// logout axios
-export const logout = async () => API.get("/auth/logout");
+import { AuthForm } from "../constants/form-default-data.constant";
+import AuthForOptions, { AuthForType } from "../constants/auth.constant";
 
 // signin with third party axios
 type authForThirdPartyParams = {
@@ -21,6 +10,17 @@ type authForThirdPartyParams = {
   authFor: AuthForType;
 };
 
+// login
+export const signin = async (data: AuthForm) => API.post("/auth/login", data);
+
+// register
+export const signup = async (data: AuthForm) =>
+  API.post("/auth/register", data);
+
+// logout
+export const logout = async () => API.get("/auth/logout");
+
+// auth with third party
 export const authWithThirdParty = async (data: authForThirdPartyParams) => {
   const { provider, authFor } = data;
 

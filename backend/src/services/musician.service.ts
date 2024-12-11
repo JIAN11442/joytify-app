@@ -5,7 +5,7 @@ import {
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
 } from "../constants/http-code.constant";
-import { MusicianType } from "../constants/musician-type.constant";
+import { MusicianType } from "../constants/musician.constant";
 
 type getMusicianIdParams = {
   name: string;

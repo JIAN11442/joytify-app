@@ -60,7 +60,6 @@ const OptionCreateModal = forwardRef<HTMLInputElement, ModalProps>(
         >
           <InputBox
             ref={ref}
-            id={type}
             value={inputVal}
             placeholder={`new ${type} option`}
             onChange={(e) => handleInputOnChange(e)}

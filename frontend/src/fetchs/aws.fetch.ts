@@ -1,5 +1,5 @@
 import API from "../config/api-client.config";
-import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
+import { FileExtension, UploadFolder } from "../constants/aws.constant";
 
 export interface SignedUrlParams {
   subfolder?: UploadFolder;
@@ -17,7 +17,7 @@ export const getSignedUrl = async (
 ): Promise<{ uploadUrl: string }> =>
   await API.post("/aws/get-signed-url", data);
 
-// upload file to aws s3
+// upload file to AWS S3
 export const uploadFileToAws = async (
   data: UploadFileParams
 ): Promise<string | null> => {
@@ -30,9 +30,9 @@ export const uploadFileToAws = async (
   // get signed url first
   const { uploadUrl } = await getSignedUrl({ subfolder, extension, nanoID });
 
-  // upload file to AWS s3
+  // upload file to AWS S3
   // withCredentials is set to false to avoid CORS issue
-  // because our s3 bucket cor origin is set to *
+  // because our S3 bucket cor origin is set to *
   await API.put(uploadUrl, file, {
     headers: { "Content-Type": file.type },
     withCredentials: false,
@@ -44,8 +44,8 @@ export const uploadFileToAws = async (
   return url;
 };
 
-// delete file from aws s3
+// delete file from AWS S3
 // the request payload must be wrapped in a 'data' object
 // because the DELETE method in Axios requires it for sending a request body
 export const deleteFileFromAws = async (awsUrl: string) =>
-  await API.delete("/aws/delete-file-url", { data: awsUrl });
+  await API.delete("/aws/delete-file-url", { data: { awsUrl } });

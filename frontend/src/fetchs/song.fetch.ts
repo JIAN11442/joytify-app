@@ -1,18 +1,16 @@
 import { nanoid } from "nanoid";
 
-import { DefaultsSongType } from "../constants/form-default-data.constant";
-import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
-import MusicianOptions from "../constants/musician-type.constant";
-import { resSong } from "../constants/data-type.constant";
+import { SongForm } from "../constants/form.constant";
+import { FileExtension, UploadFolder } from "../constants/aws.constant";
+import MusicianOptions from "../constants/musician.constant";
+import { resSong } from "../constants/axios-response.constant";
 import { getMusicianIds } from "./musician.fetch";
 import { uploadFileToAws } from "./aws.fetch";
 import API from "../config/api-client.config";
 import getAudioDuration from "../utils/get-audio-duration.util";
 
 // create song data
-export const createSongData = async (
-  data: DefaultsSongType
-): Promise<resSong> => {
+export const createSongData = async (data: SongForm): Promise<resSong> => {
   const nanoID = nanoid();
 
   const { songFile, imageFile, artist, lyricists, composers, ...params } = data;
@@ -31,7 +29,7 @@ export const createSongData = async (
     console.log("Failed to get audio duration", error);
   }
 
-  // get song url from aws
+  // get song url from AWS
   const songUrl = await uploadFileToAws({
     subfolder: UploadFolder.SONGS_MP3,
     extension: FileExtension.MP3,
@@ -39,7 +37,7 @@ export const createSongData = async (
     nanoID,
   });
 
-  // get song image url from aws
+  // get song image url from AWS
   if (imageFile?.length) {
     imageUrl = await uploadFileToAws({
       subfolder: UploadFolder.SONGS_IMAGE,

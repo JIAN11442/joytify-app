@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import SongLoopOptions, {
   SongLoopType,
-} from "../constants/song-loop-type.constant";
-import { Volume } from "../constants/volume-type.constant";
+} from "../constants/song-loop-mode.constant";
+import { Volume } from "../constants/volume.constant";
 
 type PlayerState = {
   isShuffle: boolean;

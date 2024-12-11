@@ -1,6 +1,6 @@
 import mongoose, { FilterQuery } from "mongoose";
 import LabelModel, { LabelDocument } from "../models/label.model";
-import { LabelType } from "../constants/label-type.constant";
+import { LabelType } from "../constants/label.constant";
 import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,

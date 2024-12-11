@@ -1,6 +1,9 @@
 import API from "../config/api-client.config";
-import { refactorResLabel, resLabel } from "../constants/data-type.constant";
-import { LabelType } from "../constants/label-type.constant";
+import {
+  refactorResLabel,
+  resLabel,
+} from "../constants/axios-response.constant";
+import { LabelType } from "../constants/label.constant";
 
 interface createLabelParams {
   label: string;

@@ -7,11 +7,11 @@ import Modal from "./modal.component";
 import PlaylistWarningContent from "./playlist-warning-content.component";
 import SingleSelectInputBox from "./single-select-input-box.component";
 
-import { MutationKey } from "../constants/query-client-key.constant";
 import {
-  defaultsMovingPlaylistData,
-  DefaultsMovingPlaylistType,
-} from "../constants/form-default-data.constant";
+  defaultMovingPlaylistData,
+  MovingPlaylistForm,
+} from "../constants/form.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
 import usePlaylistState from "../states/playlist.state";
 import { deletePlaylist } from "../fetchs/playlist.fetch";
 import { usePlaylists } from "../hooks/playlist.hook";
@@ -64,12 +64,12 @@ const PlaylistDeleteModal = () => {
     reset,
     trigger,
     formState: { isValid },
-  } = useForm<DefaultsMovingPlaylistType>({
-    defaultValues: { ...defaultsMovingPlaylistData },
+  } = useForm<MovingPlaylistForm>({
+    defaultValues: { ...defaultMovingPlaylistData },
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<DefaultsMovingPlaylistType> = async (value) => {
+  const onSubmit: SubmitHandler<MovingPlaylistForm> = async (value) => {
     deleteUserPlaylist({
       currentPlaylistId: playlist?._id || "",
       targetPlaylistId: value.playlist_for || "",
@@ -99,7 +99,6 @@ const PlaylistDeleteModal = () => {
         <>
           {(playlist?.songs.length ?? 0) > 0 && (
             <SingleSelectInputBox
-              id="playlist_for"
               placeholder="Click to choose a playlist"
               options={
                 userPlaylists
@@ -110,7 +109,6 @@ const PlaylistDeleteModal = () => {
                   })) || []
               }
               formMethods={{
-                name: "playlist_for",
                 setFormValue: setValue,
                 setFormError: setError,
                 trigger,

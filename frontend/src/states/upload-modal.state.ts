@@ -1,8 +1,11 @@
 import { create } from "zustand";
-import { OptionType } from "../components/multi-select-input-box.component";
-import LabelOptions, { LabelType } from "../constants/label-type.constant";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
-import { refactorResLabel, resAlbum } from "../constants/data-type.constant";
+import { OptionType } from "../components/multi-select-input-box.component";
+import LabelOptions, { LabelType } from "../constants/label.constant";
+import {
+  refactorResLabel,
+  resAlbum,
+} from "../constants/axios-response.constant";
 
 export type RefetchType<T> = (
   options?: RefetchOptions

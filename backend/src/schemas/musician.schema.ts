@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { stringSchema } from "./song.schema";
-import MusicianOptions from "../constants/musician-type.constant";
+import MusicianOptions from "../constants/musician.constant";
 
 export const musicianSchema = z.object({
   musicians: z.array(stringSchema),

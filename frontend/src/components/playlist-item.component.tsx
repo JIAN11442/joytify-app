@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { resPlaylist } from "../constants/data-type.constant";
+import { resPlaylist } from "../constants/axios-response.constant";
 import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

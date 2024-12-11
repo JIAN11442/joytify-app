@@ -27,5 +27,16 @@ dist-ssr
 *.sln
 *.sw?
 
-# custom file
+# Custom file
 postman.json
+note.txt
+
+# Custom folder
+/terraform
+
+# Dev
+Dockerfile.dev
+Dockerfile
+docker-compose.yaml
+.dockerignore
+/nginx

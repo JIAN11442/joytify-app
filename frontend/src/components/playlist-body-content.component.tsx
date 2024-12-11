@@ -1,5 +1,5 @@
 import SongsList from "./songs-list.component";
-import { refactorResPlaylist } from "../constants/data-type.constant";
+import { refactorResPlaylist } from "../constants/axios-response.constant";
 
 type PlaylistBodyContentProps = {
   playlist: refactorResPlaylist;

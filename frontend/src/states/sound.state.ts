@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { SoundOutputType } from "../hooks/sound.hook";
-import { refactorResSong } from "../constants/data-type.constant";
+import { refactorResSong } from "../constants/axios-response.constant";
 
 type SoundState = {
   activeSongId: string;

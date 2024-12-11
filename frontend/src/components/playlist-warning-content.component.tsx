@@ -1,4 +1,4 @@
-import { refactorResPlaylist } from "../constants/data-type.constant";
+import { refactorResPlaylist } from "../constants/axios-response.constant";
 
 type PlaylistWarningContentProps = {
   playlist: refactorResPlaylist | null;

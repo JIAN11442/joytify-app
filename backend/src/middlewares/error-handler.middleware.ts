@@ -48,7 +48,7 @@ const errorHandler = (): ErrorRequestHandler => {
         }
       }
 
-      // if get error from create song API, delete url file from aws
+      // if get error from create song API, delete url file from AWS
       if (error.errorCode === "CreateSongError" && error.awsUrl?.length) {
         const urls = error.awsUrl;
 
@@ -56,7 +56,7 @@ const errorHandler = (): ErrorRequestHandler => {
           // parse url to get key
           const { awsS3Key } = awsUrlParser(url);
 
-          // delete it from aws
+          // delete it from AWS
           await deleteAwsFileUrl(awsS3Key);
         }
       }

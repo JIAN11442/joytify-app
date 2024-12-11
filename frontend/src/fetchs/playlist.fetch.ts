@@ -1,5 +1,5 @@
 import API from "../config/api-client.config";
-import { resPlaylist } from "../constants/data-type.constant";
+import { resPlaylist } from "../constants/axios-response.constant";
 
 type updatePlaylistParams = {
   playlistId: string;

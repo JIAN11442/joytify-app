@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 
 import s3 from "../config/aws-s3.config";
 import { AWS_BUCKET_NAME } from "../constants/env-validate.constant";
-import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
+import { FileExtension, UploadFolder } from "../constants/aws.constant";
 import awsUrlParser from "./aws-url-parser.util";
 
 type generateUrlParams = {
@@ -44,7 +44,7 @@ export const deleteAwsFileUrl = async (awsS3Key: string) => {
       Key: awsS3Key,
     };
 
-    // delete aws file url
+    // delete AWS file url
     await s3.deleteObject(params).promise();
 
     return true;

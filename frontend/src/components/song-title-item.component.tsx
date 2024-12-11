@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import ArrangementOptions from "../constants/arrangement-type.constant";
+import ArrangementOptions from "../constants/arrangement.constant";
 import usePlaylistState from "../states/playlist.state";
 
 type SongTitleItemProps = {

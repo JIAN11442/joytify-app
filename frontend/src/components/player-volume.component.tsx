@@ -11,7 +11,7 @@ import Icon from "./react-icons.component";
 import useSoundState from "../states/sound.state";
 import usePlayerState from "../states/player.state";
 import useProviderState from "../states/provider.state";
-import { Volume } from "../constants/volume-type.constant";
+import { Volume } from "../constants/volume.constant";
 
 type PlayerVolumeProps = {
   className?: string;

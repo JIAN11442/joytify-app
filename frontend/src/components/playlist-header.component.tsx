@@ -2,10 +2,10 @@ import { twMerge } from "tailwind-merge";
 
 import ImageLabel from "./image-label.component";
 
-import { refactorResPlaylist } from "../constants/data-type.constant";
-import { timeoutForDelay } from "../lib/timeout.lib";
+import { refactorResPlaylist } from "../constants/axios-response.constant";
 import usePlaylistState from "../states/playlist.state";
 import useSidebarState from "../states/sidebar.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 type PlaylistHeaderProps = {
   playlist: refactorResPlaylist;
@@ -49,7 +49,7 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
     >
       {/* Playlist cover image */}
       <ImageLabel
-        imgSrc={cover_image}
+        src={cover_image}
         playlistId={playlistId}
         isDefault={isDefault}
       />

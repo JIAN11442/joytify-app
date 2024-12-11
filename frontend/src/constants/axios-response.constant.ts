@@ -132,22 +132,3 @@ export type refactorResLabel = {
   default: defaultLabels;
   created: defaultLabels;
 };
-
-// ===================== Fetch Request Data Types =====================
-export type reqAuth = "email" | "password" | "confirmPassword";
-
-export type reqUpload =
-  | "title"
-  | "artist"
-  | "songFile"
-  | "imageFile"
-  | "lyricists"
-  | "composers"
-  | "languages"
-  | "genres"
-  | "tags"
-  | "album"
-  | "releaseDate"
-  | "playlist_for";
-
-export type reqEditPlaylist = "coverImage" | "title" | "description";

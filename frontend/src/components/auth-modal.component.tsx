@@ -1,7 +1,7 @@
 import Modal from "./modal.component";
 import AuthForm from "./auth-form.component";
 
-import AuthForOptions from "../constants/auth-type.constant";
+import AuthForOptions from "../constants/auth.constant";
 import useAuthModalState from "../states/auth-modal.state";
 import ForgotPasswordForm from "./forgot-password-form.component";
 

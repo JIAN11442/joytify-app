@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 import { IoIosClose } from "react-icons/io";
 import Icon from "./react-icons.component";
-import { Label } from "../constants/data-type.constant";
+import { Label } from "../constants/axios-response.constant";
 
 interface CheckBoxItemProps
   extends React.InputHTMLAttributes<HTMLInputElement> {

@@ -11,8 +11,8 @@ import SidebarItem from "./sidebar-item.component";
 import Menu from "./menu.component";
 import InputSearchBar from "./input-searchbar.component";
 
-import AuthForOptions from "../constants/auth-type.constant";
-import { resUser } from "../constants/data-type.constant";
+import AuthForOptions from "../constants/auth.constant";
+import { resUser } from "../constants/axios-response.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
 import useSidebarState from "../states/sidebar.state";
 import useUploadModalState from "../states/upload-modal.state";

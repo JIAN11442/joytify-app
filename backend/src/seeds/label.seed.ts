@@ -1,4 +1,4 @@
-import LabelOptions from "../constants/label-type.constant";
+import LabelOptions from "../constants/label.constant";
 
 const defaultLanguageLabel = [
   { label: "English", type: LabelOptions.LANGUAGE, default: true },

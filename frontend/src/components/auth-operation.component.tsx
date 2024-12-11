@@ -8,7 +8,7 @@ import { deregisterUserAccount } from "../fetchs/user.fetch";
 
 import useUserState from "../states/user.state";
 import useAuthModalState from "../states/auth-modal.state";
-import AuthForOptions from "../constants/auth-type.constant";
+import AuthForOptions from "../constants/auth.constant";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import queryClient from "../config/query-client.config";

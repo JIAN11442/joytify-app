@@ -1,4 +1,4 @@
-import { refactorResSong } from "../constants/data-type.constant";
+import { refactorResSong } from "../constants/axios-response.constant";
 
 type SongsGridProps = {
   songs: refactorResSong[];

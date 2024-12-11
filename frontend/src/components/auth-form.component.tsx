@@ -15,14 +15,14 @@ import Loader from "./loader.component";
 import InputBox from "./input-box.component";
 
 import { authWithThirdParty, signin, signup } from "../fetchs/auth.fetch";
-import AuthForOptions from "../constants/auth-type.constant";
-import { reqAuth } from "../constants/data-type.constant";
+import AuthForOptions from "../constants/auth.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
 import {
-  DefaultsAuthType,
-  defaultsLoginData,
-  defaultsRegisterData,
-} from "../constants/form-default-data.constant";
+  AuthFormKeys,
+  defaultLoginData,
+  defaultRegisterData,
+} from "../constants/form.constant";
+import type { AuthForm } from "../constants/form.constant";
 import FirebaseProvider from "../constants/firebase-provider.constant";
 import useAuthModalState from "../states/auth-modal.state";
 import useAuth from "../hooks/auth.hook";
@@ -41,6 +41,61 @@ const AuthForm = () => {
 
   // redirect path
   const redirectPath = location.state?.redirectUrl || "/";
+
+  // third-party submit text
+  const thirdPartySubmitText =
+    authFor === SIGN_IN ? "Continue" : authFor.replace("-", " ");
+
+  const mutationKey =
+    authFor === SIGN_IN ? MutationKey.SIGNIN : MutationKey.SIGNUP;
+
+  const authFunc = authFor === SIGN_IN ? signin : signup;
+
+  // auth mutation (through email and password)
+  const { mutate: authUser, isPending } = useMutation({
+    mutationKey: [mutationKey],
+    mutationFn: authFunc,
+    onSuccess: () => {
+      // close modal
+      closeAuthModal();
+
+      // refetch auth query
+      authRefetch();
+
+      // display success message
+      toast.success(
+        `${authFor === SIGN_IN ? "Login" : "Registered"} successfully`
+      );
+
+      // navigate to route before logout
+      navigate(redirectPath, { replace: true });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  // auth mutation (through third-party)
+  const { mutate: authUserWithThirdParty } = useMutation({
+    mutationKey: [MutationKey.THIRD_PARTY_AUTH],
+    mutationFn: authWithThirdParty,
+    onSuccess: () => {
+      // close modal
+      closeAuthModal();
+
+      // refetch auth query
+      authRefetch();
+
+      // display success message
+      toast.success("Login Successfully");
+
+      // navigate to route before logout
+      navigate(redirectPath, { replace: true });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   // navigate to the other auth modal
   const handleSwitchAuthModal = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -65,7 +120,7 @@ const AuthForm = () => {
   // handle input onKeyDown
   const handleMoveToNextElement = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    next: React.RefObject<HTMLButtonElement> | reqAuth,
+    next: React.RefObject<HTMLButtonElement> | AuthFormKeys,
     condition: string | boolean = e.currentTarget.value.length > 0
   ) => {
     if (e.key === "Enter" && condition) {
@@ -82,54 +137,6 @@ const AuthForm = () => {
     authUserWithThirdParty({ provider, authFor });
   };
 
-  // third-party submit text
-  const thirdPartySubmitText =
-    authFor === SIGN_IN ? "Continue" : authFor.replace("-", " ");
-
-  const mutationKey =
-    authFor === SIGN_IN ? MutationKey.SIGNIN : MutationKey.SIGNUP;
-
-  const authFunc = authFor === SIGN_IN ? signin : signup;
-
-  // auth mutation (through email and password)
-  const { mutate: authUser, isPending } = useMutation({
-    mutationKey: [mutationKey],
-    mutationFn: authFunc,
-    onSuccess: () => {
-      closeAuthModal();
-
-      toast.success(
-        `${authFor === SIGN_IN ? "Login" : "Registered"} successfully`
-      );
-
-      navigate(redirectPath, { replace: true });
-
-      authRefetch();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  // auth mutation (through third-party)
-  const { mutate: authUserWithThirdParty } = useMutation({
-    mutationKey: [MutationKey.THIRD_PARTY_AUTH],
-    mutationFn: authWithThirdParty,
-    onSuccess: () => {
-      closeAuthModal();
-
-      toast.success("Login Successfully");
-
-      navigate(redirectPath, { replace: true });
-
-      // refetch the auth query to refresh the user data
-      authRefetch();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
   // get form data
   const {
     register,
@@ -138,17 +145,16 @@ const AuthForm = () => {
     watch,
     setFocus,
     formState: { isValid },
-  } = useForm<DefaultsAuthType>({
-    defaultValues:
-      authFor === SIGN_IN ? defaultsLoginData : defaultsRegisterData,
+  } = useForm<AuthForm>({
+    defaultValues: authFor === SIGN_IN ? defaultLoginData : defaultRegisterData,
     mode: "onChange",
   });
 
   // watch password value(for validate comfirm password)
-  const passwordValue = watch("password");
+  const formPasswordVal = watch("password");
 
   // handle form submit
-  const onSubmit: SubmitHandler<DefaultsAuthType> = async (value) => {
+  const onSubmit: SubmitHandler<AuthForm> = async (value) => {
     authUser(value);
   };
 
@@ -242,7 +248,6 @@ const AuthForm = () => {
         </p>
 
         <InputBox
-          id="email"
           type="email"
           placeholder="Your email address"
           icon={{ name: MdAlternateEmail }}
@@ -269,7 +274,6 @@ const AuthForm = () => {
         </p>
 
         <InputBox
-          id="password"
           type="password"
           placeholder="Your Password"
           icon={{ name: IoKey }}
@@ -286,25 +290,25 @@ const AuthForm = () => {
           {authFor === SIGN_IN ? (
             <div
               className={`
-                  flex
-                  items-center
-                  justify-end
-                  text-sm
-                  text-neutral-700
-                `}
+                flex
+                items-center
+                justify-end
+                text-sm
+                text-neutral-700
+              `}
             >
               <button
                 type="button"
                 onClick={handleNavigateToForgotPasswordPage}
                 className={`
-                    flex
-                    gap-2
-                    items-center
-                    justify-center
-                    hover:text-green-custom
-                    hover:underline
-                    transition
-                  `}
+                  flex
+                  gap-2
+                  items-center
+                  justify-center
+                  hover:text-green-custom
+                  hover:underline
+                  transition
+                `}
               >
                 <Icon name={BsFillQuestionCircleFill} />
                 <p>Forgot password?</p>
@@ -336,7 +340,6 @@ const AuthForm = () => {
             </p>
 
             <InputBox
-              id="confirm-password"
               type="password"
               placeholder="Confirm Password"
               icon={{ name: IoKey }}
@@ -344,12 +347,12 @@ const AuthForm = () => {
                 handleMoveToNextElement(
                   e,
                   submitBtnRef,
-                  e.currentTarget.value === passwordValue
+                  e.currentTarget.value === formPasswordVal
                 )
               }
               {...register("confirmPassword", {
                 required: true,
-                validate: (value) => value === passwordValue,
+                validate: (value) => value === formPasswordVal,
               })}
             />
           </div>

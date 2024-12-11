@@ -5,8 +5,8 @@ import SongListItem from "./song-list-item.component";
 
 import useSidebarState from "../states/sidebar.state";
 import usePlaylistState from "../states/playlist.state";
-import { refactorResSong } from "../constants/data-type.constant";
-import ArrangementOptions from "../constants/arrangement-type.constant";
+import { refactorResSong } from "../constants/axios-response.constant";
+import ArrangementOptions from "../constants/arrangement.constant";
 import useOnPlay from "../hooks/play.hook";
 
 type songsListProps = {

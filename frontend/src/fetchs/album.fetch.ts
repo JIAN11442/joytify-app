@@ -1,5 +1,5 @@
 import API from "../config/api-client.config";
-import { resAlbum } from "../constants/data-type.constant";
+import { resAlbum } from "../constants/axios-response.constant";
 
 type CreateAlbumType = {
   title: string;

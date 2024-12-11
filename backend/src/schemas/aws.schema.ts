@@ -4,7 +4,7 @@ import {
   AWS_BUCKET_NAME,
   AWS_REGION,
 } from "../constants/env-validate.constant";
-import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
+import { FileExtension, UploadFolder } from "../constants/aws.constant";
 import awsUrlParser from "../utils/aws-url-parser.util";
 
 const baseRootUrl = `https://${AWS_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com`;

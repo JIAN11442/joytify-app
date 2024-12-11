@@ -4,7 +4,7 @@ import SongModel from "./song.model";
 
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 import usePalette from "../hooks/paletee.hook";
-import { HexPaletee } from "../constants/paletee-type.constant";
+import { HexPaletee } from "../constants/paletee.constant";
 
 export interface PlaylistDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
@@ -30,7 +30,7 @@ const playlistSchema = new mongoose.Schema<PlaylistDocument>(
     cover_image: {
       type: String,
       default:
-        "https://mern-joytify.s3.ap-southeast-1.amazonaws.com/defaults/default_song-image.png",
+        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-song-album.png",
     },
     paletee: {
       vibrant: { type: String },
@@ -155,7 +155,7 @@ playlistSchema.post("findOneAndDelete", async function (doc) {
       },
     });
 
-    // delete aws url
+    // delete AWS url
     await deleteAwsFileUrlOnModel(cover_image);
   } catch (error) {
     console.log(error);

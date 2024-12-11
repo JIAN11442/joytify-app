@@ -1,9 +1,10 @@
-import { forwardRef, useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { forwardRef, useState } from "react";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 import { nanoid } from "nanoid";
-import { InvalidateQueryFilters, useMutation } from "@tanstack/react-query";
-import { UseFormSetValue } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { FieldValues } from "react-hook-form";
 import { AiFillEdit } from "react-icons/ai";
 
 import Loader from "./loader.component";
@@ -11,20 +12,16 @@ import Icon from "./react-icons.component";
 
 import { updatePlaylist } from "../fetchs/playlist.fetch";
 import { uploadFileToAws } from "../fetchs/aws.fetch";
-import { DefaultsPlaylistEditType } from "../constants/form-default-data.constant";
-import { reqEditPlaylist } from "../constants/data-type.constant";
-import { FileExtension, UploadFolder } from "../constants/aws-type.constant";
-import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
-import queryClient from "../config/query-client.config";
-import usePlaylistState from "../states/playlist.state";
+import { FormMethods } from "../constants/form.constant";
+import { FileExtension, UploadFolder } from "../constants/aws.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
+import { usePlaylistById, usePlaylists } from "../hooks/playlist.hook";
 
-interface ImageLabelProps extends React.HTMLAttributes<HTMLDivElement> {
-  imgSrc: string;
+interface ImageLabelProps<T extends FieldValues = any>
+  extends React.ImgHTMLAttributes<HTMLImageElement> {
+  name?: Extract<keyof T, string>;
   playlistId: string;
-  formValueState?: {
-    name: reqEditPlaylist;
-    setFormValue: UseFormSetValue<DefaultsPlaylistEditType>;
-  };
+  formMethods?: FormMethods<T>;
   isDefault?: boolean;
   tw?: {
     label?: string;
@@ -35,32 +32,25 @@ interface ImageLabelProps extends React.HTMLAttributes<HTMLDivElement> {
   };
 }
 
-const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
+const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
   (
-    { id, imgSrc, playlistId, formValueState, isDefault, className, tw },
+    { name, src, playlistId, formMethods, isDefault, className, tw, ...props },
     ref
   ) => {
-    const [imageUrl, setImageUrl] = useState(imgSrc);
     const [isUploading, setIsUploading] = useState(false);
 
-    const { coverImageSrc, setCoverImageSrc } = usePlaylistState();
+    const { refetch: playlistsRefetch } = usePlaylists();
+    const { refetch: targetPlaylistRefetch } = usePlaylistById(playlistId);
 
     // update image mutation
     const { mutate: updateUserPlaylist, isPending } = useMutation({
       mutationKey: [MutationKey.UPDATE_PLAYLIST],
       mutationFn: updatePlaylist,
-      onSuccess: async (data) => {
-        // Invalidate target query dependencies to refetch playlist query
-        await queryClient.invalidateQueries([
-          QueryKey.GET_TARGET_PLAYLIST,
-        ] as InvalidateQueryFilters);
-
-        await queryClient.invalidateQueries([
-          QueryKey.GET_USER_PLAYLISTS,
-        ] as InvalidateQueryFilters);
-
-        // update client cover image
-        setImageUrl(data.cover_image);
+      onSuccess: async () => {
+        // refetch user playlists query
+        playlistsRefetch();
+        // refetch target playlist query
+        targetPlaylistRefetch();
 
         toast.success("Playlist updated successfully");
       },
@@ -69,56 +59,56 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
       },
     });
 
-    // handle input onchange
-    const handleInputOnChange = async (
-      e: React.ChangeEvent<HTMLInputElement>
-    ) => {
-      // get image file
-      const imgFile = e.target.files as FileList;
-
-      if (imgFile.length) {
-        // start loading
+    // upload file to AWS and get signed URL
+    const getImageUrlFromAWS = async (file: FileList) => {
+      if (file.length) {
         setIsUploading(true);
 
-        // get signed url and upload image to aws
         const nanoID = nanoid();
 
+        // get signed url and upload image to AWS
         const awsImageUrl = await uploadFileToAws({
           subfolder: UploadFolder.PLAYLISTS_IMAGE,
           extension: FileExtension.PNG,
-          file: imgFile?.[0] as File,
+          file: file?.[0] as File,
           nanoID,
         });
 
-        // if form value state exist, means it will be used for form input
-        if (formValueState) {
-          const { name, setFormValue } = formValueState;
-
-          if (awsImageUrl) {
-            // then set the value to useForm
-            setFormValue(name, awsImageUrl);
-
-            // update cover image src from client
-            setImageUrl(awsImageUrl);
-          }
-        }
-        // if not, means it will be used for playlist cover image
-        else {
-          if (playlistId && awsImageUrl) {
-            // then, update playlist cover image directly
-            updateUserPlaylist({ playlistId, awsImageUrl });
-          }
-        }
-
-        // clean loading
         setIsUploading(false);
+
+        return awsImageUrl;
       }
     };
 
-    // save change of image url to zustand
-    useEffect(() => {
-      setCoverImageSrc(imageUrl);
-    }, [imageUrl]);
+    // handle input onChange
+    const handleInputOnChange = async (
+      e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      const imgFile = e.target.files as FileList;
+      const awsImageUrl = await getImageUrlFromAWS(imgFile);
+
+      if (awsImageUrl) {
+        if (formMethods && name) {
+          const { setFormValue, trigger } = formMethods;
+
+          // return value to useForm
+          setFormValue(name, awsImageUrl);
+
+          // validate specified field manually
+          trigger(name);
+        } else {
+          // update target playlist directly
+          updateUserPlaylist({ playlistId, awsImageUrl });
+        }
+      }
+    };
+
+    // handle input onClick
+    const handleInputOnClick = async (
+      e: React.MouseEvent<HTMLInputElement>
+    ) => {
+      e.stopPropagation();
+    };
 
     return (
       <div
@@ -135,7 +125,7 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
         )}
       >
         {/* label */}
-        <label htmlFor={id || "playlist-cover-image"} className={tw?.label}>
+        <label className={tw?.label}>
           <div
             className={`
               relative
@@ -145,7 +135,8 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
             `}
           >
             <img
-              src={coverImageSrc}
+              ref={ref}
+              src={src}
               className={twMerge(
                 `
                 w-full
@@ -159,6 +150,18 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
               `,
                 tw?.img
               )}
+              {...props}
+            />
+
+            {/* input */}
+            <input
+              type="file"
+              accept=".png, .jpg, .jpeg"
+              disabled={isPending || isUploading || isDefault}
+              onChange={handleInputOnChange}
+              onClick={handleInputOnClick}
+              hidden
+              className={tw?.input}
             />
 
             {/* Upload content */}
@@ -204,19 +207,6 @@ const ImageLabel = forwardRef<HTMLInputElement, ImageLabelProps>(
             </div>
           </div>
         </label>
-
-        {/* input */}
-        <input
-          ref={ref}
-          id={id || "playlist-cover-image"}
-          type="file"
-          accept=".png, .jpg, .jpeg"
-          hidden
-          disabled={isPending || isUploading || isDefault}
-          onChange={(e) => handleInputOnChange(e)}
-          onClick={(e) => e.stopPropagation()}
-          className={tw?.input}
-        />
       </div>
     );
   }

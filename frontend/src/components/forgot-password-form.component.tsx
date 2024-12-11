@@ -9,7 +9,7 @@ import Loader from "./loader.component";
 import InputBox from "./input-box.component";
 
 import { MutationKey } from "../constants/query-client-key.constant";
-import AuthForOptions from "../constants/auth-type.constant";
+import AuthForOptions from "../constants/auth.constant";
 import { DefaultsResetPasswordType } from "../constants/form-default-data.constant";
 import useAuthModalState from "../states/auth-modal.state";
 import { sendResetPasswordEmail } from "../fetchs/auth.fetch";
@@ -106,7 +106,6 @@ const ForgotPasswordForm = () => {
         </p>
 
         <InputBox
-          id="email"
           type="email"
           placeholder="Your email address"
           icon={{ name: MdAlternateEmail }}

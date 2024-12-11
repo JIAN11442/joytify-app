@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { resUser } from "../constants/data-type.constant";
+import { resUser } from "../constants/axios-response.constant";
 
 type UserParams = {
   user: resUser | null;

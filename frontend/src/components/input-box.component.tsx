@@ -1,9 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { forwardRef, useEffect, useRef, useState } from "react";
-import {
-  UseFormSetError,
-  UseFormSetValue,
-  UseFormTrigger,
-} from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { IconBaseProps } from "react-icons";
@@ -11,23 +8,17 @@ import { IconBaseProps } from "react-icons";
 import Icon, { IconName } from "./react-icons.component";
 import AnimationWrapper from "./animation-wrapper.component";
 
-import { timeoutForDelay } from "../lib/timeout.lib";
 import mergeRefs from "../lib/merge-refs.lib";
-import { reqUpload } from "../constants/data-type.constant";
-import { DefaultsSongType } from "../constants/form-default-data.constant";
+import { timeoutForDelay } from "../lib/timeout.lib";
+import { FormMethods } from "../constants/form.constant";
 
-export interface InputBoxProps
+export interface InputProps<T extends FieldValues = any>
   extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
   icon?: { name: IconName; opts?: IconBaseProps };
   warning?: string[];
   toArray?: boolean;
-  formMethods?: {
-    name: reqUpload;
-    setFormValue: UseFormSetValue<DefaultsSongType>;
-    setFormError?: UseFormSetError<DefaultsSongType>;
-    trigger: UseFormTrigger<DefaultsSongType>;
-  };
+  formMethods?: FormMethods<T>;
   syncWithOtherInput?: {
     active: boolean;
     syncVal: string | string[] | FileList | null | undefined;
@@ -37,18 +28,18 @@ export interface InputBoxProps
   tw?: { icon?: string };
 }
 
-const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
+const InputBox = forwardRef<HTMLInputElement, InputProps>(
   (
     {
-      id,
       title,
       icon,
       warning,
-      toArray,
       formMethods,
       syncWithOtherInput,
+      toArray = false,
       iconHighlight = true,
       type,
+      name,
       disabled,
       className,
       onChange,
@@ -86,8 +77,8 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       const files = e.target.files?.length;
       const value = e.target.value;
 
-      setIsFileSelected(!!files);
       setInputVal(value);
+      setIsFileSelected(!!files);
 
       if (onChange) {
         onChange(e);
@@ -117,31 +108,35 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
 
     // handle input on blur
     const handleInputOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      timeoutForDelay(() => {
-        setVisibleWarning(false);
-      });
-
       if (onBlur) {
         onBlur(e);
       }
+
+      timeoutForDelay(() => {
+        formatAndSetFormValue(inputVal);
+        setVisibleWarning(false);
+      });
     };
 
-    useEffect(() => {
-      if (formMethods) {
-        const { name, setFormValue, trigger } = formMethods;
+    // formatted input value and return to useForm
+    const formatAndSetFormValue = (value: string) => {
+      if (toArray && name && formMethods) {
+        const { setFormValue, trigger } = formMethods;
 
-        if (toArray) {
-          const generateInputVal = inputVal
-            .split(",")
-            .filter((val) => val.length)
-            .map((val) => val.trim());
+        // convert a comma-separated string into an array of strings
+        const generateInputVal = value
+          .split(",")
+          .filter((val) => val.length)
+          .map((val) => val.trim());
 
+        // return formatted value to useForm,
+        // validate specified field manually
+        timeoutForDelay(() => {
           setFormValue(name, generateInputVal);
-        }
-
-        trigger(name);
+          trigger(name);
+        });
       }
-    }, [inputVal, toArray, formMethods]);
+    };
 
     useEffect(() => {
       // if syncVal is an array, join its elements into a single string
@@ -157,6 +152,8 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       // if synchronization is enabled and the value has changed, update the input value
       if (isSyncChecked && hasChanged) {
         setInputVal(formattedVal);
+
+        formatAndSetFormValue(formattedVal);
 
         // update the reference to the current formatted value for future comparisons
         prevFormValRef.current = formattedVal;
@@ -224,7 +221,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
 
         {/* input */}
         <input
-          id={id}
+          name={name}
           ref={mergeRefs(ref, inputRef)}
           type={
             type === "password"

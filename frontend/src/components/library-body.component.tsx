@@ -4,7 +4,7 @@ import Loader from "./loader.component";
 import LibraryPlaylist from "./library-playlist.component";
 
 import useSidebarState from "../states/sidebar.state";
-import { resUser } from "../constants/data-type.constant";
+import { resUser } from "../constants/axios-response.constant";
 
 type LibraryBodyProps = {
   user: AxiosResponse | resUser | undefined;

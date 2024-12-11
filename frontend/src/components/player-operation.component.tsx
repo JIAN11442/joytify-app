@@ -1,3 +1,4 @@
+import { twMerge } from "tailwind-merge";
 import { LuDot, LuShuffle } from "react-icons/lu";
 import { RiLoopLeftLine } from "react-icons/ri";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
@@ -8,11 +9,10 @@ import PlayerSlider from "./player-slider.component";
 
 import useSoundState from "../states/sound.state";
 import usePlayerState from "../states/player.state";
-import { SoundOutputType } from "../hooks/sound.hook";
-import { refactorResSong } from "../constants/data-type.constant";
-import SongLoopOptions from "../constants/song-loop-type.constant";
-import { twMerge } from "tailwind-merge";
 import usePlaylistState from "../states/playlist.state";
+import { refactorResSong } from "../constants/axios-response.constant";
+import SongLoopOptions from "../constants/song-loop-mode.constant";
+import { SoundOutputType } from "../hooks/sound.hook";
 
 type PlayerOperationProps = {
   song: refactorResSong;

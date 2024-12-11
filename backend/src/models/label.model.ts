@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import LabelOptions from "../constants/label-type.constant";
+import LabelOptions from "../constants/label.constant";
 import defaultLabels from "../seeds/label.seed";
 
 export interface LabelDocument extends mongoose.Document {

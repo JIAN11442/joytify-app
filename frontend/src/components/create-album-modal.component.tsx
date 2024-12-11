@@ -5,9 +5,9 @@ import { useMutation } from "@tanstack/react-query";
 import OptionCreateModal from "./option-create-modal.component";
 import { createAlbum } from "../fetchs/album.fetch";
 import {
-  defaultsCreateAlbumData,
-  defaultsCreateAlbumType,
-} from "../constants/form-default-data.constant";
+  CreateAlbumForm,
+  defaultCreateAlbumData,
+} from "../constants/form.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
 import useUploadModalState from "../states/upload-modal.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
@@ -58,12 +58,12 @@ const CreateAlbumModal = () => {
     handleSubmit,
     reset,
     formState: { isValid },
-  } = useForm<defaultsCreateAlbumType>({
-    defaultValues: { ...defaultsCreateAlbumData },
+  } = useForm<CreateAlbumForm>({
+    defaultValues: { ...defaultCreateAlbumData },
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<defaultsCreateAlbumType> = async (value) => {
+  const onSubmit: SubmitHandler<CreateAlbumForm> = async (value) => {
     const { title } = value;
 
     if (title) {

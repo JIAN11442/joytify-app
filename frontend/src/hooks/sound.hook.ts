@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import useSoundState from "../states/sound.state";
-import { Volume } from "../constants/volume-type.constant";
+import { Volume } from "../constants/volume.constant";
 
 const useSound = (url: string) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);

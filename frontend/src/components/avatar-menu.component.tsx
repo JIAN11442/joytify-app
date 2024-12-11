@@ -3,7 +3,7 @@ import { useRef } from "react";
 import Menu from "./menu.component";
 
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { resUser } from "../constants/data-type.constant";
+import { resUser } from "../constants/axios-response.constant";
 
 type AvatarMenuType = {
   user: resUser;

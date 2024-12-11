@@ -6,10 +6,10 @@ import { OptionType } from "./multi-select-input-box.component";
 import OptionCreateModal from "./option-create-modal.component";
 
 import {
-  defaultsCreateLabelData,
-  DefaultsCreateLabelType,
-} from "../constants/form-default-data.constant";
-import LabelOptions from "../constants/label-type.constant";
+  CreateLabelForm,
+  defaultCreateLabelData,
+} from "../constants/form.constant";
+import LabelOptions from "../constants/label.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
 import useUploadModalState from "../states/upload-modal.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
@@ -61,12 +61,12 @@ const CreateLabelModal = () => {
     handleSubmit,
     reset,
     formState: { isValid },
-  } = useForm<DefaultsCreateLabelType>({
-    defaultValues: { ...defaultsCreateLabelData },
+  } = useForm<CreateLabelForm>({
+    defaultValues: { ...defaultCreateLabelData },
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<DefaultsCreateLabelType> = async (value) => {
+  const onSubmit: SubmitHandler<CreateLabelForm> = async (value) => {
     const { label } = value;
 
     createUserLabel({ label, type });

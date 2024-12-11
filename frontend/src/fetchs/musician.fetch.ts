@@ -1,5 +1,5 @@
 import API from "../config/api-client.config";
-import { MusicianType } from "../constants/musician-type.constant";
+import { MusicianType } from "../constants/musician.constant";
 
 type getMusicianIdsParams = {
   musicians: string[];

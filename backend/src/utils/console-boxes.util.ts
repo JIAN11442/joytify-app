@@ -1,6 +1,6 @@
 const logbox = require("log-box");
 
-const ConsoleLogBox = (msg: string) => {
+const consoleLogBox = (msg: string) => {
   const options = {
     style: "double",
     padding: {
@@ -12,4 +12,4 @@ const ConsoleLogBox = (msg: string) => {
   return logbox(msg, options);
 };
 
-export default ConsoleLogBox;
+export default consoleLogBox;

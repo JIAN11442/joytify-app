@@ -1,6 +1,5 @@
 import { create } from "zustand";
-import AuthForType from "../constants/auth-type.constant";
-import AuthForOptions from "../constants/auth-type.constant";
+import AuthForOptions, { AuthForType } from "../constants/auth.constant";
 
 type AuthModalState = {
   activeModal: boolean;
