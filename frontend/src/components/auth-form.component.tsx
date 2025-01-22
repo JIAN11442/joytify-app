@@ -101,8 +101,6 @@ const AuthForm = () => {
   const handleSwitchAuthModal = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    reset();
-
     openAuthModal(authFor === SIGN_IN ? SIGN_UP : SIGN_IN);
   };
 
@@ -141,7 +139,6 @@ const AuthForm = () => {
   const {
     register,
     handleSubmit,
-    reset,
     watch,
     setFocus,
     formState: { isValid },
@@ -352,7 +349,9 @@ const AuthForm = () => {
               }
               {...register("confirmPassword", {
                 required: true,
-                validate: (value) => value === formPasswordVal,
+                validate: (value) => {
+                  return value === formPasswordVal;
+                },
               })}
             />
           </div>
