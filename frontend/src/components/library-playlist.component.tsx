@@ -6,9 +6,9 @@ import useLibraryState from "../states/library.state";
 import { usePlaylists } from "../hooks/playlist.hook";
 
 const LibraryPlaylist = () => {
-  const { playlistSearchVal } = useLibraryState();
+  const { librarySearchVal } = useLibraryState();
   const { playlists, isLoading: isPlaylistLoading } =
-    usePlaylists(playlistSearchVal);
+    usePlaylists(librarySearchVal);
 
   const { collapseSideBarState } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
@@ -17,7 +17,7 @@ const LibraryPlaylist = () => {
     return <Loader />;
   }
 
-  if (playlistSearchVal && !playlists?.length) {
+  if (librarySearchVal && !playlists?.length) {
     return (
       <div
         className={`
@@ -28,7 +28,7 @@ const LibraryPlaylist = () => {
       >
         <p className="mb-2">
           Could not find playlist with title{" "}
-          <span className={`text-white`}>&quot;{playlistSearchVal}&quot;</span>
+          <span className={`text-white`}>&quot;{librarySearchVal}&quot;</span>
         </p>
         <p>Please try searching again with different spellings or keywords</p>
       </div>
@@ -63,7 +63,7 @@ const LibraryPlaylist = () => {
       {playlists.map((playlist, index) => (
         <AnimationWrapper
           key={playlist._id}
-          transition={{ duration: 0.5, delay: index * 0.2 }}
+          transition={{ duration: 0.3, delay: index * 0.2 }}
         >
           <PlaylistItem playlist={playlist} />
         </AnimationWrapper>

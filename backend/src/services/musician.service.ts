@@ -1,20 +1,20 @@
 import { FilterQuery } from "mongoose";
 import MusicianModel, { MusicianDocument } from "../models/musician.model";
-import appAssert from "../utils/app-assert.util";
 import {
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
 } from "../constants/http-code.constant";
 import { MusicianType } from "../constants/musician.constant";
+import appAssert from "../utils/app-assert.util";
 
-type getMusicianIdParams = {
+type GetMusicianIdParams = {
   name: string;
   type: MusicianType;
   createIfAbsent?: boolean;
 };
 
 // get musician ID service
-export const getMusicianId = async (data: getMusicianIdParams) => {
+export const getMusicianId = async (data: GetMusicianIdParams) => {
   const { name, type, createIfAbsent } = data;
 
   let findQuery: FilterQuery<MusicianDocument> = { name };

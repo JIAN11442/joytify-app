@@ -1,15 +1,17 @@
 import mongoose from "mongoose";
-import { CompareHashValue, HashValue } from "../utils/bcrypt.util";
+
+import PlaylistModel from "./playlist.model";
+import SessionModel from "./session.model";
+import { deletePlaylistById } from "../services/playlist.service";
+
 import {
   profile_collections,
   profile_names,
 } from "../constants/profile-img.constant";
-import PlaylistModel from "./playlist.model";
-import appAssert from "../utils/app-assert.util";
 import { INTERNAL_SERVER_ERROR } from "../constants/http-code.constant";
 import usePalette from "../hooks/paletee.hook";
-import { deletePlaylistById } from "../services/playlist.service";
-import SessionModel from "./session.model";
+import appAssert from "../utils/app-assert.util";
+import { CompareHashValue, HashValue } from "../utils/bcrypt.util";
 
 export interface UserDocument extends mongoose.Document {
   email: string;
@@ -79,7 +81,7 @@ userSchema.post("save", async function (doc) {
   try {
     // check if default playlist already exists
     const existDefaultPlaylist = await PlaylistModel.findOne({
-      userId: id,
+      user: id,
       default: true,
     });
 
@@ -93,11 +95,11 @@ userSchema.post("save", async function (doc) {
 
       // create default playlist
       const defaultPlaylist = await PlaylistModel.create({
-        userId: id,
+        user: id,
         title: "Liked Songs",
         description: "All your liked songs will be here",
         cover_image: defaultCoverImg,
-        paletee,
+        paletee: paletee,
         default: true,
       });
 
@@ -117,7 +119,7 @@ userSchema.pre("findOneAndDelete", async function (next) {
   try {
     const findQuery = this.getQuery();
     const user = await UserModel.findById(findQuery);
-    const playlists = await PlaylistModel.find({ userId: user?._id });
+    const playlists = await PlaylistModel.find({ user: user?._id });
 
     // delete all user playlists and relate properties,
     // exp: songs, labels, albums, musicians
@@ -133,7 +135,7 @@ userSchema.pre("findOneAndDelete", async function (next) {
     }
 
     // delete all relative sessions
-    await SessionModel.deleteMany({ userId: user?.id });
+    await SessionModel.deleteMany({ user: user?.id });
   } catch (error) {
     console.log(error);
   }

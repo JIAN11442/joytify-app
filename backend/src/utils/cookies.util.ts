@@ -1,5 +1,5 @@
 import { CookieOptions, Response } from "express";
-import { NODE_ENV } from "../constants/env-validate.constant";
+import { NODE_ENV, USE_NGINX_PROXY } from "../constants/env-validate.constant";
 import { fifteenMinutesFromNow, thirtyDaysFormNow } from "./date.util";
 
 type CookiesParams = {
@@ -16,6 +16,8 @@ const defaults: CookieOptions = {
   secure,
 };
 
+export const cookiePath = `${USE_NGINX_PROXY ? "/api" : ""}/auth/refresh`;
+
 export const getAccessTokenCookieOptions = (): CookieOptions => ({
   ...defaults,
   expires: fifteenMinutesFromNow(),
@@ -24,7 +26,7 @@ export const getAccessTokenCookieOptions = (): CookieOptions => ({
 export const getRefreshTokenCookieOptions = (): CookieOptions => ({
   ...defaults,
   expires: thirtyDaysFormNow(),
-  path: "/auth/refresh", // only in this path can get the token
+  path: cookiePath, // only in this path can get the token
 });
 
 // save cookies
@@ -42,5 +44,5 @@ export const setAuthCookies = ({
 export const clearAuthCookies = (res: Response) => {
   return res
     .clearCookie("accessToken")
-    .clearCookie("refreshToken", { path: "/auth/refresh" });
+    .clearCookie("refreshToken", { path: cookiePath });
 };

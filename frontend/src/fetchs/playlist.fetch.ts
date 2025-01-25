@@ -1,19 +1,19 @@
 import API from "../config/api-client.config";
-import { resPlaylist } from "../constants/axios-response.constant";
+import { ResPlaylist } from "../constants/axios-response.constant";
 
-type updatePlaylistParams = {
+type UpdatePlaylistParams = {
   playlistId: string;
   title?: string;
   description?: string;
   awsImageUrl?: string;
 };
 
-type deletePlaylistParams = {
+type DeletePlaylistParams = {
   currentPlaylistId: string;
   targetPlaylistId?: string;
 };
 
-type changePlaylistHiddenStateParams = {
+type ChangePlaylistHiddenStateParams = {
   playlistId: string;
   hiddenState: boolean;
 };
@@ -21,22 +21,22 @@ type changePlaylistHiddenStateParams = {
 // get all user playlists
 export const getPlaylists = async (
   query: string | null
-): Promise<resPlaylist[]> => API.get(`/playlist/search/${query}`);
+): Promise<ResPlaylist[]> => API.get(`/playlist/search/${query}`);
 
 // get playlist by id
-export const getPlaylistById = async (id: string): Promise<resPlaylist> =>
+export const getPlaylistById = async (id: string): Promise<ResPlaylist> =>
   API.get(`/playlist/${id}`);
 
 // create playlist
 export const createPlaylist = async (
   title: string | null
-): Promise<resPlaylist> =>
+): Promise<ResPlaylist> =>
   API.post("/playlist/create", { ...(title ? { title } : {}) });
 
 // update playlist cover image
 export const updatePlaylist = async (
-  data: updatePlaylistParams
-): Promise<resPlaylist> => {
+  data: UpdatePlaylistParams
+): Promise<ResPlaylist> => {
   const { awsImageUrl, playlistId, ...params } = data;
 
   return API.patch(`/playlist/update/${playlistId}`, {
@@ -47,8 +47,8 @@ export const updatePlaylist = async (
 
 // delete playlist
 export const deletePlaylist = async (
-  data: deletePlaylistParams
-): Promise<resPlaylist> => {
+  data: DeletePlaylistParams
+): Promise<ResPlaylist> => {
   const { currentPlaylistId, targetPlaylistId } = data;
 
   return API.delete(`/playlist/delete/${currentPlaylistId}`, {
@@ -60,5 +60,5 @@ export const deletePlaylist = async (
 export const changePlaylistHiddenState = async ({
   playlistId,
   hiddenState,
-}: changePlaylistHiddenStateParams): Promise<resPlaylist> =>
+}: ChangePlaylistHiddenStateParams): Promise<ResPlaylist> =>
   API.patch(`/playlist/change-hidden-state/${playlistId}`, { hiddenState });

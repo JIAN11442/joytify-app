@@ -58,7 +58,7 @@ interface RegisterParams extends AuthDefaults {
   confirmPassword?: string;
 }
 
-type resetPasswordParams = {
+type ResetPasswordParams = {
   verificationCode: string;
   password: string;
 };
@@ -80,7 +80,7 @@ export const createAccount = async (data: RegisterParams) => {
 
   // send verification code
   // const verificationCode = await VerificationCodeModel.create({
-  //   userId: user.id,
+  //   user: user.id,
   //   type: VerificationCodeType.EmailVerification,
   //   expiresAt: onYearFromNow(),
   // });
@@ -101,7 +101,7 @@ export const createAccount = async (data: RegisterParams) => {
 
   // create session
   const session = await SessionModel.create({
-    userId: user.id,
+    user: user.id,
     userAgent: data.userAgent,
     expiresAt: thirtyDaysFormNow(),
   });
@@ -142,7 +142,7 @@ export const verifyEmail = async (code: string) => {
 
   // update user verified status to true
   const updatedUser = await UserModel.findByIdAndUpdate(
-    verificationCode.userId,
+    verificationCode.user,
     { verified: true },
     { new: true }
   );
@@ -182,7 +182,7 @@ export const loginUser = async (data: LoginParams) => {
 
     const sessionIsExist = await SessionModel.exists({
       _id: payload?.sessionId,
-      userId: payload?.userId,
+      user: payload?.userId,
       expiresAt: { $gt: new Date() },
     });
 
@@ -191,7 +191,7 @@ export const loginUser = async (data: LoginParams) => {
 
   // create session
   const session = await SessionModel.create({
-    userId: user.id,
+    user: user.id,
     userAgent: data.userAgent,
     expiresAt: thirtyDaysFormNow(),
   });
@@ -242,7 +242,7 @@ export const sendResetPasswordEmail = async (email: string) => {
 
   // check if verification code is duplicated within a certain period of time.
   const count = await VerificationCodeModel.countDocuments({
-    userId: user.id,
+    user: user.id,
     type: VerificationCodeType.PasswordReset,
     expiresAt: { $gt: thirtySecondsAgo() },
   });
@@ -259,7 +259,7 @@ export const sendResetPasswordEmail = async (email: string) => {
 
   // create verification code
   const verificationCode = await VerificationCodeModel.create({
-    userId: user.id,
+    user: user.id,
     type: VerificationCodeType.PasswordReset,
     expiresAt,
   });
@@ -288,7 +288,7 @@ export const sendResetPasswordEmail = async (email: string) => {
 };
 
 // reset password service
-export const resetUserPassword = async (data: resetPasswordParams) => {
+export const resetUserPassword = async (data: ResetPasswordParams) => {
   // verify verification code
   const verificationCode = await VerificationCodeModel.findOne({
     _id: data.verificationCode,
@@ -303,7 +303,7 @@ export const resetUserPassword = async (data: resetPasswordParams) => {
   );
 
   // check if new password is same as old password
-  const user = await UserModel.findById(verificationCode.userId);
+  const user = await UserModel.findById(verificationCode.user);
   const passwordIsConflict = await user?.comparePassword(data.password);
 
   appAssert(
@@ -314,7 +314,7 @@ export const resetUserPassword = async (data: resetPasswordParams) => {
 
   // update user password
   const updatedUser = await UserModel.findByIdAndUpdate(
-    verificationCode.userId,
+    verificationCode.user,
     {
       password: await HashValue(data.password),
     },
@@ -327,7 +327,7 @@ export const resetUserPassword = async (data: resetPasswordParams) => {
   await verificationCode.deleteOne();
 
   // delete all the user session
-  await SessionModel.deleteMany({ userId: updatedUser.id });
+  await SessionModel.deleteMany({ user: updatedUser.id });
 
   // return updated user
   return {
@@ -373,7 +373,7 @@ export const refreshTokens = async (refreshToken: string) => {
   // sign access token (new 15min expiresAt time)
   const newAccessToken = signToken(
     {
-      userId: session.userId,
+      userId: session.user,
       sessionId: session.id,
     },
     AccessTokenSignOptions

@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
 import usePlayerState from "../states/player.state";
 import useSoundState from "../states/sound.state";
-import { refactorResSong } from "../constants/axios-response.constant";
+import { RefactorResSong } from "../constants/axios-response.constant";
 
-const useOnPlay = (songs: refactorResSong[]) => {
+const useOnPlay = (songs: RefactorResSong[]) => {
   const { setActiveSongId, setSongIds, setOnPlay, setShuffleSongIds } =
     useSoundState();
   const { isShuffle } = usePlayerState();

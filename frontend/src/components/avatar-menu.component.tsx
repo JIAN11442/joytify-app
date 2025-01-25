@@ -3,10 +3,10 @@ import { useRef } from "react";
 import Menu from "./menu.component";
 
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { resUser } from "../constants/axios-response.constant";
+import { ResUser } from "../constants/axios-response.constant";
 
 type AvatarMenuType = {
-  user: resUser;
+  user: ResUser;
   activeMenuState: {
     activeMenu: boolean;
     setActiveMenu: (state: boolean) => void;

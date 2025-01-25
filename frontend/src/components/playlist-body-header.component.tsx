@@ -11,7 +11,7 @@ import Icon from "./react-icons.component";
 import PlayButton from "./play-button.component";
 
 import { changePlaylistHiddenState } from "../fetchs/playlist.fetch";
-import { refactorResPlaylist } from "../constants/axios-response.constant";
+import { RefactorResPlaylist } from "../constants/axios-response.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
 import ArrangementOptions, {
   ArrangementType,
@@ -25,7 +25,7 @@ import useOnPlay from "../hooks/play.hook";
 import { usePlaylistById } from "../hooks/playlist.hook";
 
 type PlaylistBodyHeaderProps = {
-  playlist: refactorResPlaylist;
+  playlist: RefactorResPlaylist;
 };
 
 const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({

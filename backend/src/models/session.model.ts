@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 
 export interface SessionDocument extends mongoose.Document {
-  userId: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
   userAgent: string;
   expiresAt: Date;
   createdAt: Date;
 }
 
 const sessionSchema = new mongoose.Schema<SessionDocument>({
-  userId: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,

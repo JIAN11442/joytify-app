@@ -1,7 +1,7 @@
-import { refactorResSong } from "../constants/axios-response.constant";
+import { RefactorResSong } from "../constants/axios-response.constant";
 
 type SongsGridProps = {
-  songs: refactorResSong[];
+  songs: RefactorResSong[];
 };
 
 const SongsGrid: React.FC<SongsGridProps> = ({ songs }) => {

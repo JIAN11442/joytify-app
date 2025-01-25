@@ -1,10 +1,10 @@
 import { NavLink } from "react-router-dom";
-import { resPlaylist } from "../constants/axios-response.constant";
+import { ResPlaylist } from "../constants/axios-response.constant";
 import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type PlaylistItemProps = {
-  playlist: resPlaylist;
+  playlist: ResPlaylist;
 };
 
 const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {

@@ -8,18 +8,18 @@ import {
   NOT_FOUND,
 } from "../constants/http-code.constant";
 
-type createPlaylistParams = {
+type CreatePlaylistParams = {
   userId: string;
   title?: string;
 };
 
-interface updatePlaylistParams extends createPlaylistParams {
+interface UpdatePlaylistParams extends CreatePlaylistParams {
   playlistId: string;
   description?: string;
   imageUrl?: string;
 }
 
-type deletePlaylistParams = {
+type DeletePlaylistParams = {
   userId: string;
   currentPlaylistId: string;
   targetPlaylistId?: string;
@@ -31,11 +31,11 @@ export const getUserPlaylists = async (
   searchParams: string | null
 ) => {
   let defaultQueryParams: FilterQuery<PlaylistDocument> = {
-    userId,
+    user: userId,
     default: true,
   };
   let userQueryParams: FilterQuery<PlaylistDocument> = {
-    userId,
+    user: userId,
     default: false,
   };
 
@@ -67,7 +67,7 @@ export const getUserPlaylistById = async (
   // get playlist info
   let playlist = await PlaylistModel.findOne({
     _id: playlistId,
-    userId,
+    user: userId,
   }).populate({
     path: "songs",
     populate: [
@@ -85,8 +85,10 @@ export const getUserPlaylistById = async (
 };
 
 // create new playlist service
-export const createNewPlaylist = async (data: createPlaylistParams) => {
-  const playlist = await PlaylistModel.create({ ...data });
+export const createNewPlaylist = async (data: CreatePlaylistParams) => {
+  const { userId, title } = data;
+
+  const playlist = await PlaylistModel.create({ user: userId, title });
 
   appAssert(playlist, INTERNAL_SERVER_ERROR, "Failed to create playlist");
 
@@ -94,11 +96,11 @@ export const createNewPlaylist = async (data: createPlaylistParams) => {
 };
 
 // update playlist cover image service
-export const updatePlaylistById = async (data: updatePlaylistParams) => {
+export const updatePlaylistById = async (data: UpdatePlaylistParams) => {
   const { playlistId, userId, title, description, imageUrl } = data;
 
   const updatedPlaylist = await PlaylistModel.findOneAndUpdate(
-    { _id: playlistId, userId },
+    { _id: playlistId, user: userId },
     { title, description, cover_image: imageUrl },
     { new: true }
   );
@@ -113,7 +115,7 @@ export const updatePlaylistById = async (data: updatePlaylistParams) => {
 };
 
 // delete playlist service
-export const deletePlaylistById = async (data: deletePlaylistParams) => {
+export const deletePlaylistById = async (data: DeletePlaylistParams) => {
   const { userId, currentPlaylistId, targetPlaylistId } = data;
 
   // find the playlist to be deleted
@@ -149,7 +151,7 @@ export const deletePlaylistById = async (data: deletePlaylistParams) => {
   // delete target playlist
   await PlaylistModel.findOneAndDelete({
     _id: currentPlaylistId,
-    userId,
+    user: userId,
   });
 
   return { playlist };

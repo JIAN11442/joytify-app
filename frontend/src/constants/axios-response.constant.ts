@@ -15,7 +15,7 @@ export type Album = {
 };
 
 // ===================== Custom Defined Types =====================
-export type defaultLabels = {
+export type DefaultLabels = {
   feature: Label[];
   genre: Label[];
   tag: Label[];
@@ -35,7 +35,7 @@ export type HexPaletee = {
 };
 
 // ===================== Fetch Response Data Types =====================
-export type resUser = {
+export type ResUser = {
   _id: string;
   email: string;
   profile_img: string;
@@ -48,21 +48,21 @@ export type resUser = {
   updatedAt: Date;
 };
 
-export type resPlaylist = {
+export type ResPlaylist = {
   _id: string;
   user: string;
   title: string;
   description?: string;
   cover_image: string;
   paletee: HexPaletee;
-  songs: resSong[];
+  songs: ResSong[];
   default: boolean;
   hidden: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
 
-export type resSong = {
+export type ResSong = {
   _id: string;
   title: string;
   creator: string;
@@ -90,7 +90,7 @@ export type resSong = {
   createdAt: string;
 };
 
-export type resAlbum = {
+export type ResAlbum = {
   _id: string;
   title: string;
   description: string;
@@ -102,7 +102,7 @@ export type resAlbum = {
   createdAt: Date;
 };
 
-export type resLabel = {
+export type ResLabel = {
   _id: string;
   label: string;
   type: string;
@@ -113,12 +113,12 @@ export type resLabel = {
 };
 
 // ===================== Refactor Fetch Response Data Types =====================
-export type refactorResPlaylist = Omit<resPlaylist, "songs"> & {
-  songs: refactorResSong[];
+export type RefactorResPlaylist = Omit<ResPlaylist, "songs"> & {
+  songs: RefactorResSong[];
 };
 
-export type refactorResSong = Omit<
-  resSong,
+export type RefactorResSong = Omit<
+  ResSong,
   "artist" | "composers" | "lyricists" | "languages" | "album"
 > & {
   artist: string;
@@ -128,7 +128,7 @@ export type refactorResSong = Omit<
   album: string;
 };
 
-export type refactorResLabel = {
-  default: defaultLabels;
-  created: defaultLabels;
+export type RefactorResLabel = {
+  default: DefaultLabels;
+  created: DefaultLabels;
 };

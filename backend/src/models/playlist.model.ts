@@ -7,7 +7,7 @@ import usePalette from "../hooks/paletee.hook";
 import { HexPaletee } from "../constants/paletee.constant";
 
 export interface PlaylistDocument extends mongoose.Document {
-  userId: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
   title: string;
   description: string;
   cover_image: string;
@@ -19,7 +19,7 @@ export interface PlaylistDocument extends mongoose.Document {
 
 const playlistSchema = new mongoose.Schema<PlaylistDocument>(
   {
-    userId: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -30,7 +30,7 @@ const playlistSchema = new mongoose.Schema<PlaylistDocument>(
     cover_image: {
       type: String,
       default:
-        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-song-album.png",
+        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
     },
     paletee: {
       vibrant: { type: String },
@@ -104,11 +104,11 @@ playlistSchema.pre("findOneAndUpdate", async function (next) {
 
 // after created playlist, ...
 playlistSchema.post("save", async function (doc) {
-  const { id, userId } = doc;
+  const { id, user } = doc;
 
   try {
     // update user tatol_playlists and push playlist id to user playlists array
-    await UserModel.findByIdAndUpdate(userId, {
+    await UserModel.findByIdAndUpdate(user, {
       $inc: { "account_info.total_playlists": 1 },
       $push: { playlists: id },
     });
@@ -144,11 +144,11 @@ playlistSchema.pre("findOneAndDelete", async function (next) {
 
 // after delete playlist, ...
 playlistSchema.post("findOneAndDelete", async function (doc) {
-  const { id, userId, cover_image } = doc;
+  const { id, user, cover_image } = doc;
 
   try {
     // update user tatol_playlists of accouont_info
-    await UserModel.findByIdAndUpdate(userId, {
+    await UserModel.findByIdAndUpdate(user, {
       $inc: { "account_info.total_playlists": -1 },
       $pull: {
         playlists: id,

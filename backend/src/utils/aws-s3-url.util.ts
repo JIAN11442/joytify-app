@@ -5,7 +5,7 @@ import { AWS_BUCKET_NAME } from "../constants/env-validate.constant";
 import { FileExtension, UploadFolder } from "../constants/aws.constant";
 import awsUrlParser from "./aws-url-parser.util";
 
-type generateUrlParams = {
+type GenerateUrlParams = {
   subfolder?: UploadFolder | undefined;
   extension: FileExtension | undefined;
   nanoID?: string;
@@ -15,7 +15,7 @@ export const generateUploadUrl = async ({
   subfolder,
   extension,
   nanoID = "",
-}: generateUrlParams) => {
+}: GenerateUrlParams) => {
   try {
     const date = new Date();
     const fileName = `${

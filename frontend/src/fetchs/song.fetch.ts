@@ -3,14 +3,14 @@ import { nanoid } from "nanoid";
 import { SongForm } from "../constants/form.constant";
 import { FileExtension, UploadFolder } from "../constants/aws.constant";
 import MusicianOptions from "../constants/musician.constant";
-import { resSong } from "../constants/axios-response.constant";
+import { ResSong } from "../constants/axios-response.constant";
 import { getMusicianIds } from "./musician.fetch";
 import { uploadFileToAws } from "./aws.fetch";
 import API from "../config/api-client.config";
 import getAudioDuration from "../utils/get-audio-duration.util";
 
 // create song data
-export const createSongData = async (data: SongForm): Promise<resSong> => {
+export const createSongData = async (data: SongForm): Promise<ResSong> => {
   const nanoID = nanoid();
 
   const { songFile, imageFile, artist, lyricists, composers, ...params } = data;
@@ -82,5 +82,5 @@ export const createSongData = async (data: SongForm): Promise<resSong> => {
 };
 
 // get song by id
-export const getSongById = (id: string): Promise<resSong> =>
+export const getSongById = (id: string): Promise<ResSong> =>
   API.get(`/song/${id}`);

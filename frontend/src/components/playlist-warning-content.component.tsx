@@ -1,7 +1,7 @@
-import { refactorResPlaylist } from "../constants/axios-response.constant";
+import { RefactorResPlaylist } from "../constants/axios-response.constant";
 
 type PlaylistWarningContentProps = {
-  playlist: refactorResPlaylist | null;
+  playlist: RefactorResPlaylist | null;
   executeBtnText: string;
   closeModalFn: () => void;
   executeFn?: () => void;

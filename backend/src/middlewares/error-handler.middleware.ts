@@ -6,7 +6,7 @@ import {
   INTERNAL_SERVER_ERROR,
 } from "../constants/http-code.constant";
 import AppError from "../utils/app-error.util";
-import { clearAuthCookies } from "../utils/cookies.util";
+import { clearAuthCookies, cookiePath } from "../utils/cookies.util";
 import admin from "../config/firebase.config";
 import { deleteAwsFileUrl } from "../utils/aws-s3-url.util";
 import awsUrlParser from "../utils/aws-url-parser.util";
@@ -14,7 +14,7 @@ import awsUrlParser from "../utils/aws-url-parser.util";
 const errorHandler = (): ErrorRequestHandler => {
   return async (error, req, res, next) => {
     // clear the cookies while refresh path throws an error
-    if (req.path === "/auth/refresh") {
+    if (req.path === cookiePath) {
       clearAuthCookies(res);
     }
 

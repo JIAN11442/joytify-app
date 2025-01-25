@@ -1,7 +1,7 @@
 import { AuthProvider, getIdToken } from "firebase/auth";
 import API from "../config/api-client.config";
 import { authWithThirdPartyUsingPopup } from "../config/firebase.config";
-import { AuthForm } from "../constants/form-default-data.constant";
+import { AuthForm } from "../constants/form.constant";
 import AuthForOptions, { AuthForType } from "../constants/auth.constant";
 
 // signin with third party axios

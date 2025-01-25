@@ -12,7 +12,7 @@ export const songSchema = z.object({
   playlist_for: verificationCodeSchema,
   duration: z.number(),
   imageUrl: fileUrlSchema.optional().nullable(),
-  album: verificationCodeSchema.optional().nullable(),
+  album: z.union([verificationCodeSchema, z.null()]).optional(),
   lyricists: z.array(verificationCodeSchema).optional().nullable(),
   composers: z.array(verificationCodeSchema).optional().nullable(),
   languages: z.array(verificationCodeSchema).optional().nullable(),
@@ -22,4 +22,4 @@ export const songSchema = z.object({
   releaseDate: z.union([z.date(), z.string().optional().nullable()]),
 });
 
-export type songSchemaType = z.infer<typeof songSchema>;
+export type SongSchemaType = z.infer<typeof songSchema>;

@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+
+import { SoundOutputType } from "../hooks/sound.hook";
+import { storePlaybackLog } from "../fetchs/playback.fetch";
+
 import useSoundState from "../states/sound.state";
 import usePlayerState from "../states/player.state";
 import usePlaylistState from "../states/playlist.state";
-import { refactorResSong } from "../constants/axios-response.constant";
+import { RefactorResSong } from "../constants/axios-response.constant";
 import SongLoopOptions from "../constants/song-loop-mode.constant";
-import { SoundOutputType } from "../hooks/sound.hook";
+import { MutationKey } from "../constants/query-client-key.constant";
+import PlaybackStateOptions from "../constants/playback.constant";
 import { getDuration } from "../utils/get-time.util";
 
 type PlayerSliderProps = {
-  song: refactorResSong;
+  song: RefactorResSong;
   sound: SoundOutputType;
 };
 
@@ -17,7 +23,6 @@ const PlayerSlider: React.FC<PlayerSliderProps> = ({ song, sound }) => {
 
   const [displayTime, setDisplayTime] = useState("0:00");
   const {
-    currentPlaybackTime,
     isPlaying,
     songIds,
     activeSongId,
@@ -28,7 +33,9 @@ const PlayerSlider: React.FC<PlayerSliderProps> = ({ song, sound }) => {
   const { isShuffle, loopType } = usePlayerState();
   const { targetPlaylist } = usePlaylistState();
 
-  const formattedProgressTime = getDuration(currentPlaybackTime);
+  const { timestamp, playbackTime } = sound;
+
+  const formattedProgressTime = getDuration(timestamp);
   const formattedDurationTime = getDuration(duration);
 
   // handle change song seek
@@ -44,15 +51,31 @@ const PlayerSlider: React.FC<PlayerSliderProps> = ({ song, sound }) => {
     sound.seek(value);
   };
 
+  // record playback log mutation
+  const { mutate: recordPlaybackLog } = useMutation({
+    mutationKey: [MutationKey.RECORD_PLAYBACK_LOG],
+    mutationFn: storePlaybackLog,
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   // Update display time every second ,
   // since we're using seconds as the time unit (formattedProgressTime)
   useEffect(() => {
     setDisplayTime(formattedProgressTime);
 
-    // If the song has finished playing (display time equals song duration),
-    // stop the audio
+    // If the song has finished playing...
     if (formattedProgressTime === formattedDurationTime) {
       const currentIndex = songIds.indexOf(activeSongId);
+
+      // store playback log
+      recordPlaybackLog({
+        songId: song?._id,
+        duration: playbackTime,
+        state: PlaybackStateOptions.COMPLETED,
+        timestamp: new Date(),
+      });
 
       // if loop type is stack, always play same song id again
       if (loopType === SongLoopOptions.TRACK) {
@@ -109,7 +132,7 @@ const PlayerSlider: React.FC<PlayerSliderProps> = ({ song, sound }) => {
         type="range"
         min={0}
         max={duration}
-        value={currentPlaybackTime}
+        value={timestamp}
         step={1}
         onChange={handleChangeSongSeek}
         className={`input-slider`}

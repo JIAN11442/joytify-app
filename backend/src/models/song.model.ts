@@ -62,7 +62,7 @@ const songSchema = new mongoose.Schema<SongDocument>(
     imageUrl: {
       type: String,
       default:
-        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-song-image.png",
+        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-unknown-image.png",
     },
     duration: { type: Number, required: true },
     playlist_for: {

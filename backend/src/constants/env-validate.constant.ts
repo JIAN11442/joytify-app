@@ -1,7 +1,8 @@
-import { cleanEnv, port, str } from "envalid";
+import { bool, cleanEnv, port, str } from "envalid";
 
 const env = cleanEnv(process.env, {
   NODE_ENV: str(),
+  USE_NGINX_PROXY: bool(),
   BACKEND_PORT: port(),
   ORIGIN_APP: str(),
   MONGODB_CONNECTION_STRING: str(),
@@ -23,6 +24,7 @@ const env = cleanEnv(process.env, {
 
 export const {
   NODE_ENV,
+  USE_NGINX_PROXY,
   BACKEND_PORT,
   ORIGIN_APP,
   MONGODB_CONNECTION_STRING,

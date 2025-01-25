@@ -1,7 +1,7 @@
 import { useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { RegisterOptions, SubmitHandler, useForm } from "react-hook-form";
 import { FaCircleInfo } from "react-icons/fa6";
 import { IoCaretBack } from "react-icons/io5";
 
@@ -24,7 +24,7 @@ import { removeAlbum } from "../fetchs/album.fetch";
 import { deleteLabel } from "../fetchs/label.fetch";
 
 import LabelOptions from "../constants/label.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
+import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import {
   defaultSongData,
   FormMethods,
@@ -34,6 +34,7 @@ import useUploadModalState from "../states/upload-modal.state";
 
 import { navigate } from "../lib/navigate.lib";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import queryClient from "../config/query-client.config";
 
 const UploadModal = () => {
   const submitBtnRef = useRef<HTMLButtonElement>(null);
@@ -69,6 +70,11 @@ const UploadModal = () => {
 
       // refetch user playlists
       playlistRefetch();
+
+      // refetch target playlist
+      queryClient.invalidateQueries({
+        queryKey: [QueryKey.GET_TARGET_PLAYLIST],
+      });
 
       // display success message
       toast.success(`“${title}” has been created successfully`);
@@ -163,6 +169,16 @@ const UploadModal = () => {
     defaultValues: { ...defaultSongData },
     mode: "onChange",
   });
+
+  const normalizeRegister = (
+    name: keyof SongForm,
+    options?: RegisterOptions<SongForm>
+  ) => {
+    return register(name, {
+      ...options,
+      setValueAs: (val) => (val.length === 0 ? undefined : val),
+    });
+  };
 
   const formMethods: FormMethods<SongForm> = useMemo(
     () => ({
@@ -368,7 +384,7 @@ const UploadModal = () => {
               accept=".png, .jpg, .jpeg"
               title="Select an image file (*.png)"
               disabled={isPending}
-              {...register("imageFile")}
+              {...normalizeRegister("imageFile")}
             />
 
             {/* Song lyricist */}
@@ -382,7 +398,7 @@ const UploadModal = () => {
               formMethods={formMethods}
               disabled={isPending}
               toArray={true}
-              {...register("lyricists")}
+              {...normalizeRegister("lyricists")}
             />
 
             {/* Song composer */}
@@ -400,7 +416,7 @@ const UploadModal = () => {
               formMethods={formMethods}
               disabled={isPending}
               toArray={true}
-              {...register("composers")}
+              {...normalizeRegister("composers")}
             />
 
             {/* Album */}
@@ -418,7 +434,7 @@ const UploadModal = () => {
               deleteOptFn={deleteTargetAlbum}
               autoCloseMenuFn={!activeCreateAlbumModal.active}
               disabled={isPending}
-              {...register("album")}
+              {...normalizeRegister("album")}
             />
 
             {/* Language */}
@@ -442,7 +458,7 @@ const UploadModal = () => {
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}
-              {...register("languages")}
+              {...normalizeRegister("languages")}
             />
 
             {/* Genres */}
@@ -466,7 +482,7 @@ const UploadModal = () => {
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}
-              {...register("genres")}
+              {...normalizeRegister("genres")}
             />
 
             {/* Tags */}
@@ -490,7 +506,7 @@ const UploadModal = () => {
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}
-              {...register("tags")}
+              {...normalizeRegister("tags")}
             />
 
             {/* Release Date */}
@@ -498,7 +514,7 @@ const UploadModal = () => {
               id="releaseDate"
               title="Select the release date of song"
               disabled={isPending}
-              {...register("releaseDate")}
+              {...normalizeRegister("releaseDate")}
             />
           </AnimationWrapper>
         </div>

@@ -1,8 +1,8 @@
 import SongsList from "./songs-list.component";
-import { refactorResPlaylist } from "../constants/axios-response.constant";
+import { RefactorResPlaylist } from "../constants/axios-response.constant";
 
 type PlaylistBodyContentProps = {
-  playlist: refactorResPlaylist;
+  playlist: RefactorResPlaylist;
 };
 
 const PlaylistBodyContent: React.FC<PlaylistBodyContentProps> = ({

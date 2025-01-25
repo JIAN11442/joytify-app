@@ -1,5 +1,5 @@
 import SongModel from "../models/song.model";
-import { songSchemaType } from "../schemas/song.schema";
+import { SongSchemaType } from "../schemas/song.schema";
 import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
@@ -8,27 +8,27 @@ import {
 import ErrorCode from "../constants/error-code.constant";
 import appAssert from "../utils/app-assert.util";
 
-type createParams = {
+type CreateParams = {
   userId: string;
-  songInfo: songSchemaType;
+  songInfo: SongSchemaType;
 };
 
-type deleteParams = {
+type DeleteParams = {
   userId: string;
   songId: string;
 };
 
-type appAssertParams = [
+type AppAssertParams = [
   errorCode?: ErrorCode,
   firebaseUID?: string | null,
   awsUrl?: string[] | null
 ];
 
 // create new song
-export const createNewSong = async ({ userId, songInfo }: createParams) => {
+export const createNewSong = async ({ userId, songInfo }: CreateParams) => {
   const { title, artist, songUrl, imageUrl, ...props } = songInfo;
 
-  const params: appAssertParams = [
+  const params: AppAssertParams = [
     ErrorCode.CreateSongError,
     null,
     [songUrl, ...(imageUrl ? [imageUrl] : [])],
@@ -77,7 +77,7 @@ export const getSongById = async (id: string) => {
 };
 
 // delete song by id
-export const deleteSongById = async ({ userId, songId }: deleteParams) => {
+export const deleteSongById = async ({ userId, songId }: DeleteParams) => {
   // check if song exist
   const song = await SongModel.findOne({ _id: songId, creator: userId });
 

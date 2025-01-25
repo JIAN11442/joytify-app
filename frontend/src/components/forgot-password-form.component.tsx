@@ -10,7 +10,7 @@ import InputBox from "./input-box.component";
 
 import { MutationKey } from "../constants/query-client-key.constant";
 import AuthForOptions from "../constants/auth.constant";
-import { DefaultsResetPasswordType } from "../constants/form-default-data.constant";
+import { ResetPasswordForm } from "../constants/form.constant";
 import useAuthModalState from "../states/auth-modal.state";
 import { sendResetPasswordEmail } from "../fetchs/auth.fetch";
 import { timeoutForDelay } from "../lib/timeout.lib";
@@ -70,12 +70,12 @@ const ForgotPasswordForm = () => {
     register,
     setFocus,
     formState: { isValid },
-  } = useForm<DefaultsResetPasswordType>({
+  } = useForm<ResetPasswordForm>({
     defaultValues: { email: "" },
   });
 
   // handle submit
-  const onSubmit: SubmitHandler<DefaultsResetPasswordType> = async (value) => {
+  const onSubmit: SubmitHandler<ResetPasswordForm> = async (value) => {
     sendResetPasswordEmailToUser(value.email);
   };
 

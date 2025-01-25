@@ -11,6 +11,7 @@ import playlistRoute from "./routes/playlist.route";
 import labelRoute from "./routes/label.route";
 import musicianRoute from "./routes/musician.route";
 import albumRoute from "./routes/album.route";
+import playbackRoute from "./routes/playback.route";
 
 import authenticate from "./middlewares/authenticate.middleware";
 import firebaseInitialize from "./middlewares/firebase.middleware";
@@ -42,6 +43,7 @@ app.use("/playlist", authenticate, playlistRoute);
 app.use("/label", authenticate, labelRoute);
 app.use("/musician", authenticate, musicianRoute);
 app.use("/album", authenticate, albumRoute);
+app.use("/playback", authenticate, playbackRoute);
 
 // error handler
 app.use(errorHandler());

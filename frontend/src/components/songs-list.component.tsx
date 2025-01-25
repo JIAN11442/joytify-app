@@ -5,15 +5,15 @@ import SongListItem from "./song-list-item.component";
 
 import useSidebarState from "../states/sidebar.state";
 import usePlaylistState from "../states/playlist.state";
-import { refactorResSong } from "../constants/axios-response.constant";
+import { RefactorResSong } from "../constants/axios-response.constant";
 import ArrangementOptions from "../constants/arrangement.constant";
 import useOnPlay from "../hooks/play.hook";
 
-type songsListProps = {
-  songs: refactorResSong[];
+type SongsListProps = {
+  songs: RefactorResSong[];
 };
 
-const SongsList: React.FC<songsListProps> = ({ songs }) => {
+const SongsList: React.FC<SongsListProps> = ({ songs }) => {
   const { collapseSideBarState } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
 

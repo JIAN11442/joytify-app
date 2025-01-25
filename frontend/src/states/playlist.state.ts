@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import {
-  refactorResPlaylist,
-  resPlaylist,
+  RefactorResPlaylist,
+  ResPlaylist,
 } from "../constants/axios-response.constant";
 import ArrangementOptions, {
   ArrangementType,
@@ -9,12 +9,12 @@ import ArrangementOptions, {
 
 export type PlaylistModalType = {
   active: boolean;
-  playlist: refactorResPlaylist | null;
+  playlist: RefactorResPlaylist | null;
 };
 
 type PlaylistState = {
-  userPlaylists: resPlaylist[] | null;
-  targetPlaylist: refactorResPlaylist | null;
+  userPlaylists: ResPlaylist[] | null;
+  targetPlaylist: RefactorResPlaylist | null;
   activePlaylistEditModal: PlaylistModalType;
   activeDeletePlaylistModal: PlaylistModalType;
   activeRemovePlaylistModal: PlaylistModalType;
@@ -22,8 +22,8 @@ type PlaylistState = {
   activePlaylistListOptionsMenu: boolean;
   songArrangementType: ArrangementType;
 
-  setUserPlaylists: (playlists: resPlaylist[] | null) => void;
-  setTargetPlaylist: (playlist: refactorResPlaylist | null) => void;
+  setUserPlaylists: (playlists: ResPlaylist[] | null) => void;
+  setTargetPlaylist: (playlist: RefactorResPlaylist | null) => void;
   setActivePlaylistEditModal: (active: PlaylistModalType) => void;
   setActiveDeletePlaylistModal: (active: PlaylistModalType) => void;
   setActiveRemovePlaylistModal: (active: PlaylistModalType) => void;

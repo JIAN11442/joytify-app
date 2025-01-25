@@ -1,7 +1,7 @@
 import API from "../config/api-client.config";
 import { MusicianType } from "../constants/musician.constant";
 
-type getMusicianIdsParams = {
+type GetMusicianIdsParams = {
   musicians: string[];
   type: MusicianType;
   createIfAbsent?: boolean;
@@ -9,5 +9,5 @@ type getMusicianIdsParams = {
 
 // get musician ids
 export const getMusicianIds = async (
-  data: getMusicianIdsParams
+  data: GetMusicianIdsParams
 ): Promise<string[]> => API.post("/musician/getIds", data);

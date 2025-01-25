@@ -5,9 +5,14 @@ import { Volume } from "../constants/volume.constant";
 
 const useSound = (url: string) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [duration, setDuration] = useState<number>(0);
+  const prevAudioCurrentTimeRef = useRef<number>(0);
+  const prevGeneratedDurationRef = useRef<number>(0);
 
-  const { setCurrentPlaybackTime, setIsPlaying } = useSoundState();
+  const [duration, setDuration] = useState<number>(0);
+  const [timestamp, setTimestamp] = useState<number>(0);
+  const [playbackTime, setPlaybackTime] = useState<number>(0);
+
+  const { setIsPlaying } = useSoundState();
 
   useEffect(() => {
     if (url) {
@@ -19,7 +24,24 @@ const useSound = (url: string) => {
       };
 
       const handleTimeUpdate = () => {
-        timeoutForDelay(() => setCurrentPlaybackTime(audio.currentTime));
+        const audioCurrentTime = audio.currentTime;
+        const duration = audioCurrentTime - prevAudioCurrentTimeRef.current;
+        const generatedDuration =
+          duration > 0.3
+            ? prevGeneratedDurationRef.current
+            : duration < 0
+            ? 0
+            : duration;
+
+        timeoutForDelay(() => {
+          setTimestamp(audioCurrentTime);
+          setPlaybackTime((prev) =>
+            audioCurrentTime === 0 ? 0 : prev + generatedDuration
+          );
+
+          prevAudioCurrentTimeRef.current = audioCurrentTime;
+          prevGeneratedDurationRef.current = generatedDuration;
+        });
       };
 
       // listening duration and return cleanup function
@@ -40,6 +62,9 @@ const useSound = (url: string) => {
         audio.pause();
         audio.src = "";
         setIsPlaying(false);
+        setDuration(0);
+        setTimestamp(0);
+        setPlaybackTime(0);
 
         cleanupLoaded();
         cleanupTime();
@@ -95,6 +120,8 @@ const useSound = (url: string) => {
     loop,
     volume,
     duration,
+    timestamp,
+    playbackTime,
   };
 };
 

@@ -9,6 +9,10 @@ import PlayerVolume from "./player-volume.component";
 import useSound from "../hooks/sound.hook";
 import { useSongById } from "../hooks/song.hook";
 import useSoundState from "../states/sound.state";
+import { useMutation } from "@tanstack/react-query";
+import { MutationKey } from "../constants/query-client-key.constant";
+import { storePlaybackLog } from "../fetchs/playback.fetch";
+import PlaybackStateOptions from "../constants/playback.constant";
 
 type AudioPlayerProps = {
   songId: string;
@@ -23,6 +27,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
   const { setSound, songToPlay } = useSoundState();
 
   const sound = useSound(song?.songUrl || "");
+  const { playbackTime } = sound;
+
+  // record playback log mutation
+  const { mutate: recordPlaybackLog } = useMutation({
+    mutationKey: [MutationKey.RECORD_PLAYBACK_LOG],
+    mutationFn: storePlaybackLog,
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   // handle navigate to target song playlist
   const handleNavigateToPlaylist = () => {
@@ -31,12 +45,23 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
 
   // Refetch song hook when songId changes
   useEffect(() => {
-    if (songId && songPlayedRef.current !== songId) {
+    if (songId && songPlayedRef.current && songPlayedRef.current !== songId) {
+      // while song is playing and switch to another song,
+      // record playback log before refetch new song data
+      if (sound.timestamp < sound.duration - 1) {
+        recordPlaybackLog({
+          songId: songPlayedRef.current,
+          duration: playbackTime,
+          state: PlaybackStateOptions.PLAYING,
+          timestamp: new Date(),
+        });
+      }
+
       songRefetch();
     }
   }, [songId, songPlayedRef, songRefetch]);
 
-  // while sound is ready, play audio
+  // while sound and song are ready, play audio
   useEffect(() => {
     if (sound && song && songPlayedRef.current !== song._id) {
       // play audio

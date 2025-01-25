@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { resUser } from "../constants/axios-response.constant";
+import { ResUser } from "../constants/axios-response.constant";
 
 type UserParams = {
-  user: resUser | null;
+  user: ResUser | null;
   activeUserMenu: boolean;
 
-  setUser: (state: resUser | null) => void;
+  setUser: (state: ResUser | null) => void;
   setActiveUserMenu: (state: boolean) => void;
   closeUserMenu: () => void;
 };

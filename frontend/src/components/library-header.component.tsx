@@ -12,7 +12,7 @@ import Menu from "./menu.component";
 import InputSearchBar from "./input-searchbar.component";
 
 import AuthForOptions from "../constants/auth.constant";
-import { resUser } from "../constants/axios-response.constant";
+import { ResUser } from "../constants/axios-response.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
 import useSidebarState from "../states/sidebar.state";
 import useUploadModalState from "../states/upload-modal.state";
@@ -24,7 +24,7 @@ import { usePlaylists } from "../hooks/playlist.hook";
 import { navigate } from "../lib/navigate.lib";
 
 type LibraryHeaderProps = {
-  user: AxiosResponse | resUser | undefined;
+  user: AxiosResponse | ResUser | undefined;
 };
 
 const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
@@ -133,7 +133,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
 
     timeoutForDelay(() => {
       setLibrarySearchVal(value);
-    }, 300);
+    });
   };
 
   // while sidebar is collapsed, clean search value and close the searchbar

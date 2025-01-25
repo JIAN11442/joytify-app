@@ -14,7 +14,7 @@ import {
   FormMethods,
 } from "../constants/form.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
-import { refactorResPlaylist } from "../constants/axios-response.constant";
+import { RefactorResPlaylist } from "../constants/axios-response.constant";
 import { usePlaylistById, usePlaylists } from "../hooks/playlist.hook";
 import { updatePlaylist } from "../fetchs/playlist.fetch";
 import { deleteFileFromAws } from "../fetchs/aws.fetch";
@@ -29,7 +29,7 @@ const PlaylistEditModal = () => {
   const { activePlaylistEditModal, closePlaylistEditModal } =
     usePlaylistState();
   const { active, playlist } = activePlaylistEditModal;
-  const { _id: playlistId } = (playlist as refactorResPlaylist) ?? {};
+  const { _id: playlistId } = (playlist as RefactorResPlaylist) ?? {};
 
   const { refetch: playlistsRefetch } = usePlaylists();
   const { refetch: targetPlaylistRefetch } = usePlaylistById(playlistId);

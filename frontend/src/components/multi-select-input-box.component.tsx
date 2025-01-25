@@ -7,7 +7,7 @@ import AnimationWrapper from "./animation-wrapper.component";
 import OptionCheckboxItem from "./option-checkbox-item.component";
 
 import LabelOptions, { LabelType } from "../constants/label.constant";
-import { Label, refactorResLabel } from "../constants/axios-response.constant";
+import { Label, RefactorResLabel } from "../constants/axios-response.constant";
 import { FormMethods } from "../constants/form.constant";
 import mergeRefs from "../lib/merge-refs.lib";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
@@ -25,7 +25,7 @@ interface MultiSelectInputProps<T extends FieldValues = any>
   formMethods: FormMethods<T>;
   autoCloseMenuFn?: boolean;
   deleteOptFn?: (id: string) => void;
-  queryRefetch: RefetchType<refactorResLabel>;
+  queryRefetch: RefetchType<RefactorResLabel>;
 }
 
 const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(

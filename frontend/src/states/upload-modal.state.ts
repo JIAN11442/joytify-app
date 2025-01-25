@@ -3,8 +3,8 @@ import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { OptionType } from "../components/multi-select-input-box.component";
 import LabelOptions, { LabelType } from "../constants/label.constant";
 import {
-  refactorResLabel,
-  resAlbum,
+  RefactorResLabel,
+  ResAlbum,
 } from "../constants/axios-response.constant";
 
 export type RefetchType<T> = (
@@ -15,7 +15,7 @@ type LabelModalType = {
   type: LabelType;
   active: boolean;
   options: OptionType | OptionType[] | null;
-  labelRefetch: RefetchType<refactorResLabel> | null;
+  labelRefetch: RefetchType<RefactorResLabel> | null;
 };
 
 type PlaylistModalType = {
@@ -26,7 +26,7 @@ type PlaylistModalType = {
 type AlbumModalType = {
   active: boolean;
   options: string[] | null;
-  albumRefetch: RefetchType<resAlbum[]> | null;
+  albumRefetch: RefetchType<ResAlbum[]> | null;
 };
 
 type UploadModalState = {

@@ -9,12 +9,12 @@ import usePlaylistState from "../states/playlist.state";
 import useSidebarState from "../states/sidebar.state";
 import useSoundState from "../states/sound.state";
 import ArrangementOptions from "../constants/arrangement.constant";
-import { refactorResSong } from "../constants/axios-response.constant";
+import { RefactorResSong } from "../constants/axios-response.constant";
 import { getDuration, getTimeAgo } from "../utils/get-time.util";
 
 type SongListItemProps = {
   index: number;
-  song: refactorResSong;
+  song: RefactorResSong;
   switchFunc?: boolean;
   onPlay: (id: string) => void;
 };

@@ -10,12 +10,12 @@ import PlayerSlider from "./player-slider.component";
 import useSoundState from "../states/sound.state";
 import usePlayerState from "../states/player.state";
 import usePlaylistState from "../states/playlist.state";
-import { refactorResSong } from "../constants/axios-response.constant";
+import { RefactorResSong } from "../constants/axios-response.constant";
 import SongLoopOptions from "../constants/song-loop-mode.constant";
 import { SoundOutputType } from "../hooks/sound.hook";
 
 type PlayerOperationProps = {
-  song: refactorResSong;
+  song: RefactorResSong;
   sound: SoundOutputType;
   className?: string;
 };

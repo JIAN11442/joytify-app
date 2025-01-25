@@ -8,17 +8,17 @@ import {
 } from "../constants/http-code.constant";
 import appAssert from "../utils/app-assert.util";
 
-type deleteLabelParams = {
+type DeleteLabelParams = {
   id?: string;
   userId: string;
 };
 
-interface createLabelParams extends deleteLabelParams {
+interface CreateLabelParams extends DeleteLabelParams {
   label: string;
   type: LabelType;
 }
 
-interface getLabelIdParams extends createLabelParams {
+interface GetLabelIdParams extends CreateLabelParams {
   createIfAbsent?: boolean;
 }
 
@@ -85,7 +85,7 @@ export const getDefaultAndCreatedLabel = async (userId: string) => {
 };
 
 // create label service
-export const createLabel = async (data: createLabelParams) => {
+export const createLabel = async (data: CreateLabelParams) => {
   const { userId, label, type } = data;
 
   const findQuery: FilterQuery<LabelDocument> = {
@@ -111,7 +111,7 @@ export const createLabel = async (data: createLabelParams) => {
 };
 
 // get label ID service
-export const getLabelId = async (data: getLabelIdParams) => {
+export const getLabelId = async (data: GetLabelIdParams) => {
   const { userId, label: doc, type, createIfAbsent } = data;
 
   const findQuery: FilterQuery<LabelDocument> = {
@@ -140,7 +140,7 @@ export const getLabelId = async (data: getLabelIdParams) => {
 };
 
 // delete label service
-export const deleteLabel = async (data: deleteLabelParams) => {
+export const deleteLabel = async (data: DeleteLabelParams) => {
   const { id, userId } = data;
 
   const findQuery: FilterQuery<LabelDocument> = {
