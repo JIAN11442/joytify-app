@@ -1,8 +1,12 @@
 import { Router } from "express";
-import { storePlaybackLogHandler } from "../controllers/playback.controller";
+import {
+  getPlaybackLogsHandler,
+  storePlaybackLogHandler,
+} from "../controllers/playback.controller";
 
 const playbackRoute = Router();
 
 playbackRoute.post("/record", storePlaybackLogHandler);
+playbackRoute.get("/logs", getPlaybackLogsHandler);
 
 export default playbackRoute;

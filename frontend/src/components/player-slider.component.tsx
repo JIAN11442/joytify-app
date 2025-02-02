@@ -66,7 +66,7 @@ const PlayerSlider: React.FC<PlayerSliderProps> = ({ song, sound }) => {
     setDisplayTime(formattedProgressTime);
 
     // If the song has finished playing...
-    if (formattedProgressTime === formattedDurationTime) {
+    if (formattedProgressTime === formattedDurationTime && playbackTime > 0) {
       const currentIndex = songIds.indexOf(activeSongId);
 
       // store playback log

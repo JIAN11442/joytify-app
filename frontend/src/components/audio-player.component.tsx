@@ -48,7 +48,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
     if (songId && songPlayedRef.current && songPlayedRef.current !== songId) {
       // while song is playing and switch to another song,
       // record playback log before refetch new song data
-      if (sound.timestamp < sound.duration - 1) {
+      if (sound.timestamp < sound.duration - 1 && playbackTime > 0) {
         recordPlaybackLog({
           songId: songPlayedRef.current,
           duration: playbackTime,

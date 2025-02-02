@@ -5,15 +5,19 @@ import PlaybackStateOptions, {
 
 export type PlaybackStats = {
   duration: number;
-  timestamp: Date;
   state: PlaybackStateType;
+  timestamp: Date;
+};
+
+export type PlaybackSong = {
+  id: mongoose.Types.ObjectId;
+  artist: mongoose.Types.ObjectId;
+  playbacks: PlaybackStats[];
 };
 
 export interface PlaybackLogDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
-  song: mongoose.Types.ObjectId;
-  artist: mongoose.Types.ObjectId;
-  stats: PlaybackStats[];
+  songs: PlaybackSong[];
 }
 
 const playbackLogSchema = new mongoose.Schema<PlaybackLogDocument>(
@@ -24,31 +28,38 @@ const playbackLogSchema = new mongoose.Schema<PlaybackLogDocument>(
       index: true,
       required: true,
     },
-    song: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Song",
-      index: true,
-      required: true,
-    },
-    artist: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Musician",
-      index: true,
-      required: true,
-    },
-    stats: [
+    songs: [
       new mongoose.Schema(
         {
-          duration: { type: Number, required: true },
-          state: {
-            type: String,
-            enum: [
-              PlaybackStateOptions.COMPLETED,
-              PlaybackStateOptions.PLAYING,
-            ],
+          id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Song",
+            index: true,
             required: true,
           },
-          timestamp: { type: Date, required: true },
+          artist: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Musician",
+            index: true,
+            required: true,
+          },
+          playbacks: [
+            new mongoose.Schema(
+              {
+                duration: { type: Number, required: true },
+                state: {
+                  type: String,
+                  enum: [
+                    PlaybackStateOptions.COMPLETED,
+                    PlaybackStateOptions.PLAYING,
+                  ],
+                  required: true,
+                },
+                timestamp: { type: Date, required: true },
+              },
+              { _id: false }
+            ),
+          ],
         },
         { _id: false }
       ),
