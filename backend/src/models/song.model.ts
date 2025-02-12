@@ -7,6 +7,11 @@ import AlbumModel from "./album.model";
 import { updateArrRefToProp } from "../services/util.service";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
+type SongRating = {
+  id: mongoose.Types.ObjectId;
+  rating: number;
+};
+
 export interface SongDocument extends mongoose.Document {
   title: string;
   creator: mongoose.Types.ObjectId;
@@ -24,12 +29,13 @@ export interface SongDocument extends mongoose.Document {
   lyrics: string[]; // 歌詞 *
   releaseDate: Date; // 發行日期
   followers: mongoose.Types.ObjectId[];
+  ratings: SongRating[];
   activity: {
-    total_likes: number;
-    total_plays: number;
-    total_ratings: number;
+    total_rating_count: number;
     average_rating: number;
-    average_listening_duration: number;
+    total_playback_count: number;
+    total_playback_duration: number;
+    weighted_average_playback_duration: number;
   };
 }
 
@@ -93,12 +99,31 @@ const songSchema = new mongoose.Schema<SongDocument>(
       ref: "User",
       index: true,
     },
+    ratings: [
+      new mongoose.Schema(
+        {
+          id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            index: true,
+            required: true,
+          },
+          rating: {
+            type: Number,
+            min: 0,
+            max: 5,
+            default: 0,
+            required: true,
+          },
+        },
+        { _id: false, timestamps: true }
+      ),
+    ],
     activity: {
-      total_likes: { type: Number, default: 0 },
-      total_plays: { type: Number, default: 0 },
-      total_ratings: { type: Number, default: 0 },
       average_rating: { type: Number, default: 0 },
-      average_listening_duration: { type: Number, default: 0 },
+      total_playback_count: { type: Number, default: 0 },
+      total_playback_duration: { type: Number, default: 0 },
+      weighted_average_playback_duration: { type: Number, default: 0 },
     },
   },
   { timestamps: true }

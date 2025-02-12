@@ -1,12 +1,5 @@
 import { RequestHandler } from "express";
-import {
-  emailSchema,
-  firebaseAccessTokenSchema,
-  loginSchema,
-  registerSchema,
-  resetPasswordSchema,
-  verificationCodeSchema,
-} from "../schemas/auth.schema";
+
 import {
   createAccount,
   loginUser,
@@ -24,13 +17,21 @@ import {
   getRefreshTokenCookieOptions,
   setAuthCookies,
 } from "../utils/cookies.util";
-import { CREATED, OK, UNAUTHORIZED } from "../constants/http-code.constant";
 import appAssert from "../utils/app-assert.util";
+import {
+  emailZodSchema,
+  firebaseAccessTokenZodSchema,
+  loginZodSchema,
+  registerZodSchema,
+  resetPasswordZodSchema,
+} from "../schemas/auth.zod";
+import { objectIdZodSchema } from "../schemas/util.zod";
+import { CREATED, OK, UNAUTHORIZED } from "../constants/http-code.constant";
 
 // register handler
 export const registerHandler: RequestHandler = async (req, res, next) => {
   try {
-    const request = registerSchema.parse({
+    const request = registerZodSchema.parse({
       ...req.body,
       userAgent: req.headers["user-agent"],
     });
@@ -49,7 +50,7 @@ export const registerHandler: RequestHandler = async (req, res, next) => {
 export const verifyEmailHandler: RequestHandler = async (req, res, next) => {
   try {
     // verify verificationCode
-    const code = verificationCodeSchema.parse(req.params.code);
+    const code = objectIdZodSchema.parse(req.params.code);
 
     // verify email verified status
     await verifyEmail(code);
@@ -63,15 +64,12 @@ export const verifyEmailHandler: RequestHandler = async (req, res, next) => {
 // login handler
 export const loginHandler: RequestHandler = async (req, res, next) => {
   try {
-    const request = loginSchema.parse({
+    const request = loginZodSchema.parse({
       ...req.body,
       userAgent: req.headers["user-agent"],
     });
 
-    const { accessToken, refreshToken } = await loginUser({
-      ...request,
-      req,
-    });
+    const { accessToken, refreshToken } = await loginUser({ ...request, req });
 
     return setAuthCookies({ res, accessToken, refreshToken })
       .status(OK)
@@ -102,7 +100,7 @@ export const logoutHandler: RequestHandler = async (req, res, next) => {
 // forgot password handler
 export const forgotPasswordHandler: RequestHandler = async (req, res, next) => {
   try {
-    const email = emailSchema.parse(req.body.email);
+    const email = emailZodSchema.parse(req.body.email);
 
     // verify email and send reset password email
     await sendResetPasswordEmail(email);
@@ -116,7 +114,7 @@ export const forgotPasswordHandler: RequestHandler = async (req, res, next) => {
 // reset password handler
 export const resetPasswordHandler: RequestHandler = async (req, res, next) => {
   try {
-    const request = resetPasswordSchema.parse(req.body);
+    const request = resetPasswordZodSchema.parse(req.body);
 
     await resetUserPassword(request);
 
@@ -168,7 +166,9 @@ export const loginWithThirdPartyHandler: RequestHandler = async (
 ) => {
   try {
     // get firebase access token
-    const firebaseAccessToken = firebaseAccessTokenSchema.parse(req.body.token);
+    const firebaseAccessToken = firebaseAccessTokenZodSchema.parse(
+      req.body.token
+    );
 
     // verify that to get user info
     const { accessToken, refreshToken } = await loginUserWithThirdParty(
@@ -191,7 +191,9 @@ export const registerWithThirdPartyHandler: RequestHandler = async (
 ) => {
   try {
     // get firebase access token
-    const firebaseAccessToken = firebaseAccessTokenSchema.parse(req.body.token);
+    const firebaseAccessToken = firebaseAccessTokenZodSchema.parse(
+      req.body.token
+    );
 
     const { user, accessToken, refreshToken } =
       await registerUserWithThirdParty(firebaseAccessToken);

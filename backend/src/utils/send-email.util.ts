@@ -12,14 +12,14 @@ export const getEmailFrom = () => {
   return NODE_ENV === "development" ? "onboarding@resend.dev" : SENDER_EMAIL;
 };
 
-export const getEmailTo = (to: string) => {
-  return NODE_ENV === "development" ? "delivered@resend.dev" : to;
-};
+// export const getEmailTo = (to: string) => {
+//   return NODE_ENV === "development" ? "delivered@resend.dev" : to;
+// };
 
 const sendEmail = async ({ to, subject, text, html }: SendEmailParams) => {
   return await resend.emails.send({
     from: getEmailFrom(),
-    to: getEmailTo(to),
+    to,
     subject,
     text,
     html,

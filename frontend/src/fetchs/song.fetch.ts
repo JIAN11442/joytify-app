@@ -1,11 +1,13 @@
 import { nanoid } from "nanoid";
 
+import { getMusicianIds } from "./musician.fetch";
+import { uploadFileToAws } from "./aws.fetch";
+
 import { SongForm } from "../constants/form.constant";
 import { FileExtension, UploadFolder } from "../constants/aws.constant";
 import MusicianOptions from "../constants/musician.constant";
 import { ResSong } from "../constants/axios-response.constant";
-import { getMusicianIds } from "./musician.fetch";
-import { uploadFileToAws } from "./aws.fetch";
+
 import API from "../config/api-client.config";
 import getAudioDuration from "../utils/get-audio-duration.util";
 
@@ -84,3 +86,6 @@ export const createSongData = async (data: SongForm): Promise<ResSong> => {
 // get song by id
 export const getSongById = (id: string): Promise<ResSong> =>
   API.get(`/song/${id}`);
+
+// get all songs
+export const getAllSongs = (): Promise<ResSong[]> => API.get("/song/");

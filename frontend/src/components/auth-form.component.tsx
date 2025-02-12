@@ -121,7 +121,9 @@ const AuthForm = () => {
     next: React.RefObject<HTMLButtonElement> | AuthFormKeys,
     condition: string | boolean = e.currentTarget.value.length > 0
   ) => {
-    if (e.key === "Enter" && condition) {
+    if (e.key === "Tab" && condition) {
+      e.preventDefault();
+
       if (typeof next === "string") {
         setFocus(next);
       } else if (next?.current) {

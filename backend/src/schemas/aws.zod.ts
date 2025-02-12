@@ -10,13 +10,13 @@ import awsUrlParser from "../utils/aws-url-parser.util";
 const baseRootUrl = `https://${AWS_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com`;
 const fileRegex = /^[a-zA-Z0-9_-]{21}-\d{13}$/;
 
-export const awsSignedSchema = z.object({
+export const awsSignedZodSchema = z.object({
   subfolder: z.nativeEnum(UploadFolder).optional(),
   extension: z.nativeEnum(FileExtension).optional(),
   nanoID: z.string().length(21).optional(),
 });
 
-export const awsFileUrlSchema = z.string().refine((url) => {
+export const awsFileUrlZodSchema = z.string().refine((url) => {
   try {
     // parse AWS url to get each part of data
     const { rootPath, folderPath, file, extension } = awsUrlParser(url);

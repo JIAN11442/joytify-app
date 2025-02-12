@@ -1,9 +1,7 @@
 import { RequestHandler } from "express";
 
-import { verificationCodeSchema } from "../schemas/auth.schema";
-import { playlistSchema } from "../schemas/playlist.schema";
-import PlaylistModel from "../models/playlist.model";
 import SongModel from "../models/song.model";
+import PlaylistModel from "../models/playlist.model";
 
 import {
   createNewPlaylist,
@@ -17,13 +15,15 @@ import {
   INTERNAL_SERVER_ERROR,
   OK,
 } from "../constants/http-code.constant";
+import { objectIdZodSchema } from "../schemas/util.zod";
+import { playlistZodSchema } from "../schemas/playlist.zod";
 import appAssert from "../utils/app-assert.util";
 import parseParams from "../utils/parse-params.util";
 
 // get user all playlist handler
 export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
   try {
-    const userId = verificationCodeSchema.parse(req.userId);
+    const userId = objectIdZodSchema.parse(req.userId);
     const searchParams = parseParams(req.params.query);
 
     const { playlists } = await getUserPlaylists(userId, searchParams);
@@ -37,8 +37,8 @@ export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
 // create playlist handler
 export const createPlaylistHandler: RequestHandler = async (req, res, next) => {
   try {
-    const userId = verificationCodeSchema.parse(req.userId);
-    const { title } = playlistSchema.parse(req.body);
+    const userId = objectIdZodSchema.parse(req.userId);
+    const { title } = playlistZodSchema.parse(req.body);
 
     // create playlist
     const { playlist } = await createNewPlaylist({
@@ -59,8 +59,8 @@ export const getTargetPlaylistHandler: RequestHandler = async (
   next
 ) => {
   try {
-    const playlistId = verificationCodeSchema.parse(req.params.id);
-    const userId = verificationCodeSchema.parse(req.userId);
+    const playlistId = objectIdZodSchema.parse(req.params.id);
+    const userId = objectIdZodSchema.parse(req.userId);
 
     // get target playlist
     const { playlist } = await getUserPlaylistById(playlistId, userId);
@@ -74,9 +74,9 @@ export const getTargetPlaylistHandler: RequestHandler = async (
 // update playlist cover image handler
 export const updatePlaylistHandler: RequestHandler = async (req, res, next) => {
   try {
-    const playlistId = verificationCodeSchema.parse(req.params.id);
-    const userId = verificationCodeSchema.parse(req.userId);
-    const params = playlistSchema.parse(req.body);
+    const playlistId = objectIdZodSchema.parse(req.params.id);
+    const userId = objectIdZodSchema.parse(req.userId);
+    const params = playlistZodSchema.parse(req.body);
 
     // update playlist cover image
     const { playlist } = await updatePlaylistById({
@@ -94,8 +94,8 @@ export const updatePlaylistHandler: RequestHandler = async (req, res, next) => {
 // delete playlist handler
 export const deletePlaylistHandler: RequestHandler = async (req, res, next) => {
   try {
-    const userId = verificationCodeSchema.parse(req.userId);
-    const currentPlaylistId = verificationCodeSchema.parse(req.params.id);
+    const userId = objectIdZodSchema.parse(req.userId);
+    const currentPlaylistId = objectIdZodSchema.parse(req.params.id);
     const { targetPlaylistId } = req.body;
 
     const deletedPlaylist = await deletePlaylistById({
@@ -118,8 +118,8 @@ export const changePlaylistHiddenStateHandler: RequestHandler = async (
   next
 ) => {
   try {
-    const userId = verificationCodeSchema.parse(req.userId);
-    const playlistId = verificationCodeSchema.parse(req.params.id);
+    const userId = objectIdZodSchema.parse(req.userId);
+    const playlistId = objectIdZodSchema.parse(req.params.id);
     const { hiddenState } = req.body;
 
     const updatedPlaylist = await PlaylistModel.findOneAndUpdate(
@@ -147,8 +147,8 @@ export const addSongToPlaylistHandler: RequestHandler = async (
 ) => {
   try {
     const { playlistId, songId } = req.body;
-    const validatedPlaylistId = verificationCodeSchema.parse(playlistId);
-    const validatedSongId = verificationCodeSchema.parse(songId);
+    const validatedPlaylistId = objectIdZodSchema.parse(playlistId);
+    const validatedSongId = objectIdZodSchema.parse(songId);
 
     const updatedPlaylist = await PlaylistModel.findByIdAndUpdate(
       validatedPlaylistId,

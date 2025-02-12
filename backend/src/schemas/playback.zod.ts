@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { verificationCodeSchema } from "./auth.schema";
+import { objectIdZodSchema } from "./util.zod";
 import PlaybackStateOptions from "../constants/playback.constant";
 
-export const playbackLogSchema = z.object({
-  songId: verificationCodeSchema,
+export const playbackZodSchema = z.object({
+  songId: objectIdZodSchema,
   duration: z.number(),
   state: z.enum([PlaybackStateOptions.COMPLETED, PlaybackStateOptions.PLAYING]),
   timestamp: z.preprocess((arg) => {
@@ -13,4 +13,4 @@ export const playbackLogSchema = z.object({
   }, z.date()),
 });
 
-export type PlaybackLogSchemaType = z.infer<typeof playbackLogSchema>;
+export type playbackZodSchemaType = z.infer<typeof playbackZodSchema>;

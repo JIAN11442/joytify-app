@@ -1,13 +1,11 @@
 import { z } from "zod";
+import { objectIdZodSchema, stringZodSchema } from "./util.zod";
 
 // Warning messages
 const warningMsg = {
   passwordCharater: {
     message:
       "Password should be 6 to 20 characters long with a numeric, 1 lowercase and 1 uppercase letters",
-  },
-  verificationCodeCharater: {
-    message: "Verification code must be a 24 character of mongoose objectId",
   },
   sessionIdCharater: {
     message: "Session id must be a 24 character of mongoose objectId",
@@ -23,9 +21,9 @@ const warningMsg = {
 };
 
 // Items schema
-export const emailSchema = z.string().email().min(1).max(255);
+export const emailZodSchema = z.string().email().min(1).max(255);
 
-export const passwordSchema = z
+export const passwordZodSchema = z
   .string()
   .min(6, warningMsg.passwordCharater)
   .max(20, warningMsg.passwordCharater)
@@ -34,31 +32,25 @@ export const passwordSchema = z
     warningMsg.passwordCharater
   );
 
-export const verificationCodeSchema = z
-  .string()
-  .length(24, warningMsg.verificationCodeCharater);
-
 // Handler schema
-export const loginSchema = z.object({
-  email: emailSchema,
-  password: passwordSchema.optional(),
-  userAgent: z.string().optional(),
+export const loginZodSchema = z.object({
+  email: emailZodSchema,
+  password: passwordZodSchema.optional(),
+  userAgent: stringZodSchema.optional(),
 });
 
-export const registerSchema = loginSchema
-  .extend({
-    confirmPassword: passwordSchema,
-  })
+export const registerZodSchema = loginZodSchema
+  .extend({ confirmPassword: passwordZodSchema })
   .refine(
     (data) => data.password === data.confirmPassword,
     warningMsg.passwordIsNotMatch
   );
 
-export const resetPasswordSchema = z.object({
-  verificationCode: verificationCodeSchema,
-  password: passwordSchema,
+export const resetPasswordZodSchema = z.object({
+  verificationCode: objectIdZodSchema,
+  password: passwordZodSchema,
 });
 
-export const firebaseAccessTokenSchema = z
+export const firebaseAccessTokenZodSchema = z
   .string()
   .min(1, warningMsg.firebaseAccessTokenCharater);

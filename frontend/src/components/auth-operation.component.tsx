@@ -94,9 +94,9 @@ const AuthOperation = () => {
           <button onClick={handleLogoutUser} className={`menu-btn`}>
             logout
           </button>
-          <button className={`menu-btn`} onClick={handleDeregisterUser}>
+          {/* <button className={`menu-btn`} onClick={handleDeregisterUser}>
             deregister
-          </button>
+          </button> */}
         </AvatarMenu>
       ) : (
         // Sign up and login button

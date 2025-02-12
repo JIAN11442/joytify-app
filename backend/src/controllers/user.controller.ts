@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 
 import UserModel from "../models/user.model";
 import appAssert from "../utils/app-assert.util";
-import { verificationCodeSchema } from "../schemas/auth.schema";
+import { objectIdZodSchema } from "../schemas/util.zod";
 import {
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
@@ -13,7 +13,7 @@ import {
 export const getUserHandler: RequestHandler = async (req, res, next) => {
   try {
     // check user id
-    const userId = verificationCodeSchema.parse(req.userId);
+    const userId = objectIdZodSchema.parse(req.userId);
 
     // find user by id
     const user = await UserModel.findById(userId);
@@ -29,7 +29,7 @@ export const getUserHandler: RequestHandler = async (req, res, next) => {
 // deregister user handler
 export const deregisterUserHandler: RequestHandler = async (req, res, next) => {
   try {
-    const userId = verificationCodeSchema.parse(req.userId);
+    const userId = objectIdZodSchema.parse(req.userId);
     const deletedUser = await UserModel.findByIdAndDelete(userId);
 
     appAssert(

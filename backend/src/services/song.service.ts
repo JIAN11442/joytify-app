@@ -1,5 +1,7 @@
 import SongModel from "../models/song.model";
-import { SongSchemaType } from "../schemas/song.schema";
+import { getTotalPlaybackDurationAndCount } from "./playback.service";
+
+import { SongZodSchemaType } from "../schemas/song.zod";
 import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
@@ -7,10 +9,11 @@ import {
 } from "../constants/http-code.constant";
 import ErrorCode from "../constants/error-code.constant";
 import appAssert from "../utils/app-assert.util";
+import { parseToFloat } from "../utils/parse-float.util";
 
 type CreateParams = {
   userId: string;
-  songInfo: SongSchemaType;
+  songInfo: SongZodSchemaType;
 };
 
 type DeleteParams = {
@@ -21,7 +24,7 @@ type DeleteParams = {
 type AppAssertParams = [
   errorCode?: ErrorCode,
   firebaseUID?: string | null,
-  awsUrl?: string[] | null
+  awsUrl?: string[] | null,
 ];
 
 // create new song
@@ -74,6 +77,31 @@ export const getSongById = async (id: string) => {
   // const generateSong = { ...song.toObject(), paletee };
 
   return { song };
+};
+
+// re-calculate target song's total duration, total count and average duration
+export const refreshSongPlaybackStats = async (songId: string) => {
+  const { totalDuration, totalCount, weightedAvgDuration } =
+    await getTotalPlaybackDurationAndCount(songId);
+
+  const updatedSong = await SongModel.findByIdAndUpdate(
+    songId,
+    {
+      "activity.total_playback_count": totalCount,
+      "activity.total_playback_duration": parseToFloat(totalDuration),
+      "activity.weighted_average_playback_duration":
+        parseToFloat(weightedAvgDuration),
+    },
+    { new: true }
+  );
+
+  appAssert(
+    updatedSong,
+    INTERNAL_SERVER_ERROR,
+    "Failed to update song's activity"
+  );
+
+  return { updatedSong };
 };
 
 // delete song by id

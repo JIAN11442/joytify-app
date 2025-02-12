@@ -38,7 +38,7 @@ app.use(firebaseInitialize());
 app.use("/auth", authRoute);
 app.use("/user", authenticate, userRoute);
 app.use("/aws", awsRoute);
-app.use("/song", authenticate, songRoute);
+app.use("/song", songRoute);
 app.use("/playlist", authenticate, playlistRoute);
 app.use("/label", authenticate, labelRoute);
 app.use("/musician", authenticate, musicianRoute);

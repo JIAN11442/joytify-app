@@ -4,8 +4,8 @@ import {
   createOrUpdatePlaybackLog,
   getAllPlaybackLogs,
 } from "../services/playback.service";
-import { verificationCodeSchema } from "../schemas/auth.schema";
-import { playbackLogSchema } from "../schemas/playback.schema";
+import { objectIdZodSchema } from "../schemas/util.zod";
+import { playbackZodSchema } from "../schemas/playback.zod";
 import { OK } from "../constants/http-code.constant";
 
 // store playback log handler
@@ -15,8 +15,8 @@ export const storePlaybackLogHandler: RequestHandler = async (
   next
 ) => {
   try {
-    const userId = verificationCodeSchema.parse(req.userId);
-    const params = playbackLogSchema.parse(req.body);
+    const userId = objectIdZodSchema.parse(req.userId);
+    const params = playbackZodSchema.parse(req.body);
 
     const { playbackLog } = await createOrUpdatePlaybackLog({
       userId,

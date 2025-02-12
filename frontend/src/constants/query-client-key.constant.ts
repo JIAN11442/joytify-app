@@ -28,4 +28,5 @@ export enum QueryKey {
   GET_SONG_BY_ID = "get-song-by-id",
   GET_ALL_LABELS = "get-all-labels",
   GET_USER_ALBUMS = "get-user-albums",
+  GET_ALL_SONGS = "get-all-songs",
 }

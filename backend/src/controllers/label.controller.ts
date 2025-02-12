@@ -1,25 +1,24 @@
 import { RequestHandler } from "express";
 
-import { labelSchema, labelsSchema } from "../schemas/label.schema";
-import { verificationCodeSchema } from "../schemas/auth.schema";
-
-import {
-  CREATED,
-  INTERNAL_SERVER_ERROR,
-  OK,
-} from "../constants/http-code.constant";
 import {
   createLabel,
   deleteLabel,
   getDefaultAndCreatedLabel,
   getLabelId,
 } from "../services/label.service";
+import {
+  CREATED,
+  INTERNAL_SERVER_ERROR,
+  OK,
+} from "../constants/http-code.constant";
+import { objectIdZodSchema } from "../schemas/util.zod";
+import { labelZodSchema, labelsZodSchema } from "../schemas/label.zod";
 import appAssert from "../utils/app-assert.util";
 
 // get all labels handler
 export const getUserLabelsHandler: RequestHandler = async (req, res, next) => {
   try {
-    const userId = verificationCodeSchema.parse(req.userId);
+    const userId = objectIdZodSchema.parse(req.userId);
 
     const { labels } = await getDefaultAndCreatedLabel(userId);
 
@@ -38,8 +37,8 @@ export const getUserLabelsHandler: RequestHandler = async (req, res, next) => {
 // create label handler
 export const createLabelHandler: RequestHandler = async (req, res, next) => {
   try {
-    const userId = verificationCodeSchema.parse(req.userId);
-    const { label, type } = labelSchema.parse(req.body);
+    const userId = objectIdZodSchema.parse(req.userId);
+    const { label, type } = labelZodSchema.parse(req.body);
 
     const { createdLabel } = await createLabel({ userId, label, type });
 
@@ -52,8 +51,8 @@ export const createLabelHandler: RequestHandler = async (req, res, next) => {
 // get label ID handler
 export const getLabelIdsHandler: RequestHandler = async (req, res, next) => {
   try {
-    const userId = verificationCodeSchema.parse(req.userId);
-    const { labels, type, createIfAbsent } = labelsSchema.parse(req.body);
+    const userId = objectIdZodSchema.parse(req.userId);
+    const { labels, type, createIfAbsent } = labelsZodSchema.parse(req.body);
 
     const labelIds = await Promise.all(
       labels?.map(async (label) => {
@@ -77,8 +76,8 @@ export const getLabelIdsHandler: RequestHandler = async (req, res, next) => {
 // delete label handler
 export const deleteLabelHandler: RequestHandler = async (req, res, next) => {
   try {
-    const userId = verificationCodeSchema.parse(req.userId);
-    const id = verificationCodeSchema.parse(req.params.id);
+    const userId = objectIdZodSchema.parse(req.userId);
+    const id = objectIdZodSchema.parse(req.params.id);
 
     const { deletedLabel } = await deleteLabel({ userId, id });
 

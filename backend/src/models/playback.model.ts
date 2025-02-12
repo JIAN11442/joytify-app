@@ -1,7 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { UpdateQuery } from "mongoose";
 import PlaybackStateOptions, {
   PlaybackStateType,
 } from "../constants/playback.constant";
+import { getTotalPlaybackDurationAndCount } from "../services/playback.service";
+import { refreshSongPlaybackStats } from "../services/song.service";
 
 export type PlaybackStats = {
   duration: number;
@@ -15,12 +17,12 @@ export type PlaybackSong = {
   playbacks: PlaybackStats[];
 };
 
-export interface PlaybackLogDocument extends mongoose.Document {
+export interface PlaybackDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
   songs: PlaybackSong[];
 }
 
-const playbackLogSchema = new mongoose.Schema<PlaybackLogDocument>(
+const playbackSchema = new mongoose.Schema<PlaybackDocument>(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -68,9 +70,45 @@ const playbackLogSchema = new mongoose.Schema<PlaybackLogDocument>(
   { timestamps: true }
 );
 
-const PlaybackLogModel = mongoose.model<PlaybackLogDocument>(
+// after save playback, ...
+playbackSchema.post("save", async function (doc) {
+  try {
+    const songId = doc.songs[0].id;
+
+    if (songId && !this.isModified("songs")) {
+      await refreshSongPlaybackStats(songId.toString());
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// after created playback, ...
+playbackSchema.post("findOneAndUpdate", async function (doc) {
+  try {
+    if (doc) {
+      const query = this.getQuery();
+      const update = this.getUpdate() as UpdateQuery<PlaybackDocument>;
+
+      const songId =
+        query.songs && query.songs.$elemMatch
+          ? query.songs.$elemMatch.id
+          : update && update.$push && update.$push.songs
+            ? update.$push.songs.id
+            : null;
+
+      if (songId !== null) {
+        await refreshSongPlaybackStats(songId.toString());
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+const PlaybackModel = mongoose.model<PlaybackDocument>(
   "Playback",
-  playbackLogSchema
+  playbackSchema
 );
 
-export default PlaybackLogModel;
+export default PlaybackModel;

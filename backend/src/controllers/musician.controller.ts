@@ -1,12 +1,14 @@
 import { RequestHandler } from "express";
-import { musicianSchema } from "../schemas/musician.schema";
 import { getMusicianId } from "../services/musician.service";
+import { musicianZodSchema } from "../schemas/musician.zod";
 import { OK } from "../constants/http-code.constant";
 
 // get musicians ID handler
 export const getMusicianIdsHandler: RequestHandler = async (req, res, next) => {
   try {
-    const { musicians, type, createIfAbsent } = musicianSchema.parse(req.body);
+    const { musicians, type, createIfAbsent } = musicianZodSchema.parse(
+      req.body
+    );
 
     const musicianIds = await Promise.all(
       musicians?.map(async (musician) => {

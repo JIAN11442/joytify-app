@@ -5,7 +5,7 @@ import {
   INTERNAL_SERVER_ERROR,
   OK,
 } from "../constants/http-code.constant";
-import { awsFileUrlSchema, awsSignedSchema } from "../schemas/aws.schema";
+import { awsFileUrlZodSchema, awsSignedZodSchema } from "../schemas/aws.zod";
 
 import appAssert from "../utils/app-assert.util";
 import awsUrlParser from "../utils/aws-url-parser.util";
@@ -18,7 +18,7 @@ export const getAwsSignedUrlHandler: RequestHandler = async (
   next
 ) => {
   try {
-    const { subfolder, extension, nanoID } = awsSignedSchema.parse(req.body);
+    const { subfolder, extension, nanoID } = awsSignedZodSchema.parse(req.body);
 
     // Generate signed URL and return it to the client
     generateUploadUrl({ subfolder, extension, nanoID })
@@ -39,7 +39,7 @@ export const deleteAwsFileUrlHandler: RequestHandler = async (
 ) => {
   try {
     const { awsUrl } = req.body;
-    const validatedAwsUrl = awsFileUrlSchema.parse(awsUrl);
+    const validatedAwsUrl = awsFileUrlZodSchema.parse(awsUrl);
 
     // get AWS S3 key
     const { awsS3Key } = awsUrlParser(validatedAwsUrl);

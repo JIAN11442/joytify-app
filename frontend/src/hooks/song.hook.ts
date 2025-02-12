@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { QueryKey } from "../constants/query-client-key.constant";
-import { getSongById } from "../fetchs/song.fetch";
+import { getAllSongs, getSongById } from "../fetchs/song.fetch";
 import useSoundState from "../states/sound.state";
 import mergeProperties from "../lib/merge-labels.lib";
 
@@ -46,4 +46,39 @@ export const useSongById = (id: string, opts: object = {}) => {
   }, [song]);
 
   return { song, ...rest };
+};
+
+export const useAllSongs = (opts: object = {}) => {
+  const [isQueryError, setIsQueryError] = useState(false);
+
+  const { data: songs, ...rest } = useQuery({
+    queryKey: [QueryKey.GET_ALL_SONGS],
+    queryFn: async () => {
+      try {
+        const songs = await getAllSongs();
+
+        const generateSongs = songs.map((song) => {
+          return {
+            ...song,
+            artist: mergeProperties(song.artist, "name"),
+            lyricists: mergeProperties(song.lyricists, "name"),
+            composers: mergeProperties(song.composers, "name"),
+            languages: mergeProperties(song.languages, "label"),
+            album: song.album?.title || "",
+          };
+        });
+
+        return generateSongs;
+      } catch (error) {
+        if (error) {
+          setIsQueryError(true);
+        }
+      }
+    },
+    staleTime: Infinity,
+    enabled: !isQueryError,
+    ...opts,
+  });
+
+  return { songs, ...rest };
 };

@@ -80,11 +80,12 @@ export type ResSong = {
   lyrics: string[];
   playlist_for: string[];
   followers: string[];
+  ratings: { id: string; rating: number }[];
   activity: {
-    total_likes: number;
-    total_plays: number;
     average_rating: number;
-    average_listening_duration: number;
+    total_playback_count: number;
+    total_playback_duration: number;
+    weighted_average_playback_duration: number;
   };
   paletee: HexPaletee;
   createdAt: string;
