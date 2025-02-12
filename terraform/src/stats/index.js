@@ -1,22 +1,29 @@
-const { MongoClient } = require("mongodb");
-const {
-  calculatePlaybackStatistics,
+import aws from "aws-sdk";
+import { MongoClient } from "mongodb";
+import {
+  sendSnsNotification,
   moveCollectionPlaybacks,
-} = require("./service");
+  calculatePlaybackStatistics,
+} from "./service.js";
 
-exports.handler = async (event) => {
-  const { MONGODB_CONNECTION_STRING } = process.env;
+export const handler = async (event) => {
+  let client;
 
-  const uri = MONGODB_CONNECTION_STRING;
-  const client = new MongoClient(uri);
+  const uri = process.env.MONGODB_CONNECTION_STRING;
+  const snsTopicArn = process.env.SNS_TOPIC_ARN;
+
+  const sns = new aws.SNS();
+  const defaultMsg = { sns, snsTopicArn };
 
   try {
+    client = new MongoClient(uri);
+
     await client.connect();
 
     const db = client.db("mern-joytify");
     const playbackCollection = db.collection("playbacks");
     const statsCollection = db.collection("stats");
-    const historyCollection = db.collection("history");
+    const historyCollection = db.collection("histories");
 
     const playbacks = await playbackCollection.find({}).toArray();
 
@@ -26,8 +33,12 @@ exports.handler = async (event) => {
 
         const userQuery = { user: playback.user };
         const userStats = await statsCollection.findOne(userQuery);
+
         const { songStats, artistStats, peakHourStats } =
-          calculatePlaybackStatistics(playback);
+          await calculatePlaybackStatistics({
+            collection: playbackCollection,
+            userId: playback.user,
+          });
 
         const statsResult = {
           songs: songStats,
@@ -63,14 +74,28 @@ exports.handler = async (event) => {
           playbackCollection,
           historyCollection
         );
+
         console.log(`${playback.user} stats successfully`);
       }
     } else {
       console.log("Playbacks collection is empty");
       return;
     }
+
+    await sendSnsNotification({
+      ...defaultMsg,
+      status: "success",
+      detail: "Stats Lambda executed successfully",
+    });
   } catch (error) {
-    console.log(error);
+    await sendSnsNotification({
+      ...defaultMsg,
+      status: "failure",
+      detail: error.message,
+    });
+
+    console.log("error:", error);
+
     throw new Error(error);
   } finally {
     await client.close();
