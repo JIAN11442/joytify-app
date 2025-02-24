@@ -5,18 +5,19 @@ import { UserDocument } from "../models/user.model";
 import {
   ACCESS_SECRET_KEY,
   REFRESH_SECRET_KEY,
+  VERIFICATION_SECRET_KEY,
 } from "../constants/env-validate.constant";
 
-// default options type
+// ===================== Defaults =====================
 const defaults: SignOptions = {
   audience: ["user"],
 };
 
-// custom options type
+// ===================== Types =====================
 type SignOptionsAndSecret = SignOptions & { secret: string };
 type VerifyOptionsAndSecret = VerifyOptions & { secret: string };
 
-// Payload
+// ===================== Payload =====================
 export interface RefreshTokenPayload {
   sessionId: SessionDocument["_id"];
 }
@@ -26,7 +27,11 @@ export interface AccessTokenPayload extends RefreshTokenPayload {
   firebaseUserId: string;
 }
 
-// Options
+export interface VerificationTokenPayload {
+  sessionId: string;
+}
+
+// ===================== Options =====================
 export const AccessTokenSignOptions: SignOptionsAndSecret = {
   ...defaults,
   expiresIn: "15m",
@@ -39,9 +44,15 @@ export const RefreshTokenSignOptions: SignOptionsAndSecret = {
   secret: REFRESH_SECRET_KEY,
 };
 
-// sign token
+export const VerificationTokenSignOptions: SignOptionsAndSecret = {
+  ...defaults,
+  expiresIn: "10m",
+  secret: VERIFICATION_SECRET_KEY,
+};
+
+// ===================== Sign and Verify =====================
 export const signToken = (
-  payload: AccessTokenPayload | RefreshTokenPayload,
+  payload: AccessTokenPayload | RefreshTokenPayload | VerificationTokenPayload,
   options: SignOptionsAndSecret
 ) => {
   const { secret, ...signOpts } = options;
@@ -49,18 +60,20 @@ export const signToken = (
   return jwt.sign(payload, secret, signOpts);
 };
 
-// verify token
 export const verifyToken = async <TPayload extends object = AccessTokenPayload>(
-  token: string,
+  token: string | undefined,
   options: VerifyOptionsAndSecret
 ) => {
   try {
+    let payload;
     const { secret = ACCESS_SECRET_KEY, ...verifyOpts } = options;
 
-    const payload = jwt.verify(token, secret, {
-      ...defaults,
-      ...verifyOpts,
-    }) as TPayload;
+    if (token) {
+      payload = jwt.verify(token, secret, {
+        ...defaults,
+        ...verifyOpts,
+      }) as TPayload;
+    }
 
     return { payload };
   } catch (error: any) {

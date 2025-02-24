@@ -31,6 +31,7 @@ body,
     text-sm
     text-grey-custom/80
     placeholder:text-grey-custom/30
+    disabled:text-grey-custom/30
     rounded-md
     outline-none
     file:hidden;
@@ -42,6 +43,9 @@ body,
     -translate-y-1/2 
     top-1/2
     text-grey-custom/50
+    hover:text-grey-custom
+    disabled:text-grey-custom/30
+    disabled:hover:text-grey-custom/30
     outline-none;
   }
 
@@ -90,11 +94,13 @@ body,
     p-3
     bg-green-custom
     hover:opacity-80
-    disabled:bg-[#404040]
-    disabled:text-neutral-500
     border
     border-green-custom/50
-    disabled:border-neutral-600
+    disabled:opacity-80
+    disabled:hover:opacity-80
+    disabled:bg-neutral-700/50
+    disabled:text-neutral-500
+    disabled:border-grey-custom/10
     rounded-sm
     transition;
   }
@@ -153,6 +159,9 @@ body,
     border-grey-custom/10
     hover:bg-grey-custom/10
     text-sm
+    disabled:opacity-50
+    disabled:bg-neutral-700/50
+    disabled:pointer-events-none
     capitalize
     rounded-md
     transition;
@@ -162,7 +171,7 @@ body,
     @apply text-grey-custom/50 hover:text-white transition;
   }
 
-  .separate-line {
+  .divider {
     @apply flex
     my-5
     w-full
@@ -176,6 +185,21 @@ body,
   /* Input slider*/
   .slider-time {
     @apply text-[14px] text-grey-custom/50 font-inter;
+  }
+
+  /* verification code input */
+  .verification-input {
+    @apply w-16
+    h-16
+    text-3xl
+    text-center
+    uppercase
+    border
+    border-gray-500
+    outline-none
+    caret-transparent
+    focus:ring-1
+    rounded-md;
   }
 
   .input-slider {

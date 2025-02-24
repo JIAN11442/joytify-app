@@ -15,6 +15,11 @@ import Loader from "./loader.component";
 import InputBox from "./input-box.component";
 
 import { authWithThirdParty, signin, signup } from "../fetchs/auth.fetch";
+import {
+  sendVerificationCode,
+  SendCodeParams,
+} from "../fetchs/verification-code.fetch";
+import useAuth from "../hooks/auth.hook";
 import AuthForOptions from "../constants/auth.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
 import {
@@ -22,10 +27,12 @@ import {
   defaultLoginData,
   defaultRegisterData,
 } from "../constants/form.constant";
-import type { AuthForm } from "../constants/form.constant";
 import FirebaseProvider from "../constants/firebase-provider.constant";
+import type { AuthForm } from "../constants/form.constant";
+import { AppError, ErrorCode } from "../constants/error.constant";
+
 import useAuthModalState from "../states/auth-modal.state";
-import useAuth from "../hooks/auth.hook";
+import useVerificationCodeModalState from "../states/verification-code.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const AuthForm = () => {
@@ -35,14 +42,16 @@ const AuthForm = () => {
 
   const { refetch: authRefetch } = useAuth();
   const { authFor, openAuthModal, closeAuthModal } = useAuthModalState();
+  const {
+    openVerificationCodeModal,
+    setVerificationProcessPending,
+    verificationProcessPending,
+  } = useVerificationCodeModalState();
 
-  const SIGN_IN = AuthForOptions.SIGN_IN;
-  const SIGN_UP = AuthForOptions.SIGN_UP;
+  const { SIGN_IN, SIGN_UP } = AuthForOptions;
 
-  // redirect path
   const redirectPath = location.state?.redirectUrl || "/";
 
-  // third-party submit text
   const thirdPartySubmitText =
     authFor === SIGN_IN ? "Continue" : authFor.replace("-", " ");
 
@@ -51,8 +60,39 @@ const AuthForm = () => {
 
   const authFunc = authFor === SIGN_IN ? signin : signup;
 
+  // send verification code mutation
+  const { mutate: sendVerificationCodeToUser } = useMutation({
+    mutationKey: [MutationKey.SEND_VERIFICATION_CODE],
+    mutationFn: async (data: SendCodeParams) => {
+      const { email, registerFn } = data;
+
+      setVerificationProcessPending(true);
+
+      return sendVerificationCode(data).then((res) => {
+        const { id, action } = res;
+
+        if (id) {
+          openVerificationCodeModal(email, action, registerFn);
+        }
+      });
+    },
+    onSuccess: () => {
+      toast.success("Verification code sent successfully");
+    },
+    onError: (error) => {
+      if (
+        (error as AppError).errorCode ===
+        ErrorCode.VerificationCodeRateLimitExceeded
+      ) {
+        toast.error("You've made too many requests, please try again later");
+      } else {
+        toast.error(error.message);
+      }
+    },
+  });
+
   // auth mutation (through email and password)
-  const { mutate: authUser, isPending } = useMutation({
+  const { mutate: authUser, isPending: authPending } = useMutation({
     mutationKey: [mutationKey],
     mutationFn: authFunc,
     onSuccess: () => {
@@ -118,16 +158,27 @@ const AuthForm = () => {
   // handle input onKeyDown
   const handleMoveToNextElement = (
     e: React.KeyboardEvent<HTMLInputElement>,
+    prev: React.RefObject<HTMLButtonElement> | AuthFormKeys,
     next: React.RefObject<HTMLButtonElement> | AuthFormKeys,
     condition: string | boolean = e.currentTarget.value.length > 0
   ) => {
     if (e.key === "Tab" && condition) {
       e.preventDefault();
 
-      if (typeof next === "string") {
-        setFocus(next);
-      } else if (next?.current) {
-        next.current.focus();
+      if (e.shiftKey) {
+        // Handle Shift + Tab
+        if (typeof prev === "string") {
+          setFocus(prev);
+        } else if (prev?.current) {
+          prev.current.focus();
+        }
+      } else {
+        // Handle Tab
+        if (typeof next === "string") {
+          setFocus(next);
+        } else if (next?.current) {
+          next.current.focus();
+        }
       }
     }
   };
@@ -152,9 +203,22 @@ const AuthForm = () => {
   // watch password value(for validate comfirm password)
   const formPasswordVal = watch("password");
 
+  // disable edit
+  const disabledEdit = verificationProcessPending || authPending;
+
   // handle form submit
   const onSubmit: SubmitHandler<AuthForm> = async (value) => {
-    authUser(value);
+    const { email } = value;
+
+    if (authFor === SIGN_IN) {
+      authUser(value);
+    } else {
+      sendVerificationCodeToUser({
+        email,
+        shouldResendCode: false,
+        registerFn: () => authUser(value),
+      });
+    }
   };
 
   return (
@@ -177,6 +241,7 @@ const AuthForm = () => {
         {/* Google */}
         <button
           type="button"
+          disabled={disabledEdit}
           onClick={() => handleAuthWithThirdParty(FirebaseProvider.GOOGLE)}
           className={`third-party-btn`}
         >
@@ -193,6 +258,7 @@ const AuthForm = () => {
         {/* Github */}
         <button
           type="button"
+          disabled={disabledEdit}
           onClick={() => handleAuthWithThirdParty(FirebaseProvider.GITHUB)}
           className={`third-party-btn`}
         >
@@ -217,7 +283,7 @@ const AuthForm = () => {
           gap-2
         `}
       >
-        <hr className={`separate-line`} />
+        <hr className={`divider`} />
         <p
           className={`
             text-sm
@@ -226,7 +292,7 @@ const AuthForm = () => {
         >
           OR
         </p>
-        <hr className={`separate-line`} />
+        <hr className={`divider`} />
       </div>
 
       {/* Email */}
@@ -250,7 +316,8 @@ const AuthForm = () => {
           type="email"
           placeholder="Your email address"
           icon={{ name: MdAlternateEmail }}
-          onKeyDown={(e) => handleMoveToNextElement(e, "password")}
+          disabled={disabledEdit}
+          onKeyDown={(e) => handleMoveToNextElement(e, "email", "password")}
           {...register("email", { required: true })}
         />
       </div>
@@ -276,9 +343,11 @@ const AuthForm = () => {
           type="password"
           placeholder="Your Password"
           icon={{ name: IoKey }}
+          disabled={disabledEdit}
           onKeyDown={(e) =>
             handleMoveToNextElement(
               e,
+              "email",
               authFor === SIGN_IN ? submitBtnRef : "confirmPassword"
             )
           }
@@ -342,9 +411,11 @@ const AuthForm = () => {
               type="password"
               placeholder="Confirm Password"
               icon={{ name: IoKey }}
+              disabled={disabledEdit}
               onKeyDown={(e) =>
                 handleMoveToNextElement(
                   e,
+                  "password",
                   submitBtnRef,
                   e.currentTarget.value === formPasswordVal
                 )
@@ -365,7 +436,7 @@ const AuthForm = () => {
       {/* Submit button */}
       <button
         ref={submitBtnRef}
-        disabled={!isValid || isPending}
+        disabled={!isValid || disabledEdit}
         className={`
           mt-2
           submit-btn
@@ -375,7 +446,7 @@ const AuthForm = () => {
           rounded-full
         `}
       >
-        {isPending ? (
+        {disabledEdit ? (
           <Loader loader={{ size: 20 }} />
         ) : (
           authFor.replace("-", " ")
@@ -385,10 +456,10 @@ const AuthForm = () => {
       {/* Navigate link */}
       <p
         className={`
-            text-sm
-            text-neutral-600
-            text-center
-          `}
+          text-sm
+          text-neutral-600
+          text-center
+        `}
       >
         {authFor === SIGN_IN
           ? "Don't have an account?"
@@ -396,11 +467,13 @@ const AuthForm = () => {
 
         <button
           onClick={handleSwitchAuthModal}
+          disabled={disabledEdit}
           className={`
-              ml-2
-              text-green-custom
-              underline
-            `}
+            ml-2
+            text-green-custom
+            underline
+            disabled:text-neutral-500
+          `}
         >
           {authFor === SIGN_IN ? "Sign up" : "Sign in"}
         </button>

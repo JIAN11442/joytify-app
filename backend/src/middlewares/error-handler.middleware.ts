@@ -5,11 +5,13 @@ import {
   BAD_REQUEST,
   INTERNAL_SERVER_ERROR,
 } from "../constants/http-code.constant";
+import ErrorCode from "../constants/error-code.constant";
+
 import AppError from "../utils/app-error.util";
+import awsUrlParser from "../utils/aws-url-parser.util";
+import { deleteAwsFileUrl } from "../utils/aws-s3-url.util";
 import { clearAuthCookies, cookiePath } from "../utils/cookies.util";
 import admin from "../config/firebase.config";
-import { deleteAwsFileUrl } from "../utils/aws-s3-url.util";
-import awsUrlParser from "../utils/aws-url-parser.util";
 
 const errorHandler = (): ErrorRequestHandler => {
   return async (error, req, res, next) => {
@@ -42,14 +44,17 @@ const errorHandler = (): ErrorRequestHandler => {
     if (error instanceof AppError) {
       // If firebase auth with third-party provider fails, delete the firebase user
       // to avoid another provider with the same email can't auth again
-      if (error.errorCode === "InvalidFirebaseCredential") {
+      if (error.errorCode === ErrorCode.InvalidFirebaseCredential) {
         if (error.firebaseUID) {
           await admin.auth().deleteUser(error.firebaseUID);
         }
       }
 
       // if get error from create song API, delete url file from AWS
-      if (error.errorCode === "CreateSongError" && error.awsUrl?.length) {
+      if (
+        error.errorCode === ErrorCode.CreateSongError &&
+        error.awsUrl?.length
+      ) {
         const urls = error.awsUrl;
 
         for (const url of urls) {

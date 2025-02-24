@@ -1,12 +1,14 @@
 import { forwardRef, memo, useEffect, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import { IoMdClose } from "react-icons/io";
 
 import Icon from "./react-icons.component";
 
-import { timeoutForEventListener } from "../lib/timeout.lib";
+import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import mergeRefs from "../lib/merge-refs.lib";
+import Loader from "./loader.component";
 
 type ModalProps = {
   title?: string;
@@ -22,6 +24,8 @@ type ModalProps = {
     description?: string;
   };
   autoCloseModalFn?: boolean;
+  switchPage?: { initialPage: string; currentPage: string };
+  loading?: boolean;
 };
 
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
@@ -37,10 +41,22 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       className,
       tw,
       autoCloseModalFn = true,
+      switchPage,
+      loading = false,
     },
     ref
   ) => {
     const modalRef = useRef<HTMLDivElement>(null);
+
+    const { initialPage, currentPage } = switchPage || {};
+
+    const direction = currentPage === initialPage ? -1 : 1;
+
+    const handleCloseModal = () => {
+      timeoutForDelay(() => {
+        closeModalFn();
+      });
+    };
 
     // auto close modal while click outside
     useEffect(() => {
@@ -56,6 +72,46 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
 
       return timeoutForEventListener(document, "click", handleModalOnBlur);
     }, [autoCloseModalFn, modalRef]);
+
+    const modalContent = (
+      <>
+        {/* Title */}
+        <Dialog.Title
+          className={twMerge(
+            `
+              mb-4
+              text-2xl
+              font-bold
+              text-center
+              ${title ? "block" : "hidden"}
+            `,
+            tw?.title
+          )}
+        >
+          {title}
+        </Dialog.Title>
+
+        {/* Description */}
+        <Dialog.Description
+          className={twMerge(
+            `
+              mb-5
+              text-sm
+              font-light
+              text-[#22c55e]
+              text-center
+              ${description ? "block" : "hidden"}
+            `,
+            tw?.description
+          )}
+        >
+          {description}
+        </Dialog.Description>
+
+        {/* Content */}
+        <div>{children}</div>
+      </>
+    );
 
     return (
       <Dialog.Root
@@ -85,58 +141,59 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               sm:min-w-[500px]
               sm:max-w-[90vw]
               h-auto
+              min-h-[300px]
               max-h-[90vh]
-              overflow-y-auto
               p-[25px]
               border
               border-neutral-700
               bg-neutral-800 
               rounded-md
               outline-none
+              overflow-hidden
             `,
               className
             )}
           >
-            {/* Title */}
-            <Dialog.Title
-              className={twMerge(
-                `
-                  mb-4
-                  text-2xl
-                  font-bold
-                  text-center
-                  ${title ? "block" : "hidden"}
-                `,
-                tw?.title
+            <>
+              {loading && (
+                <div
+                  className={`
+                    absolute
+                    inset-0
+                    flex
+                    items-center
+                    justify-center
+                    z-10
+                    bg-neutral-900/50
+                  `}
+                >
+                  <Loader />
+                </div>
               )}
-            >
-              {title}
-            </Dialog.Title>
+            </>
 
-            {/* Description */}
-            <Dialog.Description
-              className={twMerge(
-                `
-                  mb-5
-                  text-sm
-                  font-light
-                  text-[#22c55e]
-                  text-center
-                  ${description ? "block" : "hidden"}
-                `,
-                tw?.description
+            <>
+              {switchPage ? (
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={switchPage.currentPage}
+                    initial={{ x: direction * 50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: direction * 50, opacity: 0 }}
+                    transition={{ type: "tween", duration: 0.1 }}
+                  >
+                    {modalContent}
+                  </motion.div>
+                </AnimatePresence>
+              ) : (
+                modalContent
               )}
-            >
-              {description}
-            </Dialog.Description>
-
-            {/* Content */}
-            <div>{children}</div>
+            </>
 
             {/* Close button */}
             <Dialog.Close asChild>
               <button
-                onClick={closeModalFn}
+                onClick={handleCloseModal}
                 disabled={closeBtnDisabled}
                 className={`
                   absolute
@@ -144,7 +201,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                   top-5
                   right-5
                   hover-btn
-                  ${closeBtnDisabled && "no-hover"}
+                  ${closeBtnDisabled && "no-hover hidden"}
                 `}
               >
                 <Icon

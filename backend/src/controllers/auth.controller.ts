@@ -19,13 +19,12 @@ import {
 } from "../utils/cookies.util";
 import appAssert from "../utils/app-assert.util";
 import {
-  emailZodSchema,
   firebaseAccessTokenZodSchema,
   loginZodSchema,
   registerZodSchema,
   resetPasswordZodSchema,
 } from "../schemas/auth.zod";
-import { objectIdZodSchema } from "../schemas/util.zod";
+import { emailZodSchema, objectIdZodSchema } from "../schemas/util.zod";
 import { CREATED, OK, UNAUTHORIZED } from "../constants/http-code.constant";
 
 // register handler
@@ -133,9 +132,8 @@ export const refreshTokensHandler: RequestHandler = async (req, res, next) => {
 
     appAssert(refreshToken, UNAUTHORIZED, "Missing refresh token");
 
-    const { newAccessToken, newRefreshToken } = await refreshTokens(
-      refreshToken
-    );
+    const { newAccessToken, newRefreshToken } =
+      await refreshTokens(refreshToken);
 
     if (newRefreshToken) {
       res.cookie(
@@ -171,9 +169,8 @@ export const loginWithThirdPartyHandler: RequestHandler = async (
     );
 
     // verify that to get user info
-    const { accessToken, refreshToken } = await loginUserWithThirdParty(
-      firebaseAccessToken
-    );
+    const { accessToken, refreshToken } =
+      await loginUserWithThirdParty(firebaseAccessToken);
 
     return setAuthCookies({ res, refreshToken, accessToken })
       .status(OK)

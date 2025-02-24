@@ -1,3 +1,5 @@
+import { VerificationCodeActionType } from "./verification-code.constant";
+
 // ===================== Select Properties Types =====================
 export type Label = {
   id: string;
@@ -111,6 +113,15 @@ export type ResLabel = {
   songs: string;
   default: boolean;
   createdAt: Date;
+};
+
+export type ResSendCode = {
+  id: string;
+  action: VerificationCodeActionType;
+};
+
+export type ResVerifyCode = {
+  verified: boolean;
 };
 
 // ===================== Refactor Fetch Response Data Types =====================

@@ -9,14 +9,14 @@ import appAssert from "../utils/app-assert.util";
 import {
   oneDay,
   oneHourFromNow,
-  onYearFromNow,
+  tenMinutesFromNow,
   thirtyDaysFormNow,
   thirtySecondsAgo,
 } from "../utils/date.util";
-import {
-  getPasswordResetTemplate,
-  getVerifyEmailTemplate,
-} from "../utils/email-template.util";
+// import {
+//   getPasswordResetTemplate,
+//   getVerifyEmailTemplate,
+// } from "../utils/email-template.util";
 import {
   AccessTokenSignOptions,
   RefreshTokenPayload,
@@ -24,7 +24,7 @@ import {
   signToken,
   verifyToken,
 } from "../utils/jwt.util";
-import sendEmail from "../utils/send-email.util";
+// import sendEmail from "../utils/send-email.util";
 import { HashValue } from "../utils/bcrypt.util";
 
 import {
@@ -35,11 +35,20 @@ import {
   TOO_MANY_REQUESTS,
   UNAUTHORIZED,
 } from "../constants/http-code.constant";
-import { ORIGIN_APP } from "../constants/env-validate.constant";
-import VerificationCodeType from "../constants/verification-code.constant";
+import {
+  NODE_ENV,
+  ORIGIN_APP,
+  SENDER_EMAIL,
+  TEST_EMAIL,
+} from "../constants/env-validate.constant";
 import ErrorCode from "../constants/error-code.constant";
 import PlaylistModel from "../models/playlist.model";
 import { deletePlaylistById } from "./playlist.service";
+import generateVerificationCode from "../utils/generate-code.util";
+import resend from "../config/resend.config";
+import JoytifyVerifyEmail from "../templates/register.template";
+import { FilterQuery } from "mongoose";
+import { VerificationForOptions } from "../constants/verification-code.constant";
 
 interface AuthDefaults {
   email: string;
@@ -56,12 +65,15 @@ interface LoginParams extends AuthDefaults {
 
 interface RegisterParams extends AuthDefaults {
   confirmPassword?: string;
+  verified?: boolean;
 }
 
 type ResetPasswordParams = {
   verificationCode: string;
   password: string;
 };
+
+const { EMAIL_VERIFICATION, PASSWORD_RESET } = VerificationForOptions;
 
 // create account service
 export const createAccount = async (data: RegisterParams) => {
@@ -76,28 +88,8 @@ export const createAccount = async (data: RegisterParams) => {
     password: data.password,
     profile_img: data.profile_img,
     auth_for_third_party: data.authForThirdParty,
+    verified: true,
   });
-
-  // send verification code
-  // const verificationCode = await VerificationCodeModel.create({
-  //   user: user.id,
-  //   type: VerificationCodeType.EmailVerification,
-  //   expiresAt: onYearFromNow(),
-  // });
-
-  // send verification email
-  // const url = `${ORIGIN_APP}/email/verify?code=${verificationCode.id}`;
-
-  // const { data: emailData, error } = await sendEmail({
-  //   to: user.email,
-  //   ...getVerifyEmailTemplate(url),
-  // });
-
-  // appAssert(
-  //   emailData?.id,
-  //   INTERNAL_SERVER_ERROR,
-  //   `${error?.name}-${error?.message}`
-  // );
 
   // create session
   const session = await SessionModel.create({
@@ -130,7 +122,7 @@ export const verifyEmail = async (code: string) => {
   // verify verificationCode
   const verificationCode = await VerificationCodeModel.findOne({
     _id: code,
-    type: VerificationCodeType.EmailVerification,
+    type: EMAIL_VERIFICATION,
     expiresAt: { $gt: new Date() },
   });
 
@@ -141,8 +133,8 @@ export const verifyEmail = async (code: string) => {
   );
 
   // update user verified status to true
-  const updatedUser = await UserModel.findByIdAndUpdate(
-    verificationCode.user,
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { email: verificationCode.email },
     { verified: true },
     { new: true }
   );
@@ -243,7 +235,7 @@ export const sendResetPasswordEmail = async (email: string) => {
   // check if verification code is duplicated within a certain period of time.
   const count = await VerificationCodeModel.countDocuments({
     user: user.id,
-    type: VerificationCodeType.PasswordReset,
+    type: PASSWORD_RESET,
     expiresAt: { $gt: thirtySecondsAgo() },
   });
 
@@ -260,31 +252,30 @@ export const sendResetPasswordEmail = async (email: string) => {
   // create verification code
   const verificationCode = await VerificationCodeModel.create({
     user: user.id,
-    type: VerificationCodeType.PasswordReset,
+    type: PASSWORD_RESET,
     expiresAt,
   });
 
   // send reset password email
-  const url = `${ORIGIN_APP}/password/reset?code=${
-    verificationCode.id
-  }&exp=${expiresAt.getTime()}`;
+  // const url = `${ORIGIN_APP}/password/reset?code=${
+  //   verificationCode.id
+  // }&exp=${expiresAt.getTime()}`;
 
-  const { data: EmailData, error } = await sendEmail({
-    to: user.email,
-    ...getPasswordResetTemplate(url),
-  });
+  // const { data: EmailData, error } = await sendEmail({
+  //   to: user.email,
+  //   ...getPasswordResetTemplate(url),
+  // });
 
-  appAssert(
-    EmailData?.id,
-    INTERNAL_SERVER_ERROR,
-    `${error?.name}-${error?.message}`
-  );
+  // appAssert(
+  //   EmailData?.id,
+  //   INTERNAL_SERVER_ERROR,
+  //   `${error?.name}-${error?.message}`
+  // );
 
-  // return
-  return {
-    url,
-    sentEmailId: EmailData.id,
-  };
+  // return {
+  //   url,
+  //   sentEmailId: EmailData.id,
+  // };
 };
 
 // reset password service
@@ -292,7 +283,7 @@ export const resetUserPassword = async (data: ResetPasswordParams) => {
   // verify verification code
   const verificationCode = await VerificationCodeModel.findOne({
     _id: data.verificationCode,
-    type: VerificationCodeType.PasswordReset,
+    type: PASSWORD_RESET,
     expiresAt: { $gt: new Date() },
   });
 
@@ -303,7 +294,7 @@ export const resetUserPassword = async (data: ResetPasswordParams) => {
   );
 
   // check if new password is same as old password
-  const user = await UserModel.findById(verificationCode.user);
+  const user = await UserModel.findOne({ email: verificationCode.email });
   const passwordIsConflict = await user?.comparePassword(data.password);
 
   appAssert(
@@ -313,11 +304,9 @@ export const resetUserPassword = async (data: ResetPasswordParams) => {
   );
 
   // update user password
-  const updatedUser = await UserModel.findByIdAndUpdate(
-    verificationCode.user,
-    {
-      password: await HashValue(data.password),
-    },
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { email: verificationCode.email },
+    { password: await HashValue(data.password) },
     { new: true }
   );
 
@@ -456,9 +445,8 @@ export const loginUserWithThirdParty = async (token: string) => {
 // register with third-party service
 export const registerUserWithThirdParty = async (token: string) => {
   // verify firebase access token
-  const { email, generatePicture, uid } = await verifyFirebaseAccessToken(
-    token
-  );
+  const { email, generatePicture, uid } =
+    await verifyFirebaseAccessToken(token);
 
   // register service
   const { user, accessToken, refreshToken } = await createAccount({

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { objectIdZodSchema, stringZodSchema } from "./util.zod";
+import { emailZodSchema, objectIdZodSchema, stringZodSchema } from "./util.zod";
 
 // Warning messages
 const warningMsg = {
@@ -21,7 +21,6 @@ const warningMsg = {
 };
 
 // Items schema
-export const emailZodSchema = z.string().email().min(1).max(255);
 
 export const passwordZodSchema = z
   .string()

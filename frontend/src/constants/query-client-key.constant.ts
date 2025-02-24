@@ -19,6 +19,9 @@ export enum MutationKey {
   DELETE_ALBUM_OPTION = "delete-album-option",
   DEREGISTER_USER = "deregister-user",
   RECORD_PLAYBACK_LOG = "record-playback-log",
+  SEND_VERIFICATION_CODE = "send-verification-code",
+  RESEND_VERIFICATION_CODE = "resend-verification-code",
+  VERIFY_VERIFICATION_CODE = "verify-verification-code",
 }
 
 export enum QueryKey {

@@ -63,6 +63,11 @@ export const defaultCreateAlbumData = {
   artist: undefined as string | undefined,
 };
 
+export const defaultVerificationCodeInput = {
+  letter: "",
+  numbers: Array(6).fill(""),
+};
+
 // ===================== Form Data Types =====================
 export type AuthForm = typeof defaultLoginData & {
   confirmPassword?: string;
@@ -75,6 +80,7 @@ export type CreateLabelForm = typeof defaultCreateLabelData;
 export type MovingPlaylistForm = typeof defaultMovingPlaylistData;
 export type CreatePlaylistForm = typeof defaultCreatePlaylistData;
 export type CreateAlbumForm = typeof defaultCreateAlbumData;
+export type VerificationCodeForm = typeof defaultVerificationCodeInput;
 
 export type AuthFormKeys = keyof AuthForm;
 export type SongFormKeys = keyof SongForm;

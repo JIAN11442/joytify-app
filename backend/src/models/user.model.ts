@@ -12,6 +12,7 @@ import { INTERNAL_SERVER_ERROR } from "../constants/http-code.constant";
 import usePalette from "../hooks/paletee.hook";
 import appAssert from "../utils/app-assert.util";
 import { CompareHashValue, HashValue } from "../utils/bcrypt.util";
+import VerificationCodeModel from "./verification-code.model";
 
 export interface UserDocument extends mongoose.Document {
   email: string;
@@ -136,6 +137,9 @@ userSchema.pre("findOneAndDelete", async function (next) {
 
     // delete all relative sessions
     await SessionModel.deleteMany({ user: user?.id });
+
+    // delete all relative verification codes
+    await VerificationCodeModel.deleteMany({ email: user?.email });
   } catch (error) {
     console.log(error);
   }

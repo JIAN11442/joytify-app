@@ -6,6 +6,7 @@ import PlaylistDeleteModal from "../components/playlist-delete-modal.component";
 import PlaylistEditModal from "../components/playlist-edit-modal.component";
 import PlaylistRemoveModal from "../components/playlist-remove-modal.component";
 import UploadModal from "../components/upload-modal.component";
+import VerificationCodeModal from "../components/verification-code-modal.component";
 
 const ModalProvider = () => {
   return (
@@ -18,6 +19,7 @@ const ModalProvider = () => {
       <CreateLabelModal />
       <CreatePlaylistModal />
       <CreateAlbumModal />
+      <VerificationCodeModal />
     </>
   );
 };

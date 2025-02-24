@@ -5,23 +5,23 @@ import { AuthForm } from "../constants/form.constant";
 import AuthForOptions, { AuthForType } from "../constants/auth.constant";
 
 // signin with third party axios
-type authForThirdPartyParams = {
+type AuthForThirdPartyParams = {
   provider: AuthProvider;
   authFor: AuthForType;
 };
-
-// login
-export const signin = async (data: AuthForm) => API.post("/auth/login", data);
 
 // register
 export const signup = async (data: AuthForm) =>
   API.post("/auth/register", data);
 
+// login
+export const signin = async (data: AuthForm) => API.post("/auth/login", data);
+
 // logout
 export const logout = async () => API.get("/auth/logout");
 
 // auth with third party
-export const authWithThirdParty = async (data: authForThirdPartyParams) => {
+export const authWithThirdParty = async (data: AuthForThirdPartyParams) => {
   const { provider, authFor } = data;
 
   return authWithThirdPartyUsingPopup(provider)

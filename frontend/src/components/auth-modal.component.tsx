@@ -1,16 +1,16 @@
 import Modal from "./modal.component";
 import AuthForm from "./auth-form.component";
+import ForgotPasswordForm from "./forgot-password-form.component";
 
 import AuthForOptions from "../constants/auth.constant";
 import useAuthModalState from "../states/auth-modal.state";
-import ForgotPasswordForm from "./forgot-password-form.component";
+import useVerificationCodeModalState from "../states/verification-code.state";
 
 const AuthModal = () => {
   const { activeModal, authFor, closeAuthModal } = useAuthModalState();
+  const { activeVerificationCodeModal } = useVerificationCodeModalState();
 
-  const SIGN_IN = AuthForOptions.SIGN_IN;
-  const SIGN_UP = AuthForOptions.SIGN_UP;
-  const FORGOT_PASSWORD = AuthForOptions.FORGOT_PASSWORD;
+  const { SIGN_IN, SIGN_UP, FORGOT_PASSWORD } = AuthForOptions;
 
   const title =
     authFor === SIGN_IN
@@ -32,6 +32,8 @@ const AuthModal = () => {
       description={description}
       activeState={activeModal}
       closeModalFn={closeAuthModal}
+      autoCloseModalFn={!activeVerificationCodeModal.active}
+      switchPage={{ initialPage: SIGN_UP, currentPage: authFor }}
     >
       {authFor === FORGOT_PASSWORD ? <ForgotPasswordForm /> : <AuthForm />}
     </Modal>

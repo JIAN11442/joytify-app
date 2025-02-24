@@ -18,6 +18,7 @@ import firebaseInitialize from "./middlewares/firebase.middleware";
 import errorHandler from "./middlewares/error-handler.middleware";
 
 import { NODE_ENV, ORIGIN_APP } from "./constants/env-validate.constant";
+import verificationCodeRoute from "./routes/verification-code.route";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(cookieParser());
 app.use(firebaseInitialize());
 
 // routes
+app.use("/verification-code", verificationCodeRoute);
 app.use("/auth", authRoute);
 app.use("/user", authenticate, userRoute);
 app.use("/aws", awsRoute);

@@ -275,10 +275,10 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
           {type === "password" && (
             <button
               type="button"
+              disabled={disabled}
               onClick={handleSwitchPasswordVisibility}
               className={`
                 input-right-icon
-                hover:text-grey-custom
                 transition
               `}
             >
