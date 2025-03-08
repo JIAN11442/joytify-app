@@ -4,13 +4,18 @@ import { ErrorRequestHandler } from "express";
 import {
   BAD_REQUEST,
   INTERNAL_SERVER_ERROR,
+  UNAUTHORIZED,
 } from "../constants/http-code.constant";
 import ErrorCode from "../constants/error-code.constant";
 
 import AppError from "../utils/app-error.util";
 import awsUrlParser from "../utils/aws-url-parser.util";
 import { deleteAwsFileUrl } from "../utils/aws-s3-url.util";
-import { clearAuthCookies, cookiePath } from "../utils/cookies.util";
+import {
+  clearAuthCookies,
+  cookiePath,
+  setUnauthorizedCookies,
+} from "../utils/cookies.util";
 import admin from "../config/firebase.config";
 
 const errorHandler = (): ErrorRequestHandler => {
@@ -42,6 +47,13 @@ const errorHandler = (): ErrorRequestHandler => {
 
     // App Error
     if (error instanceof AppError) {
+      // if unauthorized, set the unauthorized cookies
+      if (error.statusCode === UNAUTHORIZED) {
+        if (!req.cookies.unauthorized) {
+          setUnauthorizedCookies({ res, redirectUrl: req.originalUrl });
+        }
+      }
+
       // If firebase auth with third-party provider fails, delete the firebase user
       // to avoid another provider with the same email can't auth again
       if (error.errorCode === ErrorCode.InvalidFirebaseCredential) {

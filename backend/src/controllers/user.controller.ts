@@ -1,8 +1,10 @@
 import { RequestHandler } from "express";
 
 import UserModel from "../models/user.model";
-import appAssert from "../utils/app-assert.util";
+import { resetUserPassword } from "../services/user.service";
 import { objectIdZodSchema } from "../schemas/util.zod";
+import { resetPasswordZodSchema } from "../schemas/user.zod";
+import appAssert from "../utils/app-assert.util";
 import {
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
@@ -41,6 +43,20 @@ export const deregisterUserHandler: RequestHandler = async (req, res, next) => {
     return res
       .status(OK)
       .json({ message: "Deregister user account successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// reset user password handler
+export const resetPasswordHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const token = req.params.token;
+    const parsedParams = resetPasswordZodSchema.parse(req.body);
+
+    await resetUserPassword({ token, ...parsedParams });
+
+    return res.status(OK).json({ message: "Password reset successfully" });
   } catch (error) {
     next(error);
   }

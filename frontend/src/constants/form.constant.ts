@@ -34,8 +34,14 @@ export const defaultRegisterData = {
   confirmPassword: "",
 };
 
-export const defaultResetPasswordData = {
+export const defaultForgotPasswordData = {
   email: "",
+};
+
+export const defaultResetPasswordData = {
+  currentPassword: "",
+  newPassword: "",
+  confirmPassword: "",
 };
 
 export const defaultPlaylistEditData = {
@@ -74,6 +80,7 @@ export type AuthForm = typeof defaultLoginData & {
 };
 
 export type SongForm = typeof defaultSongData;
+export type ForgotPasswordForm = typeof defaultForgotPasswordData;
 export type ResetPasswordForm = typeof defaultResetPasswordData;
 export type EditPlaylistForm = typeof defaultPlaylistEditData;
 export type CreateLabelForm = typeof defaultCreateLabelData;
@@ -83,8 +90,6 @@ export type CreateAlbumForm = typeof defaultCreateAlbumData;
 export type VerificationCodeForm = typeof defaultVerificationCodeInput;
 
 export type AuthFormKeys = keyof AuthForm;
-export type SongFormKeys = keyof SongForm;
-export type EditPlaylistFormKeys = keyof EditPlaylistForm;
 
 export type FormMethods<T extends FieldValues> = {
   setFormValue: UseFormSetValue<T>;

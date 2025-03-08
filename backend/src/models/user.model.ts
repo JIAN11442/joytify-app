@@ -11,8 +11,8 @@ import {
 import { INTERNAL_SERVER_ERROR } from "../constants/http-code.constant";
 import usePalette from "../hooks/paletee.hook";
 import appAssert from "../utils/app-assert.util";
-import { CompareHashValue, HashValue } from "../utils/bcrypt.util";
-import VerificationCodeModel from "./verification-code.model";
+import { compareHashValue, hashValue } from "../utils/bcrypt.util";
+import VerificationModel from "./verification.model";
 
 export interface UserDocument extends mongoose.Document {
   email: string;
@@ -71,7 +71,7 @@ userSchema.pre("save", async function (next) {
     return next();
   }
 
-  this.password = await HashValue(this.password);
+  this.password = await hashValue(this.password);
   return next();
 });
 
@@ -139,7 +139,7 @@ userSchema.pre("findOneAndDelete", async function (next) {
     await SessionModel.deleteMany({ user: user?.id });
 
     // delete all relative verification codes
-    await VerificationCodeModel.deleteMany({ email: user?.email });
+    await VerificationModel.deleteMany({ email: user?.email });
   } catch (error) {
     console.log(error);
   }
@@ -147,7 +147,7 @@ userSchema.pre("findOneAndDelete", async function (next) {
 
 // custom method (compare password with hashed password from database)
 userSchema.methods.comparePassword = async function (password: string) {
-  return CompareHashValue(password, this.password);
+  return compareHashValue(password, this.password);
 };
 
 // custom method (omit password from user object)

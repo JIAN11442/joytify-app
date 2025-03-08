@@ -6,15 +6,15 @@ import VerifyStatusForm from "./verify-status-form.component";
 import {
   VerificationCodeActions,
   VerificationForOptions,
-} from "../constants/verification-code.constant";
-import useVerificationCodeModalState from "../states/verification-code.state";
+} from "../constants/verification.constant";
+import useVerificationModalState from "../states/verification.state";
 
 const VerificationCodeModal = () => {
   const {
     activeVerificationCodeModal,
     closeVerificationCodeModal,
     verifyCodePending,
-  } = useVerificationCodeModalState();
+  } = useVerificationModalState();
   const {
     active,
     type,

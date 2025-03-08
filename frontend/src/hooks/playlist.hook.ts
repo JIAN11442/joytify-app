@@ -20,7 +20,7 @@ export const usePlaylists = (
     refetch,
     ...rest
   } = useQuery({
-    queryKey: [QueryKey.GET_USER_PLAYLISTS],
+    queryKey: [QueryKey.GET_USER_PLAYLISTS, user, searchParams],
     queryFn: async () => {
       try {
         const data = await getPlaylists(
@@ -47,11 +47,6 @@ export const usePlaylists = (
       setUserPlaylists(null);
     }
   }, [playlists]);
-
-  // if user change, refetch playlists
-  useEffect(() => {
-    refetch();
-  }, [user, searchParams]);
 
   return { playlists, refetch, ...rest };
 };

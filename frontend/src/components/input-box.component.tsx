@@ -16,14 +16,13 @@ export interface InputProps<T extends FieldValues = any>
   extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
   icon?: { name: IconName; opts?: IconBaseProps };
-  warning?: string[];
   toArray?: boolean;
   formMethods?: FormMethods<T>;
   syncWithOtherInput?: {
     active: boolean;
     syncVal: string | string[] | FileList | null | undefined;
   };
-  iconHighlight?: boolean;
+  iconHighlight?: "success" | "error";
   className?: string;
   tw?: { icon?: string };
 }
@@ -33,11 +32,10 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
     {
       title,
       icon,
-      warning,
       formMethods,
       syncWithOtherInput,
       toArray = false,
-      iconHighlight = true,
+      iconHighlight,
       type,
       name,
       disabled,
@@ -59,7 +57,6 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
     const [inputVal, setInputVal] = useState<string>("");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isFileSelected, setIsFileSelected] = useState(false);
-    const [visibleWarning, setVisibleWarning] = useState(false);
     const [isSyncChecked, setIsSyncChecked] = useState(false);
 
     // switch password visibility
@@ -93,28 +90,21 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
 
     // handle input keydown
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      const ekey = e.key;
-      const isNonAlphanumeric = /[^\w,]/.test(ekey);
-
-      // if keydown is not a alphanumeric, display warning content
-      if (warning) {
-        setVisibleWarning(isNonAlphanumeric);
-      }
-
-      if (onKeyDown) {
-        onKeyDown(e);
-      }
+      timeoutForDelay(() => {
+        if (onKeyDown) {
+          onKeyDown(e);
+        }
+      });
     };
 
     // handle input on blur
     const handleInputOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      if (onBlur) {
-        onBlur(e);
-      }
-
       timeoutForDelay(() => {
         formatAndSetFormValue(inputVal);
-        setVisibleWarning(false);
+
+        if (onBlur) {
+          onBlur(e);
+        }
       });
     };
 
@@ -163,7 +153,6 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={`
-          relative
           w-full
           ${
             title &&
@@ -220,93 +209,85 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {/* input */}
-        <input
-          name={name}
-          ref={mergeRefs(ref, inputRef)}
-          type={
-            type === "password"
-              ? isPasswordVisible
-                ? "text"
-                : "password"
-              : type
-          }
-          value={inputVal}
-          disabled={disabled}
-          onChange={(e) => handleInputOnChange(e)}
-          onKeyDown={(e) => handleInputKeyDown(e)}
-          onBlur={(e) => handleInputOnBlur(e)}
-          required={required}
-          readOnly={isSyncChecked}
-          className={twMerge(
-            `
-              input-box
-              ${icon && "pl-[3.5rem]"}
-              ${
-                type === "file" &&
-                ` ${
-                  isFileSelected ? "text-grey-custom/80" : "text-grey-custom/30"
-                }`
-              }
-            `,
-            className
-          )}
-          {...props}
-        />
-
-        {/* input icon */}
-        <>
-          {icon && (
-            <Icon
-              name={icon.name}
-              opts={icon?.opts}
-              className={twMerge(
-                `
-                input-left-icon
-                ${iconHighlight && inputVal?.length && "text-green-custom/80"}
+        <div className={`relative`}>
+          <input
+            name={name}
+            ref={mergeRefs(ref, inputRef)}
+            type={
+              type === "password"
+                ? isPasswordVisible
+                  ? "text"
+                  : "password"
+                : type
+            }
+            value={inputVal}
+            disabled={disabled}
+            onChange={(e) => handleInputOnChange(e)}
+            onKeyDown={(e) => handleInputKeyDown(e)}
+            onBlur={(e) => handleInputOnBlur(e)}
+            required={required}
+            readOnly={isSyncChecked}
+            className={twMerge(
+              `
+                input-box
+                ${icon && "pl-[3.5rem]"}
+                ${
+                  type === "file" &&
+                  ` ${
+                    isFileSelected
+                      ? "text-grey-custom/80"
+                      : "text-grey-custom/30"
+                  }`
+                }
               `,
-                tw?.icon
-              )}
-            />
-          )}
-        </>
+              className
+            )}
+            {...props}
+          />
 
-        {/* password visible icon */}
-        <>
-          {type === "password" && (
-            <button
-              type="button"
-              disabled={disabled}
-              onClick={handleSwitchPasswordVisibility}
-              className={`
-                input-right-icon
-                transition
-              `}
-            >
-              <Icon name={isPasswordVisible ? IoEyeOff : IoEye} />
-            </button>
-          )}
-        </>
+          {/* input icon */}
+          <>
+            {icon && (
+              <Icon
+                name={icon.name}
+                opts={icon?.opts}
+                className={twMerge(
+                  `
+                    input-left-icon
+                    ${
+                      iconHighlight && !disabled
+                        ? iconHighlight === "success"
+                          ? "text-green-custom/80"
+                          : "text-orange-400/80"
+                        : disabled
+                        ? "opacity-50"
+                        : ""
+                    }
+                  `,
+                  tw?.icon
+                )}
+              />
+            )}
+          </>
 
-        {/* warning content */}
-        <>
-          {visibleWarning && (
-            <AnimationWrapper
-              className={`
-                flex
-                gap-2
-                text-sm
-                text-red-500
-              `}
-            >
-              <p>*</p>
-              <p className={`flex flex-col`}>
-                {warning?.map((content, index) => (
-                  <span key={index}>{content}</span>
-                ))}
-              </p>
-            </AnimationWrapper>
-          )}
-        </>
+          {/* password visible icon */}
+          <>
+            {type === "password" && (
+              <button
+                type="button"
+                tabIndex={-1}
+                disabled={disabled}
+                onClick={handleSwitchPasswordVisibility}
+                className={`
+                  input-right-icon
+                  transition
+                `}
+              >
+                <Icon name={isPasswordVisible ? IoEyeOff : IoEye} />
+              </button>
+            )}
+          </>
+        </div>
       </div>
     );
   }

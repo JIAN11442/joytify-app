@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { QueryKey } from "../constants/query-client-key.constant";
 import { getUserAlbums } from "../fetchs/album.fetch";
 import useUserState from "../states/user.state";
@@ -14,7 +14,7 @@ export const useGetAlbums = (opts: object = {}) => {
     refetch,
     ...rest
   } = useQuery({
-    queryKey: [QueryKey.GET_USER_ALBUMS],
+    queryKey: [QueryKey.GET_USER_ALBUMS, user],
     queryFn: async () => {
       try {
         const albums = await getUserAlbums();
@@ -30,11 +30,6 @@ export const useGetAlbums = (opts: object = {}) => {
     enabled: !isQueryError,
     ...opts,
   });
-
-  // while login or user change, refetch albums
-  useEffect(() => {
-    refetch();
-  }, [user]);
 
   return { albums, refetch, ...rest };
 };

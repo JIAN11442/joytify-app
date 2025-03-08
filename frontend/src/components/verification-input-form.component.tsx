@@ -7,13 +7,13 @@ import {
   sendVerificationCode,
   verifyVerificationCode,
   SendCodeParams,
-} from "../fetchs/verification-code.fetch";
+} from "../fetchs/verification.fetch";
 import {
   defaultVerificationCodeInput,
   VerificationCodeForm,
 } from "../constants/form.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
-import useVerificationCodeModalState from "../states/verification-code.state";
+import useVerificationModalState from "../states/verification.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 interface VerificationInputFormProps {
@@ -27,7 +27,7 @@ const VerificationInputForm: React.FC<VerificationInputFormProps> = ({
   const numberRegix = /^\d$/;
 
   const { openResendStatusModal, openVerifyStatusModal, setVerifyCodePending } =
-    useVerificationCodeModalState();
+    useVerificationModalState();
 
   const handleLetterInputOnChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -87,20 +87,21 @@ const VerificationInputForm: React.FC<VerificationInputFormProps> = ({
   };
 
   // resend code mutation
-  const { mutate: resendVerificationCodeToUser } = useMutation({
-    mutationKey: [MutationKey.RESEND_VERIFICATION_CODE],
-    mutationFn: async (data: SendCodeParams) => {
-      await sendVerificationCode(data);
-    },
-    onSuccess: () => {
-      openResendStatusModal(true);
-      toast.success("verification code resent successfully");
-    },
-    onError: (error) => {
-      openResendStatusModal(false);
-      toast.error(error.message);
-    },
-  });
+  const { mutate: resendVerificationCodeToUser, isPending: resendPending } =
+    useMutation({
+      mutationKey: [MutationKey.RESEND_VERIFICATION_CODE],
+      mutationFn: async (data: SendCodeParams) => {
+        await sendVerificationCode(data);
+      },
+      onSuccess: () => {
+        openResendStatusModal(true);
+        toast.success("verification code resent successfully");
+      },
+      onError: (error) => {
+        openResendStatusModal(false);
+        toast.error(error.message);
+      },
+    });
 
   // verify code mutation
   const { mutate: verifyCode, isPending: verifyPending } = useMutation({
@@ -154,8 +155,8 @@ const VerificationInputForm: React.FC<VerificationInputFormProps> = ({
 
   // save pending state
   useEffect(() => {
-    setVerifyCodePending(verifyPending);
-  }, [verifyPending]);
+    setVerifyCodePending(resendPending || verifyPending);
+  }, [resendPending, verifyPending]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

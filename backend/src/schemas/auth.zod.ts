@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { emailZodSchema, objectIdZodSchema, stringZodSchema } from "./util.zod";
+import { emailZodSchema, stringZodSchema } from "./util.zod";
 
 // Warning messages
 const warningMsg = {
@@ -21,7 +21,6 @@ const warningMsg = {
 };
 
 // Items schema
-
 export const passwordZodSchema = z
   .string()
   .min(6, warningMsg.passwordCharater)
@@ -44,11 +43,6 @@ export const registerZodSchema = loginZodSchema
     (data) => data.password === data.confirmPassword,
     warningMsg.passwordIsNotMatch
   );
-
-export const resetPasswordZodSchema = z.object({
-  verificationCode: objectIdZodSchema,
-  password: passwordZodSchema,
-});
 
 export const firebaseAccessTokenZodSchema = z
   .string()

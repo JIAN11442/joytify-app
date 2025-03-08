@@ -7,6 +7,7 @@ import {
   REFRESH_SECRET_KEY,
   VERIFICATION_SECRET_KEY,
 } from "../constants/env-validate.constant";
+import { VerificationDocument } from "../models/verification.model";
 
 // ===================== Defaults =====================
 const defaults: SignOptions = {
@@ -17,19 +18,24 @@ const defaults: SignOptions = {
 type SignOptionsAndSecret = SignOptions & { secret: string };
 type VerifyOptionsAndSecret = VerifyOptions & { secret: string };
 
+type TokenPayload =
+  | AccessTokenPayload
+  | RefreshTokenPayload
+  | VerificationTokenPayload;
+
 // ===================== Payload =====================
-export interface RefreshTokenPayload {
+export type RefreshTokenPayload = {
   sessionId: SessionDocument["_id"];
-}
+};
 
 export interface AccessTokenPayload extends RefreshTokenPayload {
   userId: UserDocument["_id"];
   firebaseUserId: string;
 }
 
-export interface VerificationTokenPayload {
+export type VerificationTokenPayload = {
   sessionId: string;
-}
+};
 
 // ===================== Options =====================
 export const AccessTokenSignOptions: SignOptionsAndSecret = {
@@ -52,7 +58,7 @@ export const VerificationTokenSignOptions: SignOptionsAndSecret = {
 
 // ===================== Sign and Verify =====================
 export const signToken = (
-  payload: AccessTokenPayload | RefreshTokenPayload | VerificationTokenPayload,
+  payload: TokenPayload,
   options: SignOptionsAndSecret
 ) => {
   const { secret, ...signOpts } = options;

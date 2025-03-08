@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { QueryKey } from "../constants/query-client-key.constant";
 import { getUserLabels } from "../fetchs/label.fetch";
 import useUserState from "../states/user.state";
@@ -13,7 +13,7 @@ export const useGetLabels = (opts: object = {}) => {
     refetch,
     ...rest
   } = useQuery({
-    queryKey: [QueryKey.GET_ALL_LABELS],
+    queryKey: [QueryKey.GET_ALL_LABELS, user],
     queryFn: async () => {
       try {
         const labels = await getUserLabels();
@@ -29,11 +29,6 @@ export const useGetLabels = (opts: object = {}) => {
     enabled: !!user && !isQueryError,
     ...opts,
   });
-
-  // while login or user change, refetch labels
-  useEffect(() => {
-    refetch();
-  }, [user]);
 
   return { labels, refetch, ...rest };
 };

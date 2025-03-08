@@ -1,6 +1,8 @@
 import crypto from "crypto";
+import { ORIGIN_APP } from "../constants/env-validate.constant";
+import { signToken, VerificationTokenSignOptions } from "./jwt.util";
 
-const generateVerificationCode = () => {
+export const generateVerificationCode = () => {
   const letter = String.fromCharCode(
     65 + (crypto.getRandomValues(new Uint8Array(1))[0] % 26)
   );
@@ -14,4 +16,10 @@ const generateVerificationCode = () => {
   return code;
 };
 
-export default generateVerificationCode;
+export const generateVerificationLink = async (sessionId: string) => {
+  const token = signToken({ sessionId }, VerificationTokenSignOptions);
+
+  const url = `${ORIGIN_APP}/password/reset?token=${token}`;
+
+  return url;
+};

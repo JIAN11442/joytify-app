@@ -19,10 +19,18 @@ export interface VerifyCodeParams extends DefaultParams {
 
 // send verification code
 export const sendVerificationCode = async (
-  data: SendCodeParams
-): Promise<ResSendCode> => API.post("/verification-code/send", data);
+  params: SendCodeParams
+): Promise<ResSendCode> => API.post("/verification/send/code", params);
 
 // verify verification code
 export const verifyVerificationCode = async (
-  data: VerifyCodeParams
-): Promise<ResVerifyCode> => API.post("/verification-code/verify", data);
+  params: VerifyCodeParams
+): Promise<ResVerifyCode> => API.post("/verification/verify/code", params);
+
+// send verification link
+export const sendResetPasswordEmail = async (email: string) =>
+  API.post("/verification/send/link", { email });
+
+// verify reset password link
+export const verifyResetPasswordLink = async (token: string) =>
+  API.get(`/verification/verify/link/${token}`);

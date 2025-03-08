@@ -3,20 +3,8 @@ import * as admin from "firebase-admin";
 
 import SessionModel from "../models/session.model";
 import UserModel from "../models/user.model";
-import VerificationCodeModel from "../models/verification-code.model";
-
 import appAssert from "../utils/app-assert.util";
-import {
-  oneDay,
-  oneHourFromNow,
-  tenMinutesFromNow,
-  thirtyDaysFormNow,
-  thirtySecondsAgo,
-} from "../utils/date.util";
-// import {
-//   getPasswordResetTemplate,
-//   getVerifyEmailTemplate,
-// } from "../utils/email-template.util";
+import { oneDay, thirtyDaysFormNow } from "../utils/date.util";
 import {
   AccessTokenSignOptions,
   RefreshTokenPayload,
@@ -24,31 +12,14 @@ import {
   signToken,
   verifyToken,
 } from "../utils/jwt.util";
-// import sendEmail from "../utils/send-email.util";
-import { HashValue } from "../utils/bcrypt.util";
-
 import {
   CONFLICT,
   FORBIDDEN,
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
-  TOO_MANY_REQUESTS,
   UNAUTHORIZED,
 } from "../constants/http-code.constant";
-import {
-  NODE_ENV,
-  ORIGIN_APP,
-  SENDER_EMAIL,
-  TEST_EMAIL,
-} from "../constants/env-validate.constant";
 import ErrorCode from "../constants/error-code.constant";
-import PlaylistModel from "../models/playlist.model";
-import { deletePlaylistById } from "./playlist.service";
-import generateVerificationCode from "../utils/generate-code.util";
-import resend from "../config/resend.config";
-import JoytifyVerifyEmail from "../templates/register.template";
-import { FilterQuery } from "mongoose";
-import { VerificationForOptions } from "../constants/verification-code.constant";
 
 interface AuthDefaults {
   email: string;
@@ -67,13 +38,6 @@ interface RegisterParams extends AuthDefaults {
   confirmPassword?: string;
   verified?: boolean;
 }
-
-type ResetPasswordParams = {
-  verificationCode: string;
-  password: string;
-};
-
-const { EMAIL_VERIFICATION, PASSWORD_RESET } = VerificationForOptions;
 
 // create account service
 export const createAccount = async (data: RegisterParams) => {
@@ -117,39 +81,6 @@ export const createAccount = async (data: RegisterParams) => {
   return { user: user.omitPassword(), accessToken, refreshToken };
 };
 
-// verify email service
-export const verifyEmail = async (code: string) => {
-  // verify verificationCode
-  const verificationCode = await VerificationCodeModel.findOne({
-    _id: code,
-    type: EMAIL_VERIFICATION,
-    expiresAt: { $gt: new Date() },
-  });
-
-  appAssert(
-    verificationCode,
-    NOT_FOUND,
-    "Invalid or expired verification code"
-  );
-
-  // update user verified status to true
-  const updatedUser = await UserModel.findOneAndUpdate(
-    { email: verificationCode.email },
-    { verified: true },
-    { new: true }
-  );
-
-  appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to verify email");
-
-  // delete verification code
-  await verificationCode.deleteOne();
-
-  // return updated user
-  return {
-    user: updatedUser.omitPassword(),
-  };
-};
-
 // login service
 export const loginUser = async (data: LoginParams) => {
   // find user by email
@@ -158,10 +89,19 @@ export const loginUser = async (data: LoginParams) => {
   appAssert(user, UNAUTHORIZED, "Invalid email or password");
 
   // validate password
-  if (!data.authForThirdParty && data.password) {
-    const isPasswordMatch = await user.comparePassword(data.password);
+  if (!data.authForThirdParty) {
+    // if user is registered with third-party service, but try to login with password
+    appAssert(
+      !user.auth_for_third_party,
+      FORBIDDEN,
+      "This account was registered using a third-party service. Please log in with related service to access the account."
+    );
 
-    appAssert(isPasswordMatch, UNAUTHORIZED, "Invalid email or password");
+    if (data.password) {
+      const isPasswordMatch = await user.comparePassword(data.password);
+
+      appAssert(isPasswordMatch, UNAUTHORIZED, "Invalid email or password");
+    }
   }
 
   // return if user is already logged in
@@ -199,9 +139,7 @@ export const loginUser = async (data: LoginParams) => {
   );
 
   const refreshToken = signToken(
-    {
-      sessionId: session.id,
-    },
+    { sessionId: session.id },
     RefreshTokenSignOptions
   );
 
@@ -223,105 +161,6 @@ export const logoutUser = async (accessToken: string) => {
 
   // find session by userId and delete it
   return await SessionModel.findByIdAndDelete(payload?.sessionId);
-};
-
-// forgot password and send reset password email service
-export const sendResetPasswordEmail = async (email: string) => {
-  // find user by email
-  const user = await UserModel.findOne({ email });
-
-  appAssert(user, NOT_FOUND, "User not found");
-
-  // check if verification code is duplicated within a certain period of time.
-  const count = await VerificationCodeModel.countDocuments({
-    user: user.id,
-    type: PASSWORD_RESET,
-    expiresAt: { $gt: thirtySecondsAgo() },
-  });
-
-  // if count is greater than 0,
-  // it means that the user has requested a password reset within a certain period of time.
-  appAssert(
-    count < 1,
-    TOO_MANY_REQUESTS,
-    "Too many requests, please try again later"
-  );
-
-  const expiresAt = oneHourFromNow();
-
-  // create verification code
-  const verificationCode = await VerificationCodeModel.create({
-    user: user.id,
-    type: PASSWORD_RESET,
-    expiresAt,
-  });
-
-  // send reset password email
-  // const url = `${ORIGIN_APP}/password/reset?code=${
-  //   verificationCode.id
-  // }&exp=${expiresAt.getTime()}`;
-
-  // const { data: EmailData, error } = await sendEmail({
-  //   to: user.email,
-  //   ...getPasswordResetTemplate(url),
-  // });
-
-  // appAssert(
-  //   EmailData?.id,
-  //   INTERNAL_SERVER_ERROR,
-  //   `${error?.name}-${error?.message}`
-  // );
-
-  // return {
-  //   url,
-  //   sentEmailId: EmailData.id,
-  // };
-};
-
-// reset password service
-export const resetUserPassword = async (data: ResetPasswordParams) => {
-  // verify verification code
-  const verificationCode = await VerificationCodeModel.findOne({
-    _id: data.verificationCode,
-    type: PASSWORD_RESET,
-    expiresAt: { $gt: new Date() },
-  });
-
-  appAssert(
-    verificationCode,
-    NOT_FOUND,
-    "Invalid or expired verification code"
-  );
-
-  // check if new password is same as old password
-  const user = await UserModel.findOne({ email: verificationCode.email });
-  const passwordIsConflict = await user?.comparePassword(data.password);
-
-  appAssert(
-    !passwordIsConflict,
-    CONFLICT,
-    "New password cannot be the same as the old password"
-  );
-
-  // update user password
-  const updatedUser = await UserModel.findOneAndUpdate(
-    { email: verificationCode.email },
-    { password: await HashValue(data.password) },
-    { new: true }
-  );
-
-  appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to reset password");
-
-  // delete reset password verification code
-  await verificationCode.deleteOne();
-
-  // delete all the user session
-  await SessionModel.deleteMany({ user: updatedUser.id });
-
-  // return updated user
-  return {
-    user: updatedUser.omitPassword(),
-  };
 };
 
 // refresh tokens service
@@ -425,7 +264,7 @@ export const loginUserWithThirdParty = async (token: string) => {
   appAssert(
     user.auth_for_third_party,
     FORBIDDEN,
-    "This account was signed up without third-party. Please log in with password to access the account.",
+    "This account was registered without using third-party service. Please log in with password to access the account.",
     ErrorCode.InvalidFirebaseCredential,
     uid
   );

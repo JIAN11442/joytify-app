@@ -7,6 +7,9 @@ enum VerificationCodeActions {
   CODE_CREATED = "code_created",
   CODE_UPDATED = "code_updated",
   CODE_RETURNED = "code_returned",
+
+  LINK_CREATED = "link_created",
+  LINK_UPDATED = "link_updated",
 }
 
 export type VerificationForType =

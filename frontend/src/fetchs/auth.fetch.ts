@@ -11,27 +11,28 @@ type AuthForThirdPartyParams = {
 };
 
 // register
-export const signup = async (data: AuthForm) =>
-  API.post("/auth/register", data);
+export const signup = async (params: AuthForm) =>
+  API.post("/auth/register", params);
 
 // login
-export const signin = async (data: AuthForm) => API.post("/auth/login", data);
+export const signin = async (params: AuthForm) =>
+  API.post("/auth/login", params);
 
 // logout
 export const logout = async () => API.get("/auth/logout");
 
 // auth with third party
-export const authWithThirdParty = async (data: AuthForThirdPartyParams) => {
-  const { provider, authFor } = data;
+export const authWithThirdParty = async (params: AuthForThirdPartyParams) => {
+  const { provider, authFor } = params;
 
   return authWithThirdPartyUsingPopup(provider)
     .then(async (user) => {
       if (user) {
         const token = await getIdToken(user);
-        const params =
+        const authType =
           authFor === AuthForOptions.SIGN_IN ? "login" : "register";
 
-        return API.post(`/auth/third-party/${params}`, { token });
+        return API.post(`/auth/third-party/${authType}`, { token });
       }
     })
     .catch((error) => {
@@ -39,7 +40,3 @@ export const authWithThirdParty = async (data: AuthForThirdPartyParams) => {
       throw error;
     });
 };
-
-// send reset password verification email
-export const sendResetPasswordEmail = async (email: string) =>
-  API.post("/auth/password/forgot", { email });

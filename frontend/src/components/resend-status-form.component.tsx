@@ -5,8 +5,8 @@ import Icon from "./react-icons.component";
 import {
   VerificationCodeActions,
   VerificationForType,
-} from "../constants/verification-code.constant";
-import useVerificationCodeModalState from "../states/verification-code.state";
+} from "../constants/verification.constant";
+import useVerificationModalState from "../states/verification.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { getDuration } from "../utils/get-time.util";
 
@@ -20,10 +20,10 @@ const ResendStatusForm: React.FC<ResendStatusFormProps> = ({
   initialPage,
 }) => {
   const btnRef = useRef<HTMLButtonElement>(null);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(5);
 
   const { activeVerificationCodeModal, backToInitialPage } =
-    useVerificationCodeModalState();
+    useVerificationModalState();
 
   const { userEmail } = activeVerificationCodeModal;
 
@@ -46,7 +46,7 @@ const ResendStatusForm: React.FC<ResendStatusFormProps> = ({
       setCountdown((prev) => prev - 1);
     }, 1000);
 
-    if (countdown === 0 && btnRef && btnRef.current) {
+    if (countdown === 0 && btnRef.current) {
       clearInterval(timer);
       btnRef.current.disabled = true;
       handleSwitchToMainForm();
@@ -106,6 +106,7 @@ const ResendStatusForm: React.FC<ResendStatusFormProps> = ({
       {/* Button */}
       <button
         ref={btnRef}
+        autoFocus
         onClick={handleSwitchToMainForm}
         className={`
           submit-btn

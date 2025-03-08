@@ -7,10 +7,12 @@ import {
   logoutUser,
   refreshTokens,
   registerUserWithThirdParty,
-  resetUserPassword,
-  sendResetPasswordEmail,
-  verifyEmail,
 } from "../services/auth.service";
+import {
+  firebaseAccessTokenZodSchema,
+  loginZodSchema,
+  registerZodSchema,
+} from "../schemas/auth.zod";
 import {
   clearAuthCookies,
   getAccessTokenCookieOptions,
@@ -18,13 +20,6 @@ import {
   setAuthCookies,
 } from "../utils/cookies.util";
 import appAssert from "../utils/app-assert.util";
-import {
-  firebaseAccessTokenZodSchema,
-  loginZodSchema,
-  registerZodSchema,
-  resetPasswordZodSchema,
-} from "../schemas/auth.zod";
-import { emailZodSchema, objectIdZodSchema } from "../schemas/util.zod";
 import { CREATED, OK, UNAUTHORIZED } from "../constants/http-code.constant";
 
 // register handler
@@ -40,21 +35,6 @@ export const registerHandler: RequestHandler = async (req, res, next) => {
     return setAuthCookies({ res, accessToken, refreshToken })
       .status(CREATED)
       .json(user);
-  } catch (error) {
-    next(error);
-  }
-};
-
-// verify email
-export const verifyEmailHandler: RequestHandler = async (req, res, next) => {
-  try {
-    // verify verificationCode
-    const code = objectIdZodSchema.parse(req.params.code);
-
-    // verify email verified status
-    await verifyEmail(code);
-
-    return res.status(OK).json({ message: "Email verified successfully" });
   } catch (error) {
     next(error);
   }
@@ -91,35 +71,6 @@ export const logoutHandler: RequestHandler = async (req, res, next) => {
     return clearAuthCookies(res)
       .status(OK)
       .json({ message: "Logout successfully" });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// forgot password handler
-export const forgotPasswordHandler: RequestHandler = async (req, res, next) => {
-  try {
-    const email = emailZodSchema.parse(req.body.email);
-
-    // verify email and send reset password email
-    await sendResetPasswordEmail(email);
-
-    return res.status(OK).json({ message: "Reset password email sent" });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// reset password handler
-export const resetPasswordHandler: RequestHandler = async (req, res, next) => {
-  try {
-    const request = resetPasswordZodSchema.parse(req.body);
-
-    await resetUserPassword(request);
-
-    return clearAuthCookies(res)
-      .status(OK)
-      .json({ message: "Password reset successfully" });
   } catch (error) {
     next(error);
   }

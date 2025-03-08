@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { RegisterOptions, SubmitHandler, useForm } from "react-hook-form";
@@ -15,6 +15,7 @@ import MultiSelectInputBox, {
   OptionType,
 } from "./multi-select-input-box.component";
 import CalendarInputBox from "./calendar-input-box.component";
+import WarningMsgBox from "./warning-message-box.component";
 
 import { useGetLabels } from "../hooks/label.hook";
 import { usePlaylists } from "../hooks/playlist.hook";
@@ -36,8 +37,17 @@ import { navigate } from "../lib/navigate.lib";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import queryClient from "../config/query-client.config";
 
+type WarningState = {
+  active: boolean;
+  target: string | null;
+};
+
 const UploadModal = () => {
   const submitBtnRef = useRef<HTMLButtonElement>(null);
+  const [visibleWarning, setVisibleWarning] = useState<WarningState>({
+    active: false,
+    target: "",
+  });
 
   const {
     activeUploadModal,
@@ -180,6 +190,30 @@ const UploadModal = () => {
     });
   };
 
+  const warningContent = () => {
+    return (
+      <span>
+        If there is more than one {visibleWarning.target}, please separate them
+        with a comma.{" "}
+        <span className={`font-extrabold text-orange-400`}>
+          [e.g., John, Jason]
+        </span>
+      </span>
+    );
+  };
+
+  const warning = (target: string) => ({
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      setVisibleWarning({
+        active: Boolean(e.target.value.length),
+        target,
+      });
+    },
+    onBlur: () => {
+      setVisibleWarning({ active: false, target: null });
+    },
+  });
+
   const formMethods: FormMethods<SongForm> = useMemo(
     () => ({
       setFormValue: setValue,
@@ -207,14 +241,19 @@ const UploadModal = () => {
         !isPending
       }
       className={`
-        ${
-          activeAdvancedSettings &&
-          `
-            md:min-w-[80vw]  
-            lg:min-w-[70vw] 
-          `
-        }`}
+        ${activeAdvancedSettings && "md:w-[80vw] md:max-w-[700px]"}`}
     >
+      {/* warning message box */}
+      <WarningMsgBox
+        warningMsg={warningContent()}
+        visible={visibleWarning.active}
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        tw={{ msg: "tracking-wider", clsBtn: "hidden" }}
+      />
+
+      {/* upload song form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={`
@@ -263,10 +302,10 @@ const UploadModal = () => {
           {/* Basic setting */}
           <div
             className={`
-              flex
-              flex-col
+              grid
+              grid-cols-1
               gap-5
-              ${activeAdvancedSettings && "md:grid md:grid-cols-2"}
+              ${activeAdvancedSettings && "md:grid-cols-2"}
             `}
           >
             {/* Song title */}
@@ -284,14 +323,12 @@ const UploadModal = () => {
               type="text"
               title="Enter song artist"
               placeholder="Song artist"
-              warning={[
-                "If there is more than one artist, please separate them with a comma. [e.g., John, Jason]",
-              ]}
               formMethods={formMethods}
               disabled={isPending}
               toArray={true}
               required
               {...register("artist", { required: true })}
+              {...warning("artist")}
             />
 
             {/* Song file */}
@@ -392,13 +429,12 @@ const UploadModal = () => {
               type="text"
               title="Enter song lyricist"
               placeholder="Song lyricist"
-              warning={[
-                "If there is more than one lyricist, please separate them with a comma. [e.g., John, Jason]",
-              ]}
+              // warning={warning("lyricist")}
               formMethods={formMethods}
               disabled={isPending}
               toArray={true}
               {...normalizeRegister("lyricists")}
+              {...warning("lyricist")}
             />
 
             {/* Song composer */}
@@ -406,9 +442,6 @@ const UploadModal = () => {
               type="text"
               title="Enter song composer"
               placeholder="Song composer"
-              warning={[
-                "If there is more than one composer, please separate them with a comma. [e.g., John, Jason]",
-              ]}
               syncWithOtherInput={{
                 active: !!watch("lyricists")?.length,
                 syncVal: watch("lyricists"),
@@ -417,6 +450,7 @@ const UploadModal = () => {
               disabled={isPending}
               toArray={true}
               {...normalizeRegister("composers")}
+              {...warning("composer")}
             />
 
             {/* Album */}
@@ -440,7 +474,7 @@ const UploadModal = () => {
             {/* Language */}
             <MultiSelectInputBox
               id="language"
-              title="Select one or more languages for the song"
+              title="Select language(s) for the song"
               placeholder="Click to choose song language"
               formMethods={formMethods}
               options={
@@ -464,7 +498,7 @@ const UploadModal = () => {
             {/* Genres */}
             <MultiSelectInputBox
               id="genre"
-              title="Select one or more genres for the song"
+              title="Select genre(s) for the song"
               placeholder="Click to choose song genre"
               formMethods={formMethods}
               options={
@@ -488,7 +522,7 @@ const UploadModal = () => {
             {/* Tags */}
             <MultiSelectInputBox
               id="tag"
-              title="Select one or more tags for the song"
+              title="Select tag(s) for the song"
               placeholder="Click to choose song tags"
               formMethods={formMethods}
               options={
@@ -535,7 +569,6 @@ const UploadModal = () => {
             className={`
               mt-2
               submit-btn
-              ${activeAdvancedSettings && `lg:w-1/2 lg:rounded-full`}
               capitalize
               text-sm
               outline-none

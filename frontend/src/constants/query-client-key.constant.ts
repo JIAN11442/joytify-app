@@ -7,7 +7,6 @@ export enum MutationKey {
   UPLOAD_SONG_FILE = "upload-song-file",
   UPLOAD_IMAGE_FILE = "upload-image-file",
   CREATE_NEW_SONG = "create-new-song",
-  SEND_RESET_PASSWORD_EMAIL = "send-reset-password-email",
   CREATE_USER_PLAYLIST = "create-user-playlist",
   UPDATE_PLAYLIST = "update-playlist",
   DELETE_PLAYLIST = "delete-playlist",
@@ -21,7 +20,9 @@ export enum MutationKey {
   RECORD_PLAYBACK_LOG = "record-playback-log",
   SEND_VERIFICATION_CODE = "send-verification-code",
   RESEND_VERIFICATION_CODE = "resend-verification-code",
+  SEND_RESET_PASSWORD_EMAIL = "send-reset-password-email",
   VERIFY_VERIFICATION_CODE = "verify-verification-code",
+  RESET_USER_PASSWORD = "reset-user-password",
 }
 
 export enum QueryKey {
@@ -32,4 +33,5 @@ export enum QueryKey {
   GET_ALL_LABELS = "get-all-labels",
   GET_USER_ALBUMS = "get-user-albums",
   GET_ALL_SONGS = "get-all-songs",
+  VERIFY_RESET_PASSWORD_LINK = "verify-reset-password-link",
 }

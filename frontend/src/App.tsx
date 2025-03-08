@@ -21,13 +21,15 @@ function App() {
       <Route path="/" element={<Sidebar />}>
         <Route index element={<HomePage />} />
         <Route path="/search" element={<SearchPage />} />
-        <Route path="/password/reset" element={<ResetPasswordPage />} />
 
         {/* need login to access */}
         <Route element={<AppContainerPage />}>
           <Route path="/playlist/:id" element={<PlaylistPage />} />
         </Route>
       </Route>
+
+      <Route path="/password/reset" element={<ResetPasswordPage />} />
+      <Route path="*" element={<h1>404</h1>} />
     </Routes>
   );
 }

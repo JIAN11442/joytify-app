@@ -21,12 +21,13 @@ export const getUserLabels = async (): Promise<RefactorResLabel> =>
   API.get("/label");
 
 // create label
-export const createLabel = async (data: createLabelParams): Promise<ResLabel> =>
-  API.post("/label/create", data);
+export const createLabel = async (
+  params: createLabelParams
+): Promise<ResLabel> => API.post("/label/create", params);
 
 // get label ids
-export const getLabelIds = async (data: getLabelIdsParams) =>
-  await API.post("/label/getIds", data);
+export const getLabelIds = async (params: getLabelIdsParams) =>
+  await API.post("/label/getIds", params);
 
 // delete label
 export const deleteLabel = async (id: string): Promise<ResLabel> =>

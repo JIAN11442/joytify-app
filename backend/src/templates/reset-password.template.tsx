@@ -1,6 +1,8 @@
 import React from "react";
+
 import {
   Body,
+  Button,
   Container,
   Head,
   Heading,
@@ -8,7 +10,6 @@ import {
   Html,
   Img,
   Link,
-  Preview,
   Section,
   Text,
 } from "@react-email/components";
@@ -20,8 +21,6 @@ import {
   h1,
   mainText,
   verificationSection,
-  verifyText,
-  codeText,
   validityText,
   cautionText,
   spanText,
@@ -29,57 +28,76 @@ import {
   footerText,
   link,
   divider,
+  button,
 } from "./template-styles";
 
-interface VerifyEmailProps {
-  verificationCode?: string;
+interface ResetPasswordProps {
+  url: string;
+  username: string;
 }
 
 // const baseUrl = import.meta.env.VERCEL_URL
 //   ? `https://${import.meta.env.VERCEL_URL}`
 //   : "";
 
-const sendImg =
-  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/send-email.png";
+const SendImage =
+  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/reset-password-02.png";
+const JoytifyLogo =
+  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/logo-r.png";
 
-export default function JoytifyVerifyEmail({
-  verificationCode = "K-596853",
-}: VerifyEmailProps) {
+export const JoytifyResetPasswordLinkEmail = (data: ResetPasswordProps) => {
+  const { url, username } = data;
+
   return (
     <Html>
       <Head />
       <Body style={main}>
-        {/* preview */}
-        <Preview>Joytify Email Verification</Preview>
-
         {/* container */}
         <Container style={container}>
           <Section style={coverSection}>
+            {/* logo */}
+            <table
+              role="presentation"
+              align="center"
+              width="100%"
+              style={{ marginTop: "10px", marginBottom: "20px" }}
+            >
+              <tr>
+                <td align="center">
+                  <Img src={JoytifyLogo} width="150" />
+                </td>
+              </tr>
+            </table>
+
             {/* image */}
             <table role="presentation" align="center" width="100%">
               <tr>
                 <td align="center">
-                  <Img src={sendImg} height="200" />
+                  <Img src={SendImage} height="200" />
                 </td>
               </tr>
             </table>
 
             {/* content */}
             <Section style={upperSection}>
-              <Heading style={h1}>Verify your email address</Heading>
-              <Text style={mainText}>
-                Thanks for starting the new{" "}
-                <span style={spanText}>Joytify</span> account creation process.
-                We want to make sure it's really you. Please enter the following
-                verification code when prompted. If you don&apos;t want to
-                create an account, you can ignore this message.
-              </Text>
-              <Section style={verificationSection}>
-                <Text style={verifyText}>Verification code</Text>
+              <Heading style={h1}>Hi, {username}</Heading>
 
-                <Text style={codeText}>{verificationCode}</Text>
+              <Text style={mainText}>
+                Trouble accessing your <span style={spanText}>Joytify</span>{" "}
+                account? No problem, we're here to help. Select the button below
+                to reset your password.
+              </Text>
+
+              <Button
+                href={url}
+                style={{ ...button, margin: "0 auto", marginBottom: "20px" }}
+              >
+                RESET PASSWORD
+              </Button>
+
+              <Section style={verificationSection}>
                 <Text style={validityText}>
-                  (This code is valid for 10 minutes)
+                  (This link is valid for 10 minutes)
                 </Text>
               </Section>
             </Section>
@@ -90,9 +108,9 @@ export default function JoytifyVerifyEmail({
             {/* caution */}
             <Section style={lowerSection}>
               <Text style={cautionText}>
-                <span style={spanText}>Joytify</span> will never send you an
-                email asking you to reveal or verify your credit card or bank
-                account number.
+                <span style={spanText}>Joytify</span> will never ask you to
+                reveal or verify your credit card or bank account details via
+                email.
               </Text>
             </Section>
           </Section>
@@ -127,4 +145,4 @@ export default function JoytifyVerifyEmail({
       </Body>
     </Html>
   );
-}
+};

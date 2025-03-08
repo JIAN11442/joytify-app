@@ -8,7 +8,7 @@ import useSoundState from "../states/sound.state";
 import usePlayerState from "../states/player.state";
 import usePlaylistState from "../states/playlist.state";
 import { RefactorResSong } from "../constants/axios-response.constant";
-import SongLoopOptions from "../constants/song-loop-mode.constant";
+import SongLoopOptions from "../constants/loop-mode.constant";
 import { MutationKey } from "../constants/query-client-key.constant";
 import PlaybackStateOptions from "../constants/playback.constant";
 import { getDuration } from "../utils/get-time.util";

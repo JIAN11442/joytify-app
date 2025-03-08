@@ -1,4 +1,4 @@
-import { VerificationCodeActionType } from "./verification-code.constant";
+import { VerificationCodeActionType } from "./verification.constant";
 
 // ===================== Select Properties Types =====================
 export type Label = {

@@ -11,7 +11,7 @@ import useSoundState from "../states/sound.state";
 import usePlayerState from "../states/player.state";
 import usePlaylistState from "../states/playlist.state";
 import { RefactorResSong } from "../constants/axios-response.constant";
-import SongLoopOptions from "../constants/song-loop-mode.constant";
+import SongLoopOptions from "../constants/loop-mode.constant";
 import { SoundOutputType } from "../hooks/sound.hook";
 
 type PlayerOperationProps = {

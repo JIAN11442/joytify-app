@@ -9,5 +9,5 @@ type GetMusicianIdsParams = {
 
 // get musician ids
 export const getMusicianIds = async (
-  data: GetMusicianIdsParams
-): Promise<string[]> => API.post("/musician/getIds", data);
+  params: GetMusicianIdsParams
+): Promise<string[]> => API.post("/musician/getIds", params);

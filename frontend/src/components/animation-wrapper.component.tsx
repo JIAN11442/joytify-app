@@ -1,5 +1,10 @@
 import { forwardRef } from "react";
-import { AnimatePresence, motion, MotionProps } from "framer-motion";
+import {
+  AnimatePresence,
+  AnimatePresenceProps,
+  motion,
+  MotionProps,
+} from "framer-motion";
 
 export type DefaultAnimationWrapperProps = {
   initial?: MotionProps["initial"];
@@ -7,6 +12,7 @@ export type DefaultAnimationWrapperProps = {
   transition?: MotionProps["transition"];
   exit?: MotionProps["exit"];
   mode?: "sync" | "wait" | "popLayout";
+  initialState?: AnimatePresenceProps["initial"] | undefined;
   visible?: boolean;
   style?: React.CSSProperties;
 };
@@ -26,6 +32,7 @@ const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
       transition = { duration: 0.5 },
       exit,
       mode = "wait",
+      initialState = undefined,
       visible = true,
       className,
       style,
@@ -39,7 +46,7 @@ const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
     ) as MotionProps["exit"];
 
     return (
-      <AnimatePresence mode={mode}>
+      <AnimatePresence mode={mode} initial={initialState}>
         {visible && (
           <motion.div
             ref={ref}

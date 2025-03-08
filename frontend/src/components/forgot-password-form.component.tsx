@@ -8,17 +8,20 @@ import { MdAlternateEmail } from "react-icons/md";
 import Loader from "./loader.component";
 import InputBox from "./input-box.component";
 
-import { MutationKey } from "../constants/query-client-key.constant";
+import { sendResetPasswordEmail } from "../fetchs/verification.fetch";
 import AuthForOptions from "../constants/auth.constant";
-import { ResetPasswordForm } from "../constants/form.constant";
+import { MutationKey } from "../constants/query-client-key.constant";
+import { defaultForgotPasswordData } from "../constants/form.constant";
+import type { ForgotPasswordForm } from "../constants/form.constant";
+import { AppError, ErrorCode } from "../constants/error-code.constant";
 import useAuthModalState from "../states/auth-modal.state";
-import { sendResetPasswordEmail } from "../fetchs/auth.fetch";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { navigate } from "../lib/navigate.lib";
+import { isHighlight } from "../lib/icon-highlight.lib";
+import { emailRegex } from "../utils/regex";
 
 const ForgotPasswordForm = () => {
   const location = useLocation();
-
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
   const { openAuthModal, closeAuthModal } = useAuthModalState();
@@ -38,24 +41,16 @@ const ForgotPasswordForm = () => {
       navigate(redirectPath, { replace: true });
     },
     onError: (error) => {
-      toast.error(error.message);
+      if (
+        (error as AppError).errorCode ===
+        ErrorCode.VerificationCodeRateLimitExceeded
+      ) {
+        toast.error("You've made too many requests, please try again later");
+      } else {
+        toast.error(error.message);
+      }
     },
   });
-
-  // handle input onKeyDown
-  const handleMoveToNextElement = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    next: React.RefObject<HTMLButtonElement>,
-    condition: string | boolean = e.currentTarget.value.length > 0
-  ) => {
-    if (e.key === "Enter" && condition) {
-      if (typeof next === "string") {
-        setFocus(next);
-      } else if (next?.current) {
-        next.current.focus();
-      }
-    }
-  };
 
   // handle navigate to sign in modal
   const handleNavigateToSignInModal = () => {
@@ -68,14 +63,19 @@ const ForgotPasswordForm = () => {
   const {
     handleSubmit,
     register,
-    setFocus,
-    formState: { isValid },
-  } = useForm<ResetPasswordForm>({
-    defaultValues: { email: "" },
+    watch,
+    formState: { isValid, errors },
+  } = useForm<ForgotPasswordForm>({
+    defaultValues: defaultForgotPasswordData,
+    mode: "onChange",
   });
 
+  // icon highlight
+  const isIconHighlight = (target: keyof ForgotPasswordForm) =>
+    isHighlight(watch, errors, target);
+
   // handle submit
-  const onSubmit: SubmitHandler<ResetPasswordForm> = async (value) => {
+  const onSubmit: SubmitHandler<ForgotPasswordForm> = async (value) => {
     sendResetPasswordEmailToUser(value.email);
   };
 
@@ -89,49 +89,34 @@ const ForgotPasswordForm = () => {
       `}
     >
       {/* Email address */}
-      <div
-        className={`
-          flex
-          flex-col
-          gap-2
-        `}
-      >
-        <p
-          className={`
-            text-sm
-            text-grey-custom/50
-          `}
-        >
-          Email address
-        </p>
-
-        <InputBox
-          type="email"
-          placeholder="Your email address"
-          icon={{ name: MdAlternateEmail }}
-          onKeyDown={(e) => handleMoveToNextElement(e, submitBtnRef)}
-          {...register("email", { required: true })}
-        />
-      </div>
+      <InputBox
+        type="email"
+        placeholder="Your registered email address"
+        icon={{ name: MdAlternateEmail }}
+        iconHighlight={isIconHighlight("email")}
+        className={`py-4`}
+        {...register("email", {
+          required: true,
+          validate: (value) => emailRegex.test(value),
+        })}
+      />
 
       {/* Submit button */}
       <button
+        type="submit"
         ref={submitBtnRef}
-        disabled={!isValid}
+        disabled={!isValid || isPending}
         className={`
-          mt-2
           submit-btn
-          capitalize
+          mt-2
+          py-2.5
           text-sm
           outline-none
           rounded-full
+          capitalize
         `}
       >
-        {isPending ? (
-          <Loader loader={{ size: 20 }} />
-        ) : (
-          "Send reset password link"
-        )}
+        {isPending ? <Loader loader={{ size: 20 }} /> : "Send"}
       </button>
 
       {/* Navigate link */}
@@ -144,11 +129,14 @@ const ForgotPasswordForm = () => {
       >
         Already have an account?
         <button
+          type="button"
           onClick={handleNavigateToSignInModal}
+          disabled={isPending}
           className={`
             ml-2
             text-green-custom
             underline
+            disabled:text-neutral-600
           `}
         >
           Sign in

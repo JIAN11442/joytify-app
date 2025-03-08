@@ -55,6 +55,7 @@ const CreatePlaylistModal = () => {
     formState: { isValid },
   } = useForm({
     defaultValues: { ...defaultCreatePlaylistData },
+    mode: "onChange",
   });
 
   const onSubmit: SubmitHandler<CreatePlaylistForm> = async (value) => {

@@ -4,8 +4,7 @@ import LibraryHeader from "./library-header.component";
 import useAuth from "../hooks/auth.hook";
 
 const Library = () => {
-  const { user, isLoading, isFetching } = useAuth();
-  const isInitialLoading = isLoading && isFetching;
+  const { user, isFetching } = useAuth();
 
   return (
     <ContentBox
@@ -22,7 +21,7 @@ const Library = () => {
       <LibraryHeader user={user} />
 
       {/* Body */}
-      <LibraryBody user={user} isLoading={isInitialLoading} />
+      <LibraryBody user={user} isLoading={isFetching} />
     </ContentBox>
   );
 };

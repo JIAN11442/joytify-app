@@ -1,4 +1,4 @@
-import { bool, cleanEnv, port, str } from "envalid";
+import { bool, cleanEnv, num, port, str } from "envalid";
 
 const env = cleanEnv(process.env, {
   NODE_ENV: str(),
@@ -9,6 +9,7 @@ const env = cleanEnv(process.env, {
   RESEND_API_KEY: str(),
   TEST_EMAIL: str(),
   SENDER_EMAIL: str(),
+  SEND_LIMIT_PER_PERIOD: num(),
   ACCESS_SECRET_KEY: str(),
   REFRESH_SECRET_KEY: str(),
   VERIFICATION_SECRET_KEY: str(),
@@ -33,6 +34,7 @@ export const {
   RESEND_API_KEY,
   TEST_EMAIL,
   SENDER_EMAIL,
+  SEND_LIMIT_PER_PERIOD,
   ACCESS_SECRET_KEY,
   REFRESH_SECRET_KEY,
   VERIFICATION_SECRET_KEY,

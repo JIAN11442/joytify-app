@@ -19,6 +19,7 @@ import * as Vsc from "react-icons/vsc";
 import * as Cg from "react-icons/cg";
 import * as Lu from "react-icons/lu";
 import * as Pi from "react-icons/pi";
+import * as Go from "react-icons/go";
 
 const IconModules = {
   Ri,
@@ -41,6 +42,7 @@ const IconModules = {
   Cg,
   Lu,
   Pi,
+  Go,
 };
 
 export type IconName = keyof typeof IconModules | IconType;

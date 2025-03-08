@@ -13,19 +13,19 @@ interface UploadFileParams extends SignedUrlParams {
 
 // get signed url for upload
 export const getSignedUrl = async (
-  data: SignedUrlParams
+  params: SignedUrlParams
 ): Promise<{ uploadUrl: string }> =>
-  await API.post("/aws/get-signed-url", data);
+  await API.post("/aws/get-signed-url", params);
 
 // upload file to AWS S3
 export const uploadFileToAws = async (
-  data: UploadFileParams
+  params: UploadFileParams
 ): Promise<string | null> => {
   // set default img URL
   let url = null;
 
   // get data
-  const { file, subfolder, extension, nanoID } = data;
+  const { file, subfolder, extension, nanoID } = params;
 
   // get signed url first
   const { uploadUrl } = await getSignedUrl({ subfolder, extension, nanoID });

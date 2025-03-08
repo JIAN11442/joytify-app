@@ -7,7 +7,7 @@ const main = {
 
 const container = {
   margin: "auto",
-  maxWidth: "700px",
+  maxWidth: "780px",
   padding: "20px",
   borderRadius: "10px",
   backgroundColor: "#eee",
@@ -26,10 +26,15 @@ const center = {
   justifyContent: "center",
 };
 
+const logoSection = {
+  ...center,
+  marginBottom: "10px",
+};
+
 const upperSection = {
   ...center,
-  marginBottom: "30px",
   textAlign: "center" as const,
+  marginBottom: "30px",
 };
 
 const lowerSection = { marginBottom: "20px" };
@@ -56,17 +61,32 @@ const link = {
   textDecoration: "underline",
 };
 
+const button = {
+  backgroundColor: "#1cd760",
+  color: "#fff",
+  padding: "1rem 3rem",
+  borderRadius: "5px",
+  fontFamily: fontFamily,
+  fontSize: "14px",
+  fontWeight: "bold",
+};
+
 const text = {
   color: "#363737",
   fontFamily: fontFamily,
   fontSize: "14px",
 };
 
-const mainText = { ...text, marginBottom: "14px" };
+const mainText = {
+  ...text,
+  padding: "0 20px",
+  marginBottom: "14px",
+};
 
 const cautionText = {
   ...text,
   margin: "0px",
+  padding: "0 20px",
   color: "#777777",
   textAlign: "center" as const,
 };
@@ -91,7 +111,7 @@ const codeText = {
   margin: "25px 0",
   fontFamily: "monospace",
   fontWeight: "bold",
-  fontSize: "30px",
+  fontSize: "40px",
   textAlign: "center" as const,
   letterSpacing: "10px",
   color: "#1cd760",
@@ -118,11 +138,13 @@ export {
   main,
   container,
   coverSection,
+  logoSection,
   upperSection,
   verificationSection,
   lowerSection,
   h1,
   link,
+  button,
   mainText,
   verifyText,
   codeText,

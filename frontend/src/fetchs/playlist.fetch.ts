@@ -35,21 +35,21 @@ export const createPlaylist = async (
 
 // update playlist cover image
 export const updatePlaylist = async (
-  data: UpdatePlaylistParams
+  params: UpdatePlaylistParams
 ): Promise<ResPlaylist> => {
-  const { awsImageUrl, playlistId, ...params } = data;
+  const { awsImageUrl, playlistId, ...rest } = params;
 
   return API.patch(`/playlist/update/${playlistId}`, {
-    ...params,
+    ...rest,
     imageUrl: awsImageUrl,
   });
 };
 
 // delete playlist
 export const deletePlaylist = async (
-  data: DeletePlaylistParams
+  params: DeletePlaylistParams
 ): Promise<ResPlaylist> => {
-  const { currentPlaylistId, targetPlaylistId } = data;
+  const { currentPlaylistId, targetPlaylistId } = params;
 
   return API.delete(`/playlist/delete/${currentPlaylistId}`, {
     data: { targetPlaylistId },

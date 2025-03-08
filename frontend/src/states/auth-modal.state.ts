@@ -2,7 +2,7 @@ import { create } from "zustand";
 import AuthForOptions, { AuthForType } from "../constants/auth.constant";
 
 type AuthModalState = {
-  activeModal: boolean;
+  activeAuthModal: boolean;
   authFor: AuthForType;
 
   openAuthModal: (auth: AuthForType) => void;
@@ -10,13 +10,13 @@ type AuthModalState = {
 };
 
 const useAuthModalState = create<AuthModalState>((set) => ({
-  activeModal: false,
+  activeAuthModal: false,
   authFor: AuthForOptions.SIGN_IN,
 
   openAuthModal: (auth: AuthForType) =>
-    set({ activeModal: true, authFor: auth }),
+    set({ activeAuthModal: true, authFor: auth }),
   closeAuthModal: () =>
-    set({ activeModal: false, authFor: AuthForOptions.SIGN_IN }),
+    set({ activeAuthModal: false, authFor: AuthForOptions.SIGN_IN }),
 }));
 
 export default useAuthModalState;

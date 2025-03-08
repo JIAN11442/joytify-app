@@ -8,5 +8,5 @@ type StorePlaybackLogParams = {
 };
 
 // store playback log
-export const storePlaybackLog = async (data: StorePlaybackLogParams) =>
-  API.post("/playback/record", data);
+export const storePlaybackLog = async (params: StorePlaybackLogParams) =>
+  API.post("/playback/record", params);

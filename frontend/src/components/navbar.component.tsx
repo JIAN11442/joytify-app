@@ -6,13 +6,13 @@ import JoytifyLogo from "../../public/joytify-logo.svg";
 
 import AuthOperation from "./auth-operation.component";
 import NavbarSearchBar from "./navbar-searchbar.component";
+import NavbarLink from "./navbar-link.component";
 
 import useNavbarState from "../states/navbar.state";
 import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { navigate } from "../lib/navigate.lib";
-import NavbarLink from "./navbar-link.component";
 
 const Navbar = () => {
   const [searchBarVal, setSearchBarVal] = useState("");

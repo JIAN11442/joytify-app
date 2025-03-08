@@ -2,10 +2,10 @@ import { FaCheck } from "react-icons/fa6";
 import {
   VerificationCodeActions,
   VerificationForType,
-} from "../constants/verification-code.constant";
+} from "../constants/verification.constant";
 import Icon from "./react-icons.component";
 import { IoClose } from "react-icons/io5";
-import useVerificationCodeModalState from "../states/verification-code.state";
+import useVerificationModalState from "../states/verification.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { useEffect, useRef, useState } from "react";
 import { getDuration } from "../utils/get-time.util";
@@ -22,10 +22,11 @@ const VerifyStatusForm: React.FC<VerifyStatusFormProps> = ({
   registerFn,
 }) => {
   const btnRef = useRef<HTMLButtonElement>(null);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(5);
 
   const { backToInitialPage, closeVerificationCodeModal } =
-    useVerificationCodeModalState();
+    useVerificationModalState();
+
   const { EMAIL_VERIFY_FAILED } = VerificationCodeActions;
   const iconName = isSuccess ? FaCheck : IoClose;
 
@@ -122,6 +123,7 @@ const VerifyStatusForm: React.FC<VerifyStatusFormProps> = ({
       <button
         ref={btnRef}
         type="button"
+        autoFocus
         onClick={handleBtnClick}
         className={`
           submit-btn

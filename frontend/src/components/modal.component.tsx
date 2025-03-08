@@ -5,10 +5,10 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { IoMdClose } from "react-icons/io";
 
 import Icon from "./react-icons.component";
+import Loader from "./loader.component";
 
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import mergeRefs from "../lib/merge-refs.lib";
-import Loader from "./loader.component";
 
 type ModalProps = {
   title?: string;
@@ -141,7 +141,6 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               sm:min-w-[500px]
               sm:max-w-[90vw]
               h-auto
-              min-h-[300px]
               max-h-[90vh]
               p-[25px]
               border
@@ -149,7 +148,8 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               bg-neutral-800 
               rounded-md
               outline-none
-              overflow-hidden
+              overflow-y-auto
+              overflow-x-hidden
             `,
               className
             )}

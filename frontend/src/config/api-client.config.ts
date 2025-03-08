@@ -4,21 +4,32 @@ import axios, { AxiosRequestConfig } from "axios";
 import queryClient from "./query-client.config";
 import { navigate } from "../lib/navigate.lib";
 
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    silent?: boolean;
+  }
+}
+
 const options: AxiosRequestConfig = {
   baseURL: import.meta.env.VITE_SERVER_URL,
   withCredentials: true,
+  silent: true,
 };
 
-// API for refresh
+// API for axios
+const API = axios.create(options);
 const RefreshTokensClient = axios.create(options);
+const Unauthorized = document.cookie.includes("unauthorized");
+const pathName = window.location.pathname;
 
+let refreshPromise: Promise<void> | null = null;
+let isWarningUnauthorized = false;
+
+// API for refresh
 RefreshTokensClient.interceptors.response.use(
   (res) => res.data,
   (err) => Promise.reject(err.response.data.message)
 );
-
-// API for axios
-const API = axios.create(options);
 
 // response interceptor (controll return data of the API)
 API.interceptors.response.use(
@@ -31,20 +42,33 @@ API.interceptors.response.use(
 
     // if got an error with status 401 and errorCode is InvalidAccessToken
     // that means the access token is expired, so we need to refresh the tokens to login in back screen
-    if (status === 401 && data?.errorCode === "InvalidAccessToken") {
-      try {
-        // refresh tokens
-        await RefreshTokensClient.get("/auth/refresh");
+    if (status === 401) {
+      if (data?.errorCode === "InvalidAccessToken") {
+        try {
+          if (!refreshPromise) {
+            refreshPromise = RefreshTokensClient.get("/auth/refresh");
+          }
 
-        // retry the request to get current page data
-        return RefreshTokensClient(config);
-      } catch (error) {
-        // if refresh token failed, clear the query cache
-        queryClient.clear();
+          await refreshPromise;
 
-        // save currrent path to redirect url
-        // so we can redirect user to the current page after login
-        navigate("/", { state: { redirectUrl: window.location.pathname } });
+          return RefreshTokensClient(config);
+        } catch (error) {
+          // if refresh token failed, clear the query cache
+          queryClient.clear();
+
+          // if the current path is not /search or /password/reset,
+          if (pathName !== "/search" && pathName !== "/password/reset") {
+            // navigate to homepage and save currrent path to redirect url
+            // so we can redirect user to the current page after login
+            navigate("/", { state: { redirectUrl: window.location.pathname } });
+          }
+        }
+      }
+
+      // warning
+      if (Unauthorized && !isWarningUnauthorized) {
+        console.warn("🔑 Unauthorized!");
+        isWarningUnauthorized = true;
       }
     }
 
