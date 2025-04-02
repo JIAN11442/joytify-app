@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { PlaybackSong } from "./playback.model";
-import PlaybackStateOptions from "../constants/playback.constant";
+import { PlaybackSong } from "@joytify/shared-types/types";
+import { PlaybackStateOptions } from "@joytify/shared-types/constants";
 
 export interface HistoryDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
@@ -35,10 +35,7 @@ const historySchema = new mongoose.Schema<HistoryDocument>({
               duration: { type: Number, required: true },
               state: {
                 type: String,
-                enum: [
-                  PlaybackStateOptions.COMPLETED,
-                  PlaybackStateOptions.PLAYING,
-                ],
+                enum: [PlaybackStateOptions.COMPLETED, PlaybackStateOptions.PLAYING],
                 required: true,
               },
               timestamp: { type: Date, required: true },

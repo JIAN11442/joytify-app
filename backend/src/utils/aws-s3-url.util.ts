@@ -1,9 +1,9 @@
 import { nanoid } from "nanoid";
 
-import s3 from "../config/aws-s3.config";
 import { AWS_BUCKET_NAME } from "../constants/env-validate.constant";
-import { FileExtension, UploadFolder } from "../constants/aws.constant";
+import { FileExtension, UploadFolder } from "@joytify/shared-types/constants";
 import awsUrlParser from "./aws-url-parser.util";
+import s3 from "../config/aws-s3.config";
 
 type GenerateUrlParams = {
   subfolder?: UploadFolder | undefined;
@@ -18,9 +18,7 @@ export const generateUploadUrl = async ({
 }: GenerateUrlParams) => {
   try {
     const date = new Date();
-    const fileName = `${
-      nanoID ? nanoID : nanoid()
-    }-${date.getTime()}${extension}`;
+    const fileName = `${nanoID ? nanoID : nanoid()}-${date.getTime()}${extension}`;
     const uploadFilePath = subfolder ? `${subfolder}/${fileName}` : fileName;
 
     const params = {

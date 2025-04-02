@@ -1,37 +1,35 @@
-import toast from "react-hot-toast";
+import { useEffect } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { BsList, BsListTask } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
-import { MdDeleteSweep, MdPlaylistPlay } from "react-icons/md";
-import { FaCheck, FaUserPlus, FaUserXmark } from "react-icons/fa6";
-import { useMutation } from "@tanstack/react-query";
+import { MdDeleteSweep, MdLock, MdPlaylistPlay, MdPublic } from "react-icons/md";
+import { FaCheck } from "react-icons/fa6";
 
 import Menu from "./menu.component";
 import Icon from "./react-icons.component";
+import MenuItem from "./menu-item.component";
 import PlayButton from "./play-button.component";
 
-import { changePlaylistHiddenState } from "../fetchs/playlist.fetch";
-import { RefactorResPlaylist } from "../constants/axios-response.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
-import ArrangementOptions, {
-  ArrangementType,
-} from "../constants/arrangement.constant";
-import SongLoopOptions from "../constants/loop-mode.constant";
-import useSoundState from "../states/sound.state";
-import usePlayerState from "../states/player.state";
-import usePlaylistState from "../states/playlist.state";
-import { timeoutForDelay } from "../lib/timeout.lib";
 import useOnPlay from "../hooks/play.hook";
-import { usePlaylistById } from "../hooks/playlist.hook";
+import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
+import { ArrangementOptions } from "../constants/arrangement.constant";
+import { SongLoopOptions } from "../constants/loop-mode.constant";
+import { PrivacyOptions } from "@joytify/shared-types/constants";
+import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
+import { ArrangementType } from "../types/arragement.type";
+import usePlaylistState from "../states/playlist.state";
+import usePlayerState from "../states/player.state";
+import useSoundState from "../states/sound.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 type PlaylistBodyHeaderProps = {
-  playlist: RefactorResPlaylist;
+  playlist: RefactorPlaylistResponse;
 };
 
-const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
-  playlist,
-}) => {
-  const { songs, default: isDefault, hidden } = playlist;
+const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({ playlist }) => {
+  const { _id: playlistId, songs, default: isDefault, privacy } = playlist;
+  const { PUBLIC, PRIVATE } = PrivacyOptions;
+  const isPublic = privacy === PUBLIC;
 
   const {
     activePlaylistEditOptionsMenu,
@@ -40,36 +38,17 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
     setActivePlaylistEditModal,
     setActivePlaylistEditOptionsMenu,
     setActivePlaylistListOptionsMenu,
-    setActiveDeletePlaylistModal,
-    setActiveRemovePlaylistModal,
+    setActivePlaylistDeleteModal,
+    setActivePlaylistPrivacyModal,
     setSongArrangementType,
   } = usePlaylistState();
 
-  const { sound, isPlaying, activeSongId } = useSoundState();
   const { setLoopType } = usePlayerState();
+  const { sound, isPlaying, activeSongId } = useSoundState();
 
   const { onPlay } = useOnPlay(songs);
-  const { refetch: targetPlaylistRefetch } = usePlaylistById(playlist._id);
 
-  // add playlist to profile mutation
-  const { mutate: addUserPlaylistToProfile } = useMutation({
-    mutationKey: [MutationKey.ADD_PLAYLIST_TO_PROFILE],
-    mutationFn: changePlaylistHiddenState,
-    onSuccess: (data) => {
-      const { title } = data;
-
-      // close edit options menu
-      setActivePlaylistEditOptionsMenu(false);
-
-      // refetch target playlist
-      targetPlaylistRefetch();
-
-      toast.success(`"${title}" playlist added to profile`);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  const { mutate: updatePlaylistFn } = useUpdatePlaylistMutation(playlistId);
 
   // handle active playlist edit options modal
   const handleActivePlaylistEditOptionsMenu = () => {
@@ -95,20 +74,22 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
   // handle active delete warning modal
   const handleActiveDeleteWarningModal = () => {
     timeoutForDelay(() => {
-      setActiveDeletePlaylistModal({ active: true, playlist });
+      setActivePlaylistDeleteModal({ active: true, playlist });
     });
   };
 
-  // handle active remove warning modal
-  const handleActiveRemoveWarningModal = () => {
+  // handle active playlist privacy warning modal
+  const handleActivePlaylistPrivacyModal = () => {
     timeoutForDelay(() => {
-      setActiveRemovePlaylistModal({ active: true, playlist });
+      setActivePlaylistPrivacyModal({ active: true, playlist });
     });
   };
 
-  // handle add playlist to profile
-  const handleAddPlaylistToProfile = () => {
-    addUserPlaylistToProfile({ playlistId: playlist._id, hiddenState: false });
+  // handle switch playlist privacy
+  const handleSwitchPlaylistPrivacy = () => {
+    timeoutForDelay(() => {
+      updatePlaylistFn({ privacy: isPublic ? PRIVATE : PUBLIC });
+    });
   };
 
   // handle change song arrangement type
@@ -136,10 +117,19 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
     }
   };
 
-  const playedSongExistInPlaylist =
-    songs && songs.some((song) => song._id === activeSongId);
+  // check if played song exist in playlist
+  const playedSongExistInPlaylist = songs && songs.some((song) => song._id === activeSongId);
 
-  const arrangeTypes = [ArrangementOptions.COMPACT, ArrangementOptions.LIST];
+  // get needed arrangement types
+  const arrangementTypes = Object.values(ArrangementOptions).filter(
+    (type) => type !== ArrangementOptions.GRID
+  );
+
+  // close playlist edit options menu in first render
+  useEffect(() => {
+    setActivePlaylistEditOptionsMenu(false);
+    setActivePlaylistListOptionsMenu(false);
+  }, []);
 
   return (
     <div
@@ -158,95 +148,82 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
         `}
       >
         {/* play button */}
-        {songs && songs.length ? (
+        {songs && songs.length > 0 && (
           <PlayButton
             onClick={handleLoopPlaylist}
             isPlaying={playedSongExistInPlaylist ? isPlaying : false}
           />
-        ) : (
-          ""
         )}
 
         {/* options */}
-        <>
-          {!isDefault && (
-            <div className={`relative`}>
-              {/* options button */}
-              <button
-                type="button"
-                onClick={handleActivePlaylistEditOptionsMenu}
-                className={`
-                  text-grey-custom/50   
-                  hover:text-white
-                  outline-none
-                  transition 
-                `}
-              >
-                <Icon name={BiDotsHorizontalRounded} opts={{ size: 30 }} />
-              </button>
+        {!isDefault && (
+          <div className={`relative`}>
+            {/* options button */}
+            <button
+              type="button"
+              onClick={handleActivePlaylistEditOptionsMenu}
+              className={`
+                text-grey-custom/50   
+                hover:text-white
+                outline-none
+                transition 
+              `}
+            >
+              <Icon name={BiDotsHorizontalRounded} opts={{ size: 30 }} />
+            </button>
 
-              {/* options menu */}
-              <Menu
-                activeState={{
-                  visible: activePlaylistEditOptionsMenu,
-                  setVisible: setActivePlaylistEditOptionsMenu,
-                }}
-                wrapper={{ transformOrigin: "top left" }}
-                className={`w-[210px]`}
-              >
-                {/* Edit details */}
-                <button
-                  type="button"
-                  onClick={handleActivePlaylistEditModal}
-                  className={`menu-btn normal-case`}
-                >
-                  <Icon name={AiFillEdit} opts={{ size: 18 }} />
-                  <p>Edit details</p>
-                </button>
+            {/* options menu */}
+            <Menu
+              activeState={{
+                visible: activePlaylistEditOptionsMenu,
+                setVisible: setActivePlaylistEditOptionsMenu,
+              }}
+              wrapper={{ transformOrigin: "top left" }}
+              className={`w-[210px]`}
+            >
+              {/* Edit details */}
+              <MenuItem
+                onClick={handleActivePlaylistEditModal}
+                icon={{ name: AiFillEdit }}
+                label="Edit details"
+              />
 
-                {/* Delete playlist */}
-                <button
-                  onClick={handleActiveDeleteWarningModal}
-                  className={`menu-btn normal-case`}
-                >
-                  <Icon name={MdDeleteSweep} opts={{ size: 18 }} />
-                  <p>Delete playlist</p>
-                </button>
+              {/* Delete playlist */}
+              <MenuItem
+                onClick={handleActiveDeleteWarningModal}
+                icon={{ name: MdDeleteSweep }}
+                label="Delete playlist"
+              />
 
-                {/* Remove from profile */}
-                <button
-                  onClick={
-                    hidden
-                      ? handleAddPlaylistToProfile
-                      : handleActiveRemoveWarningModal
-                  }
-                  className={`menu-btn normal-case`}
-                >
-                  <Icon
-                    name={hidden ? FaUserPlus : FaUserXmark}
-                    opts={{ size: 18 }}
-                  />
-                  <p>{hidden ? "Add to profile" : "Remove from profile"}</p>
-                </button>
-              </Menu>
-            </div>
-          )}
-        </>
+              {/* Remove from profile */}
+              <MenuItem
+                onClick={isPublic ? handleActivePlaylistPrivacyModal : handleSwitchPlaylistPrivacy}
+                icon={{ name: isPublic ? MdLock : MdPublic }}
+                label={isPublic ? "Make private" : "Make public"}
+              />
+            </Menu>
+          </div>
+        )}
       </div>
 
       {/* right side */}
-      <div
-        onClick={handleActivePlaylistListOptionsMenu}
-        className={`
-          relative
-          text-grey-custom/50   
-          hover:text-white
-          cursor-pointer
-          transition
-        `}
-      >
-        <Icon name={MdPlaylistPlay} opts={{ size: 28 }} />
+      <div className={`relative`}>
+        {/* options button */}
+        <button
+          type="button"
+          onClick={handleActivePlaylistListOptionsMenu}
+          className={`
+            relative
+            text-grey-custom/50   
+            hover:text-white
+            cursor-pointer
+            transition
+          `}
+        >
+          <Icon name={MdPlaylistPlay} opts={{ size: 28 }} />
+        </button>
 
+        {/* options menu */}
         <Menu
           activeState={{
             visible: activePlaylistListOptionsMenu,
@@ -254,6 +231,7 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
           }}
           wrapper={{ transformOrigin: "top right" }}
           className={`
+            absolute
             top-8
             right-0
             w-[210px]  
@@ -274,17 +252,14 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
 
           {/* Arrange option button */}
           <>
-            {arrangeTypes.map((opt) => (
+            {arrangementTypes.map((opt) => (
               <button
                 key={opt}
                 onClick={() => handleChangeSongArrangementType(opt)}
                 className={`
-                   menu-btn
-                  ${
-                    songArrangementType === opt &&
-                    `text-green-500 hover:text-green-500`
-                  }
-                 `}
+                    menu-btn
+                  ${songArrangementType === opt && `text-green-500 hover:text-green-500`}
+                  `}
               >
                 <div
                   className={`
@@ -294,11 +269,7 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({
                     justify-center
                   `}
                 >
-                  <Icon
-                    name={
-                      opt === ArrangementOptions.COMPACT ? BsList : BsListTask
-                    }
-                  />
+                  <Icon name={opt === ArrangementOptions.COMPACT ? BsList : BsListTask} />
                   <p>{opt}</p>
                 </div>
 

@@ -7,9 +7,9 @@ import AnimationWrapper from "../components/animation-wrapper.component";
 import ResetStatusForm from "../components/reset-status-form.component";
 import JoytifyLogo from "../../public/joytify-logo.svg";
 
+import { PasswordResetStatus } from "@joytify/shared-types/constants";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { PasswordResetStatus } from "../constants/user.constant";
 
 const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();

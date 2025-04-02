@@ -7,6 +7,7 @@ import {
 const playbackRoute = Router();
 
 playbackRoute.post("/record", storePlaybackLogHandler);
-playbackRoute.get("/logs", getPlaybackLogsHandler);
+
+playbackRoute.get("/logs", getPlaybackLogsHandler); //(*)
 
 export default playbackRoute;

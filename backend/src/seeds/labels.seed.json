@@ -1,0 +1,954 @@
+[
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934c9"
+    },
+    "label": "English",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-03-19T08:37:20.073Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ca"
+    },
+    "label": "Chinese",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-03-14T14:10:16.289Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934cb"
+    },
+    "label": "Japanese",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-03-18T03:46:28.437Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934cc"
+    },
+    "label": "Korean",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-03-19T08:37:20.191Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934cd"
+    },
+    "label": "Spanish",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ce"
+    },
+    "label": "French",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934cf"
+    },
+    "label": "Italian",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d0"
+    },
+    "label": "Malay",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d1"
+    },
+    "label": "German",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d2"
+    },
+    "label": "Portuguese",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d3"
+    },
+    "label": "Russian",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d4"
+    },
+    "label": "Hindi",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d5"
+    },
+    "label": "Turkish",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d6"
+    },
+    "label": "Greek",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d7"
+    },
+    "label": "Swedish",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d8"
+    },
+    "label": "Dutch",
+    "type": "language",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d9"
+    },
+    "label": "Pop",
+    "type": "genre",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-03-19T08:37:20.073Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934da"
+    },
+    "label": "Rock",
+    "type": "genre",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-03-14T04:05:51.296Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934db"
+    },
+    "label": "Hip-Hop",
+    "type": "genre",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934dc"
+    },
+    "label": "Jazz",
+    "type": "genre",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934dd"
+    },
+    "label": "Classical",
+    "type": "genre",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934de"
+    },
+    "label": "Electronic",
+    "type": "genre",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934df"
+    },
+    "label": "Country",
+    "type": "genre",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-20T09:09:49.809Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e0"
+    },
+    "label": "Reggae",
+    "type": "genre",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e1"
+    },
+    "label": "Blues",
+    "type": "genre",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e2"
+    },
+    "label": "Metal",
+    "type": "genre",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e3"
+    },
+    "label": "Folk",
+    "type": "genre",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e4"
+    },
+    "label": "Happy",
+    "type": "tag",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e5"
+    },
+    "label": "Sad",
+    "type": "tag",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e6"
+    },
+    "label": "Energetic",
+    "type": "tag",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e7"
+    },
+    "label": "Melancholic",
+    "type": "tag",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e8"
+    },
+    "label": "Romantic",
+    "type": "tag",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-03-19T08:37:20.073Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e9"
+    },
+    "label": "Chill",
+    "type": "tag",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ea"
+    },
+    "label": "Uplifting",
+    "type": "tag",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934eb"
+    },
+    "label": "Love",
+    "type": "theme",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ec"
+    },
+    "label": "Heartbreak",
+    "type": "theme",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ed"
+    },
+    "label": "Party",
+    "type": "theme",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ee"
+    },
+    "label": "Friendship",
+    "type": "theme",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ef"
+    },
+    "label": "Social Issues",
+    "type": "theme",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f0"
+    },
+    "label": "Life",
+    "type": "theme",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f1"
+    },
+    "label": "Nature",
+    "type": "theme",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f2"
+    },
+    "label": "Acoustic",
+    "type": "feature",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f3"
+    },
+    "label": "Live",
+    "type": "feature",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f4"
+    },
+    "label": "Cover",
+    "type": "feature",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f5"
+    },
+    "label": "Remix",
+    "type": "feature",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f6"
+    },
+    "label": "Instrumental",
+    "type": "feature",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f7"
+    },
+    "label": "Acapella",
+    "type": "feature",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f8"
+    },
+    "label": "Remastered",
+    "type": "feature",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f9"
+    },
+    "label": "Demo",
+    "type": "feature",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934fa"
+    },
+    "label": "Latin",
+    "type": "region",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934fb"
+    },
+    "label": "African",
+    "type": "region",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934fc"
+    },
+    "label": "Asian",
+    "type": "region",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934fd"
+    },
+    "label": "Indie",
+    "type": "region",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934fe"
+    },
+    "label": "North American",
+    "type": "region",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ff"
+    },
+    "label": "South American",
+    "type": "region",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c6193500"
+    },
+    "label": "European",
+    "type": "region",
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  }
+]

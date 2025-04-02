@@ -1,23 +1,21 @@
 import { useCallback, useEffect } from "react";
 import usePlayerState from "../states/player.state";
 import useSoundState from "../states/sound.state";
-import { RefactorResSong } from "../constants/axios-response.constant";
+import { RefactorSongResponse } from "@joytify/shared-types/types";
 
-const useOnPlay = (songs: RefactorResSong[]) => {
-  const { setActiveSongId, setSongIds, setOnPlay, setShuffleSongIds } =
-    useSoundState();
+const useOnPlay = (songs?: RefactorSongResponse[]) => {
   const { isShuffle } = usePlayerState();
+  const { setActiveSongId, setSongIds, setOnPlay, setShuffleSongIds } = useSoundState();
 
   // shuffle song ids function
   const shuffleSongIds = useCallback(
     (id: string) => {
-      const songIds = songs.map((song) => song._id);
+      if (songs) {
+        const songIds = songs.map((song) => song._id).filter((songId) => songId !== id);
+        const shuffleSongIds = [id, ...songIds.sort(() => Math.random() - 0.5)];
 
-      songIds.splice(songIds.indexOf(id), 1);
-
-      const shuffleSongIds = [id, ...songIds.sort(() => Math.random() - 0.5)];
-
-      setSongIds(shuffleSongIds);
+        setSongIds(shuffleSongIds);
+      }
     },
     [isShuffle, songs]
   );
@@ -25,13 +23,15 @@ const useOnPlay = (songs: RefactorResSong[]) => {
   // on play target id song
   const onPlay = useCallback(
     (id: string) => {
-      setActiveSongId(id);
+      if (songs) {
+        setActiveSongId(id);
 
-      // for to previous or next button
-      if (isShuffle) {
-        shuffleSongIds(id);
-      } else {
-        setSongIds(songs.map((song) => song._id));
+        // for to previous or next button
+        if (isShuffle) {
+          shuffleSongIds(id);
+        } else {
+          setSongIds(songs.map((song) => song._id));
+        }
       }
     },
     [songs, isShuffle]

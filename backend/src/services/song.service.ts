@@ -1,38 +1,40 @@
-import SongModel from "../models/song.model";
-import { getTotalPlaybackDurationAndCount } from "./playback.service";
+import { FilterQuery } from "mongoose";
+import SongModel, { SongDocument } from "../models/song.model";
 
-import { SongZodSchemaType } from "../schemas/song.zod";
+import { getTotalPlaybackDurationAndCount } from "./playback.service";
+import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
 import {
-  CONFLICT,
-  INTERNAL_SERVER_ERROR,
-  NOT_FOUND,
-} from "../constants/http-code.constant";
-import ErrorCode from "../constants/error-code.constant";
+  CreateSongRequest,
+  DeleteSongRequest,
+  SongResponse,
+  RefactorSongResponse,
+  Musician,
+  Label,
+  Album,
+} from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
+import { joinLabels } from "../utils/join-labels.util";
 import { parseToFloat } from "../utils/parse-float.util";
 
-type CreateParams = {
-  userId: string;
-  songInfo: SongZodSchemaType;
-};
+type CreateSongServiceRequest = { userId: string; songInfo: CreateSongRequest };
 
-type DeleteParams = {
-  userId: string;
-  songId: string;
-};
+interface DeleteSongServiceRequest extends DeleteSongRequest {
+  userId?: string;
+}
 
-type AppAssertParams = [
-  errorCode?: ErrorCode,
-  firebaseUID?: string | null,
-  awsUrl?: string[] | null,
-];
+type AppAssert = [errorCode?: ErrorCode, firebaseUID?: string | null, awsUrl?: string[] | null];
+
+const { INTERNAL_SERVER_ERROR, CONFLICT } = HttpCode;
+const { CREATE_SONG_ERROR } = ErrorCode;
 
 // create new song
-export const createNewSong = async ({ userId, songInfo }: CreateParams) => {
+export const createNewSong = async (params: CreateSongServiceRequest) => {
+  const { userId, songInfo } = params;
   const { title, artist, songUrl, imageUrl, ...props } = songInfo;
 
-  const params: AppAssertParams = [
-    ErrorCode.CreateSongError,
+  // app assert params
+  const appAssertParams: AppAssert = [
+    CREATE_SONG_ERROR,
     null,
     [songUrl, ...(imageUrl ? [imageUrl] : [])],
   ];
@@ -44,9 +46,9 @@ export const createNewSong = async ({ userId, songInfo }: CreateParams) => {
     followers: userId,
   });
 
-  appAssert(!songIsExist, CONFLICT, "Song already exists", ...params);
+  appAssert(!songIsExist, CONFLICT, "Song already exists", ...appAssertParams);
 
-  // // create new song
+  // create new song
   const song = await SongModel.create({
     title,
     artist,
@@ -57,26 +59,71 @@ export const createNewSong = async ({ userId, songInfo }: CreateParams) => {
     ...props,
   });
 
-  appAssert(song, INTERNAL_SERVER_ERROR, "Failed to create song", ...params);
+  appAssert(song, INTERNAL_SERVER_ERROR, "Failed to create song", ...appAssertParams);
 
   return { song };
 };
 
+// get all songs
+export const getSongs = async () => {
+  // get songs
+  const songs = await SongModel.find()
+    .populate({ path: "artist", select: "name", transform: (doc: Musician) => doc.name })
+    .populate({ path: "lyricists", select: "name", transform: (doc: Musician) => doc.name })
+    .populate({ path: "composers", select: "name", transform: (doc: Musician) => doc.name })
+    .populate({ path: "languages", select: "label", transform: (doc: Label) => doc.label })
+    .populate({ path: "album", select: "title", transform: (doc: Album) => doc.title })
+    .lean<SongResponse[]>();
+
+  // refactor songs's params from array to string
+  const refactorSongs: RefactorSongResponse[] = songs.map((song: SongResponse) => ({
+    ...song,
+    lyricists: joinLabels(song.lyricists),
+    composers: joinLabels(song.composers),
+    languages: joinLabels(song.languages),
+    album: song.album || "",
+  }));
+
+  return { songs: refactorSongs };
+};
+
 // get song by id
 export const getSongById = async (id: string) => {
+  // get target id song
   const song = await SongModel.findOne({ _id: id })
-    .populate({ path: "artist", select: "name" })
-    .populate({ path: "lyricists", select: "name" })
-    .populate({ path: "composers", select: "name" })
-    .populate({ path: "languages", select: "label" })
-    .populate({ path: "album", select: "title" });
+    .populate({ path: "artist", select: "name", transform: (doc: Musician) => doc.name })
+    .populate({ path: "lyricists", select: "name", transform: (doc: Musician) => doc.name })
+    .populate({ path: "composers", select: "name", transform: (doc: Musician) => doc.name })
+    .populate({ path: "languages", select: "label", transform: (doc: Label) => doc.label })
+    .populate({ path: "album", select: "title", transform: (doc: Album) => doc.title })
+    .lean<SongResponse>();
 
   appAssert(song, INTERNAL_SERVER_ERROR, "Song not found");
 
-  // const paletee = await usePalette(song.imageUrl);
-  // const generateSong = { ...song.toObject(), paletee };
+  // refactor song's params from array to string
+  const refactorSong: RefactorSongResponse = {
+    ...song,
+    lyricists: joinLabels(song.lyricists),
+    composers: joinLabels(song.composers),
+    languages: joinLabels(song.languages),
+    album: song.album || "",
+  };
 
-  return { song };
+  return { song: refactorSong };
+};
+
+// delete song by id(*)
+export const deleteSongById = async (params: DeleteSongServiceRequest) => {
+  const { songId, userId } = params;
+
+  const queryParams: FilterQuery<SongDocument> = {
+    _id: songId,
+    ...(userId ? { creator: userId } : {}),
+  };
+
+  const deletedSong = await SongModel.findOneAndDelete(queryParams);
+
+  return { deletedSong };
 };
 
 // re-calculate target song's total duration, total count and average duration
@@ -89,32 +136,12 @@ export const refreshSongPlaybackStats = async (songId: string) => {
     {
       "activity.total_playback_count": totalCount,
       "activity.total_playback_duration": parseToFloat(totalDuration),
-      "activity.weighted_average_playback_duration":
-        parseToFloat(weightedAvgDuration),
+      "activity.weighted_average_playback_duration": parseToFloat(weightedAvgDuration),
     },
     { new: true }
   );
 
-  appAssert(
-    updatedSong,
-    INTERNAL_SERVER_ERROR,
-    "Failed to update song's activity"
-  );
+  appAssert(updatedSong, INTERNAL_SERVER_ERROR, "Failed to update song's activity");
 
   return { updatedSong };
-};
-
-// delete song by id
-export const deleteSongById = async ({ userId, songId }: DeleteParams) => {
-  // check if song exist
-  const song = await SongModel.findOne({ _id: songId, creator: userId });
-
-  appAssert(song, NOT_FOUND, "Song not found");
-
-  // delete target song
-  const deletedSong = await SongModel.findByIdAndDelete(song._id);
-
-  appAssert(deletedSong, INTERNAL_SERVER_ERROR, "Failed to delete song");
-
-  return { deletedSong };
 };

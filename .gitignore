@@ -1,6 +1,5 @@
-/node_modules
+# Environment Variables
 .env
-dist
 
 # Logs
 logs
@@ -11,6 +10,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies and build
 node_modules
 dist
 dist-ssr
@@ -56,6 +56,11 @@ Dockerfile.dev
 Dockerfile
 docker-compose.yaml
 .dockerignore
-/nginx
+nginx
 
 
+# Shared Types Folder
+share
+
+# SonarQube Folder
+.scannerwork

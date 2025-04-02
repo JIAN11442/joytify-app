@@ -3,14 +3,22 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      screens: {
+        xs: "350px",
+      },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
         inter: ["'Inter'", "sans-serif"],
         gelasio: ["'Gelasio'", "serif"],
         ubuntu: ["Ubuntu", "sans-serif"],
+        dangrek: ["Dangrek", "sans-serif"],
+        montserrat: ["Montserrat", "sans-serif"],
       },
       fontSize: {
         lgc: "17px",
+      },
+      fontWeight: {
+        ultra: "1000",
       },
       colors: {
         green: {

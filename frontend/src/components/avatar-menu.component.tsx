@@ -3,10 +3,10 @@ import { useRef } from "react";
 import Menu from "./menu.component";
 
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { ResUser } from "../constants/axios-response.constant";
+import { AuthUserResponse } from "@joytify/shared-types/types";
 
 type AvatarMenuType = {
-  user: ResUser;
+  authUser: AuthUserResponse;
   activeMenuState: {
     activeMenu: boolean;
     setActiveMenu: (state: boolean) => void;
@@ -14,11 +14,7 @@ type AvatarMenuType = {
   children?: React.ReactNode;
 };
 
-const AvatarMenu: React.FC<AvatarMenuType> = ({
-  user,
-  activeMenuState,
-  children,
-}) => {
+const AvatarMenu: React.FC<AvatarMenuType> = ({ authUser, activeMenuState, children }) => {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const { activeMenu, setActiveMenu } = activeMenuState;
@@ -48,7 +44,7 @@ const AvatarMenu: React.FC<AvatarMenuType> = ({
         "
       >
         <img
-          src={user?.profile_img || ""}
+          src={authUser?.profile_img || ""}
           className="
             w-full
             h-full

@@ -2,9 +2,9 @@ import Modal from "./modal.component";
 import AuthForm from "./auth-form.component";
 import ForgotPasswordForm from "./forgot-password-form.component";
 
-import AuthForOptions from "../constants/auth.constant";
-import useAuthModalState from "../states/auth-modal.state";
+import { AuthForOptions } from "@joytify/shared-types/constants";
 import useVerificationModalState from "../states/verification.state";
+import useAuthModalState from "../states/auth-modal.state";
 
 const AuthModal = () => {
   const { activeAuthModal, authFor, closeAuthModal } = useAuthModalState();

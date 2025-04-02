@@ -1,19 +1,18 @@
 import AlbumModel from "../models/album.model";
+import { HttpCode } from "@joytify/shared-types/constants";
+import { CreateAlbumRequest } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
-import { INTERNAL_SERVER_ERROR } from "../constants/http-code.constant";
 
-type CreateAlbumType = {
+interface CreateAlbumServiceRequest extends CreateAlbumRequest {
   userId: string;
-  title: string;
-  description?: string;
-  cover_image?: string;
-  artist?: string;
-};
+}
 
-type DeleteAlbumType = {
+type DeleteAlbumServiceRequest = {
   userId: string;
   albumId: string;
 };
+
+const { INTERNAL_SERVER_ERROR } = HttpCode;
 
 // get user albums service
 export const getUserAlbums = async (userId: string) => {
@@ -23,8 +22,8 @@ export const getUserAlbums = async (userId: string) => {
 };
 
 // create album service
-export const createAlbum = async (data: CreateAlbumType) => {
-  const { userId, title, artist, ...params } = data;
+export const createAlbum = async (params: CreateAlbumServiceRequest) => {
+  const { userId, title, artist, ...rest } = params;
 
   let album = await AlbumModel.findOneAndUpdate(
     { title, artist },
@@ -38,7 +37,7 @@ export const createAlbum = async (data: CreateAlbumType) => {
       title,
       artist,
       users: [userId],
-      ...params,
+      ...rest,
     });
 
     appAssert(album, INTERNAL_SERVER_ERROR, "Failed to create album");
@@ -48,7 +47,7 @@ export const createAlbum = async (data: CreateAlbumType) => {
 };
 
 // remove user ID from album service
-export const removeAlbum = async (data: DeleteAlbumType) => {
+export const removeAlbum = async (data: DeleteAlbumServiceRequest) => {
   const { userId, albumId } = data;
 
   const updatedAlbum = await AlbumModel.findByIdAndUpdate(
@@ -64,4 +63,18 @@ export const removeAlbum = async (data: DeleteAlbumType) => {
   );
 
   return { updatedAlbum };
+};
+
+// delete user album service(*)
+export const deleteAlbum = async (data: DeleteAlbumServiceRequest) => {
+  const { userId, albumId } = data;
+
+  const deletedAlbum = await AlbumModel.findOneAndDelete({
+    _id: albumId,
+    users: userId,
+  });
+
+  appAssert(deletedAlbum, INTERNAL_SERVER_ERROR, "Failed to delete album");
+
+  return { deletedAlbum };
 };

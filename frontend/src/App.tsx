@@ -9,6 +9,8 @@ import SearchPage from "./pages/search.page";
 import Sidebar from "./components/sidebar.component";
 
 import { setNavigate } from "./lib/navigate.lib";
+import ProfilePage from "./pages/profile.page";
+import ProfileSectionPage from "./pages/profile-section.page";
 
 function App() {
   // original navigate function can't be using outside of the component
@@ -25,6 +27,8 @@ function App() {
         {/* need login to access */}
         <Route element={<AppContainerPage />}>
           <Route path="/playlist/:id" element={<PlaylistPage />} />
+          <Route path="/profile/:id" element={<ProfilePage />} />
+          <Route path="/profile/:id/:section" element={<ProfileSectionPage />} />
         </Route>
       </Route>
 

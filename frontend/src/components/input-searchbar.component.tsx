@@ -4,9 +4,7 @@ import { IconBaseProps } from "react-icons";
 
 import { IconName } from "./react-icons.component";
 import InputBox, { InputProps } from "./input-box.component";
-import AnimationWrapper, {
-  DefaultAnimationWrapperProps,
-} from "./animation-wrapper.component";
+import AnimationWrapper, { DefaultAnimationWrapperProps } from "./animation-wrapper.component";
 import mergeRefs from "../lib/merge-refs.lib";
 import { timeoutForEventListener } from "../lib/timeout.lib";
 
@@ -25,7 +23,7 @@ const InputSearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
       placeholder,
       autoFocus = true,
       onChange,
-      iconHighlight = false,
+      iconHighlight,
       autoCloseFn,
       className,
       visible = false,
@@ -56,11 +54,7 @@ const InputSearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
         if (autoCloseFn) {
           const { active, closeFn } = autoCloseFn;
 
-          if (
-            active &&
-            searchBarRef.current &&
-            !searchBarRef.current.contains(e.target as Node)
-          ) {
+          if (active && searchBarRef.current && !searchBarRef.current.contains(e.target as Node)) {
             closeFn();
           }
         }

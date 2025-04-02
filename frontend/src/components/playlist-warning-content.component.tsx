@@ -1,7 +1,8 @@
-import { RefactorResPlaylist } from "../constants/axios-response.constant";
+import Loader from "./loader.component";
+import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
 
 type PlaylistWarningContentProps = {
-  playlist: RefactorResPlaylist | null;
+  playlist: RefactorPlaylistResponse | null;
   executeBtnText: string;
   closeModalFn: () => void;
   executeFn?: () => void;
@@ -21,7 +22,12 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
   isPending = false,
   children,
 }) => {
-  const { title, cover_image, description, songs, paletee } = playlist ?? {};
+  // if playlist is not loaded, show loader
+  if (!playlist) {
+    return <Loader />;
+  }
+
+  const { title, cover_image, description, songs, paletee } = playlist;
 
   return (
     <form
@@ -38,8 +44,9 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
         style={{
           backgroundImage: `linear-gradient(
             to top right,
-            ${paletee?.darkVibrant} 0%,
-            ${paletee?.darkMuted} 20%,
+            #262626 0%,
+            ${paletee?.darkVibrant} 20%,
+            ${paletee?.vibrant} 50%,
             #262626 100%
           )`,
         }}

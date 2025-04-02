@@ -1,9 +1,6 @@
 import { create } from "zustand";
-import {
-  VerificationForType,
-  VerificationForOptions,
-  VerificationCodeActionType,
-} from "../constants/verification.constant";
+import { VerificationForOptions } from "@joytify/shared-types/constants";
+import { VerificationForType, VerificationCodeActionType } from "@joytify/shared-types/types";
 
 type VerificationModalType = {
   active: boolean;
@@ -30,18 +27,14 @@ type VerificationModalState = {
   openResendStatusModal: (status: boolean) => void;
   openVerifyStatusModal: (status: boolean) => void;
 
-  backToInitialPage: (
-    page: VerificationForType,
-    action?: VerificationCodeActionType
-  ) => void;
+  backToInitialPage: (page: VerificationForType, action?: VerificationCodeActionType) => void;
 
   setActiveVerificationCodeModal: (state: VerificationModalType) => void;
   setVerificationProcessPending: (state: boolean) => void;
   setVerifyCodePending: (state: boolean) => void;
 };
 
-const { EMAIL_VERIFICATION, RESEND_EMAIL_VERIFICATION, VERIFY_EMAIL } =
-  VerificationForOptions;
+const { EMAIL_VERIFICATION, RESEND_EMAIL_VERIFICATION, VERIFY_EMAIL } = VerificationForOptions;
 
 const initialParams = {
   active: false,
@@ -104,10 +97,8 @@ const useVerificationModalState = create<VerificationModalState>((set, get) => {
         },
       }),
 
-    setActiveVerificationCodeModal: (state) =>
-      set({ activeVerificationCodeModal: state }),
-    setVerificationProcessPending: (state: boolean) =>
-      set({ verificationProcessPending: state }),
+    setActiveVerificationCodeModal: (state) => set({ activeVerificationCodeModal: state }),
+    setVerificationProcessPending: (state: boolean) => set({ verificationProcessPending: state }),
     setVerifyCodePending: (state: boolean) => set({ verifyCodePending: state }),
   };
 });

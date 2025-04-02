@@ -1,13 +1,6 @@
 import API from "../config/api-client.config";
-import { MusicianType } from "../constants/musician.constant";
+import { GetMusicianIdRequest } from "@joytify/shared-types/types";
 
-type GetMusicianIdsParams = {
-  musicians: string[];
-  type: MusicianType;
-  createIfAbsent?: boolean;
-};
-
-// get musician ids
-export const getMusicianIds = async (
-  params: GetMusicianIdsParams
-): Promise<string[]> => API.post("/musician/getIds", params);
+// get musician id
+export const getMusicianId = async (params: GetMusicianIdRequest): Promise<string> =>
+  API.post("/musician/getId", params);

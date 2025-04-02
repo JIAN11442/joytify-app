@@ -1,12 +1,7 @@
 import API from "../config/api-client.config";
-
-type StorePlaybackLogParams = {
-  songId: string;
-  duration: number;
-  state: string;
-  timestamp: Date;
-};
+import { StorePlaybackLogRequest, PlaybackLogResponse } from "@joytify/shared-types/types";
 
 // store playback log
-export const storePlaybackLog = async (params: StorePlaybackLogParams) =>
-  API.post("/playback/record", params);
+export const storePlaybackLog = async (
+  params: StorePlaybackLogRequest
+): Promise<PlaybackLogResponse> => API.post("/playback/record", params);

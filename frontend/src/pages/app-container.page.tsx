@@ -1,20 +1,16 @@
 import { Navigate, Outlet } from "react-router-dom";
 import Loader from "../components/loader.component";
-import useAuth from "../hooks/auth.hook";
+import { useGetAuthUserInfoQuery } from "../hooks/user-query.hook";
 
 const AppContainerPage = () => {
-  const { user, isLoading } = useAuth();
+  const { authUser, isFetching } = useGetAuthUserInfoQuery();
 
-  return isLoading ? (
-    <Loader />
-  ) : user ? (
+  return isFetching ? (
+    <Loader className={{ container: "h-full" }} />
+  ) : authUser ? (
     <Outlet />
   ) : (
-    <Navigate
-      to="/"
-      replace={true}
-      state={{ redirectUrl: window.location.pathname }}
-    />
+    <Navigate to="/" replace={true} state={{ redirectUrl: window.location.pathname }} />
   );
 };
 

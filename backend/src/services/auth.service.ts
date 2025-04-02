@@ -1,10 +1,10 @@
-import { Request } from "express";
 import * as admin from "firebase-admin";
 
-import SessionModel from "../models/session.model";
 import UserModel from "../models/user.model";
-import appAssert from "../utils/app-assert.util";
+import SessionModel from "../models/session.model";
+import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
 import { oneDay, thirtyDaysFormNow } from "../utils/date.util";
+import appAssert from "../utils/app-assert.util";
 import {
   AccessTokenSignOptions,
   RefreshTokenPayload,
@@ -12,35 +12,30 @@ import {
   signToken,
   verifyToken,
 } from "../utils/jwt.util";
-import {
-  CONFLICT,
-  FORBIDDEN,
-  INTERNAL_SERVER_ERROR,
-  NOT_FOUND,
-  UNAUTHORIZED,
-} from "../constants/http-code.constant";
-import ErrorCode from "../constants/error-code.constant";
 
-interface AuthDefaults {
+type AuthServiceRequest = {
   email: string;
   password?: string;
   userAgent?: string;
   profile_img?: string;
   authForThirdParty?: boolean;
   firebaseUID?: string;
+};
+
+export interface LoginServiceRequest extends AuthServiceRequest {
+  accessToken?: string;
 }
 
-interface LoginParams extends AuthDefaults {
-  req?: Request;
-}
-
-interface RegisterParams extends AuthDefaults {
+export interface CreateAccountServiceRequest extends AuthServiceRequest {
   confirmPassword?: string;
   verified?: boolean;
 }
 
+const { INTERNAL_SERVER_ERROR, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, CONFLICT } = HttpCode;
+const { INVALID_FIREBASE_CREDENTIAL } = ErrorCode;
+
 // create account service
-export const createAccount = async (data: RegisterParams) => {
+export const createAccount = async (data: CreateAccountServiceRequest) => {
   // verify email if exist
   const isEmailExist = await UserModel.findOne({ email: data.email });
 
@@ -49,6 +44,7 @@ export const createAccount = async (data: RegisterParams) => {
   // create user
   const user = await UserModel.create({
     email: data.email,
+    username: data.email.split("@")[0],
     password: data.password,
     profile_img: data.profile_img,
     auth_for_third_party: data.authForThirdParty,
@@ -72,17 +68,14 @@ export const createAccount = async (data: RegisterParams) => {
     AccessTokenSignOptions
   );
 
-  const refreshToken = signToken(
-    { sessionId: session.id },
-    RefreshTokenSignOptions
-  );
+  const refreshToken = signToken({ sessionId: session.id }, RefreshTokenSignOptions);
 
   // return user and tokens
   return { user: user.omitPassword(), accessToken, refreshToken };
 };
 
 // login service
-export const loginUser = async (data: LoginParams) => {
+export const loginUser = async (data: LoginServiceRequest) => {
   // find user by email
   const user = await UserModel.findOne({ email: data.email });
 
@@ -105,10 +98,8 @@ export const loginUser = async (data: LoginParams) => {
   }
 
   // return if user is already logged in
-  const existAccessToken = data.req?.cookies.accessToken;
-
-  if (existAccessToken) {
-    const { payload } = await verifyToken(existAccessToken, {
+  if (data.accessToken) {
+    const { payload } = await verifyToken(data.accessToken, {
       secret: AccessTokenSignOptions.secret,
     });
 
@@ -138,10 +129,7 @@ export const loginUser = async (data: LoginParams) => {
     AccessTokenSignOptions
   );
 
-  const refreshToken = signToken(
-    { sessionId: session.id },
-    RefreshTokenSignOptions
-  );
+  const refreshToken = signToken({ sessionId: session.id }, RefreshTokenSignOptions);
 
   // return tokens
   return { accessToken, refreshToken };
@@ -184,8 +172,7 @@ export const refreshTokens = async (refreshToken: string) => {
 
   // if session expires in less than 1 day,
   // then need to create a refresh token and update session expiresAt time
-  const sessionNeedToRefresh =
-    session.expiresAt.getTime() - now.getTime() < oneDay();
+  const sessionNeedToRefresh = session.expiresAt.getTime() - now.getTime() < oneDay();
 
   if (sessionNeedToRefresh) {
     // update session expiresAt time (new 30d expiresAt time)
@@ -225,7 +212,7 @@ export const verifyFirebaseAccessToken = async (token: string) => {
     decodedUser,
     UNAUTHORIZED,
     "Invalid firebase access token",
-    ErrorCode.InvalidFirebaseCredential,
+    INVALID_FIREBASE_CREDENTIAL,
     uid
   );
 
@@ -234,7 +221,7 @@ export const verifyFirebaseAccessToken = async (token: string) => {
     email,
     INTERNAL_SERVER_ERROR,
     "Third-party do not provide email",
-    ErrorCode.InvalidFirebaseCredential,
+    INVALID_FIREBASE_CREDENTIAL,
     uid
   );
 
@@ -252,20 +239,14 @@ export const loginUserWithThirdParty = async (token: string) => {
   const user = await UserModel.findOne({ email: email });
 
   // if user is not exist
-  appAssert(
-    user,
-    NOT_FOUND,
-    "User not found",
-    ErrorCode.InvalidFirebaseCredential,
-    uid
-  );
+  appAssert(user, NOT_FOUND, "User not found", INVALID_FIREBASE_CREDENTIAL, uid);
 
   // if those user is exist but not auth for third party
   appAssert(
     user.auth_for_third_party,
     FORBIDDEN,
     "This account was registered without using third-party service. Please log in with password to access the account.",
-    ErrorCode.InvalidFirebaseCredential,
+    INVALID_FIREBASE_CREDENTIAL,
     uid
   );
 
@@ -284,8 +265,7 @@ export const loginUserWithThirdParty = async (token: string) => {
 // register with third-party service
 export const registerUserWithThirdParty = async (token: string) => {
   // verify firebase access token
-  const { email, generatePicture, uid } =
-    await verifyFirebaseAccessToken(token);
+  const { email, generatePicture, uid } = await verifyFirebaseAccessToken(token);
 
   // register service
   const { user, accessToken, refreshToken } = await createAccount({

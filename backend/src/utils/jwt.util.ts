@@ -7,7 +7,6 @@ import {
   REFRESH_SECRET_KEY,
   VERIFICATION_SECRET_KEY,
 } from "../constants/env-validate.constant";
-import { VerificationDocument } from "../models/verification.model";
 
 // ===================== Defaults =====================
 const defaults: SignOptions = {

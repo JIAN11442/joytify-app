@@ -1,10 +1,10 @@
 import { NavLink } from "react-router-dom";
-import { ResPlaylist } from "../constants/axios-response.constant";
 import useSidebarState from "../states/sidebar.state";
+import { PlaylistResponse } from "@joytify/shared-types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type PlaylistItemProps = {
-  playlist: ResPlaylist;
+  playlist: PlaylistResponse;
 };
 
 const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
@@ -42,6 +42,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
     >
       {/* cover image */}
       <img
+        alt="playlist-cover-image"
         src={cover_image}
         className={`
           w-[3.3rem]
@@ -52,35 +53,34 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
       />
 
       {/* content */}
-      <>
-        {(!isCollapsed || floating) && (
+      {(!isCollapsed || floating) && (
+        <div
+          className={`
+            flex
+            flex-col
+            gap-1
+            items-start
+            justify-center
+            text-right
+            text-[14px]
+            text-neutral-300
+          `}
+        >
+          <p>{title}</p>
           <div
             className={`
               flex
-              flex-col
               gap-1
-              items-start
-              justify-center
-              text-right
-              text-[14px]
+              text-sm
+              text-neutral-500
             `}
           >
-            <p>{title}</p>
-            <div
-              className={`
-                flex
-                gap-1
-                text-sm
-                text-neutral-500
-              `}
-            >
-              <p>Playlist</p>
-              <p>•</p>
-              <p>{songs.length} songs</p>
-            </div>
+            <p>Playlist</p>
+            <p>•</p>
+            <p>{songs.length} songs</p>
           </div>
-        )}
-      </>
+        </div>
+      )}
     </NavLink>
   );
 };

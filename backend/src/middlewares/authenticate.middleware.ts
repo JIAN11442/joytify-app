@@ -1,20 +1,19 @@
 import { RequestHandler } from "express";
-import appAssert from "../utils/app-assert.util";
-import { UNAUTHORIZED } from "../constants/http-code.constant";
-import ErrorCode from "../constants/error-code.constant";
-import { AccessTokenSignOptions, verifyToken } from "../utils/jwt.util";
 
+import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
+import { AccessTokenSignOptions, verifyToken } from "../utils/jwt.util";
+import appAssert from "../utils/app-assert.util";
+
+const { UNAUTHORIZED } = HttpCode;
+const { INVALID_ACCESS_TOKEN } = ErrorCode;
+
+// authenticate middleware
 const authenticate: RequestHandler = async (req, res, next) => {
   try {
     // get access token from cookies
     const { accessToken } = req.cookies;
 
-    appAssert(
-      accessToken,
-      UNAUTHORIZED,
-      "Not authorized",
-      ErrorCode.InvalidAccessToken
-    );
+    appAssert(accessToken, UNAUTHORIZED, "Not authorized", INVALID_ACCESS_TOKEN);
 
     // if have access token, verify that
     const { payload, error } = await verifyToken(accessToken, {
@@ -25,7 +24,7 @@ const authenticate: RequestHandler = async (req, res, next) => {
       payload,
       UNAUTHORIZED,
       error === "jwt expired" ? "Token expired" : "Invalid token",
-      ErrorCode.InvalidAccessToken
+      INVALID_ACCESS_TOKEN
     );
 
     // save the payload to req

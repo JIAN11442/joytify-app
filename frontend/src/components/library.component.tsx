@@ -1,10 +1,10 @@
 import ContentBox from "./content-box.component";
 import LibraryBody from "./library-body.component";
 import LibraryHeader from "./library-header.component";
-import useAuth from "../hooks/auth.hook";
+import useUserState from "../states/user.state";
 
 const Library = () => {
-  const { user, isFetching } = useAuth();
+  const { authUser, isFetchingAuthUser } = useUserState();
 
   return (
     <ContentBox
@@ -14,14 +14,13 @@ const Library = () => {
         h-full
         p-2
         gap-y-4
-        overflow-hidden
       `}
     >
       {/* Header */}
-      <LibraryHeader user={user} />
+      <LibraryHeader authUser={authUser} />
 
       {/* Body */}
-      <LibraryBody user={user} isLoading={isFetching} />
+      <LibraryBody authUser={authUser} isLoading={isFetchingAuthUser} />
     </ContentBox>
   );
 };

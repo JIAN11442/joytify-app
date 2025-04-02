@@ -7,12 +7,10 @@ import PlayerOperation from "./player-operation.component";
 import PlayerVolume from "./player-volume.component";
 
 import useSound from "../hooks/sound.hook";
-import { useSongById } from "../hooks/song.hook";
+import { useGetSongByIdQuery } from "../hooks/song-query.hook";
+import { useRecordPlaybackLogMutation } from "../hooks/playback-mutate.hook";
+import { PlaybackStateOptions } from "@joytify/shared-types/constants";
 import useSoundState from "../states/sound.state";
-import { useMutation } from "@tanstack/react-query";
-import { MutationKey } from "../constants/query-client-key.constant";
-import { storePlaybackLog } from "../fetchs/playback.fetch";
-import PlaybackStateOptions from "../constants/playback.constant";
 
 type AudioPlayerProps = {
   songId: string;
@@ -23,20 +21,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
 
   const songPlayedRef = useRef<string | null>(null);
 
-  const { song, refetch: songRefetch } = useSongById(songId);
   const { setSound, songToPlay } = useSoundState();
+  const { song, refetch: songRefetch } = useGetSongByIdQuery(songId);
 
   const sound = useSound(song?.songUrl || "");
   const { playbackTime } = sound;
 
-  // record playback log mutation
-  const { mutate: recordPlaybackLog } = useMutation({
-    mutationKey: [MutationKey.RECORD_PLAYBACK_LOG],
-    mutationFn: storePlaybackLog,
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  // mutations
+  const { mutate: recordPlaybackLog } = useRecordPlaybackLogMutation();
 
   // handle navigate to target song playlist
   const handleNavigateToPlaylist = () => {

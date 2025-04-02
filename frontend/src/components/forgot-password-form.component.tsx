@@ -1,56 +1,26 @@
 import { useRef } from "react";
-import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useLocation } from "react-router-dom";
 import { MdAlternateEmail } from "react-icons/md";
 
 import Loader from "./loader.component";
 import InputBox from "./input-box.component";
 
-import { sendResetPasswordEmail } from "../fetchs/verification.fetch";
-import AuthForOptions from "../constants/auth.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
+import { useSendResetPasswordEmailMutation } from "../hooks/verification-mutate.hook";
 import { defaultForgotPasswordData } from "../constants/form.constant";
-import type { ForgotPasswordForm } from "../constants/form.constant";
-import { AppError, ErrorCode } from "../constants/error-code.constant";
+import { AuthForOptions } from "@joytify/shared-types/constants";
+import { DefaultForgotPasswordForm } from "../types/form.type";
 import useAuthModalState from "../states/auth-modal.state";
-import { timeoutForDelay } from "../lib/timeout.lib";
-import { navigate } from "../lib/navigate.lib";
 import { isHighlight } from "../lib/icon-highlight.lib";
+import { timeoutForDelay } from "../lib/timeout.lib";
 import { emailRegex } from "../utils/regex";
 
 const ForgotPasswordForm = () => {
-  const location = useLocation();
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
-  const { openAuthModal, closeAuthModal } = useAuthModalState();
-
-  // redirect path
-  const redirectPath = location.state?.redirectUrl || "/";
+  const { openAuthModal } = useAuthModalState();
 
   // send reset password email mutation
-  const { mutate: sendResetPasswordEmailToUser, isPending } = useMutation({
-    mutationKey: [MutationKey.SEND_RESET_PASSWORD_EMAIL],
-    mutationFn: sendResetPasswordEmail,
-    onSuccess: () => {
-      closeAuthModal();
-
-      toast.success("Reset password email sent");
-
-      navigate(redirectPath, { replace: true });
-    },
-    onError: (error) => {
-      if (
-        (error as AppError).errorCode ===
-        ErrorCode.VerificationCodeRateLimitExceeded
-      ) {
-        toast.error("You've made too many requests, please try again later");
-      } else {
-        toast.error(error.message);
-      }
-    },
-  });
+  const { mutate: sendResetPasswordEmailFn, isPending } = useSendResetPasswordEmailMutation();
 
   // handle navigate to sign in modal
   const handleNavigateToSignInModal = () => {
@@ -65,18 +35,18 @@ const ForgotPasswordForm = () => {
     register,
     watch,
     formState: { isValid, errors },
-  } = useForm<ForgotPasswordForm>({
+  } = useForm<DefaultForgotPasswordForm>({
     defaultValues: defaultForgotPasswordData,
     mode: "onChange",
   });
 
   // icon highlight
-  const isIconHighlight = (target: keyof ForgotPasswordForm) =>
+  const isIconHighlight = (target: keyof DefaultForgotPasswordForm) =>
     isHighlight(watch, errors, target);
 
   // handle submit
-  const onSubmit: SubmitHandler<ForgotPasswordForm> = async (value) => {
-    sendResetPasswordEmailToUser(value.email);
+  const onSubmit: SubmitHandler<DefaultForgotPasswordForm> = async (value) => {
+    sendResetPasswordEmailFn(value.email);
   };
 
   return (

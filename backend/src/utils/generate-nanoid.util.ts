@@ -1,5 +1,6 @@
-import { nanoid } from "nanoid";
 import { hashValue } from "./bcrypt.util";
+
+const { nanoid } = require("nanoid");
 
 export const generateNanoId = async (hash: boolean): Promise<string> => {
   const session = nanoid();

@@ -2,19 +2,20 @@ import mongoose, { UpdateQuery } from "mongoose";
 import UserModel from "./user.model";
 import SongModel from "./song.model";
 
-import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 import usePalette from "../hooks/paletee.hook";
-import { HexPaletee } from "../constants/paletee.constant";
+import { PrivacyOptions } from "@joytify/shared-types/constants";
+import { PrivacyType, HexPaletee } from "@joytify/shared-types/types";
+import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
 export interface PlaylistDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
   title: string;
   description: string;
   cover_image: string;
+  privacy: PrivacyType;
+  default: boolean;
   paletee: HexPaletee;
   songs: mongoose.Types.ObjectId[];
-  default: boolean;
-  hidden: boolean;
 }
 
 const playlistSchema = new mongoose.Schema<PlaylistDocument>(
@@ -32,6 +33,8 @@ const playlistSchema = new mongoose.Schema<PlaylistDocument>(
       default:
         "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
     },
+    privacy: { type: String, default: PrivacyOptions.PUBLIC },
+    default: { type: Boolean, default: false },
     paletee: {
       vibrant: { type: String },
       darkVibrant: { type: String },
@@ -41,8 +44,6 @@ const playlistSchema = new mongoose.Schema<PlaylistDocument>(
       lightMuted: { type: String },
     },
     songs: { type: [mongoose.Schema.Types.ObjectId], ref: "Song", index: true },
-    default: { type: Boolean, default: false },
-    hidden: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
@@ -70,12 +71,25 @@ playlistSchema.pre("save", async function (next) {
 
   // parser image to get relate paletee
   if (this.cover_image) {
-    const paletee = await usePalette(this.cover_image);
-
-    this.paletee = paletee;
+    this.paletee = await usePalette(this.cover_image);
   }
 
   next();
+});
+
+// after created playlist, ...
+playlistSchema.post("save", async function (doc) {
+  const { id, user } = doc;
+
+  try {
+    // update user tatol_playlists and push playlist id to user playlists array
+    await UserModel.findByIdAndUpdate(user, {
+      $inc: { "account_info.total_playlists": 1 },
+      $push: { playlists: id },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // before update playlist, ...
@@ -102,21 +116,6 @@ playlistSchema.pre("findOneAndUpdate", async function (next) {
   next();
 });
 
-// after created playlist, ...
-playlistSchema.post("save", async function (doc) {
-  const { id, user } = doc;
-
-  try {
-    // update user tatol_playlists and push playlist id to user playlists array
-    await UserModel.findByIdAndUpdate(user, {
-      $inc: { "account_info.total_playlists": 1 },
-      $push: { playlists: id },
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
 // before delete playlist, ...
 playlistSchema.pre("findOneAndDelete", async function (next) {
   try {
@@ -129,10 +128,7 @@ playlistSchema.pre("findOneAndDelete", async function (next) {
 
       // update all songs from playlist to be delete
       if (songs.length) {
-        await SongModel.updateMany(
-          { _id: { $in: songs } },
-          { $pull: { playlist_for: id } }
-        );
+        await SongModel.updateMany({ _id: { $in: songs } }, { $pull: { playlist_for: id } });
       }
     }
 
@@ -147,12 +143,10 @@ playlistSchema.post("findOneAndDelete", async function (doc) {
   const { id, user, cover_image } = doc;
 
   try {
-    // update user tatol_playlists of accouont_info
+    // update user tatol_playlists of account_info
     await UserModel.findByIdAndUpdate(user, {
       $inc: { "account_info.total_playlists": -1 },
-      $pull: {
-        playlists: id,
-      },
+      $pull: { playlists: id },
     });
 
     // delete AWS url
@@ -162,9 +156,6 @@ playlistSchema.post("findOneAndDelete", async function (doc) {
   }
 });
 
-const PlaylistModel = mongoose.model<PlaylistDocument>(
-  "Playlist",
-  playlistSchema
-);
+const PlaylistModel = mongoose.model<PlaylistDocument>("Playlist", playlistSchema);
 
 export default PlaylistModel;

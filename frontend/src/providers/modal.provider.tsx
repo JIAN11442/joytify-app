@@ -1,21 +1,36 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { lazy, Suspense } from "react";
 import useAuthModalState from "../states/auth-modal.state";
 import useUploadModalState from "../states/upload-modal.state";
 import usePlaylistState from "../states/playlist.state";
 import useVerificationModalState from "../states/verification.state";
+import useUserState from "../states/user.state";
 
-const path = "../components";
+// import all components
+const components = import.meta.glob("../components/*.component.tsx");
 
-const modalComponents = {
-  auth: lazy(() => import(`${path}/auth-modal.component`)),
-  upload: lazy(() => import(`${path}/upload-modal.component`)),
-  createLabel: lazy(() => import(`${path}/create-label-modal.component`)),
-  createAlbum: lazy(() => import(`${path}/create-album-modal.component`)),
-  createPlaylist: lazy(() => import(`${path}/create-playlist-modal.component`)),
-  editPlaylist: lazy(() => import(`${path}/playlist-edit-modal.component`)),
-  deletePlaylist: lazy(() => import(`${path}/playlist-delete-modal.component`)),
-  removePlaylist: lazy(() => import(`${path}/playlist-remove-modal.component`)),
-  verification: lazy(() => import(`${path}/verification-code-modal.component`)),
+// get the path of the component
+const path = (filename: string) => {
+  const key = `../components/${filename}.component.tsx`;
+  if (!(key in components)) {
+    throw new Error(`Module "${filename}" not found`);
+  }
+
+  return components[key]() as Promise<{ default: React.ComponentType<any> }>;
+};
+
+const Modal = {
+  authModal: lazy(() => path("auth-modal")),
+  uploadModal: lazy(() => path("upload-modal")),
+  labelCreateModal: lazy(() => path("create-label-modal")),
+  albumCreateModal: lazy(() => path("create-album-modal")),
+  playlistCreateModal: lazy(() => path("create-playlist-modal")),
+  playlistEditModal: lazy(() => path("playlist-edit-modal")),
+  playlistDeleteModal: lazy(() => path("playlist-delete-modal")),
+  playlistPrivacyModal: lazy(() => path("playlist-privacy-modal")),
+  verificationCodeModal: lazy(() => path("verification-code-modal")),
+  profileEditModal: lazy(() => path("profile-edit-modal")),
 };
 
 const ModalProvider = () => {
@@ -26,24 +41,23 @@ const ModalProvider = () => {
     activeCreateAlbumModal,
     activeCreatePlaylistModal,
   } = useUploadModalState();
-  const {
-    activePlaylistEditModal,
-    activeDeletePlaylistModal,
-    activeRemovePlaylistModal,
-  } = usePlaylistState();
+  const { activePlaylistEditModal, activePlaylistDeleteModal, activePlaylistPrivacyModal } =
+    usePlaylistState();
   const { activeVerificationCodeModal } = useVerificationModalState();
+  const { activeProfileEditModal } = useUserState();
 
   return (
     <Suspense fallback={null}>
-      {activeAuthModal && <modalComponents.auth />}
-      {activeUploadModal && <modalComponents.upload />}
-      {activeCreateLabelModal.active && <modalComponents.createLabel />}
-      {activeCreateAlbumModal.active && <modalComponents.createAlbum />}
-      {activeCreatePlaylistModal.active && <modalComponents.createPlaylist />}
-      {activePlaylistEditModal.active && <modalComponents.editPlaylist />}
-      {activeDeletePlaylistModal.active && <modalComponents.deletePlaylist />}
-      {activeRemovePlaylistModal.active && <modalComponents.removePlaylist />}
-      {activeVerificationCodeModal.active && <modalComponents.verification />}
+      {activeAuthModal && <Modal.authModal />}
+      {activeUploadModal && <Modal.uploadModal />}
+      {activeCreateLabelModal.active && <Modal.labelCreateModal />}
+      {activeCreateAlbumModal.active && <Modal.albumCreateModal />}
+      {activeCreatePlaylistModal.active && <Modal.playlistCreateModal />}
+      {activePlaylistEditModal.active && <Modal.playlistEditModal />}
+      {activePlaylistDeleteModal.active && <Modal.playlistDeleteModal />}
+      {activePlaylistPrivacyModal.active && <Modal.playlistPrivacyModal />}
+      {activeVerificationCodeModal.active && <Modal.verificationCodeModal />}
+      {activeProfileEditModal.active && <Modal.profileEditModal />}
     </Suspense>
   );
 };

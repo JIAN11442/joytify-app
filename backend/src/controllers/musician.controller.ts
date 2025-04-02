@@ -1,28 +1,20 @@
 import { RequestHandler } from "express";
+
 import { getMusicianId } from "../services/musician.service";
 import { musicianZodSchema } from "../schemas/musician.zod";
-import { OK } from "../constants/http-code.constant";
+import { HttpCode } from "@joytify/shared-types/constants";
+import { GetMusicianIdRequest } from "@joytify/shared-types/types";
 
-// get musicians ID handler
-export const getMusicianIdsHandler: RequestHandler = async (req, res, next) => {
+const { OK } = HttpCode;
+
+// get musician ID handler
+export const getMusicianIdHandler: RequestHandler = async (req, res, next) => {
   try {
-    const { musicians, type, createIfAbsent } = musicianZodSchema.parse(
-      req.body
-    );
+    const params: GetMusicianIdRequest = musicianZodSchema.parse(req.body);
 
-    const musicianIds = await Promise.all(
-      musicians?.map(async (musician) => {
-        const { id } = await getMusicianId({
-          name: musician,
-          type,
-          createIfAbsent,
-        });
+    const { id } = await getMusicianId(params);
 
-        return id;
-      }) || []
-    );
-
-    return res.status(OK).json(musicianIds);
+    return res.status(OK).json(id);
   } catch (error) {
     next(error);
   }

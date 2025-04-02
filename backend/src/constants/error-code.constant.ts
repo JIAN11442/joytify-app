@@ -1,8 +1,0 @@
-enum ErrorCode {
-  "InvalidAccessToken" = "InvalidAccessToken",
-  "InvalidFirebaseCredential" = "InvalidFirebaseCredential",
-  "CreateSongError" = "CreateSongError",
-  "VerificationCodeRateLimitExceeded" = "VerificationCodeRateLimitExceeded",
-}
-
-export default ErrorCode;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
+import { Volume } from "../types/volume.type";
 import useSoundState from "../states/sound.state";
-import { Volume } from "../constants/volume.constant";
+import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 
 const useSound = (url: string) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -27,17 +27,11 @@ const useSound = (url: string) => {
         const audioCurrentTime = audio.currentTime;
         const duration = audioCurrentTime - prevAudioCurrentTimeRef.current;
         const generatedDuration =
-          duration > 0.3
-            ? prevGeneratedDurationRef.current
-            : duration < 0
-            ? 0
-            : duration;
+          duration > 0.3 ? prevGeneratedDurationRef.current : duration < 0 ? 0 : duration;
 
         timeoutForDelay(() => {
           setTimestamp(audioCurrentTime);
-          setPlaybackTime((prev) =>
-            audioCurrentTime === 0 ? 0 : prev + generatedDuration
-          );
+          setPlaybackTime((prev) => (audioCurrentTime === 0 ? 0 : prev + generatedDuration));
 
           prevAudioCurrentTimeRef.current = audioCurrentTime;
           prevGeneratedDurationRef.current = generatedDuration;
@@ -45,18 +39,10 @@ const useSound = (url: string) => {
       };
 
       // listening duration and return cleanup function
-      const cleanupLoaded = timeoutForEventListener(
-        audio,
-        "loadedmetadata",
-        handleLoadedMetaData
-      );
+      const cleanupLoaded = timeoutForEventListener(audio, "loadedmetadata", handleLoadedMetaData);
 
       // listening current time and return cleanup function
-      const cleanupTime = timeoutForEventListener(
-        audio,
-        "timeupdate",
-        handleTimeUpdate
-      );
+      const cleanupTime = timeoutForEventListener(audio, "timeupdate", handleTimeUpdate);
 
       return () => {
         audio.pause();

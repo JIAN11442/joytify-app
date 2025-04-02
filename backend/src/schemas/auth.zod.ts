@@ -25,10 +25,7 @@ export const passwordZodSchema = z
   .string()
   .min(6, warningMsg.passwordCharater)
   .max(20, warningMsg.passwordCharater)
-  .regex(
-    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/,
-    warningMsg.passwordCharater
-  );
+  .regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/, warningMsg.passwordCharater);
 
 // Handler schema
 export const loginZodSchema = z.object({
@@ -37,13 +34,15 @@ export const loginZodSchema = z.object({
   userAgent: stringZodSchema.optional(),
 });
 
-export const registerZodSchema = loginZodSchema
-  .extend({ confirmPassword: passwordZodSchema })
-  .refine(
-    (data) => data.password === data.confirmPassword,
-    warningMsg.passwordIsNotMatch
-  );
+export const registerZodSchema = z
+  .object({
+    email: emailZodSchema,
+    password: passwordZodSchema,
+    confirmPassword: passwordZodSchema,
+    userAgent: stringZodSchema,
+  })
+  .refine((data) => data.password === data.confirmPassword, warningMsg.passwordIsNotMatch);
 
-export const firebaseAccessTokenZodSchema = z
-  .string()
-  .min(1, warningMsg.firebaseAccessTokenCharater);
+export const firebaseAccessTokenZodSchema = z.object({
+  token: z.string().min(1, warningMsg.firebaseAccessTokenCharater),
+});

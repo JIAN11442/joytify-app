@@ -3,6 +3,7 @@ import {
   createAlbumHandler,
   removeUserAlbumHandler,
   getUserAlbumsHandler,
+  deleteUserAlbumHandler,
 } from "../controllers/album.controller";
 
 const albumRoute = Router();
@@ -10,6 +11,7 @@ const albumRoute = Router();
 // prefix: album
 albumRoute.get("/", getUserAlbumsHandler);
 albumRoute.post("/create", createAlbumHandler);
-albumRoute.delete("/delete/:id", removeUserAlbumHandler);
+albumRoute.patch("/remove/:id", removeUserAlbumHandler);
+albumRoute.delete("delete/:id", deleteUserAlbumHandler);
 
 export default albumRoute;

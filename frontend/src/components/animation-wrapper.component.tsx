@@ -1,10 +1,5 @@
 import { forwardRef } from "react";
-import {
-  AnimatePresence,
-  AnimatePresenceProps,
-  motion,
-  MotionProps,
-} from "framer-motion";
+import { AnimatePresence, AnimatePresenceProps, motion, MotionProps } from "framer-motion";
 
 export type DefaultAnimationWrapperProps = {
   initial?: MotionProps["initial"];
@@ -41,9 +36,7 @@ const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
     },
     ref
   ) => {
-    const resolvedExit = (
-      exit === undefined ? initial : exit
-    ) as MotionProps["exit"];
+    const resolvedExit = (exit ?? initial) as MotionProps["exit"];
 
     return (
       <AnimatePresence mode={mode} initial={initialState}>

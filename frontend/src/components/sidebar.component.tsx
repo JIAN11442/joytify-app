@@ -15,12 +15,8 @@ import { timeoutForEventListener } from "../lib/timeout.lib";
 const Sidebar = () => {
   const floatingDivRef = useRef<HTMLDivElement>(null);
 
-  const {
-    collapseSideBarState,
-    floating,
-    setCollapseSideBarState,
-    setFloating,
-  } = useSidebarState();
+  const { collapseSideBarState, floating, setCollapseSideBarState, setFloating } =
+    useSidebarState();
   const { isCollapsed, changeForScreenResize } = collapseSideBarState;
 
   const { screenWidth } = useProviderState();
@@ -52,10 +48,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     const handleOnBlur: EventListener = (e) => {
-      if (
-        floatingDivRef.current &&
-        !floatingDivRef.current.contains(e.target as Node)
-      ) {
+      if (floatingDivRef.current && !floatingDivRef.current.contains(e.target as Node)) {
         setFloating(false);
       }
     };
@@ -68,10 +61,11 @@ const Sidebar = () => {
       className={`
         flex
         flex-col
-        p-2
-        gap-2
         w-full
         h-screen
+        p-2
+        gap-2
+        overflow-hidden
       `}
     >
       {/* navbar */}
@@ -83,6 +77,7 @@ const Sidebar = () => {
           flex
           gap-x-2
           ${activeSongId ? "h-[calc(100vh-80px)]" : "h-full"}
+          overflow-hidden
         `}
       >
         {/* sidebar */}
@@ -97,7 +92,6 @@ const Sidebar = () => {
             ease-in-out
             duration-300
             ${isCollapsed ? `w-[70px]` : `w-[500px]`}
-           
           `}
         >
           {/* Library */}
@@ -111,15 +105,11 @@ const Sidebar = () => {
           initial={{ width: "0%", opacity: 0 }}
           animate={{
             width:
-              screenWidth > 0 && screenWidth <= 500
-                ? screenWidth <= 430
-                  ? "90%"
-                  : "70%"
-                : "60%",
+              screenWidth > 0 && screenWidth <= 500 ? (screenWidth <= 430 ? "90%" : "70%") : "60%",
             opacity: 1,
           }}
-          transition={{ duration: 0.3 }} // 增加动画持续时间
           exit={{ width: "20%", opacity: 0 }}
+          transition={{ duration: 0.3 }}
           mode="sync"
           className={`floating-menu`}
         >
@@ -130,7 +120,7 @@ const Sidebar = () => {
         <ContentBox
           className={`
             h-full
-            overflow-hidden
+            overflow-y-auto
           `}
         >
           <Outlet />

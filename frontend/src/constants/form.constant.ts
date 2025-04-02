@@ -1,18 +1,8 @@
-import {
-  FieldValues,
-  Path,
-  PathValue,
-  UseFormSetError,
-  UseFormSetValue,
-  UseFormTrigger,
-} from "react-hook-form";
-
-// ===================== Initial Form Data =====================
 export const defaultSongData = {
-  title: null as string | null,
-  artist: null as string[] | null,
+  title: "",
+  artist: "",
   songFile: null as FileList | null,
-  playlist_for: null as string | null,
+  playlist_for: "",
   imageFile: undefined as FileList | undefined,
   album: undefined as string | undefined,
   lyricists: undefined as string[] | undefined,
@@ -63,7 +53,7 @@ export const defaultCreatePlaylistData = {
 };
 
 export const defaultCreateAlbumData = {
-  title: null as string | null,
+  title: "",
   description: undefined as string | undefined,
   imageFile: undefined as FileList | undefined,
   artist: undefined as string | undefined,
@@ -74,27 +64,7 @@ export const defaultVerificationCodeInput = {
   numbers: Array(6).fill(""),
 };
 
-// ===================== Form Data Types =====================
-export type AuthForm = typeof defaultLoginData & {
-  confirmPassword?: string;
+export const defaultProfileEditData = {
+  profileImage: "",
+  username: "",
 };
-
-export type SongForm = typeof defaultSongData;
-export type ForgotPasswordForm = typeof defaultForgotPasswordData;
-export type ResetPasswordForm = typeof defaultResetPasswordData;
-export type EditPlaylistForm = typeof defaultPlaylistEditData;
-export type CreateLabelForm = typeof defaultCreateLabelData;
-export type MovingPlaylistForm = typeof defaultMovingPlaylistData;
-export type CreatePlaylistForm = typeof defaultCreatePlaylistData;
-export type CreateAlbumForm = typeof defaultCreateAlbumData;
-export type VerificationCodeForm = typeof defaultVerificationCodeInput;
-
-export type AuthFormKeys = keyof AuthForm;
-
-export type FormMethods<T extends FieldValues> = {
-  setFormValue: UseFormSetValue<T>;
-  setFormError: UseFormSetError<T>;
-  trigger: UseFormTrigger<T>;
-};
-
-export type FormPathValue<T extends FieldValues> = PathValue<T, Path<T>>;

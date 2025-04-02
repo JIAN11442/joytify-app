@@ -1,52 +1,26 @@
-import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
+
 import OptionCreateModal from "./option-create-modal.component";
-import {
-  CreatePlaylistForm,
-  defaultCreatePlaylistData,
-} from "../constants/form.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
-import { createPlaylist } from "../fetchs/playlist.fetch";
+import { useCreatePlaylistMutation } from "../hooks/playlist-mutate.hook";
+import { defaultCreatePlaylistData } from "../constants/form.constant";
+import { DefaultCreatePlaylistForm } from "../types/form.type";
 import useUploadModalState from "../states/upload-modal.state";
-import { usePlaylists } from "../hooks/playlist.hook";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const CreatePlaylistModal = () => {
-  const { refetch: playlistRefetch } = usePlaylists();
-
-  const { activeCreatePlaylistModal, setActiveCreatePlaylistModal } =
-    useUploadModalState();
+  const { activeCreatePlaylistModal, closeCreatePlaylistModal } = useUploadModalState();
   const { active, options } = activeCreatePlaylistModal;
 
   // handle close modal
   const handleCloseModal = () => {
     timeoutForDelay(() => {
-      setActiveCreatePlaylistModal({ active: false, options: null });
+      closeCreatePlaylistModal();
+      reset();
     });
-    reset();
   };
 
   // create playlist mutation
-  const { mutate: createUserPlaylist } = useMutation({
-    mutationKey: [MutationKey.CREATE_USER_PLAYLIST],
-    mutationFn: createPlaylist,
-    onSuccess: (data) => {
-      const { title } = data;
-
-      // refetch playlist query
-      playlistRefetch();
-
-      // close create playlist modal
-      handleCloseModal();
-
-      // display success message
-      toast.success(`"${title}" playlist is created`);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  const { mutate: createPlaylistFn } = useCreatePlaylistMutation(handleCloseModal);
 
   const {
     register,
@@ -58,10 +32,10 @@ const CreatePlaylistModal = () => {
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<CreatePlaylistForm> = async (value) => {
+  const onSubmit: SubmitHandler<DefaultCreatePlaylistForm> = async (value) => {
     const { playlist } = value;
 
-    createUserPlaylist(playlist);
+    createPlaylistFn(playlist);
   };
 
   return (
@@ -75,9 +49,7 @@ const CreatePlaylistModal = () => {
       {...register("playlist", {
         required: true,
         validate: (value) => {
-          return !options?.some(
-            (opt) => opt.toLowerCase() === value.toLowerCase()
-          );
+          return !options?.some((opt) => opt.toLowerCase() === value.toLowerCase());
         },
       })}
     />

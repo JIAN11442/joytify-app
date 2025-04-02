@@ -1,34 +1,19 @@
 import Modal from "./modal.component";
-import VerificationInputForm from "./verification-input-form.component";
 import ResendStatusForm from "./resend-status-form.component";
 import VerifyStatusForm from "./verify-status-form.component";
+import VerificationInputForm from "./verification-input-form.component";
 
-import {
-  VerificationCodeActions,
-  VerificationForOptions,
-} from "../constants/verification.constant";
+import { VerificationForOptions, VerificationCodeActions } from "@joytify/shared-types/constants";
 import useVerificationModalState from "../states/verification.state";
 
 const VerificationCodeModal = () => {
-  const {
-    activeVerificationCodeModal,
-    closeVerificationCodeModal,
-    verifyCodePending,
-  } = useVerificationModalState();
-  const {
-    active,
-    type,
-    userEmail,
-    isResendSuccessful,
-    isVerified,
-    action,
-    registerFn,
-  } = activeVerificationCodeModal;
+  const { activeVerificationCodeModal, closeVerificationCodeModal, verifyCodePending } =
+    useVerificationModalState();
+  const { active, type, userEmail, isResendSuccessful, isVerified, action, registerFn } =
+    activeVerificationCodeModal;
 
-  const { EMAIL_VERIFICATION, RESEND_EMAIL_VERIFICATION, VERIFY_EMAIL } =
-    VerificationForOptions;
-  const { CODE_RETURNED, CODE_SEND_FAILED, EMAIL_VERIFY_FAILED } =
-    VerificationCodeActions;
+  const { EMAIL_VERIFICATION, RESEND_EMAIL_VERIFICATION, VERIFY_EMAIL } = VerificationForOptions;
+  const { CODE_RETURNED, CODE_SEND_FAILED, EMAIL_VERIFY_FAILED } = VerificationCodeActions;
 
   let description = "";
   const title = type === EMAIL_VERIFICATION ? "Verify your email" : "";
@@ -61,15 +46,10 @@ const VerificationCodeModal = () => {
       switchPage={{ initialPage: EMAIL_VERIFICATION, currentPage: type }}
       loading={verifyCodePending}
     >
-      {type === EMAIL_VERIFICATION && userEmail && (
-        <VerificationInputForm email={userEmail} />
-      )}
+      {type === EMAIL_VERIFICATION && userEmail && <VerificationInputForm email={userEmail} />}
 
       {type === RESEND_EMAIL_VERIFICATION && (
-        <ResendStatusForm
-          isSuccess={isResendSuccessful}
-          initialPage={EMAIL_VERIFICATION}
-        />
+        <ResendStatusForm isSuccess={isResendSuccessful} initialPage={EMAIL_VERIFICATION} />
       )}
 
       {type === VERIFY_EMAIL && registerFn && (

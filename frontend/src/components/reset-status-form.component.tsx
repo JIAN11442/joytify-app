@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { IoCheckmark, IoClose } from "react-icons/io5";
 
 import Icon from "./react-icons.component";
-import { PasswordResetStatus } from "../constants/user.constant";
+import { PasswordResetStatus } from "@joytify/shared-types/constants";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { getDuration } from "../utils/get-time.util";
@@ -70,11 +70,7 @@ const ResetStatusForm: React.FC<ResetStatusFormProps> = ({ isSuccess }) => {
           rounded-full
           shadow-[0_0_30px_5px]
           animate-shadow-pulse-5
-          ${
-            isSuccess
-              ? "bg-green-500 shadow-green-500/30"
-              : "bg-red-500 shadow-red-500/50"
-          }
+          ${isSuccess ? "bg-green-500 shadow-green-500/30" : "bg-red-500 shadow-red-500/50"}
         `}
       >
         <Icon name={iconName} opts={{ size: 100 }} />

@@ -1,30 +1,60 @@
 import { create } from "zustand";
-import { ResUser } from "../constants/axios-response.constant";
+import { PasswordResetStatus } from "@joytify/shared-types/constants";
 import {
-  PasswordResetStatus,
+  AuthUserResponse,
+  RefactorProfileUserResponse,
   PasswordResetStatusType,
-} from "../constants/user.constant";
+  ProfileCollectionInfoResponse,
+} from "@joytify/shared-types/types";
+
+type ActiveEditProfileModal = {
+  active: boolean;
+  profileUser: RefactorProfileUserResponse | null;
+};
 
 type UserParams = {
-  user: ResUser | null;
+  authUser: AuthUserResponse | null;
+  profileUser: RefactorProfileUserResponse | null;
+  profileCollectionDocs: ProfileCollectionInfoResponse | null;
+  isFetchingAuthUser: boolean;
+
   activeUserMenu: boolean;
+  activeProfileOptionsMenu: boolean;
+  activeProfileEditModal: ActiveEditProfileModal;
   passwordResetStatus: PasswordResetStatusType;
 
-  setUser: (state: ResUser | null) => void;
+  closeProfileEditModal: () => void;
+
+  setAuthUser: (data: AuthUserResponse | null) => void;
+  setProfileUser: (data: RefactorProfileUserResponse | null) => void;
+  setProfileCollectionDocs: (data: ProfileCollectionInfoResponse | null) => void;
+  setIsFetchingAuthUser: (state: boolean) => void;
   setActiveUserMenu: (state: boolean) => void;
-  closeUserMenu: () => void;
+  setActiveProfileOptionsMenu: (state: boolean) => void;
+  setActiveProfileEditModal: (state: ActiveEditProfileModal) => void;
   setPasswordResetStatus: (state: PasswordResetStatusType) => void;
 };
 
 const useUserState = create<UserParams>((set) => ({
-  user: null,
+  authUser: null,
+  profileUser: null,
+  profileCollectionDocs: null,
+  isFetchingAuthUser: false,
   activeUserMenu: false,
-  isPasswordResetSuccessful: null,
+  activeProfileOptionsMenu: false,
+  activeProfileEditModal: { active: false, profileUser: null },
   passwordResetStatus: PasswordResetStatus.INITIAL,
 
-  setUser: (state) => set({ user: state }),
+  closeProfileEditModal: () =>
+    set({ activeProfileEditModal: { active: false, profileUser: null } }),
+
+  setAuthUser: (data) => set({ authUser: data }),
+  setProfileUser: (data) => set({ profileUser: data }),
+  setProfileCollectionDocs: (data) => set({ profileCollectionDocs: data }),
+  setIsFetchingAuthUser: (state) => set({ isFetchingAuthUser: state }),
   setActiveUserMenu: (state) => set({ activeUserMenu: state }),
-  closeUserMenu: () => set({ activeUserMenu: false }),
+  setActiveProfileOptionsMenu: (state) => set({ activeProfileOptionsMenu: state }),
+  setActiveProfileEditModal: (state) => set({ activeProfileEditModal: state }),
   setPasswordResetStatus: (state) => set({ passwordResetStatus: state }),
 }));
 

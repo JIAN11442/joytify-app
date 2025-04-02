@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
 
 export interface AlbumDocument extends mongoose.Document {
   title: string;
@@ -30,6 +31,31 @@ const albumSchema = new mongoose.Schema<AlbumDocument>(
   },
   { timestamps: true }
 );
+
+// after update album,...
+albumSchema.post("findOneAndUpdate", async function (doc) {
+  if (!doc) {
+    return;
+  }
+
+  const { users, songs } = doc;
+
+  // if there are no users and songs, delete the album
+  if (users.length === 0 && songs.length === 0) {
+    await doc.deleteOne();
+  }
+});
+
+// after update album,...
+albumSchema.post("updateMany", async function (doc) {
+  // if nothing updated, return
+  if (!doc || !doc.modifiedCount) {
+    return;
+  }
+
+  // delete albums with no users and songs
+  await deleteDocWhileFieldsArrayEmpty({ model: AlbumModel, arrayFields: ["users", "songs"] });
+});
 
 const AlbumModel = mongoose.model<AlbumDocument>("Album", albumSchema);
 

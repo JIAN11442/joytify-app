@@ -7,12 +7,14 @@ import { navigate } from "../lib/navigate.lib";
 import useNavbarState from "../states/navbar.state";
 import useLibraryState from "../states/library.state";
 import usePlaylistState from "../states/playlist.state";
+import useUserState from "../states/user.state";
 
 type ShortcutKeysProps = {
   children: React.ReactNode;
 };
 
 const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
+  const { authUser } = useUserState();
   const { collapseSideBarState, setCollapseSideBarState } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
   const { isPlaying, sound, activeSongId } = useSoundState();
@@ -54,17 +56,21 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
           toggleSidebar();
         }
       } else if (ekey.shiftKey) {
-        // navigate to home route
-        if (!isEditing && !activeNavSearchBar && key === "H") {
-          navigate("/");
-        }
-        // navigate to search route
-        else if (key === "F") {
-          if (!activeNavSearchBar) {
-            timeoutForDelay(() => {
-              setActiveNavSearchBar(!activeNavSearchBar);
-              navigate("/search");
-            });
+        if (!isEditing) {
+          // navigate to home route
+          if (!activeNavSearchBar && key === "H") {
+            navigate("/");
+          }
+          // navigate to search route
+          else if (key === "F") {
+            if (!activeNavSearchBar) {
+              timeoutForDelay(() => {
+                setActiveNavSearchBar(!activeNavSearchBar);
+                navigate("/search");
+              });
+            }
+          } else if (key === "P" && authUser) {
+            navigate(`/profile/${authUser?._id}`);
           }
         }
       } else if (activeSongId && key === " ") {

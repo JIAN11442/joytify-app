@@ -62,24 +62,22 @@ const SidebarItem = forwardRef<HTMLDivElement, SidebarItemProps>(
         <Icon name={name} opts={{ size: 24, ...opts }} />
 
         {/* Label */}
-        <>
-          {(label?.length && !collapse) || floating ? (
-            <p
-              className={twMerge(
-                `
+        {(label?.length && !collapse) || floating ? (
+          <p
+            className={twMerge(
+              `
                 text-lgc
                 font-bold
                 truncate
                 `,
-                tw?.label
-              )}
-            >
-              {label}
-            </p>
-          ) : (
-            ""
-          )}
-        </>
+              tw?.label
+            )}
+          >
+            {label}
+          </p>
+        ) : (
+          ""
+        )}
       </div>
     );
   }

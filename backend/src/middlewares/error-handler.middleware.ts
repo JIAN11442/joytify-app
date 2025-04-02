@@ -1,22 +1,15 @@
 import { ZodError } from "zod";
 import { ErrorRequestHandler } from "express";
 
-import {
-  BAD_REQUEST,
-  INTERNAL_SERVER_ERROR,
-  UNAUTHORIZED,
-} from "../constants/http-code.constant";
-import ErrorCode from "../constants/error-code.constant";
-
-import AppError from "../utils/app-error.util";
-import awsUrlParser from "../utils/aws-url-parser.util";
+import { AppError } from "@joytify/shared-types/classes";
+import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
+import { clearAuthCookies, cookiePath, setUnauthorizedCookies } from "../utils/cookies.util";
 import { deleteAwsFileUrl } from "../utils/aws-s3-url.util";
-import {
-  clearAuthCookies,
-  cookiePath,
-  setUnauthorizedCookies,
-} from "../utils/cookies.util";
+import awsUrlParser from "../utils/aws-url-parser.util";
 import admin from "../config/firebase.config";
+
+const { BAD_REQUEST, INTERNAL_SERVER_ERROR, UNAUTHORIZED } = HttpCode;
+const { INVALID_FIREBASE_CREDENTIAL, CREATE_SONG_ERROR } = ErrorCode;
 
 const errorHandler = (): ErrorRequestHandler => {
   return async (error, req, res, next) => {
@@ -56,17 +49,14 @@ const errorHandler = (): ErrorRequestHandler => {
 
       // If firebase auth with third-party provider fails, delete the firebase user
       // to avoid another provider with the same email can't auth again
-      if (error.errorCode === ErrorCode.InvalidFirebaseCredential) {
+      if (error.errorCode?.valueOf() === INVALID_FIREBASE_CREDENTIAL) {
         if (error.firebaseUID) {
           await admin.auth().deleteUser(error.firebaseUID);
         }
       }
 
       // if get error from create song API, delete url file from AWS
-      if (
-        error.errorCode === ErrorCode.CreateSongError &&
-        error.awsUrl?.length
-      ) {
+      if (error.errorCode?.valueOf() === CREATE_SONG_ERROR && error.awsUrl?.length) {
         const urls = error.awsUrl;
 
         for (const url of urls) {

@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 
 import { SoundOutputType } from "../hooks/sound.hook";
-import { storePlaybackLog } from "../fetchs/playback.fetch";
-
+import { useRecordPlaybackLogMutation } from "../hooks/playback-mutate.hook";
+import { SongLoopOptions } from "../constants/loop-mode.constant";
+import { PlaybackStateOptions } from "@joytify/shared-types/constants";
+import { RefactorSongResponse } from "@joytify/shared-types/types";
 import useSoundState from "../states/sound.state";
 import usePlayerState from "../states/player.state";
 import usePlaylistState from "../states/playlist.state";
-import { RefactorResSong } from "../constants/axios-response.constant";
-import SongLoopOptions from "../constants/loop-mode.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
-import PlaybackStateOptions from "../constants/playback.constant";
 import { getDuration } from "../utils/get-time.util";
 
 type PlayerSliderProps = {
-  song: RefactorResSong;
+  song: RefactorSongResponse;
   sound: SoundOutputType;
 };
 
@@ -22,14 +19,8 @@ const PlayerSlider: React.FC<PlayerSliderProps> = ({ song, sound }) => {
   const { duration } = song;
 
   const [displayTime, setDisplayTime] = useState("0:00");
-  const {
-    isPlaying,
-    songIds,
-    activeSongId,
-    setActiveSongId,
-    setSongIds,
-    shuffleSongIds,
-  } = useSoundState();
+  const { isPlaying, songIds, activeSongId, setActiveSongId, setSongIds, shuffleSongIds } =
+    useSoundState();
   const { isShuffle, loopType } = usePlayerState();
   const { targetPlaylist } = usePlaylistState();
 
@@ -37,6 +28,9 @@ const PlayerSlider: React.FC<PlayerSliderProps> = ({ song, sound }) => {
 
   const formattedProgressTime = getDuration(timestamp);
   const formattedDurationTime = getDuration(duration);
+
+  // record playback log mutation
+  const { mutate: recordPlaybackLog } = useRecordPlaybackLogMutation();
 
   // handle change song seek
   const handleChangeSongSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,15 +44,6 @@ const PlayerSlider: React.FC<PlayerSliderProps> = ({ song, sound }) => {
 
     sound.seek(value);
   };
-
-  // record playback log mutation
-  const { mutate: recordPlaybackLog } = useMutation({
-    mutationKey: [MutationKey.RECORD_PLAYBACK_LOG],
-    mutationFn: storePlaybackLog,
-    onError: (error) => {
-      console.log(error);
-    },
-  });
 
   // Update display time every second ,
   // since we're using seconds as the time unit (formattedProgressTime)
@@ -108,9 +93,7 @@ const PlayerSlider: React.FC<PlayerSliderProps> = ({ song, sound }) => {
         }
 
         // finally, both of situation just set to next song id to play
-        setActiveSongId(
-          songIds[currentIndex === songIds.length - 1 ? 0 : currentIndex + 1]
-        );
+        setActiveSongId(songIds[currentIndex === songIds.length - 1 ? 0 : currentIndex + 1]);
       }
     }
   }, [formattedProgressTime]);

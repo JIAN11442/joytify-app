@@ -1,33 +1,32 @@
 import mongoose from "mongoose";
 
 import SongModel from "../models/song.model";
-import PlaybackModel from "../models/playback.model";
 import HistoryModel from "../models/history.model";
+import PlaybackModel, { PlaybackDocument } from "../models/playback.model";
 
-import { PlaybackStateType } from "../constants/playback.constant";
-import { INTERNAL_SERVER_ERROR } from "../constants/http-code.constant";
+import { HttpCode } from "@joytify/shared-types/constants";
+import { StorePlaybackLogRequest } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 
-type CreateParams = {
+interface UpsertPlaybackLogServiceRequest extends StorePlaybackLogRequest {
   userId: string;
-  songId: string;
-  duration: number;
-  timestamp: Date;
-  state: PlaybackStateType;
-};
+}
+
+const { INTERNAL_SERVER_ERROR } = HttpCode;
 
 // create or update playback logs service
-export const createOrUpdatePlaybackLog = async (data: CreateParams) => {
+export const upsertPlaybackLog = async (data: UpsertPlaybackLogServiceRequest) => {
   const { userId, songId, ...rest } = data;
 
   let playbackLog;
 
   // make sure song exists
   const song = await SongModel.findById(songId);
+
   appAssert(song, INTERNAL_SERVER_ERROR, "Song not found");
 
   // check if user has playback log
-  const userPlaybackLog = await PlaybackModel.findOne({ user: userId });
+  const userPlaybackLog: PlaybackDocument = await PlaybackModel.findOne({ user: userId });
 
   if (userPlaybackLog) {
     // Check if the song already exists in the user's playback log
@@ -45,11 +44,7 @@ export const createOrUpdatePlaybackLog = async (data: CreateParams) => {
         { new: true }
       );
 
-      appAssert(
-        playbackLog,
-        INTERNAL_SERVER_ERROR,
-        "Failed to record new playback log"
-      );
+      appAssert(playbackLog, INTERNAL_SERVER_ERROR, "Failed to record new playback log");
     } else {
       // If song does not exist, add new song with stats
       playbackLog = await PlaybackModel.findOneAndUpdate(
@@ -62,11 +57,7 @@ export const createOrUpdatePlaybackLog = async (data: CreateParams) => {
         { new: true }
       );
 
-      appAssert(
-        playbackLog,
-        INTERNAL_SERVER_ERROR,
-        "Failed to create new song playback log"
-      );
+      appAssert(playbackLog, INTERNAL_SERVER_ERROR, "Failed to create new song playback log");
     }
   } else {
     // If user does not have a playback log, create a new one
@@ -75,11 +66,7 @@ export const createOrUpdatePlaybackLog = async (data: CreateParams) => {
       songs: [{ id: song.id, artist: song.artist, playbacks: [rest] }],
     });
 
-    appAssert(
-      playbackLog,
-      INTERNAL_SERVER_ERROR,
-      "Failed to create a new user playback log"
-    );
+    appAssert(playbackLog, INTERNAL_SERVER_ERROR, "Failed to create a new user playback log");
   }
 
   return { playbackLog };
@@ -118,17 +105,14 @@ export const getTotalPlaybackDurationAndCount = async (songId: string) => {
 
     const result = await model.aggregate(aggregateQuery);
 
-    return result.length > 0
-      ? result[0]
-      : { totalDuration: 0, count: 0, durations: [] };
+    return result.length > 0 ? result[0] : { totalDuration: 0, count: 0, durations: [] };
   };
 
   const playbackResult = await executeAggregateQuery(PlaybackModel, songObjId);
   const historyResult = await executeAggregateQuery(HistoryModel, songObjId);
 
   const totalCount = playbackResult.count + historyResult.count;
-  const totalDuration =
-    playbackResult.totalDuration + historyResult.totalDuration;
+  const totalDuration = playbackResult.totalDuration + historyResult.totalDuration;
   const durations = [...playbackResult.durations, ...historyResult.durations];
 
   const weightedAvgDuration = durations.reduce((acc, duration) => {

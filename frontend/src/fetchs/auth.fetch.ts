@@ -1,36 +1,31 @@
-import { AuthProvider, getIdToken } from "firebase/auth";
-import API from "../config/api-client.config";
-import { authWithThirdPartyUsingPopup } from "../config/firebase.config";
-import { AuthForm } from "../constants/form.constant";
-import AuthForOptions, { AuthForType } from "../constants/auth.constant";
+import { getIdToken, AuthProvider } from "firebase/auth";
 
-// signin with third party axios
-type AuthForThirdPartyParams = {
+import { AuthForOptions } from "@joytify/shared-types/constants";
+import { RegisterRequest, LoginRequest, AuthForType } from "@joytify/shared-types/types";
+import { authWithThirdPartyUsingPopup } from "../config/firebase.config";
+import API from "../config/api-client.config";
+
+type AuthWithThirdPartyParams = {
   provider: AuthProvider;
   authFor: AuthForType;
 };
 
 // register
-export const signup = async (params: AuthForm) =>
-  API.post("/auth/register", params);
+export const signup = async (params: RegisterRequest) => API.post("/auth/register", params);
 
 // login
-export const signin = async (params: AuthForm) =>
-  API.post("/auth/login", params);
-
-// logout
-export const logout = async () => API.get("/auth/logout");
+export const signin = async (params: LoginRequest) => API.post("/auth/login", params);
 
 // auth with third party
-export const authWithThirdParty = async (params: AuthForThirdPartyParams) => {
+export const authWithThirdParty = async (params: AuthWithThirdPartyParams) => {
   const { provider, authFor } = params;
+  const { SIGN_IN } = AuthForOptions;
 
   return authWithThirdPartyUsingPopup(provider)
     .then(async (user) => {
       if (user) {
         const token = await getIdToken(user);
-        const authType =
-          authFor === AuthForOptions.SIGN_IN ? "login" : "register";
+        const authType = authFor === SIGN_IN ? "login" : "register";
 
         return API.post(`/auth/third-party/${authType}`, { token });
       }
@@ -40,3 +35,6 @@ export const authWithThirdParty = async (params: AuthForThirdPartyParams) => {
       throw error;
     });
 };
+
+// logout
+export const logout = async () => API.get("/auth/logout");

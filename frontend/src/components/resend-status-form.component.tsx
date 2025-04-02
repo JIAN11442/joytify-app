@@ -2,28 +2,22 @@ import { useEffect, useRef, useState } from "react";
 import { LuMailCheck, LuMailX } from "react-icons/lu";
 
 import Icon from "./react-icons.component";
-import {
-  VerificationCodeActions,
-  VerificationForType,
-} from "../constants/verification.constant";
+import { VerificationCodeActions } from "@joytify/shared-types/constants";
+import { VerificationForType } from "@joytify/shared-types/types";
 import useVerificationModalState from "../states/verification.state";
-import { timeoutForDelay } from "../lib/timeout.lib";
 import { getDuration } from "../utils/get-time.util";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 type ResendStatusFormProps = {
   isSuccess: boolean;
   initialPage: VerificationForType;
 };
 
-const ResendStatusForm: React.FC<ResendStatusFormProps> = ({
-  isSuccess,
-  initialPage,
-}) => {
+const ResendStatusForm: React.FC<ResendStatusFormProps> = ({ isSuccess, initialPage }) => {
   const btnRef = useRef<HTMLButtonElement>(null);
   const [countdown, setCountdown] = useState(5);
 
-  const { activeVerificationCodeModal, backToInitialPage } =
-    useVerificationModalState();
+  const { activeVerificationCodeModal, backToInitialPage } = useVerificationModalState();
 
   const { userEmail } = activeVerificationCodeModal;
 
@@ -96,8 +90,8 @@ const ResendStatusForm: React.FC<ResendStatusFormProps> = ({
           {content}{" "}
           {isSuccess && (
             <span>
-              <span className={`text-blue-500`}>{userEmail}</span>. Please check
-              your email inbox or spam folder.
+              <span className={`text-blue-500`}>{userEmail}</span>. Please check your email inbox or
+              spam folder.
             </span>
           )}
         </p>

@@ -1,35 +1,33 @@
 import mongoose, { FilterQuery } from "mongoose";
+
 import LabelModel, { LabelDocument } from "../models/label.model";
-import { LabelType } from "../constants/label.constant";
-import {
-  CONFLICT,
-  INTERNAL_SERVER_ERROR,
-  NOT_FOUND,
-} from "../constants/http-code.constant";
+import { HttpCode } from "@joytify/shared-types/constants";
+import { CreateLabelRequest } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 
-type DeleteLabelParams = {
-  id?: string;
+interface CreateLabelServiceRequest extends CreateLabelRequest {
   userId: string;
-};
-
-interface CreateLabelParams extends DeleteLabelParams {
-  label: string;
-  type: LabelType;
 }
 
-interface GetLabelIdParams extends CreateLabelParams {
+interface GetLabelIdServiceRequest extends CreateLabelServiceRequest {
   createIfAbsent?: boolean;
 }
 
+type RemoveLabelRequest = {
+  id: string;
+  userId: string;
+};
+
+const { INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;
+
 // get labels service
-export const getDefaultAndCreatedLabel = async (userId: string) => {
+export const getLabels = async (userId: string) => {
   const groupLabels = (isDefault: boolean, userId?: string) => [
     // Match labels based on default status
     {
       $match: {
         default: isDefault,
-        ...(userId ? { author: new mongoose.Types.ObjectId(userId) } : {}),
+        ...(userId ? { users: new mongoose.Types.ObjectId(userId) } : {}),
       },
     },
     // Group labels by their type and collect them into a set
@@ -85,34 +83,53 @@ export const getDefaultAndCreatedLabel = async (userId: string) => {
 };
 
 // create label service
-export const createLabel = async (data: CreateLabelParams) => {
-  const { userId, label, type } = data;
+export const createLabel = async (params: CreateLabelServiceRequest) => {
+  const { userId, label, type } = params;
 
-  const findQuery: FilterQuery<LabelDocument> = {
-    label,
-    type,
-    author: userId,
-    default: false,
-  };
+  const findQuery: FilterQuery<LabelDocument> = { label, type };
 
-  const isLabelExist = await LabelModel.exists(findQuery);
+  // check if label is already exist
+  let labelDoc = await LabelModel.findOne(findQuery);
 
-  appAssert(!isLabelExist, CONFLICT, "Each label already exists");
+  if (labelDoc) {
+    // update users params
+    labelDoc = await LabelModel.findOneAndUpdate(
+      findQuery,
+      { $addToSet: { users: userId } },
+      { new: true }
+    );
+  } else {
+    labelDoc = await LabelModel.create({
+      ...findQuery,
+      author: userId,
+      users: userId,
+      default: false,
+    });
+  }
 
-  const createdLabel = await LabelModel.create(findQuery);
+  appAssert(labelDoc, INTERNAL_SERVER_ERROR, "Failed to create label");
 
-  appAssert(
-    createdLabel,
-    INTERNAL_SERVER_ERROR,
-    "Failed to create the new label"
-  );
-
-  return { createdLabel };
+  return { label: labelDoc };
 };
 
-// get label ID service
-export const getLabelId = async (data: GetLabelIdParams) => {
-  const { userId, label: doc, type, createIfAbsent } = data;
+// remove label service
+export const removeLabel = async (data: RemoveLabelRequest) => {
+  const { id, userId } = data;
+
+  const removedLabel = await LabelModel.findOneAndUpdate(
+    { _id: id, default: false },
+    { $pull: { users: userId } },
+    { new: true }
+  );
+
+  appAssert(removedLabel, NOT_FOUND, "Label is not found");
+
+  return { removedLabel };
+};
+
+// get label ID service(*)
+export const getLabelId = async (params: GetLabelIdServiceRequest) => {
+  const { userId, label: doc, type, createIfAbsent } = params;
 
   const findQuery: FilterQuery<LabelDocument> = {
     type,
@@ -137,29 +154,4 @@ export const getLabelId = async (data: GetLabelIdParams) => {
   appAssert(label, NOT_FOUND, "Label is not found");
 
   return { id: label._id };
-};
-
-// delete label service
-export const deleteLabel = async (data: DeleteLabelParams) => {
-  const { id, userId } = data;
-
-  const findQuery: FilterQuery<LabelDocument> = {
-    _id: id,
-    author: userId,
-    default: false,
-  };
-
-  const isLabelExist = await LabelModel.exists(findQuery);
-
-  appAssert(isLabelExist, NOT_FOUND, "Label to be deleted is not found");
-
-  const deletedLabel = await LabelModel.findOneAndDelete(findQuery);
-
-  appAssert(
-    deletedLabel,
-    INTERNAL_SERVER_ERROR,
-    "Failed to delete target label"
-  );
-
-  return { deletedLabel };
 };

@@ -1,56 +1,24 @@
-import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
+import { BiUser } from "react-icons/bi";
+import { IoSettingsOutline } from "react-icons/io5";
+import { IoIosPower, IoMdLogOut } from "react-icons/io";
 
 import AvatarMenu from "./avatar-menu.component";
+import MenuItem from "./menu-item.component";
 
-import { logout } from "../fetchs/auth.fetch";
-import { deregisterUserAccount } from "../fetchs/user.fetch";
-
-import useUserState from "../states/user.state";
+import { useDeregisterMutation, useLogoutMutation } from "../hooks/auth-mutate.hook";
+import { AuthForOptions } from "@joytify/shared-types/constants";
+import { AuthUserResponse } from "@joytify/shared-types/types";
 import useAuthModalState from "../states/auth-modal.state";
-import AuthForOptions from "../constants/auth.constant";
-import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
+import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import queryClient from "../config/query-client.config";
 
 const AuthOperation = () => {
   const { openAuthModal } = useAuthModalState();
-  const { user, activeUserMenu, setActiveUserMenu } = useUserState();
+  const { authUser, activeUserMenu, setActiveUserMenu } = useUserState();
 
-  // logout mutation
-  const { mutate: logoutUser } = useMutation({
-    mutationKey: [MutationKey.LOGOUT],
-    mutationFn: logout,
-    onSuccess: () => {
-      // clear user query data
-      clearUserQueryData();
-
-      // display success message
-      toast.success("Logged out successfully");
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-
-  // deregister mutation
-  const { mutate: deregisterUser } = useMutation({
-    mutationKey: [MutationKey.DEREGISTER_USER],
-    mutationFn: deregisterUserAccount,
-    onSuccess: () => {
-      clearUserQueryData();
-      toast.success("Deregister Successfully");
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-
-  // Set the query data to null to refetch on the next request
-  const clearUserQueryData = () => {
-    queryClient.setQueryData([QueryKey.GET_USER_INFO], null);
-    queryClient.setQueryData([QueryKey.GET_USER_PLAYLISTS], null);
-  };
+  // mutations
+  const { mutate: logoutFn } = useLogoutMutation();
+  const { mutate: deregisterFn } = useDeregisterMutation();
 
   // handle active auth modal(login or register)
   const handleActiveAuthModal = (authFor: AuthForOptions) => {
@@ -62,41 +30,32 @@ const AuthOperation = () => {
   // handle logout
   const handleLogoutUser = () => {
     timeoutForDelay(() => {
-      logoutUser();
+      logoutFn();
     });
   };
 
   // handle deregister user
   const handleDeregisterUser = () => {
     timeoutForDelay(() => {
-      // logout first to clear the accessToken and firebase authentication record,
-      // this prevents conflicts when signing up the same email again
-      logout();
-
-      // deregister account
-      deregisterUser();
+      deregisterFn();
     });
   };
 
   return (
     <>
-      {user ? (
+      {authUser ? (
         // Avatar & Menu
         <AvatarMenu
-          user={user}
+          authUser={authUser as AuthUserResponse}
           activeMenuState={{
             activeMenu: activeUserMenu,
             setActiveMenu: setActiveUserMenu,
           }}
         >
-          <button className={`menu-btn`}>profile</button>
-          <button className={`menu-btn`}>setting</button>
-          <button onClick={handleLogoutUser} className={`menu-btn`}>
-            logout
-          </button>
-          <button className={`menu-btn`} onClick={handleDeregisterUser}>
-            deregister
-          </button>
+          <MenuItem to={`/profile/${authUser._id}`} icon={{ name: BiUser }} label="profile" />
+          <MenuItem to={"/settings"} icon={{ name: IoSettingsOutline }} label="setting" />
+          <MenuItem onClick={handleLogoutUser} icon={{ name: IoIosPower }} label="logout" />
+          <MenuItem onClick={handleDeregisterUser} icon={{ name: IoMdLogOut }} label="deregister" />
         </AvatarMenu>
       ) : (
         // Sign up and login button

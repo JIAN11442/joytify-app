@@ -1,14 +1,14 @@
 import useOnPlay from "../hooks/play.hook";
-import { RefactorResSong } from "../constants/axios-response.constant";
+import { useGetSongsQuery } from "../hooks/song-query.hook";
+import { RefactorSongResponse } from "@joytify/shared-types/types";
 import useSoundState from "../states/sound.state";
-import { useAllSongs } from "../hooks/song.hook";
 
 const HomePage = () => {
-  const { songs } = useAllSongs();
-  const { onPlay } = useOnPlay(songs!);
+  const { songs } = useGetSongsQuery();
+  const { onPlay } = useOnPlay(songs);
   const { activeSongId, isPlaying, sound } = useSoundState();
 
-  const handlePlaySong = (song: RefactorResSong) => {
+  const handlePlaySong = (song: RefactorSongResponse) => {
     if (!sound || song._id !== activeSongId) {
       onPlay(song._id);
     } else {

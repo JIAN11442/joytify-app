@@ -42,21 +42,19 @@ const CalendarInputBox = forwardRef<HTMLInputElement, CalendarProps>(
         )}
       >
         {/* title */}
-        <>
-          {title && (
-            <p
-              className={twMerge(
-                `
+        {title && (
+          <p
+            className={twMerge(
+              `
                 text-sm
                 text-grey-custom/50
               `,
-                tw?.title
-              )}
-            >
-              {title}
-            </p>
-          )}
-        </>
+              tw?.title
+            )}
+          >
+            {title}
+          </p>
+        )}
 
         {/* input */}
         <input

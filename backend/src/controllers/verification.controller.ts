@@ -10,17 +10,16 @@ import {
   sendLinkEmailToUser,
   verifyLink,
 } from "../services/verification.service";
-import { OK } from "../constants/http-code.constant";
-import {
-  clearVerificationCookies,
-  setVerificationCookies,
-} from "../utils/cookies.util";
+import { HttpCode } from "@joytify/shared-types/constants";
+import { VerifyCodeRequest } from "@joytify/shared-types/types";
+import { clearVerificationCookies, setVerificationCookies } from "../utils/cookies.util";
+
+const { OK } = HttpCode;
 
 // send verification code email handler
 export const sendCodeEmailHandler: RequestHandler = async (req, res, next) => {
   try {
     const token = req.cookies.vrfctToken;
-
     const data = sendCodeZodSchema.parse({ ...req.body, token });
 
     const { id, action, sessionToken } = await sendCodeEmailToUser(data);
@@ -35,6 +34,24 @@ export const sendCodeEmailHandler: RequestHandler = async (req, res, next) => {
   }
 };
 
+// verify verification code handler
+export const verifyCodeHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const token = req.cookies.vrfctToken;
+    const params: VerifyCodeRequest = verifyCodeZodSchema.parse({ ...req.body, token });
+
+    const { verified } = await verifyCode({ token, ...params });
+
+    if (verified) {
+      clearVerificationCookies(res);
+    }
+
+    res.status(OK).json({ verified });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // send verification link email handler
 export const sendLinkEmailHandler: RequestHandler = async (req, res, next) => {
   try {
@@ -43,24 +60,6 @@ export const sendLinkEmailHandler: RequestHandler = async (req, res, next) => {
     const { url } = await sendLinkEmailToUser(email);
 
     return res.status(OK).json({ url });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// verify verification code handler
-export const verifyCodeHandler: RequestHandler = async (req, res, next) => {
-  try {
-    const token = req.cookies.vrfctToken;
-    const { code, email } = verifyCodeZodSchema.parse({ ...req.body, token });
-
-    const { verified } = await verifyCode({ code, email, token });
-
-    if (verified) {
-      clearVerificationCookies(res);
-    }
-
-    res.status(OK).json({ verified });
   } catch (error) {
     next(error);
   }

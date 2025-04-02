@@ -2,28 +2,21 @@ import { twMerge } from "tailwind-merge";
 
 import ImageLabel from "./image-label.component";
 
-import { RefactorResPlaylist } from "../constants/axios-response.constant";
+import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
+import { UploadFolder } from "@joytify/shared-types/constants";
+import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
 import usePlaylistState from "../states/playlist.state";
 import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type PlaylistHeaderProps = {
-  playlist: RefactorResPlaylist;
+  playlist: RefactorPlaylistResponse;
   className?: string;
 };
 
-const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
-  playlist,
-  className,
-}) => {
-  const {
-    _id: playlistId,
-    title,
-    songs,
-    description,
-    cover_image,
-    default: isDefault,
-  } = playlist;
+const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ playlist, className }) => {
+  const { _id: playlistId, title, songs, description, cover_image, default: isDefault } = playlist;
+
   const { setActivePlaylistEditModal } = usePlaylistState();
   const { collapseSideBarState } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
@@ -37,12 +30,17 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
     });
   };
 
+  // update playlist mutation
+  const { mutate: updatePlaylistFn, isPending } = useUpdatePlaylistMutation(playlistId);
+
   return (
     <div
       className={twMerge(
         `
           flex
+          px-6
           gap-x-5
+          w-full
         `,
         className
       )}
@@ -50,16 +48,20 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
       {/* Playlist cover image */}
       <ImageLabel
         src={cover_image}
-        playlistId={playlistId}
+        subfolder={UploadFolder.PLAYLISTS_IMAGE}
+        updateConfig={{
+          updateImgFn: (awsImageUrl) => updatePlaylistFn({ cover_image: awsImageUrl }),
+          isPending,
+        }}
         isDefault={isDefault}
       />
 
-      {/* Title */}
+      {/* content */}
       <div
         className={`
           flex
           flex-col
-          py-1
+          w-full
           lg:py-0
           items-start
           justify-between
@@ -78,52 +80,36 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
 
         {/* title */}
         <button
+          type="button"
           onClick={handleActivePlaylistEditModal}
           className={`
             ${isDefault ? "cursor-default" : "cursor-pointer"}
           `}
         >
-          <p
+          <h1
             style={{ lineHeight: "1.15" }}
             className={`
-              text-left
-              text-5xl
-              sm:text-6xl
-              ${
-                isCollapsed
-                  ? `
-                      md:text-[5.5rem]
-                      lg:text[6rem]
-                    `
-                  : `
-                      lg:text-[5.5rem]
-                    `
-              }
-              font-extrabold
-              font-serif
-              line-clamp-1
+              info-title
+              ${isCollapsed ? "lg:text-[7rem]" : "lg:text-[6.5rem]"}
             `}
           >
             {title}
-          </p>
+          </h1>
         </button>
 
-        {/* other */}
-        <>
-          {description ? (
-            <p
-              className={`
-                text-grey-custom/50
-                truncate
-                line-clamp-1
-              `}
-            >
-              {description}
-            </p>
-          ) : (
-            <p>{songs?.length} songs</p>
-          )}
-        </>
+        {/* other - description or songs count */}
+        {description ? (
+          <p
+            className={`
+              text-grey-custom/50
+              line-clamp-1
+            `}
+          >
+            {description}
+          </p>
+        ) : (
+          <p>{songs?.length} songs</p>
+        )}
       </div>
     </div>
   );

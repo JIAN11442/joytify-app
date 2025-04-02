@@ -1,10 +1,7 @@
 import { z } from "zod";
 
-import {
-  AWS_BUCKET_NAME,
-  AWS_REGION,
-} from "../constants/env-validate.constant";
-import { FileExtension, UploadFolder } from "../constants/aws.constant";
+import { AWS_BUCKET_NAME, AWS_REGION } from "../constants/env-validate.constant";
+import { FileExtension, UploadFolder } from "@joytify/shared-types/constants";
 import awsUrlParser from "../utils/aws-url-parser.util";
 
 const baseRootUrl = `https://${AWS_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com`;
@@ -31,8 +28,7 @@ export const awsFileUrlZodSchema = z.string().refine((url) => {
     if (!file || !fileRegex.test(file)) return false;
 
     // validate extension
-    if (!z.nativeEnum(FileExtension).safeParse(`.${extension}`).success)
-      return false;
+    if (!z.nativeEnum(FileExtension).safeParse(`.${extension}`).success) return false;
 
     return true;
   } catch (error) {

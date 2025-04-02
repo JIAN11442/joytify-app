@@ -1,49 +1,43 @@
-import { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
 
 import Modal from "./modal.component";
+import Loader from "./loader.component";
 import InputBox from "./input-box.component";
 import ImageLabel from "./image-label.component";
-import Loader from "./loader.component";
 
-import {
-  defaultPlaylistEditData,
-  EditPlaylistForm,
-  FormMethods,
-} from "../constants/form.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
-import { RefactorResPlaylist } from "../constants/axios-response.constant";
-import { usePlaylistById, usePlaylists } from "../hooks/playlist.hook";
-import { updatePlaylist } from "../fetchs/playlist.fetch";
 import { deleteFileFromAws } from "../fetchs/aws.fetch";
+import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
+import { UploadFolder } from "@joytify/shared-types/constants";
+import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
+import { DefaultEditPlaylistForm, FormMethods } from "../types/form.type";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import { getModifiedFormData } from "../utils/get-form-data.util";
 
 const PlaylistEditModal = () => {
-  const modifiedFieldsRef = useRef<string[]>([]);
-  const [isModified, setIsModified] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [playlistImage, setPlaylistImage] = useState<string | null>(null);
+  const [closeModalPending, setCloseModalPending] = useState<boolean>(false);
 
-  const { activePlaylistEditModal, closePlaylistEditModal } =
-    usePlaylistState();
+  const { activePlaylistEditModal, closePlaylistEditModal } = usePlaylistState();
   const { active, playlist } = activePlaylistEditModal;
-  const { _id: playlistId } = (playlist as RefactorResPlaylist) ?? {};
-
-  const { refetch: playlistsRefetch } = usePlaylists();
-  const { refetch: targetPlaylistRefetch } = usePlaylistById(playlistId);
+  const {
+    _id: playlistId,
+    title,
+    description,
+    cover_image,
+  } = (playlist as RefactorPlaylistResponse) ?? {};
 
   // handle close modal
   const handleCloseModal = () => {
     timeoutForDelay(async () => {
-      const isFileDeletionRequired =
-        !isSubmitted && modifiedFieldsRef.current.includes("coverImage");
-      const currentCoverImage = watch("coverImage");
+      // start pending
+      setCloseModalPending(true);
 
       // while coverImage is changed but not submitted,
       // delete that file store in AWS
-      if (isFileDeletionRequired && currentCoverImage) {
+      if (!isSubmitted && watch("coverImage") && watch("coverImage") !== cover_image) {
         try {
           await deleteFileFromAws(watch("coverImage"));
         } catch (error) {
@@ -51,106 +45,65 @@ const PlaylistEditModal = () => {
         }
       }
 
+      // close modal
       closePlaylistEditModal();
+
+      // end pending
+      setCloseModalPending(false);
+
+      // reset form
       reset();
     });
   };
 
   // update playlist mutation
-  const { mutate: updateUserPlaylist, isPending } = useMutation({
-    mutationKey: [MutationKey.UPDATE_PLAYLIST],
-    mutationFn: updatePlaylist,
-    onSuccess: async () => {
-      // refetch user playlists query
-      playlistsRefetch();
-
-      // refetch target playlist query
-      targetPlaylistRefetch();
-
-      // close modal
-      handleCloseModal();
-
-      // display success message
-      toast.success("Playlist updated successfully");
-    },
-    onError: () => {
-      toast.error("Failed to update playlist");
-    },
-  });
+  const { mutate: updatePlaylistFn, isPending } = useUpdatePlaylistMutation(
+    playlistId,
+    handleCloseModal
+  );
 
   // initial form state
-  const { register, handleSubmit, setValue, setError, reset, trigger, watch } =
-    useForm<EditPlaylistForm>({
-      defaultValues: { ...defaultPlaylistEditData },
-      mode: "onChange",
-    });
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    reset,
+    trigger,
+    watch,
+    formState: { dirtyFields },
+  } = useForm<DefaultEditPlaylistForm>({
+    defaultValues: { title, description }, // it's necessary if you want to track form changes（dirtyFields）.
+    mode: "onChange",
+  });
+
+  // check form if is modified
+  const isModified = Object.keys(dirtyFields).length > 0;
 
   // form methods
-  const formMethods: FormMethods<EditPlaylistForm> = {
+  const formMethods: FormMethods<DefaultEditPlaylistForm> = {
     setFormValue: setValue,
     setFormError: setError,
     trigger,
   };
 
   // submit form
-  const onSubmit: SubmitHandler<EditPlaylistForm> = async (value) => {
-    const { coverImage, ...params } = value;
+  const onSubmit: SubmitHandler<DefaultEditPlaylistForm> = async (value) => {
+    const { coverImage: cover_image, ...rest } = getModifiedFormData(value, dirtyFields);
 
-    updateUserPlaylist({ playlistId, awsImageUrl: coverImage, ...params });
+    updatePlaylistFn({ cover_image, ...rest });
 
     setIsSubmitted(true);
   };
 
-  // initialize default form value
-  useEffect(() => {
-    if (playlist) {
-      reset({
-        title: playlist?.title,
-        description: playlist?.description,
-        coverImage: playlist?.cover_image,
-      });
-    }
-  }, [playlist, reset]);
-
-  // listen for changes in the form fields
-  useEffect(() => {
-    if (!playlist) return;
-
-    // subscribe to changes in the form values using watch
-    // or using observable.subscribe()
-    const subscription = watch((val) => {
-      const fieldsToCheck = {
-        title: playlist?.title,
-        description: playlist?.description,
-        coverImage: playlist?.cover_image,
-      };
-
-      // get all changed fields
-      const changedFields = Object.entries(fieldsToCheck)
-        .filter(([field, originalValue]) => {
-          return val[field as keyof typeof val] !== originalValue;
-        })
-        .map(([field]) => field);
-
-      // update modified state
-      setIsModified(!!changedFields.length);
-
-      // use a ref to store modified fields for accessing the latest value without re-rendering.
-      // useState is unsuitable here due to closure issues in the onClick function.
-      modifiedFieldsRef.current = changedFields;
-    });
-
-    // clean function
-    return () => subscription.unsubscribe();
-  }, [playlist, watch, modifiedFieldsRef]);
-
   return (
     <Modal
-      title="Edit details"
+      title="Edit playlist"
       activeState={active}
       closeModalFn={handleCloseModal}
+      loading={closeModalPending}
       className={`w-[600px]`}
-      tw={{ title: `text-left` }}
+      tw={{ title: "text-left max-sm:text-center" }}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -164,15 +117,19 @@ const PlaylistEditModal = () => {
       >
         {/* Image input */}
         <ImageLabel
-          src={watch("coverImage")}
-          playlistId={playlistId}
+          src={playlistImage ?? cover_image}
+          subfolder={UploadFolder.PLAYLISTS_IMAGE}
           formMethods={formMethods}
+          setImgSrc={setPlaylistImage}
           className={`
-            w-[15rem]
-            h-[15rem]
-            min-w-[15rem]
-            min-h-[15rem]
+            flex
+            items-center
+            justify-center
+            max-sm:w-full
+            max-sm:rounded-md
+            bg-grey-dark
           `}
+          tw={{ label: "w-[15rem] h-[15rem]" }}
           {...register("coverImage")}
         />
 
@@ -188,18 +145,19 @@ const PlaylistEditModal = () => {
           {/* Title */}
           <InputBox
             type="text"
-            value={watch("title")}
             placeholder="Title"
+            defaultValue={title}
             formMethods={formMethods}
             disabled={isPending}
+            autoFocus
             {...register("title")}
           />
 
           {/* Description */}
           <textarea
             id="description"
-            value={watch("description")}
             placeholder="Description"
+            defaultValue={description}
             disabled={isPending}
             className={`
               input-box

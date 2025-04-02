@@ -1,31 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { forwardRef, useState } from "react";
-import toast from "react-hot-toast";
-import { twMerge } from "tailwind-merge";
 import { nanoid } from "nanoid";
-import { useMutation } from "@tanstack/react-query";
+import { forwardRef, useState } from "react";
 import { FieldValues } from "react-hook-form";
+import { twMerge } from "tailwind-merge";
 import { AiFillEdit } from "react-icons/ai";
 
 import Loader from "./loader.component";
 import Icon from "./react-icons.component";
 
-import { updatePlaylist } from "../fetchs/playlist.fetch";
 import { uploadFileToAws } from "../fetchs/aws.fetch";
-import { FormMethods } from "../constants/form.constant";
-import { FileExtension, UploadFolder } from "../constants/aws.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
-import { usePlaylistById, usePlaylists } from "../hooks/playlist.hook";
+import { FileExtension } from "@joytify/shared-types/constants";
+import { UploadFolderType } from "@joytify/shared-types/types";
+import { FormMethods } from "../types/form.type";
 
 interface ImageLabelProps<T extends FieldValues = any>
   extends React.ImgHTMLAttributes<HTMLImageElement> {
+  subfolder: UploadFolderType;
   name?: Extract<keyof T, string>;
-  playlistId: string;
   formMethods?: FormMethods<T>;
   isDefault?: boolean;
+  updateConfig?: {
+    updateImgFn: (awsImageUrl: string) => void;
+    isPending: boolean;
+  };
+  setImgSrc?: (src: string) => void;
   tw?: {
+    mask?: string;
     label?: string;
     img?: string;
+    upload?: string;
     loader?: { container?: string; text?: string };
     icon?: string;
     input?: string;
@@ -34,30 +37,25 @@ interface ImageLabelProps<T extends FieldValues = any>
 
 const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
   (
-    { name, src, playlistId, formMethods, isDefault, className, tw, ...props },
+    {
+      subfolder,
+      name,
+      src,
+      formMethods,
+      updateConfig,
+      isDefault,
+      setImgSrc,
+      className,
+      tw = {
+        mask: "rounded-md",
+      },
+      ...props
+    },
     ref
   ) => {
+    const { updateImgFn, isPending } = updateConfig ?? {};
+
     const [isUploading, setIsUploading] = useState(false);
-
-    const { refetch: playlistsRefetch } = usePlaylists();
-    const { refetch: targetPlaylistRefetch } = usePlaylistById(playlistId);
-
-    // update image mutation
-    const { mutate: updateUserPlaylist, isPending } = useMutation({
-      mutationKey: [MutationKey.UPDATE_PLAYLIST],
-      mutationFn: updatePlaylist,
-      onSuccess: async () => {
-        // refetch user playlists query
-        playlistsRefetch();
-        // refetch target playlist query
-        targetPlaylistRefetch();
-
-        toast.success("Playlist updated successfully");
-      },
-      onError: () => {
-        toast.error("Failed to update playlist");
-      },
-    });
 
     // upload file to AWS and get signed URL
     const getImageUrlFromAWS = async (file: FileList) => {
@@ -68,7 +66,7 @@ const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
 
         // get signed url and upload image to AWS
         const awsImageUrl = await uploadFileToAws({
-          subfolder: UploadFolder.PLAYLISTS_IMAGE,
+          subfolder: subfolder,
           extension: FileExtension.PNG,
           file: file?.[0] as File,
           nanoID,
@@ -81,9 +79,7 @@ const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
     };
 
     // handle input onChange
-    const handleInputOnChange = async (
-      e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleInputOnChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
       const imgFile = e.target.files as FileList;
       const awsImageUrl = await getImageUrlFromAWS(imgFile);
 
@@ -92,63 +88,59 @@ const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
           const { setFormValue, trigger } = formMethods;
 
           // return value to useForm
-          setFormValue(name, awsImageUrl);
-
+          setFormValue(name, awsImageUrl, { shouldDirty: true });
           // validate specified field manually
           trigger(name);
         } else {
-          // update target playlist directly
-          updateUserPlaylist({ playlistId, awsImageUrl });
+          // update img directly(eg. playlist, user, etc.)
+          if (updateImgFn) {
+            updateImgFn(awsImageUrl);
+          }
+        }
+
+        if (setImgSrc) {
+          setImgSrc(awsImageUrl);
         }
       }
     };
 
     // handle input onClick
-    const handleInputOnClick = async (
-      e: React.MouseEvent<HTMLInputElement>
-    ) => {
+    const handleInputOnClick = async (e: React.MouseEvent<HTMLInputElement>) => {
       e.stopPropagation();
     };
 
     return (
-      <div
-        className={twMerge(
-          `
-            w-[9rem]
-            h-[9rem]
-            min-w-[9rem]
-            min-h-[9rem]
-            lg:w-[10rem]
-            lg:h-[10rem]
-          `,
-          className
-        )}
-      >
+      <div className={twMerge(className, tw?.mask)}>
         {/* label */}
-        <label className={tw?.label}>
+        <label>
           <div
-            className={`
-              relative
-              group
-              w-full
-              h-full
-            `}
+            className={twMerge(
+              `
+                relative
+                group
+                w-[165px]
+                h-[165px]
+              `,
+              tw?.label
+            )}
           >
             <img
+              alt="image-label"
               ref={ref}
               src={src}
               className={twMerge(
                 `
                 w-full
                 h-full
-                rounded-md
-                shadow-xl
+                shadow-[0px_0px_25px_2px]
+                shadow-black/30
                 outline-none
                 border-none
                 object-cover
                 overflow-hidden
               `,
-                tw?.img
+                tw?.img,
+                tw?.mask
               )}
               {...props}
             />
@@ -166,7 +158,8 @@ const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
 
             {/* Upload content */}
             <div
-              className={`
+              className={twMerge(
+                `
                 absolute
                 top-0
                 left-0
@@ -188,19 +181,17 @@ const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
                         group-hover:opacity-100
                       `
                 }
-                rounded-md
                 transition  
-              `}
+              `,
+                tw?.upload,
+                tw?.mask
+              )}
             >
               {isPending || isUploading ? (
                 <Loader className={tw?.loader} />
               ) : (
                 <>
-                  <Icon
-                    name={AiFillEdit}
-                    opts={{ size: 30 }}
-                    className={tw?.icon}
-                  />
+                  <Icon name={AiFillEdit} opts={{ size: 30 }} className={tw?.icon} />
                   <p>Choose photo</p>
                 </>
               )}

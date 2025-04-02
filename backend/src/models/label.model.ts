@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
-import LabelOptions from "../constants/label.constant";
-import defaultLabels from "../seeds/label.seed";
+import { LabelOptions } from "@joytify/shared-types/constants";
+import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
 
 export interface LabelDocument extends mongoose.Document {
   label: string;
   type: LabelOptions;
   author: mongoose.Types.ObjectId;
+  users: mongoose.Types.ObjectId[];
   songs: mongoose.Types.ObjectId[];
   default: boolean;
 }
@@ -19,6 +20,11 @@ const labelSchema = new mongoose.Schema<LabelDocument>(
       ref: "User",
       index: true,
     },
+    users: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      index: true,
+    },
     songs: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Song",
@@ -29,60 +35,33 @@ const labelSchema = new mongoose.Schema<LabelDocument>(
   { timestamps: true }
 );
 
-// while save, check the default label with seed file
-// labelSchema.pre("save", async function (next) {
-//   try {
-//     const existLabels = await LabelModel.find(
-//       { default: true },
-//       "label type default"
-//     );
+// after update label,...
+labelSchema.post("findOneAndUpdate", async function (doc) {
+  if (!doc) {
+    return;
+  }
 
-//     const generateExistLabels = new Set(
-//       existLabels.map((label) => `${label.label}|${label.type}`)
-//     );
+  const { users, songs } = doc;
 
-//     // If a label from the default file does not exist in the database,
-//     // That is the data we want to add.
-//     const labelsToInsert = defaultLabels.filter(
-//       (defaultLabel) =>
-//         !generateExistLabels.has(`${defaultLabel.label}|${defaultLabel.type}`)
-//     );
+  // delete label if no users and songs
+  if (users.length === 0 && songs.length === 0) {
+    await doc.deleteOne();
+  }
+});
 
-//     if (labelsToInsert.length > 0) {
-//       await LabelModel.insertMany(labelsToInsert);
-//     }
+// after update many labels,...
+labelSchema.post("updateMany", async function (doc) {
+  if (!doc || !doc.modifiedCount) {
+    return;
+  }
 
-//     next();
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-
-// export const initializeLabel = async () => {
-//   try {
-//     const existLabels = await LabelModel.find(
-//       { default: true },
-//       "label type default"
-//     );
-
-//     const generateExistLabels = new Set(
-//       existLabels.map((label) => `${label.label}|${label.type}`)
-//     );
-
-//     // If a label from the default file does not exist in the database,
-//     // That is the data we want to add.
-//     const labelsToInsert = defaultLabels.filter(
-//       (defaultLabel) =>
-//         !generateExistLabels.has(`${defaultLabel.label}|${defaultLabel.type}`)
-//     );
-
-//     if (labelsToInsert.length > 0) {
-//       await LabelModel.insertMany(labelsToInsert);
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+  // delete labels with no users and songs
+  await deleteDocWhileFieldsArrayEmpty({
+    model: LabelModel,
+    filter: { default: false },
+    arrayFields: ["users", "songs"],
+  });
+});
 
 const LabelModel = mongoose.model<LabelDocument>("Label", labelSchema);
 

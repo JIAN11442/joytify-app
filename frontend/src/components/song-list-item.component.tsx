@@ -1,36 +1,31 @@
 import { FaPlay } from "react-icons/fa6";
 
 import Icon from "./react-icons.component";
-import AnimationWrapper from "./animation-wrapper.component";
-import SongTitleItem from "./song-title-item.component";
 import SoundWave from "./sound-wave.component";
+import SongTitleItem from "./song-title-item.component";
+import AnimationWrapper from "./animation-wrapper.component";
 
-import usePlaylistState from "../states/playlist.state";
-import useSidebarState from "../states/sidebar.state";
+import { ArrangementOptions } from "../constants/arrangement.constant";
+import { RefactorSongResponse } from "@joytify/shared-types/types";
 import useSoundState from "../states/sound.state";
-import ArrangementOptions from "../constants/arrangement.constant";
-import { RefactorResSong } from "../constants/axios-response.constant";
+import useSidebarState from "../states/sidebar.state";
+import usePlaylistState from "../states/playlist.state";
 import { getDuration, getTimeAgo } from "../utils/get-time.util";
 
 type SongListItemProps = {
   index: number;
-  song: RefactorResSong;
+  song: RefactorSongResponse;
   switchFunc?: boolean;
   onPlay: (id: string) => void;
 };
 
-const SongListItem: React.FC<SongListItemProps> = ({
-  index,
-  song,
-  switchFunc = true,
-  onPlay,
-}) => {
+const SongListItem: React.FC<SongListItemProps> = ({ index, song, switchFunc = true, onPlay }) => {
   const { title, imageUrl, artist, album, duration, createdAt } = song;
 
   const { songArrangementType, targetPlaylist } = usePlaylistState();
   const { paletee } = targetPlaylist ?? {};
 
-  const compact = ArrangementOptions.COMPACT;
+  const { COMPACT } = ArrangementOptions;
 
   const { collapseSideBarState } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
@@ -76,11 +71,7 @@ const SongListItem: React.FC<SongListItemProps> = ({
         gap-5
         w-full
         items-center
-        ${
-          activeSongId === song._id && isPlaying
-            ? ""
-            : "hover:bg-neutral-700/40"
-        }
+        ${activeSongId === song._id && isPlaying ? "" : "hover:bg-neutral-700/40"}
         text-sm
         font-light
         text-grey-custom/60
@@ -97,20 +88,10 @@ const SongListItem: React.FC<SongListItemProps> = ({
         `}
       >
         {isPlaying && activeSongId === song._id ? (
-          <SoundWave
-            color={paletee?.vibrant}
-            barWidth={3}
-            style={{ filter: "brightness(1.5)" }}
-          />
+          <SoundWave color={paletee?.vibrant} barWidth={3} style={{ filter: "brightness(1.5)" }} />
         ) : (
           <>
-            <p
-              className={`
-                group-hover:hidden
-              `}
-            >
-              {index + 1}
-            </p>
+            <p className={` group-hover:hidden`}>{index + 1}</p>
 
             <Icon
               name={FaPlay}
@@ -143,7 +124,7 @@ const SongListItem: React.FC<SongListItemProps> = ({
         className={`
           flex-1
           min-w-[100px]  
-          ${switchFunc && songArrangementType === compact ? "block" : "hidden"}
+          ${switchFunc && songArrangementType === COMPACT ? "block" : "hidden"}
         `}
       >
         <p>{artist}</p>
@@ -154,7 +135,7 @@ const SongListItem: React.FC<SongListItemProps> = ({
         className={`
           flex-1
           min-w-[100px]
-          ${switchFunc && songArrangementType === compact && "max-sm:hidden"}
+          ${switchFunc && songArrangementType === COMPACT && "max-sm:hidden"}
         `}
       >
         <p className={`line-clamp-1`}>{album && album.length ? album : "--"}</p>
@@ -168,7 +149,7 @@ const SongListItem: React.FC<SongListItemProps> = ({
           ${isCollapsed ? "max-md:hidden" : "max-lg:hidden"}
         `}
       >
-        <p className={`line-clamp-1`}>{getTimeAgo(createdAt)}</p>
+        <p className={`line-clamp-1`}>{getTimeAgo(createdAt.toString())}</p>
       </div>
 
       {/* Duration */}

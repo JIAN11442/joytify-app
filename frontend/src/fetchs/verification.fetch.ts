@@ -1,31 +1,19 @@
 import API from "../config/api-client.config";
 import {
-  ResSendCode,
-  ResVerifyCode,
-} from "../constants/axios-response.constant";
-
-type DefaultParams = {
-  email: string;
-};
-
-export interface SendCodeParams extends DefaultParams {
-  shouldResendCode: boolean;
-  registerFn?: () => void;
-}
-
-export interface VerifyCodeParams extends DefaultParams {
-  code: string;
-}
+  SendCodeRequest,
+  SendCodeResponse,
+  VerifyCodeRequest,
+  VerifyCodeResponse,
+} from "@joytify/shared-types/types";
 
 // send verification code
-export const sendVerificationCode = async (
-  params: SendCodeParams
-): Promise<ResSendCode> => API.post("/verification/send/code", params);
+export const sendVerificationCode = async (params: SendCodeRequest): Promise<SendCodeResponse> =>
+  API.post("/verification/send/code", params);
 
 // verify verification code
 export const verifyVerificationCode = async (
-  params: VerifyCodeParams
-): Promise<ResVerifyCode> => API.post("/verification/verify/code", params);
+  params: VerifyCodeRequest
+): Promise<VerifyCodeResponse> => API.post("/verification/verify/code", params);
 
 // send verification link
 export const sendResetPasswordEmail = async (email: string) =>

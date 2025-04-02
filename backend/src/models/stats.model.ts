@@ -1,22 +1,22 @@
 import mongoose from "mongoose";
 
-export type SongStats = {
+type SongStats = {
   song: mongoose.Types.ObjectId;
   totalDuration: number;
 };
 
-export type ArtistStats = {
+type ArtistStats = {
   artist: mongoose.Types.ObjectId;
   totalDuration: number;
 };
 
-export type PeakHourStats = {
+type PeakHourStats = {
   hour: number;
   totalDuration: number;
   utilization: number;
 };
 
-export type UserStats = {
+type UserStats = {
   songs: SongStats[];
   artists: ArtistStats[];
   peakHour: PeakHourStats[];

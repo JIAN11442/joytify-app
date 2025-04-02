@@ -1,18 +1,9 @@
 import { useEffect } from "react";
-import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 
-import {
-  sendVerificationCode,
-  verifyVerificationCode,
-  SendCodeParams,
-} from "../fetchs/verification.fetch";
-import {
-  defaultVerificationCodeInput,
-  VerificationCodeForm,
-} from "../constants/form.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
+import { useResendCodeMutation, useVerifyCodeMutation } from "../hooks/verification-mutate.hook";
+import { defaultVerificationCodeInput } from "../constants/form.constant";
+import { DefaultVerificationCodeForm } from "../types/form.type";
 import useVerificationModalState from "../states/verification.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
@@ -20,18 +11,19 @@ interface VerificationInputFormProps {
   email: string;
 }
 
-const VerificationInputForm: React.FC<VerificationInputFormProps> = ({
-  email,
-}) => {
+const VerificationInputForm: React.FC<VerificationInputFormProps> = ({ email }) => {
   const letterRegix = /^[A-Za-z]$/;
   const numberRegix = /^\d$/;
 
-  const { openResendStatusModal, openVerifyStatusModal, setVerifyCodePending } =
-    useVerificationModalState();
+  const { setVerifyCodePending } = useVerificationModalState();
 
-  const handleLetterInputOnChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  // resend code mutation
+  const { mutate: resendCodeFn, isPending: resendCodePending } = useResendCodeMutation();
+
+  // verify code mutation
+  const { mutate: verifyCodeFn, isPending: verifyCodePending } = useVerifyCodeMutation();
+
+  const handleLetterInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.slice(-1);
 
     if (value) {
@@ -44,10 +36,7 @@ const VerificationInputForm: React.FC<VerificationInputFormProps> = ({
     }
   };
 
-  const handleNumberInputOnChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
+  const handleNumberInputOnChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const value = e.target.value.slice(-1);
 
     if (value) {
@@ -60,10 +49,7 @@ const VerificationInputForm: React.FC<VerificationInputFormProps> = ({
     }
   };
 
-  const handleOnKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number
-  ) => {
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     const inputValue = e.currentTarget.value;
 
     if (e.key === "Backspace" || e.key === "Delete") {
@@ -79,49 +65,12 @@ const VerificationInputForm: React.FC<VerificationInputFormProps> = ({
 
   const handleResendVerificationCode = () => {
     timeoutForDelay(() => {
-      resendVerificationCodeToUser({
+      resendCodeFn({
         email,
         shouldResendCode: true,
       });
     });
   };
-
-  // resend code mutation
-  const { mutate: resendVerificationCodeToUser, isPending: resendPending } =
-    useMutation({
-      mutationKey: [MutationKey.RESEND_VERIFICATION_CODE],
-      mutationFn: async (data: SendCodeParams) => {
-        await sendVerificationCode(data);
-      },
-      onSuccess: () => {
-        openResendStatusModal(true);
-        toast.success("verification code resent successfully");
-      },
-      onError: (error) => {
-        openResendStatusModal(false);
-        toast.error(error.message);
-      },
-    });
-
-  // verify code mutation
-  const { mutate: verifyCode, isPending: verifyPending } = useMutation({
-    mutationKey: [MutationKey.VERIFY_VERIFICATION_CODE],
-    mutationFn: verifyVerificationCode,
-    onSuccess: (res) => {
-      const { verified } = res;
-
-      openVerifyStatusModal(verified);
-
-      if (verified) {
-        toast.success("Code verified successfully");
-      } else {
-        toast.error("Failed to verify code");
-      }
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
 
   const {
     register,
@@ -130,7 +79,7 @@ const VerificationInputForm: React.FC<VerificationInputFormProps> = ({
     setValue,
     control,
     formState: { isValid },
-  } = useForm<VerificationCodeForm>({
+  } = useForm<DefaultVerificationCodeForm>({
     defaultValues: defaultVerificationCodeInput,
     mode: "onChange",
   });
@@ -139,11 +88,11 @@ const VerificationInputForm: React.FC<VerificationInputFormProps> = ({
   const watchNumbers = useWatch({ control, name: "numbers" });
   const isCompleted = watchLetter && watchNumbers.every((num) => num !== "");
 
-  const onSubmit: SubmitHandler<VerificationCodeForm> = async (value) => {
+  const onSubmit: SubmitHandler<DefaultVerificationCodeForm> = async (value) => {
     const { letter, numbers } = value;
     const code = `${String(letter).toLocaleUpperCase()}-${numbers.join("")}`;
 
-    verifyCode({ email, code });
+    verifyCodeFn({ email, code });
   };
 
   // while the verification code is completed and valid, submit the form
@@ -155,8 +104,8 @@ const VerificationInputForm: React.FC<VerificationInputFormProps> = ({
 
   // save pending state
   useEffect(() => {
-    setVerifyCodePending(resendPending || verifyPending);
-  }, [resendPending, verifyPending]);
+    setVerifyCodePending(resendCodePending || verifyCodePending);
+  }, [resendCodePending, verifyCodePending]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -223,25 +172,23 @@ const VerificationInputForm: React.FC<VerificationInputFormProps> = ({
         </div>
 
         {/* warning */}
-        <>
-          {isCompleted && !isValid && (
-            <div
-              className={`
+        {isCompleted && !isValid && (
+          <div
+            className={`
               flex
               gap-2
               text-sm
             text-red-500
               font-medium
           `}
-            >
-              <p>* </p>
-              <p>
-                Something went wrong, Please check your verification code and
-                ensure it matches the one you received.
-              </p>
-            </div>
-          )}
-        </>
+          >
+            <p>* </p>
+            <p>
+              Something went wrong, Please check your verification code and ensure it matches the
+              one you received.
+            </p>
+          </div>
+        )}
 
         {/* seperate line */}
         <hr className={`divider`} />

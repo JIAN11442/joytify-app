@@ -2,10 +2,10 @@ import { twMerge } from "tailwind-merge";
 
 import PlaylistBodyHeader from "./playlist-body-header.component";
 import PlaylistBodyContent from "./playlist-body-content.component";
-import { RefactorResPlaylist } from "../constants/axios-response.constant";
+import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
 
 type PlaylistBodyProps = {
-  playlist: RefactorResPlaylist;
+  playlist: RefactorPlaylistResponse;
   className?: string;
 };
 

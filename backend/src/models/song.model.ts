@@ -4,7 +4,7 @@ import LabelModel from "./label.model";
 import MusicianModel from "./musician.model";
 import PlaylistModel from "./playlist.model";
 import AlbumModel from "./album.model";
-import { updateArrRefToProp } from "../services/util.service";
+import { bulkUpdateReferenceArrayFields } from "../utils/mongoose.util";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
 type SongRating = {
@@ -15,7 +15,7 @@ type SongRating = {
 export interface SongDocument extends mongoose.Document {
   title: string;
   creator: mongoose.Types.ObjectId;
-  artist: mongoose.Types.ObjectId[]; // 作者
+  artist: mongoose.Types.ObjectId; // 作者
   lyricists: mongoose.Types.ObjectId[]; // 作詞者
   composers: mongoose.Types.ObjectId[]; // 作曲者
   songUrl: string; // 歌曲連結
@@ -49,7 +49,7 @@ const songSchema = new mongoose.Schema<SongDocument>(
       index: true,
     },
     artist: {
-      type: [mongoose.Schema.Types.ObjectId],
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Musician",
       index: true,
       required: true,
@@ -136,14 +136,14 @@ songSchema.post("save", async function (doc) {
 
   try {
     if (song) {
-      // increase count in user's total_songs and push id to songs
+      // increase count in user's account_info and push id to songs
       if (creator) {
         await UserModel.findByIdAndUpdate(creator, {
-          $inc: { "account_info.total_songs": 1 },
-        });
-
-        await UserModel.findByIdAndUpdate(creator, {
-          $addToSet: { songs: id },
+          $addToSet: { songs: id, albums: album },
+          $inc: {
+            "account_info.total_songs": 1,
+            ...(!!album && { "account_info.total_albums": 1 }),
+          },
         });
       }
 
@@ -157,18 +157,16 @@ songSchema.post("save", async function (doc) {
       // increate song duration to album's total_duration
       if (album) {
         await AlbumModel.findByIdAndUpdate(album, {
+          $addToSet: { songs: id },
           $inc: { total_duration: song.duration },
         });
       }
 
       // push created song ID to each relate label's "songs" property
-      await updateArrRefToProp(song, id, LabelModel, "songs", "$addToSet");
+      await bulkUpdateReferenceArrayFields(song, id, LabelModel, "songs", "$addToSet");
 
       // push created song ID to each relate musician's "songs" property
-      await updateArrRefToProp(song, id, MusicianModel, "songs", "$addToSet");
-
-      // push created song ID to relate album's "songs" property
-      await updateArrRefToProp(song, id, AlbumModel, "songs", "$addToSet");
+      await bulkUpdateReferenceArrayFields(song, id, MusicianModel, "songs", "$addToSet");
     }
   } catch (error) {
     console.log(error);
@@ -179,8 +177,8 @@ songSchema.post("save", async function (doc) {
 songSchema.pre("findOneAndDelete", async function (next) {
   try {
     const findQuery = this.getQuery();
-    const id = findQuery._id;
-    const song = await SongModel.findById(id);
+    const songId = findQuery._id;
+    const song = await SongModel.findById(songId);
 
     if (song) {
       const { creator, playlist_for, songUrl, imageUrl, album } = song;
@@ -188,18 +186,26 @@ songSchema.pre("findOneAndDelete", async function (next) {
       // reduce count in user's total_songs and remove id from songs
       if (creator) {
         await UserModel.findByIdAndUpdate(creator, {
-          $inc: { "account_info.total_songs": -1 },
-        });
-
-        await UserModel.findByIdAndUpdate(creator, {
-          $pull: { songs: id },
+          $pull: { songs: songId, albums: album },
+          $inc: {
+            "account_info.total_songs": -1,
+            ...(!!album && { "account_info.total_albums": -1 }),
+          },
         });
       }
 
       // remove song ID to target playlist's songs array
       if (playlist_for) {
         await PlaylistModel.findByIdAndUpdate(playlist_for, {
-          $pull: { songs: id },
+          $pull: { songs: songId },
+        });
+      }
+
+      // decrease song duration to album's total_duration
+      if (album) {
+        await AlbumModel.findByIdAndUpdate(album, {
+          $pull: { songs: songId },
+          $inc: { total_duration: song.duration * -1 },
         });
       }
 
@@ -213,21 +219,11 @@ songSchema.pre("findOneAndDelete", async function (next) {
         await deleteAwsFileUrlOnModel(imageUrl);
       }
 
-      // decrease song duration to album's total_duration
-      if (album) {
-        await AlbumModel.findByIdAndUpdate(album, {
-          $inc: { total_duration: song.duration * -1 },
-        });
-      }
+      // remove song ID from each relate label's "songs" property
+      await bulkUpdateReferenceArrayFields(song, songId, LabelModel, "songs", "$pull");
 
-      // // remove song ID from each relate label's "songs" property
-      await updateArrRefToProp(song, id, LabelModel, "songs", "$pull");
-
-      // // push created song ID from each relate musician's "songs" property
-      await updateArrRefToProp(song, id, MusicianModel, "songs", "$pull");
-
-      // remove created song ID from relate album's "songs" property
-      await updateArrRefToProp(song, id, AlbumModel, "songs", "$pull");
+      // push created song ID from each relate musician's "songs" property
+      await bulkUpdateReferenceArrayFields(song, songId, MusicianModel, "songs", "$pull");
     }
 
     next();

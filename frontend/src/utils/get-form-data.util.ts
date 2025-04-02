@@ -1,23 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { FieldNamesMarkedBoolean, FieldValues } from "react-hook-form";
 
-const getFormData = <T extends object>(
-  ref: React.RefObject<HTMLFormElement>
-): { formData: T } => {
-  // empty object to store form data
-  const formData = {} as T;
+/**
+ * Extracts only the modified fields from a form data object based on dirty fields tracking.
+ *
+ * @template T - Type of the form values object
+ * @param {T} value - The complete form data object
+ * @param {Partial<Readonly<FieldNamesMarkedBoolean<T>>>} dirtyFields - Object marking which fields have been modified
+ * @returns {T} A new object containing only the modified field values
+ *
+ * @example
+ * const formData = { name: "John", email: "john@example.com", age: 25 };
+ * const dirtyFields = { name: true, email: true };
+ * const modified = getModifiedFormData(formData, dirtyFields);
+ * // Result: { name: "John", email: "john@example.com" }
+ */
 
-  try {
-    if (ref.current) {
-      const form = new FormData(ref.current);
+export const getModifiedFormData = <T extends FieldValues>(
+  value: T,
+  dirtyFields: Partial<Readonly<FieldNamesMarkedBoolean<T>>>
+) => {
+  const values = Object.keys(dirtyFields).reduce((acc, field) => {
+    acc[field as keyof T] = value[field as keyof T];
+    return acc;
+  }, {} as T);
 
-      for (const [key, value] of form.entries()) {
-        formData[key as keyof T] = value as T[keyof T];
-      }
-    }
-  } catch (error: any) {
-    console.log(`Failed to get form data:\n${error}`);
-  }
-  return { formData };
+  return values;
 };
-
-export default getFormData;

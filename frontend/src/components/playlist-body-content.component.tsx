@@ -1,13 +1,11 @@
 import SongsList from "./songs-list.component";
-import { RefactorResPlaylist } from "../constants/axios-response.constant";
+import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
 
 type PlaylistBodyContentProps = {
-  playlist: RefactorResPlaylist;
+  playlist: RefactorPlaylistResponse;
 };
 
-const PlaylistBodyContent: React.FC<PlaylistBodyContentProps> = ({
-  playlist,
-}) => {
+const PlaylistBodyContent: React.FC<PlaylistBodyContentProps> = ({ playlist }) => {
   const { songs } = playlist;
 
   return (

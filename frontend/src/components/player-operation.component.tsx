@@ -7,29 +7,25 @@ import { MdSkipNext, MdSkipPrevious } from "react-icons/md";
 import Icon from "./react-icons.component";
 import PlayerSlider from "./player-slider.component";
 
-import useSoundState from "../states/sound.state";
-import usePlayerState from "../states/player.state";
-import usePlaylistState from "../states/playlist.state";
-import { RefactorResSong } from "../constants/axios-response.constant";
-import SongLoopOptions from "../constants/loop-mode.constant";
 import { SoundOutputType } from "../hooks/sound.hook";
+import { SongLoopOptions } from "../constants/loop-mode.constant";
+import { RefactorSongResponse } from "@joytify/shared-types/types";
+import usePlaylistState from "../states/playlist.state";
+import usePlayerState from "../states/player.state";
+import useSoundState from "../states/sound.state";
 
 type PlayerOperationProps = {
-  song: RefactorResSong;
+  song: RefactorSongResponse;
   sound: SoundOutputType;
   className?: string;
 };
 
-const PlayerOperation: React.FC<PlayerOperationProps> = ({
-  song,
-  sound,
-  className,
-}) => {
+const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, sound, className }) => {
   const { isShuffle, setIsShuffle, loopType, setLoopType } = usePlayerState();
-  const { songIds, isPlaying, activeSongId, onPlay, shuffleSongIds } =
-    useSoundState();
-
+  const { songIds, isPlaying, activeSongId, onPlay, shuffleSongIds } = useSoundState();
   const { targetPlaylist } = usePlaylistState();
+
+  const { OFF, PLAYLIST, TRACK } = SongLoopOptions;
 
   const currentIndex = songIds.indexOf(activeSongId);
 
@@ -44,8 +40,7 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({
 
   // handle switch to previous song
   const handleSwitchToPreviousSong = () => {
-    const previousIndex =
-      currentIndex === 0 ? songIds.length - 1 : currentIndex - 1;
+    const previousIndex = currentIndex === 0 ? songIds.length - 1 : currentIndex - 1;
 
     if (onPlay) {
       onPlay(songIds[previousIndex]);
@@ -54,8 +49,7 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({
 
   // handle switch to next song
   const handleSwitchToNextSong = () => {
-    const nextIndex =
-      currentIndex === songIds.length - 1 ? 0 : currentIndex + 1;
+    const nextIndex = currentIndex === songIds.length - 1 ? 0 : currentIndex + 1;
 
     if (onPlay) {
       onPlay(songIds[nextIndex]);
@@ -71,8 +65,8 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({
     }
 
     // If loopType is active when shuffle button is clicked, turn it off
-    if (loopType !== SongLoopOptions.OFF) {
-      setLoopType(SongLoopOptions.OFF);
+    if (loopType !== OFF) {
+      setLoopType(OFF);
     }
   };
 
@@ -80,18 +74,15 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({
   const handleSwitchLoopState = () => {
     // prevent switching to playlist loop when only one song is available
     const nextLoopType = {
-      [SongLoopOptions.OFF]:
-        (targetPlaylist?.songs.length ?? 0) > 1
-          ? SongLoopOptions.PLAYLIST
-          : SongLoopOptions.TRACK,
-      [SongLoopOptions.PLAYLIST]: SongLoopOptions.TRACK,
-      [SongLoopOptions.TRACK]: SongLoopOptions.OFF,
+      [OFF]: (targetPlaylist?.songs.length ?? 0) > 1 ? PLAYLIST : TRACK,
+      [PLAYLIST]: TRACK,
+      [TRACK]: OFF,
     }[loopType];
 
     setLoopType(nextLoopType);
 
     // if shuffle is active when loop button is clicked, turn it off
-    if (nextLoopType !== SongLoopOptions.OFF) {
+    if (nextLoopType !== OFF) {
       setIsShuffle(false);
     }
   };
@@ -156,10 +147,7 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({
             transition
           `}
         >
-          <Icon
-            name={isPlaying ? BsPauseFill : BsPlayFill}
-            opts={{ size: 20 }}
-          />
+          <Icon name={isPlaying ? BsPauseFill : BsPlayFill} opts={{ size: 20 }} />
         </button>
 
         {/* next */}
@@ -168,15 +156,12 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({
         </button>
 
         {/* loop */}
-        <button
-          onClick={handleSwitchLoopState}
-          className={`relative player-btn`}
-        >
+        <button onClick={handleSwitchLoopState} className={`relative player-btn`}>
           <Icon
             name={RiLoopLeftLine}
             opts={{ size: 26 }}
             className={`
-             ${loopType !== SongLoopOptions.OFF && "text-green-500"}
+             ${loopType !== OFF && "text-green-500"}
             `}
           />
 
@@ -188,11 +173,7 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({
               top-1/2
               left-1/2
               text-[10px]
-              ${
-                loopType === SongLoopOptions.TRACK
-                  ? "flex text-green-500"
-                  : "hidden"
-              }
+              ${loopType === TRACK ? "flex text-green-500" : "hidden"}
             `}
           >
             1

@@ -2,34 +2,38 @@ import { FilterQuery } from "mongoose";
 
 import SongModel from "../models/song.model";
 import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
-import appAssert from "../utils/app-assert.util";
+import { HttpCode } from "@joytify/shared-types/constants";
 import {
-  INTERNAL_SERVER_ERROR,
-  NOT_FOUND,
-} from "../constants/http-code.constant";
+  CreatePlaylistRequest,
+  UpdatePlaylistRequest,
+  PopulatedPlaylistResponse,
+  RefactorPlaylistResponse,
+  SongResponse,
+  Musician,
+  Label,
+  Album,
+} from "@joytify/shared-types/types";
+import appAssert from "../utils/app-assert.util";
+import { joinLabels } from "../utils/join-labels.util";
 
-type CreatePlaylistParams = {
+interface CreatePlaylistServiceRequest extends CreatePlaylistRequest {
   userId: string;
-  title?: string;
-};
-
-interface UpdatePlaylistParams extends CreatePlaylistParams {
-  playlistId: string;
-  description?: string;
-  imageUrl?: string;
 }
 
-type DeletePlaylistParams = {
+interface UpdatePlaylistServiceRequest extends UpdatePlaylistRequest {
+  userId: string;
+}
+
+type DeletePlaylistServiceRequest = {
   userId: string;
   currentPlaylistId: string;
   targetPlaylistId?: string;
 };
 
+const { INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;
+
 // get user all playlist service
-export const getUserPlaylists = async (
-  userId: string,
-  searchParams: string | null
-) => {
+export const getUserPlaylists = async (userId: string, query: string) => {
   let defaultQueryParams: FilterQuery<PlaylistDocument> = {
     user: userId,
     default: true,
@@ -39,54 +43,62 @@ export const getUserPlaylists = async (
     default: false,
   };
 
-  if (searchParams !== null && searchParams?.length) {
-    const titleRegex = new RegExp(searchParams, "i");
+  if (query && query.length > 0) {
+    const titleRegex = new RegExp(query, "i");
     defaultQueryParams.title = titleRegex;
     userQueryParams.title = titleRegex;
   }
 
   const defaultPlaylist = await PlaylistModel.findOne(defaultQueryParams);
 
-  const userPlaylists = await PlaylistModel.find(userQueryParams).sort({
-    createdAt: -1,
-  });
+  const userPlaylists = await PlaylistModel.find(userQueryParams).sort({ createdAt: -1 });
 
-  const playlists = [
-    ...(defaultPlaylist ? [defaultPlaylist] : []),
-    ...userPlaylists,
-  ].filter(Boolean);
+  const playlists = [...(defaultPlaylist ? [defaultPlaylist] : []), ...userPlaylists].filter(
+    Boolean
+  );
 
   return { playlists };
 };
 
 // get playlist by id service
-export const getUserPlaylistById = async (
-  playlistId: string,
-  userId: string
-) => {
+export const getUserPlaylistById = async (playlistId: string, userId: string) => {
   // get playlist info
-  let playlist = await PlaylistModel.findOne({
+  const playlist = await PlaylistModel.findOne({
     _id: playlistId,
     user: userId,
-  }).populate({
-    path: "songs",
-    populate: [
-      { path: "artist", select: "name" },
-      { path: "composers", select: "name" },
-      { path: "lyricists", select: "name" },
-      { path: "languages", select: "label" },
-      { path: "album", select: "title" },
-    ],
-  });
+  })
+    .populate({
+      path: "songs",
+      populate: [
+        { path: "artist", select: "name", transform: (doc: Musician) => doc.name },
+        { path: "composers", select: "name", transform: (doc: Musician) => doc.name },
+        { path: "lyricists", select: "name", transform: (doc: Musician) => doc.name },
+        { path: "languages", select: "label", transform: (doc: Label) => doc.label },
+        { path: "album", select: "title", transform: (doc: Album) => doc.title },
+      ],
+    })
+    .lean<PopulatedPlaylistResponse>();
 
   appAssert(playlist, NOT_FOUND, "Playlist not found");
 
-  return { playlist };
+  // refactor playlist songs's params from array to string
+  const refactorPlaylist: RefactorPlaylistResponse = {
+    ...playlist,
+    songs: playlist.songs.map((song: SongResponse) => ({
+      ...song,
+      lyricists: joinLabels(song.lyricists),
+      composers: joinLabels(song.composers),
+      languages: joinLabels(song.languages),
+      album: song.album || "",
+    })),
+  };
+
+  return { playlist: refactorPlaylist };
 };
 
 // create new playlist service
-export const createNewPlaylist = async (data: CreatePlaylistParams) => {
-  const { userId, title } = data;
+export const createNewPlaylist = async (params: CreatePlaylistServiceRequest) => {
+  const { userId, title } = params;
 
   const playlist = await PlaylistModel.create({ user: userId, title });
 
@@ -96,27 +108,23 @@ export const createNewPlaylist = async (data: CreatePlaylistParams) => {
 };
 
 // update playlist cover image service
-export const updatePlaylistById = async (data: UpdatePlaylistParams) => {
-  const { playlistId, userId, title, description, imageUrl } = data;
+export const updatePlaylistById = async (params: UpdatePlaylistServiceRequest) => {
+  const { playlistId, userId, ...rest } = params;
 
   const updatedPlaylist = await PlaylistModel.findOneAndUpdate(
     { _id: playlistId, user: userId },
-    { title, description, cover_image: imageUrl },
+    { ...rest },
     { new: true }
   );
 
-  appAssert(
-    updatedPlaylist,
-    INTERNAL_SERVER_ERROR,
-    "Failed to update playlist"
-  );
+  appAssert(updatedPlaylist, INTERNAL_SERVER_ERROR, "Failed to update playlist");
 
   return { playlist: updatedPlaylist };
 };
 
 // delete playlist service
-export const deletePlaylistById = async (data: DeletePlaylistParams) => {
-  const { userId, currentPlaylistId, targetPlaylistId } = data;
+export const deletePlaylistById = async (params: DeletePlaylistServiceRequest) => {
+  const { userId, currentPlaylistId, targetPlaylistId } = params;
 
   // find the playlist to be deleted
   const playlist = await PlaylistModel.findById(currentPlaylistId);
@@ -127,13 +135,16 @@ export const deletePlaylistById = async (data: DeletePlaylistParams) => {
   if (targetPlaylistId) {
     const [updatedPlaylist, updatedSongs] = await Promise.all([
       // add all songs ID from delete playlist to target playlist
-      PlaylistModel.findByIdAndUpdate(targetPlaylistId, {
-        $addToSet: { songs: { $each: playlist.songs } },
-      }),
+      PlaylistModel.findByIdAndUpdate(
+        targetPlaylistId,
+        { $addToSet: { songs: { $each: playlist.songs } } },
+        { new: true }
+      ),
       // add target playlist ID to songs's playlist_for property
       SongModel.updateMany(
         { _id: { $in: playlist.songs } },
-        { $addToSet: { playlist_for: targetPlaylistId } }
+        { $addToSet: { playlist_for: targetPlaylistId } },
+        { new: true }
       ),
     ]);
     appAssert(

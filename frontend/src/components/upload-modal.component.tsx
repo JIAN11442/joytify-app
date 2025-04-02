@@ -1,41 +1,29 @@
 import { useMemo, useRef, useState } from "react";
-import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
 import { RegisterOptions, SubmitHandler, useForm } from "react-hook-form";
 import { FaCircleInfo } from "react-icons/fa6";
 import { IoCaretBack } from "react-icons/io5";
 
 import Modal from "./modal.component";
-import InputBox from "./input-box.component";
 import Loader from "./loader.component";
 import Icon from "./react-icons.component";
+import InputBox from "./input-box.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import SingleSelectInputBox from "./single-select-input-box.component";
-import MultiSelectInputBox, {
-  OptionType,
-} from "./multi-select-input-box.component";
+import MultiSelectInputBox, { OptionType } from "./multi-select-input-box.component";
 import CalendarInputBox from "./calendar-input-box.component";
 import WarningMsgBox from "./warning-message-box.component";
 
-import { useGetLabels } from "../hooks/label.hook";
-import { usePlaylists } from "../hooks/playlist.hook";
-import { useGetAlbums } from "../hooks/album.hook";
-import { createSongData } from "../fetchs/song.fetch";
-import { removeAlbum } from "../fetchs/album.fetch";
-import { deleteLabel } from "../fetchs/label.fetch";
-
-import LabelOptions from "../constants/label.constant";
-import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
-import {
-  defaultSongData,
-  FormMethods,
-  SongForm,
-} from "../constants/form.constant";
+import { useGetLabelsQuery } from "../hooks/label-query.hook";
+import { useGetAlbumsQuery } from "../hooks/album-query.hook";
+import { useCreateSongMutation } from "../hooks/song-mutate.hook";
+import { useRemoveLabelMutation } from "../hooks/label-mutate.hook";
+import { useRemoveAlbumMutation } from "../hooks/album-mutate.hook";
+import { defaultSongData } from "../constants/form.constant";
+import { LabelOptions } from "@joytify/shared-types/constants";
+import { DefaultSongForm, FormMethods } from "../types/form.type";
 import useUploadModalState from "../states/upload-modal.state";
-
-import { navigate } from "../lib/navigate.lib";
+import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import queryClient from "../config/query-client.config";
 
 type WarningState = {
   active: boolean;
@@ -61,75 +49,23 @@ const UploadModal = () => {
     setActiveCreatePlaylistModal,
   } = useUploadModalState();
 
-  const { playlists, refetch: playlistRefetch } = usePlaylists();
-  const { labels, refetch: labelRefetch } = useGetLabels();
-  const { albums, refetch: albumRefetch } = useGetAlbums();
+  const { userPlaylists } = usePlaylistState();
 
-  // create song mutation
-  const { mutate: createNewSong, isPending } = useMutation({
-    mutationKey: [MutationKey.CREATE_NEW_SONG],
-    mutationFn: createSongData,
-    onSuccess: (data) => {
-      const { title, playlist_for } = data;
+  const { albums } = useGetAlbumsQuery();
+  const { labels, refetch: labelRefetch } = useGetLabelsQuery();
 
-      // close modal
+  // handle close upload modal
+  const handleCloseUploadModal = () => {
+    timeoutForDelay(() => {
       closeUploadModal();
-
-      // reset form input value
       reset(defaultSongData);
+    });
+  };
 
-      // refetch user playlists
-      playlistRefetch();
-
-      // refetch target playlist
-      queryClient.invalidateQueries({
-        queryKey: [QueryKey.GET_TARGET_PLAYLIST],
-      });
-
-      // display success message
-      toast.success(`“${title}” has been created successfully`);
-
-      // navigate to playlist
-      navigate(`/playlist/${playlist_for}`);
-    },
-    onError: (error) => toast.error(error.message),
-  });
-
-  // delete label mutation
-  const { mutate: deleteTargetLabel } = useMutation({
-    mutationKey: [MutationKey.DELETE_LABEL_OPTION],
-    mutationFn: deleteLabel,
-    onSuccess: (data) => {
-      const { label } = data;
-
-      // refetch query label
-      labelRefetch();
-
-      // display deleted success message
-      toast.success(`"${label}" already deleted`);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  // delete album mutation
-  const { mutate: deleteTargetAlbum } = useMutation({
-    mutationKey: [MutationKey.DELETE_ALBUM_OPTION],
-    mutationFn: removeAlbum,
-    onSuccess: (data) => {
-      const { title } = data;
-
-      // refetch get albums query
-      albumRefetch();
-
-      // display success message
-      toast.success(`"${title}" already deleted`);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  // mutations
+  const { mutate: removeLabelFn } = useRemoveLabelMutation();
+  const { mutate: removeAlbumFn } = useRemoveAlbumMutation();
+  const { mutate: createSongFn, isPending } = useCreateSongMutation(handleCloseUploadModal);
 
   // handle active advanced settings
   const handleActiveAdvancedSettings = () => {
@@ -150,7 +86,7 @@ const UploadModal = () => {
     timeoutForDelay(() => {
       setActiveCreatePlaylistModal({
         active: true,
-        options: playlists?.map((playlist) => playlist.title) || null,
+        options: userPlaylists?.map((playlist) => playlist.title) || null,
       });
     });
   };
@@ -161,7 +97,7 @@ const UploadModal = () => {
       // generate albums structure to string array
       const options = albums?.map((album) => album.title) || [];
 
-      setActiveCreateAlbumModal({ active: true, options, albumRefetch });
+      setActiveCreateAlbumModal({ active: true, options });
     });
   };
 
@@ -175,14 +111,13 @@ const UploadModal = () => {
     reset,
     watch,
     formState: { isValid },
-  } = useForm<SongForm>({
-    defaultValues: { ...defaultSongData },
+  } = useForm<DefaultSongForm>({
     mode: "onChange",
   });
 
   const normalizeRegister = (
-    name: keyof SongForm,
-    options?: RegisterOptions<SongForm>
+    name: keyof DefaultSongForm,
+    options?: RegisterOptions<DefaultSongForm>
   ) => {
     return register(name, {
       ...options,
@@ -193,28 +128,26 @@ const UploadModal = () => {
   const warningContent = () => {
     return (
       <span>
-        If there is more than one {visibleWarning.target}, please separate them
-        with a comma.{" "}
-        <span className={`font-extrabold text-orange-400`}>
-          [e.g., John, Jason]
-        </span>
+        If there is more than one {visibleWarning.target}, please separate them with a comma.{" "}
+        <span className={`font-extrabold text-orange-400`}>[e.g., John, Jason]</span>
       </span>
     );
   };
 
-  const warning = (target: string) => ({
+  const warning = () => ({
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
       setVisibleWarning({
         active: Boolean(e.target.value.length),
-        target,
+        target: e.target.name,
       });
     },
+
     onBlur: () => {
       setVisibleWarning({ active: false, target: null });
     },
   });
 
-  const formMethods: FormMethods<SongForm> = useMemo(
+  const formMethods: FormMethods<DefaultSongForm> = useMemo(
     () => ({
       setFormValue: setValue,
       setFormError: setError,
@@ -223,8 +156,8 @@ const UploadModal = () => {
     []
   );
 
-  const onSubmit: SubmitHandler<SongForm> = async (value) => {
-    createNewSong(value);
+  const onSubmit: SubmitHandler<DefaultSongForm> = async (value) => {
+    createSongFn(value);
   };
 
   return (
@@ -232,7 +165,7 @@ const UploadModal = () => {
       title="Add a song"
       description="upload an mp3 file"
       activeState={activeUploadModal}
-      closeModalFn={closeUploadModal}
+      closeModalFn={handleCloseUploadModal}
       closeBtnDisabled={isPending}
       autoCloseModalFn={
         !activeCreateLabelModal.active &&
@@ -264,31 +197,29 @@ const UploadModal = () => {
         `}
       >
         {/* turn back button */}
-        <>
-          {activeAdvancedSettings && (
-            <button
-              type="button"
-              onClick={handleInactiveAdvancedSettings}
-              disabled={isPending}
+        {activeAdvancedSettings && (
+          <button
+            type="button"
+            onClick={handleInactiveAdvancedSettings}
+            disabled={isPending}
+            className={`
+              absolute
+              group
+              top-5
+              left-5
+              hover-btn
+              ${isPending && "no-hover"}
+            `}
+          >
+            <Icon
+              name={IoCaretBack}
               className={`
-                absolute
-                group
-                top-5
-                left-5
-                hover-btn
-                ${isPending && "no-hover"}
+                text-neutral-400
+                ${!isPending && "group-hover:text-white"}
               `}
-            >
-              <Icon
-                name={IoCaretBack}
-                className={`
-                  text-neutral-400
-                  ${!isPending && "group-hover:text-white"}
-                `}
-              />
-            </button>
-          )}
-        </>
+            />
+          </button>
+        )}
 
         {/* input */}
         <div
@@ -323,12 +254,9 @@ const UploadModal = () => {
               type="text"
               title="Enter song artist"
               placeholder="Song artist"
-              formMethods={formMethods}
               disabled={isPending}
-              toArray={true}
               required
               {...register("artist", { required: true })}
-              {...warning("artist")}
             />
 
             {/* Song file */}
@@ -348,7 +276,7 @@ const UploadModal = () => {
               placeholder="Click to choose a playlist"
               formMethods={formMethods}
               options={
-                playlists?.map((playlist) => ({
+                userPlaylists?.map((playlist) => ({
                   id: playlist._id,
                   title: playlist.title,
                 })) || []
@@ -360,49 +288,41 @@ const UploadModal = () => {
               {...register("playlist_for", {
                 required: true,
                 validate: (val) =>
-                  playlists
-                    ?.map((playlist) => playlist._id)
-                    .includes(val ?? ""),
+                  userPlaylists?.map((playlist) => playlist._id).includes(val ?? ""),
               })}
             />
           </div>
 
           {/* Advance setting button */}
-          <>
-            {!activeAdvancedSettings && (
-              <div
+          {!activeAdvancedSettings && (
+            <div
+              className={`
+                flex
+                items-center
+                justify-end
+                text-sm
+                ${isValid && !isPending ? "text-green-custom" : "text-neutral-700"}
+                ${!isPending && "hover:underline"}
+              `}
+            >
+              <button
+                type="button"
+                onClick={handleActiveAdvancedSettings}
+                disabled={isPending}
                 className={`
                   flex
+                  gap-2
                   items-center
-                  justify-end
-                  text-sm
-                  ${
-                    isValid && !isPending
-                      ? "text-green-custom"
-                      : "text-neutral-700"
-                  }
-                  ${!isPending && "hover:underline"}
+                  justify-center
+                  transition
+                  ${isValid && !isPending ? "animate-bounce" : ""}
                 `}
               >
-                <button
-                  type="button"
-                  onClick={handleActiveAdvancedSettings}
-                  disabled={isPending}
-                  className={`
-                    flex
-                    gap-2
-                    items-center
-                    justify-center
-                    transition
-                    ${isValid && !isPending ? "animate-bounce" : ""}
-                  `}
-                >
-                  <Icon name={FaCircleInfo} />
-                  <p>Advance Settings</p>
-                </button>
-              </div>
-            )}
-          </>
+                <Icon name={FaCircleInfo} />
+                <p>Advance Settings</p>
+              </button>
+            </div>
+          )}
 
           {/* Advance setting */}
           <AnimationWrapper
@@ -429,12 +349,10 @@ const UploadModal = () => {
               type="text"
               title="Enter song lyricist"
               placeholder="Song lyricist"
-              // warning={warning("lyricist")}
               formMethods={formMethods}
               disabled={isPending}
               toArray={true}
-              {...normalizeRegister("lyricists")}
-              {...warning("lyricist")}
+              {...normalizeRegister("lyricists", { ...warning() })}
             />
 
             {/* Song composer */}
@@ -449,8 +367,7 @@ const UploadModal = () => {
               formMethods={formMethods}
               disabled={isPending}
               toArray={true}
-              {...normalizeRegister("composers")}
-              {...warning("composer")}
+              {...normalizeRegister("composers", { ...warning() })}
             />
 
             {/* Album */}
@@ -465,7 +382,7 @@ const UploadModal = () => {
                 })) || []
               }
               createNewFn={handleActiveCreateAlbumModal}
-              deleteOptFn={deleteTargetAlbum}
+              deleteOptFn={removeAlbumFn}
               autoCloseMenuFn={!activeCreateAlbumModal.active}
               disabled={isPending}
               {...normalizeRegister("album")}
@@ -488,7 +405,7 @@ const UploadModal = () => {
                     : null,
                 } as OptionType
               }
-              deleteOptFn={deleteTargetLabel}
+              deleteOptFn={removeLabelFn}
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}
@@ -512,7 +429,7 @@ const UploadModal = () => {
                     : null,
                 } as OptionType
               }
-              deleteOptFn={deleteTargetLabel}
+              deleteOptFn={removeLabelFn}
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}
@@ -536,7 +453,7 @@ const UploadModal = () => {
                     : null,
                 } as OptionType
               }
-              deleteOptFn={deleteTargetLabel}
+              deleteOptFn={removeLabelFn}
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
               disabled={isPending}

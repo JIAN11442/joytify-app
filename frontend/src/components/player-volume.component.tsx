@@ -8,10 +8,10 @@ import {
 
 import Icon from "./react-icons.component";
 
+import { Volume } from "../types/volume.type";
 import useSoundState from "../states/sound.state";
 import usePlayerState from "../states/player.state";
 import useProviderState from "../states/provider.state";
-import { Volume } from "../constants/volume.constant";
 
 type PlayerVolumeProps = {
   className?: string;

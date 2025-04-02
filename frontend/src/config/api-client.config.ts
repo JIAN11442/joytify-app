@@ -4,16 +4,9 @@ import axios, { AxiosRequestConfig } from "axios";
 import queryClient from "./query-client.config";
 import { navigate } from "../lib/navigate.lib";
 
-declare module "axios" {
-  export interface AxiosRequestConfig {
-    silent?: boolean;
-  }
-}
-
 const options: AxiosRequestConfig = {
   baseURL: import.meta.env.VITE_SERVER_URL,
   withCredentials: true,
-  silent: true,
 };
 
 // API for axios

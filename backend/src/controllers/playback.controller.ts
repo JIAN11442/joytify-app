@@ -1,27 +1,20 @@
 import { RequestHandler } from "express";
 
-import {
-  createOrUpdatePlaybackLog,
-  getAllPlaybackLogs,
-} from "../services/playback.service";
+import { getAllPlaybackLogs, upsertPlaybackLog } from "../services/playback.service";
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { playbackZodSchema } from "../schemas/playback.zod";
-import { OK } from "../constants/http-code.constant";
+import { HttpCode } from "@joytify/shared-types/constants";
+import { StorePlaybackLogRequest } from "@joytify/shared-types/types";
+
+const { OK } = HttpCode;
 
 // store playback log handler
-export const storePlaybackLogHandler: RequestHandler = async (
-  req,
-  res,
-  next
-) => {
+export const storePlaybackLogHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const params = playbackZodSchema.parse(req.body);
+    const params: StorePlaybackLogRequest = playbackZodSchema.parse(req.body);
 
-    const { playbackLog } = await createOrUpdatePlaybackLog({
-      userId,
-      ...params,
-    });
+    const { playbackLog } = await upsertPlaybackLog({ userId, ...params });
 
     res.status(OK).json({ playbackLog });
   } catch (error) {
@@ -29,12 +22,8 @@ export const storePlaybackLogHandler: RequestHandler = async (
   }
 };
 
-// get playback logs handler
-export const getPlaybackLogsHandler: RequestHandler = async (
-  req,
-  res,
-  next
-) => {
+// get playback logs handler(*)
+export const getPlaybackLogsHandler: RequestHandler = async (req, res, next) => {
   try {
     const { playbackLogs } = await getAllPlaybackLogs();
 

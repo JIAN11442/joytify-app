@@ -1,26 +1,22 @@
 import API from "../config/api-client.config";
-import { FileExtension, UploadFolder } from "../constants/aws.constant";
+import { FileExtension, UploadFolder } from "@joytify/shared-types/constants";
 
-export interface SignedUrlParams {
+export interface SignedUrlRequest {
   subfolder?: UploadFolder;
   extension: FileExtension;
   nanoID?: string;
 }
 
-interface UploadFileParams extends SignedUrlParams {
+interface UploadFileRequest extends SignedUrlRequest {
   file: File;
 }
 
 // get signed url for upload
-export const getSignedUrl = async (
-  params: SignedUrlParams
-): Promise<{ uploadUrl: string }> =>
+export const getSignedUrl = async (params: SignedUrlRequest): Promise<{ uploadUrl: string }> =>
   await API.post("/aws/get-signed-url", params);
 
 // upload file to AWS S3
-export const uploadFileToAws = async (
-  params: UploadFileParams
-): Promise<string | null> => {
+export const uploadFileToAws = async (params: UploadFileRequest): Promise<string | null> => {
   // set default img URL
   let url = null;
 

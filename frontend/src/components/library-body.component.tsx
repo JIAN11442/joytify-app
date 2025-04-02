@@ -1,20 +1,15 @@
-import { AxiosResponse } from "axios";
-
 import Loader from "./loader.component";
 import LibraryPlaylist from "./library-playlist.component";
 
 import useSidebarState from "../states/sidebar.state";
-import { ResUser } from "../constants/axios-response.constant";
+import { AuthUserResponse } from "@joytify/shared-types/types";
 
 type LibraryBodyProps = {
-  user: AxiosResponse | ResUser | undefined;
+  authUser?: AuthUserResponse | null;
   isLoading: boolean;
 };
 
-const LibraryBody: React.FC<LibraryBodyProps> = ({
-  user,
-  isLoading: isAuthLoading,
-}) => {
+const LibraryBody: React.FC<LibraryBodyProps> = ({ authUser, isLoading: isAuthLoading }) => {
   const { collapseSideBarState } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
 
@@ -22,14 +17,14 @@ const LibraryBody: React.FC<LibraryBodyProps> = ({
     <div
       className={`
         overflow-y-auto
-        overflow-x-hidden
         hidden-scrollbar
+        text-neutral-600/50
         ${!isCollapsed && "pl-3 pr-3"}
       `}
     >
       {isAuthLoading ? (
         <Loader />
-      ) : user ? (
+      ) : authUser ? (
         // already login
         <LibraryPlaylist />
       ) : (

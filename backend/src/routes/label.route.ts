@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
   createLabelHandler,
-  deleteLabelHandler,
-  getLabelIdsHandler,
+  getLabelsIdHandler,
   getUserLabelsHandler,
+  removeLabelHandler,
 } from "../controllers/label.controller";
 
 const labelRoute = Router();
@@ -11,7 +11,8 @@ const labelRoute = Router();
 // prefix: label
 labelRoute.get("/", getUserLabelsHandler);
 labelRoute.post("/create", createLabelHandler);
-labelRoute.post("/getIds", getLabelIdsHandler);
-labelRoute.delete("/delete/:id", deleteLabelHandler);
+labelRoute.patch("/remove/:id", removeLabelHandler);
+
+labelRoute.post("/getIds", getLabelsIdHandler); //(*)
 
 export default labelRoute;

@@ -1,13 +1,12 @@
+import { useEffect, useRef, useState } from "react";
 import { FaCheck } from "react-icons/fa6";
-import {
-  VerificationCodeActions,
-  VerificationForType,
-} from "../constants/verification.constant";
-import Icon from "./react-icons.component";
 import { IoClose } from "react-icons/io5";
+
+import Icon from "./react-icons.component";
+import { VerificationCodeActions } from "@joytify/shared-types/constants";
+import { VerificationForType } from "@joytify/shared-types/types";
 import useVerificationModalState from "../states/verification.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { useEffect, useRef, useState } from "react";
 import { getDuration } from "../utils/get-time.util";
 
 type VerifyStatusFormProps = {
@@ -24,8 +23,7 @@ const VerifyStatusForm: React.FC<VerifyStatusFormProps> = ({
   const btnRef = useRef<HTMLButtonElement>(null);
   const [countdown, setCountdown] = useState(5);
 
-  const { backToInitialPage, closeVerificationCodeModal } =
-    useVerificationModalState();
+  const { backToInitialPage, closeVerificationCodeModal } = useVerificationModalState();
 
   const { EMAIL_VERIFY_FAILED } = VerificationCodeActions;
   const iconName = isSuccess ? FaCheck : IoClose;

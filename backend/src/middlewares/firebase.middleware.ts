@@ -1,17 +1,15 @@
 import { RequestHandler } from "express";
 
+import { HttpCode } from "@joytify/shared-types/constants";
 import appAssert from "../utils/app-assert.util";
 import admin from "../config/firebase.config";
-import { INTERNAL_SERVER_ERROR } from "../constants/http-code.constant";
+
+const { INTERNAL_SERVER_ERROR } = HttpCode;
 
 const firebaseInitialize = (): RequestHandler => {
   return (req, res, next) => {
     try {
-      appAssert(
-        admin.apps.length > 0,
-        INTERNAL_SERVER_ERROR,
-        "Firebase initialization failed"
-      );
+      appAssert(admin.apps.length > 0, INTERNAL_SERVER_ERROR, "Firebase initialization failed");
 
       next();
     } catch (error) {

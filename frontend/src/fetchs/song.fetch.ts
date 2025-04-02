@@ -1,25 +1,24 @@
 import { nanoid } from "nanoid";
 
-import { getMusicianIds } from "./musician.fetch";
 import { uploadFileToAws } from "./aws.fetch";
-
-import { SongForm } from "../constants/form.constant";
-import { FileExtension, UploadFolder } from "../constants/aws.constant";
-import MusicianOptions from "../constants/musician.constant";
-import { ResSong } from "../constants/axios-response.constant";
-
-import API from "../config/api-client.config";
+import { getMusicianId } from "./musician.fetch";
+import { MusicianOptions, FileExtension, UploadFolder } from "@joytify/shared-types/constants";
+import { SongResponse, RefactorSongResponse } from "@joytify/shared-types/types";
+import { DefaultSongForm } from "../types/form.type";
 import getAudioDuration from "../utils/get-audio-duration.util";
+import API from "../config/api-client.config";
 
 // create song data
-export const createSongData = async (data: SongForm): Promise<ResSong> => {
+export const createSongData = async (params: DefaultSongForm): Promise<SongResponse> => {
   const nanoID = nanoid();
 
-  const { songFile, imageFile, artist, lyricists, composers, ...params } = data;
+  const { songFile, imageFile, artist, lyricists, composers, ...rest } = params;
 
-  let imageUrl = undefined;
+  const { ARTIST, LYRICIST, COMPOSER } = MusicianOptions;
+
   let duration = 0;
-  const musicianParams: { [key: string]: string[] } = {};
+  let imageUrl = undefined;
+  const musicianParams: { [key: string]: string | string[] } = {};
 
   const file = songFile?.[0] as File;
   const audio = new Audio(URL.createObjectURL(file));
@@ -51,22 +50,32 @@ export const createSongData = async (data: SongForm): Promise<ResSong> => {
 
   // collect musician IDs for various categories
   const propsNeedGetIds = [
-    { name: "artist", musicians: artist, type: MusicianOptions.ARTIST },
-    { name: "lyricists", musicians: lyricists, type: MusicianOptions.LYRICIST },
-    { name: "composers", musicians: composers, type: MusicianOptions.COMPOSER },
+    { name: "artist", musicians: artist, type: ARTIST },
+    { name: "lyricists", musicians: lyricists, type: LYRICIST },
+    { name: "composers", musicians: composers, type: COMPOSER },
   ];
 
-  // and return them as a single object.
+  // and return them as a single object
   for (const { name, musicians, type } of propsNeedGetIds) {
-    if (musicians && musicians.length) {
+    if (musicians) {
       try {
-        const ids = await getMusicianIds({
-          musicians,
-          type,
-          createIfAbsent: true,
-        });
+        if (Array.isArray(musicians)) {
+          musicianParams[name] = [];
 
-        musicianParams[name] = ids;
+          for (const musician of musicians) {
+            const id = await getMusicianId({ musician, type, createIfAbsent: true });
+
+            musicianParams[name].push(id);
+          }
+        } else {
+          musicianParams[name] = await getMusicianId({
+            musician: musicians,
+            type,
+            createIfAbsent: true,
+          });
+        }
+
+        console.log(musicianParams);
       } catch (error) {
         console.error(`failed to get ${name} IDs:`, error);
       }
@@ -75,7 +84,7 @@ export const createSongData = async (data: SongForm): Promise<ResSong> => {
 
   // finally, fetch the request API
   return API.post("/song/create", {
-    ...params,
+    ...rest,
     ...musicianParams,
     ...(imageUrl ? { imageUrl } : {}),
     songUrl,
@@ -83,9 +92,8 @@ export const createSongData = async (data: SongForm): Promise<ResSong> => {
   });
 };
 
-// get song by id
-export const getSongById = (id: string): Promise<ResSong> =>
-  API.get(`/song/${id}`);
-
 // get all songs
-export const getAllSongs = (): Promise<ResSong[]> => API.get("/song/");
+export const getAllSongs = (): Promise<RefactorSongResponse[]> => API.get("/song/");
+
+// get song by id
+export const getSongById = (id: string): Promise<RefactorSongResponse> => API.get(`/song/${id}`);

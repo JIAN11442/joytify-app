@@ -13,9 +13,11 @@ export enum MutationKey {
   REMOVE_PLAYLIST_FROM_PROFILE = "remove-playlist-from-profile",
   ADD_PLAYLIST_TO_PROFILE = "add-playlist-to-profile",
   CREATE_LABEL_OPTION = "create-label-option",
-  DELETE_LABEL_OPTION = "delete-label-option",
+  REMOVE_LABEL_OPTION = "remove-label-option",
   CREATE_ALBUM_OPTION = "create-album-option",
+  REMOVE_ALBUM_OPTION = "remove-album-option",
   DELETE_ALBUM_OPTION = "delete-album-option",
+  UPDATE_USER = "update-user",
   DEREGISTER_USER = "deregister-user",
   RECORD_PLAYBACK_LOG = "record-playback-log",
   SEND_VERIFICATION_CODE = "send-verification-code",
@@ -26,12 +28,15 @@ export enum MutationKey {
 }
 
 export enum QueryKey {
-  GET_USER_INFO = "get-user-info",
+  GET_AUTH_USER_INFO = "get-auth-user-info",
   GET_USER_PLAYLISTS = "get-user-playlists",
+  GET_PROFILE_COLLECTION_INFO = "get-profile-collection-info",
   GET_TARGET_PLAYLIST = "get-target-playlist",
+  GET_PLAYLIST_PRIVACY_COUNTS = "get-playlist-privacy-counts",
   GET_SONG_BY_ID = "get-song-by-id",
   GET_ALL_LABELS = "get-all-labels",
   GET_USER_ALBUMS = "get-user-albums",
   GET_ALL_SONGS = "get-all-songs",
+  GET_PROFILE_USER_INFO = "get-profile-user-info",
   VERIFY_RESET_PASSWORD_LINK = "verify-reset-password-link",
 }

@@ -1,10 +1,8 @@
 import mongoose, { UpdateQuery } from "mongoose";
 
-import ErrorCode from "../constants/error-code.constant";
-import { TOO_MANY_REQUESTS } from "../constants/http-code.constant";
-import { VerificationForType } from "../constants/verification.constant";
 import { SEND_LIMIT_PER_PERIOD } from "../constants/env-validate.constant";
-
+import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
+import { VerificationForType } from "@joytify/shared-types/types";
 import { hashValue } from "../utils/bcrypt.util";
 import appAssert from "../utils/app-assert.util";
 
@@ -17,6 +15,8 @@ export interface VerificationDocument extends mongoose.Document {
   expiresAt: Date;
   createdAt: Date;
 }
+
+const { TOO_MANY_REQUESTS } = HttpCode;
 
 const verificationSchema = new mongoose.Schema<VerificationDocument>({
   email: { type: String, required: true },
@@ -53,7 +53,7 @@ verificationSchema.pre("findOneAndUpdate", async function (next) {
         false,
         TOO_MANY_REQUESTS,
         "Make too many requests",
-        ErrorCode.VerificationCodeRateLimitExceeded
+        ErrorCode.VERIFICATION_CODE_RATE_LIMIT_EXCEEDED
       );
     }
 
@@ -67,9 +67,6 @@ verificationSchema.pre("findOneAndUpdate", async function (next) {
   next();
 });
 
-const VerificationModel = mongoose.model<VerificationDocument>(
-  "verification",
-  verificationSchema
-);
+const VerificationModel = mongoose.model<VerificationDocument>("verification", verificationSchema);
 
 export default VerificationModel;

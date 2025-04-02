@@ -1,8 +1,5 @@
 import { RequestHandler } from "express";
 
-import SongModel from "../models/song.model";
-import PlaylistModel from "../models/playlist.model";
-
 import {
   createNewPlaylist,
   deletePlaylistById,
@@ -10,25 +7,36 @@ import {
   getUserPlaylistById,
   updatePlaylistById,
 } from "../services/playlist.service";
-import {
-  CREATED,
-  INTERNAL_SERVER_ERROR,
-  OK,
-} from "../constants/http-code.constant";
-import { objectIdZodSchema } from "../schemas/util.zod";
-import { playlistZodSchema } from "../schemas/playlist.zod";
-import appAssert from "../utils/app-assert.util";
-import parseParams from "../utils/parse-params.util";
+import { createPlaylistZodSchema, playlistZodSchema } from "../schemas/playlist.zod";
+import { objectIdZodSchema, stringZodSchema } from "../schemas/util.zod";
+import { HttpCode } from "@joytify/shared-types/constants";
+
+const { OK, CREATED } = HttpCode;
 
 // get user all playlist handler
 export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const searchParams = parseParams(req.params.query);
+    const query = stringZodSchema.optional().parse(req.query.search) ?? "";
 
-    const { playlists } = await getUserPlaylists(userId, searchParams);
+    const { playlists } = await getUserPlaylists(userId, query);
 
     return res.status(OK).json(playlists);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// get target playlist handler
+export const getTargetPlaylistHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = objectIdZodSchema.parse(req.userId);
+    const playlistId = objectIdZodSchema.parse(req.params.id);
+
+    // get target playlist
+    const { playlist } = await getUserPlaylistById(playlistId, userId);
+
+    return res.status(OK).json(playlist);
   } catch (error) {
     next(error);
   }
@@ -38,34 +46,12 @@ export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
 export const createPlaylistHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const { title } = playlistZodSchema.parse(req.body);
+    const { title } = createPlaylistZodSchema.parse(req.body);
 
     // create playlist
-    const { playlist } = await createNewPlaylist({
-      userId,
-      ...(title ? { title } : {}),
-    });
+    const { playlist } = await createNewPlaylist({ userId, title });
 
     res.status(CREATED).json(playlist);
-  } catch (error) {
-    next(error);
-  }
-};
-
-// get target playlist handler
-export const getTargetPlaylistHandler: RequestHandler = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    const playlistId = objectIdZodSchema.parse(req.params.id);
-    const userId = objectIdZodSchema.parse(req.userId);
-
-    // get target playlist
-    const { playlist } = await getUserPlaylistById(playlistId, userId);
-
-    return res.status(OK).json(playlist);
   } catch (error) {
     next(error);
   }
@@ -79,11 +65,7 @@ export const updatePlaylistHandler: RequestHandler = async (req, res, next) => {
     const params = playlistZodSchema.parse(req.body);
 
     // update playlist cover image
-    const { playlist } = await updatePlaylistById({
-      playlistId,
-      userId,
-      ...params,
-    });
+    const { playlist } = await updatePlaylistById({ playlistId, userId, ...params });
 
     return res.status(OK).json(playlist);
   } catch (error) {
@@ -107,70 +89,6 @@ export const deletePlaylistHandler: RequestHandler = async (req, res, next) => {
     return res.status(OK).json(deletedPlaylist);
   } catch (error) {
     console.log(error);
-    next(error);
-  }
-};
-
-// remove playlist from user profile handler
-export const changePlaylistHiddenStateHandler: RequestHandler = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    const userId = objectIdZodSchema.parse(req.userId);
-    const playlistId = objectIdZodSchema.parse(req.params.id);
-    const { hiddenState } = req.body;
-
-    const updatedPlaylist = await PlaylistModel.findOneAndUpdate(
-      { _id: playlistId, userId },
-      { hidden: hiddenState }
-    );
-
-    appAssert(
-      updatedPlaylist,
-      INTERNAL_SERVER_ERROR,
-      `Failed to change playlist hidden state to ${hiddenState}`
-    );
-
-    return res.status(OK).json(updatedPlaylist);
-  } catch (error) {
-    next(error);
-  }
-};
-
-// add target song ID to playlist handler
-export const addSongToPlaylistHandler: RequestHandler = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    const { playlistId, songId } = req.body;
-    const validatedPlaylistId = objectIdZodSchema.parse(playlistId);
-    const validatedSongId = objectIdZodSchema.parse(songId);
-
-    const updatedPlaylist = await PlaylistModel.findByIdAndUpdate(
-      validatedPlaylistId,
-      {
-        $addToSet: { songs: validatedSongId },
-      }
-    );
-
-    appAssert(
-      updatedPlaylist,
-      INTERNAL_SERVER_ERROR,
-      "Failed to update playlist"
-    );
-
-    const updatedSong = await SongModel.findByIdAndUpdate(validatedSongId, {
-      $addToSet: { playlist_for: validatedPlaylistId },
-    });
-
-    appAssert(updatedSong, INTERNAL_SERVER_ERROR, "Failed to update song");
-
-    return res.status(OK).json({ updatedPlaylist, updatedSong });
-  } catch (error) {
     next(error);
   }
 };

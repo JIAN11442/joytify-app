@@ -1,52 +1,18 @@
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import Modal from "./modal.component";
 import PlaylistWarningContent from "./playlist-warning-content.component";
 import SingleSelectInputBox from "./single-select-input-box.component";
 
-import {
-  defaultMovingPlaylistData,
-  MovingPlaylistForm,
-} from "../constants/form.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
+import { useDeletePlaylistMutation } from "../hooks/playlist-mutate.hook";
+import { defaultMovingPlaylistData } from "../constants/form.constant";
+import { DefaultMovingPlaylistForm } from "../types/form.type";
 import usePlaylistState from "../states/playlist.state";
-import { deletePlaylist } from "../fetchs/playlist.fetch";
-import { usePlaylists } from "../hooks/playlist.hook";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const PlaylistDeleteModal = () => {
-  const navigate = useNavigate();
-  const { refetch: playlistRefetch } = usePlaylists();
-
-  const { activeDeletePlaylistModal, closePlaylistDeleteModal, userPlaylists } =
-    usePlaylistState();
-  const { active, playlist } = activeDeletePlaylistModal;
-
-  // delete playlist mutation
-  const { mutate: deleteUserPlaylist, isPending } = useMutation({
-    mutationKey: [MutationKey.DELETE_PLAYLIST],
-    mutationFn: deletePlaylist,
-    onSuccess: (data) => {
-      const { title } = data;
-
-      // close modal
-      handleCloseModal();
-
-      // navigate to homepage
-      navigate("/");
-
-      // refetch query of get all user playlists
-      playlistRefetch();
-
-      toast.success(`Playlist "${title}" has been deleted.`);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  const { activePlaylistDeleteModal, closePlaylistDeleteModal, userPlaylists } = usePlaylistState();
+  const { active, playlist } = activePlaylistDeleteModal;
 
   // handle close modal
   const handleCloseModal = () => {
@@ -56,6 +22,9 @@ const PlaylistDeleteModal = () => {
     });
   };
 
+  // delete playlist mutation
+  const { mutate: deletePlaylistFn, isPending } = useDeletePlaylistMutation(handleCloseModal);
+
   const {
     register,
     handleSubmit,
@@ -64,13 +33,13 @@ const PlaylistDeleteModal = () => {
     reset,
     trigger,
     formState: { isValid },
-  } = useForm<MovingPlaylistForm>({
+  } = useForm<DefaultMovingPlaylistForm>({
     defaultValues: { ...defaultMovingPlaylistData },
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<MovingPlaylistForm> = async (value) => {
-    deleteUserPlaylist({
+  const onSubmit: SubmitHandler<DefaultMovingPlaylistForm> = async (value) => {
+    deletePlaylistFn({
       currentPlaylistId: playlist?._id || "",
       targetPlaylistId: value.playlist_for || "",
     });
@@ -89,35 +58,33 @@ const PlaylistDeleteModal = () => {
         {/* Warning text */}
         <p className={`text-red-500/80`}>
           This will delete the playlist{" "}
-          <span className={`font-bold text-white`}>{playlist?.title}</span> from
-          your library, and you won't be able to restore it again.{" "}
+          <span className={`font-bold text-white`}>{playlist?.title}</span> from your library, and
+          you won't be able to restore it again.{" "}
           {(playlist?.songs.length ?? 0) > 0 &&
             `Otherwise, you also can choose to transfer all the songs from this playlist to another one, or opt not to transfer them.`}
         </p>
 
         {/* Playlist options */}
-        <>
-          {(playlist?.songs.length ?? 0) > 0 && (
-            <SingleSelectInputBox
-              placeholder="Click to choose a playlist"
-              options={
-                userPlaylists
-                  ?.filter((opt) => opt._id !== playlist?._id)
-                  .map((opt) => ({
-                    id: opt._id,
-                    title: opt.title,
-                  })) || []
-              }
-              formMethods={{
-                setFormValue: setValue,
-                setFormError: setError,
-                trigger,
-              }}
-              disabled={isPending}
-              {...register("playlist_for", { required: false })}
-            />
-          )}
-        </>
+        {(playlist?.songs.length ?? 0) > 0 && (
+          <SingleSelectInputBox
+            placeholder="Click to choose a playlist"
+            options={
+              userPlaylists
+                ?.filter((opt) => opt._id !== playlist?._id)
+                .map((opt) => ({
+                  id: opt._id,
+                  title: opt.title,
+                })) || []
+            }
+            formMethods={{
+              setFormValue: setValue,
+              setFormError: setError,
+              trigger,
+            }}
+            disabled={isPending}
+            {...register("playlist_for", { required: false })}
+          />
+        )}
       </PlaylistWarningContent>
     </Modal>
   );

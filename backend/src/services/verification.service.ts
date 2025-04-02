@@ -1,42 +1,28 @@
 import { FilterQuery } from "mongoose";
 
 import UserModel from "../models/user.model";
-import VerificationModel, {
-  VerificationDocument,
-} from "../models/verification.model";
+import VerificationModel, { VerificationDocument } from "../models/verification.model";
 
 import { JoytifyVerificationCodeEmail } from "../templates/verification-code.template";
 import { JoytifyResetPasswordLinkEmail } from "../templates/reset-password.template";
+import { NODE_ENV, SENDER_EMAIL, TEST_EMAIL } from "../constants/env-validate.constant";
 import {
+  HttpCode,
   VerificationForOptions,
   VerificationCodeActions,
-} from "../constants/verification.constant";
-import {
-  CONFLICT,
-  FORBIDDEN,
-  INTERNAL_SERVER_ERROR,
-  NOT_FOUND,
-  UNAUTHORIZED,
-} from "../constants/http-code.constant";
-import {
-  NODE_ENV,
-  SENDER_EMAIL,
-  TEST_EMAIL,
-} from "../constants/env-validate.constant";
-import appAssert from "../utils/app-assert.util";
+} from "@joytify/shared-types/constants";
+import { SendCodeRequest, VerifyCodeRequest } from "@joytify/shared-types/types";
+import { generateVerificationCode, generateVerificationLink } from "../utils/generate-code.util";
+import { generateNanoId } from "../utils/generate-nanoid.util";
 import { tenMinutesFromNow } from "../utils/date.util";
-import {
-  generateVerificationCode,
-  generateVerificationLink,
-} from "../utils/generate-code.util";
+import { compareHashValue } from "../utils/bcrypt.util";
+import appAssert from "../utils/app-assert.util";
 import {
   signToken,
   VerificationTokenPayload,
   VerificationTokenSignOptions,
   verifyToken,
 } from "../utils/jwt.util";
-import { generateNanoId } from "../utils/generate-nanoid.util";
-import { compareHashValue } from "../utils/bcrypt.util";
 import resend from "../config/resend.config";
 
 type SendEmailParams = {
@@ -46,22 +32,13 @@ type SendEmailParams = {
   content: React.JSX.Element;
 };
 
-type DefaultCodeParams = {
-  email: string;
-  token?: string;
-};
-
-interface SendCodeParams extends DefaultCodeParams {
-  shouldResendCode: boolean;
-}
-
-interface VerifyCodeParams extends DefaultCodeParams {
-  code: string;
-}
+type SendCodeServiceRequest = SendCodeRequest & { token?: string };
+type VerifyCodeServiceRequest = VerifyCodeRequest & { token?: string };
 
 type FilterQueryParams = FilterQuery<VerificationDocument>;
 
 const { EMAIL_VERIFICATION, PASSWORD_RESET } = VerificationForOptions;
+const { CONFLICT, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } = HttpCode;
 
 // send email service
 export const sendEmail = async ({
@@ -75,15 +52,11 @@ export const sendEmail = async ({
     react: content,
   });
 
-  appAssert(
-    data?.id,
-    INTERNAL_SERVER_ERROR,
-    error ? error.message : "Failed to send email"
-  );
+  appAssert(data?.id, INTERNAL_SERVER_ERROR, error ? error.message : "Failed to send email");
 };
 
 // send verification code service
-export const sendCodeEmailToUser = async (params: SendCodeParams) => {
+export const sendCodeEmailToUser = async (params: SendCodeServiceRequest) => {
   const { email, shouldResendCode, token } = params;
 
   const { CODE_CREATED, CODE_UPDATED, CODE_RETURNED } = VerificationCodeActions;
@@ -102,11 +75,7 @@ export const sendCodeEmailToUser = async (params: SendCodeParams) => {
       secret: VerificationTokenSignOptions.secret,
     });
 
-    appAssert(
-      payload?.sessionId === isVerifying.session,
-      CONFLICT,
-      "Email is already in use"
-    );
+    appAssert(payload?.sessionId === isVerifying.session, CONFLICT, "Email is already in use");
 
     // If resending is not required, return the existing verification record
     if (!shouldResendCode) {
@@ -119,8 +88,8 @@ export const sendCodeEmailToUser = async (params: SendCodeParams) => {
   }
 
   // generate a new verification code and session ID
-  const code = generateVerificationCode();
-  // const code = "K-108866";
+  // const code = generateVerificationCode();
+  const code = "K-108866";
   const content = JoytifyVerificationCodeEmail({ verificationCode: code });
   const subject = `${code} is your Joytify verification code`;
   const hashedSession = await generateNanoId(true);
@@ -149,19 +118,54 @@ export const sendCodeEmailToUser = async (params: SendCodeParams) => {
   appAssert(doc, INTERNAL_SERVER_ERROR, "Failed to process verification code");
 
   // generate a new session token for verification tracking
-  const sessionToken = signToken(
-    { sessionId: hashedSession },
-    VerificationTokenSignOptions
-  );
+  const sessionToken = signToken({ sessionId: hashedSession }, VerificationTokenSignOptions);
 
   // send verification email
-  await sendEmail({ to: email, subject, content });
+  // await sendEmail({ to: email, subject, content });
 
   return {
     id: doc._id,
     action: isVerifying ? CODE_UPDATED : CODE_CREATED,
     sessionToken,
   };
+};
+
+// verify verification code service
+export const verifyCode = async (params: VerifyCodeServiceRequest) => {
+  let verified = false;
+
+  const { code, email, token } = params;
+
+  if (token) {
+    const { payload } = await verifyToken<VerificationTokenPayload>(token, {
+      secret: VerificationTokenSignOptions.secret,
+    });
+
+    const queryParams: FilterQueryParams = {
+      email,
+      session: payload?.sessionId,
+      type: EMAIL_VERIFICATION,
+    };
+
+    const verifyDoc = await VerificationModel.findOne(queryParams);
+
+    if (verifyDoc) {
+      verified = await compareHashValue(code, verifyDoc.verification_code);
+
+      if (verified) {
+        // delete verification code
+        const deletedVerificationCode = await VerificationModel.findOneAndDelete(queryParams);
+
+        appAssert(
+          deletedVerificationCode,
+          INTERNAL_SERVER_ERROR,
+          "Failed to delete verification code"
+        );
+      }
+    }
+  }
+
+  return { verified };
 };
 
 // send verification link service
@@ -191,16 +195,9 @@ export const sendLinkEmailToUser = async (email: string) => {
 
   if (doc) {
     // update verification doc
-    const updateDoc = await VerificationModel.findOneAndUpdate(
-      queryParams,
-      payloadParams
-    );
+    const updateDoc = await VerificationModel.findOneAndUpdate(queryParams, payloadParams);
 
-    appAssert(
-      updateDoc,
-      INTERNAL_SERVER_ERROR,
-      "Failed to update verification doc"
-    );
+    appAssert(updateDoc, INTERNAL_SERVER_ERROR, "Failed to update verification doc");
   } else {
     // create verification doc
     const newDoc = await VerificationModel.create({
@@ -208,11 +205,7 @@ export const sendLinkEmailToUser = async (email: string) => {
       ...payloadParams,
     });
 
-    appAssert(
-      newDoc,
-      INTERNAL_SERVER_ERROR,
-      "Failed to create verification doc"
-    );
+    appAssert(newDoc, INTERNAL_SERVER_ERROR, "Failed to create verification doc");
   }
 
   // generate verification link
@@ -222,48 +215,9 @@ export const sendLinkEmailToUser = async (email: string) => {
   const subject = "Reset your password for Joytify";
 
   // send email
-  await sendEmail({ to: email, subject, content });
+  // await sendEmail({ to: email, subject, content });
 
   return { url };
-};
-
-// verify verification code service
-export const verifyCode = async (params: VerifyCodeParams) => {
-  let verified = false;
-
-  const { code, email, token } = params;
-
-  if (token) {
-    const { payload } = await verifyToken<VerificationTokenPayload>(token, {
-      secret: VerificationTokenSignOptions.secret,
-    });
-
-    const queryParams: FilterQueryParams = {
-      email,
-      session: payload?.sessionId,
-      type: EMAIL_VERIFICATION,
-    };
-
-    const verifyDoc = await VerificationModel.findOne(queryParams);
-
-    if (verifyDoc) {
-      verified = await compareHashValue(code, verifyDoc.verification_code);
-
-      if (verified) {
-        // delete verification code
-        const deletedVerificationCode =
-          await VerificationModel.findOneAndDelete(queryParams);
-
-        appAssert(
-          deletedVerificationCode,
-          INTERNAL_SERVER_ERROR,
-          "Failed to delete verification code"
-        );
-      }
-    }
-  }
-
-  return { verified };
 };
 
 // verify verification link service

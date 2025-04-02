@@ -6,15 +6,15 @@ import CreateNewBtn from "./create-new-button.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import OptionCheckboxItem from "./option-checkbox-item.component";
 
-import LabelOptions, { LabelType } from "../constants/label.constant";
-import { Label, RefactorResLabel } from "../constants/axios-response.constant";
-import { FormMethods } from "../constants/form.constant";
-import mergeRefs from "../lib/merge-refs.lib";
-import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
+import { LabelOptions } from "@joytify/shared-types/constants";
+import { Label, LabelOptionsType, RefactorLabelResponse } from "@joytify/shared-types/types";
+import { FormMethods } from "../types/form.type";
 import useUploadModalState, { RefetchType } from "../states/upload-modal.state";
+import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
+import mergeRefs from "../lib/merge-refs.lib";
 
 export type OptionType = {
-  type: LabelType;
+  type: LabelOptionsType;
   labels: { defaults: Label[]; created: Label[] };
 };
 
@@ -25,7 +25,7 @@ interface MultiSelectInputProps<T extends FieldValues = any>
   formMethods: FormMethods<T>;
   autoCloseMenuFn?: boolean;
   deleteOptFn?: (id: string) => void;
-  queryRefetch: RefetchType<RefactorResLabel>;
+  queryRefetch: RefetchType<RefactorLabelResponse>;
 }
 
 const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
@@ -58,23 +58,18 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
     const labelOpts = Object.values((options as OptionType).labels);
 
     // handle option menu onchange
-    const handleOptMenuOnChange = (
-      opt: Label,
-      e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleOptMenuOnChange = (opt: Label, e: React.ChangeEvent<HTMLInputElement>) => {
       const checked = e.target.checked;
 
       if (checked) {
         setSelectedOpts((prev) => [...prev, opt]);
       } else {
-        setSelectedOpts((prev) =>
-          prev.filter((existedOpt) => existedOpt !== opt)
-        );
+        setSelectedOpts((prev) => prev.filter((existedOpt) => existedOpt !== opt));
       }
     };
 
     // handle active create label modal
-    const handleActiveCreateLabelModal = (type: LabelType) => {
+    const handleActiveCreateLabelModal = (type: LabelOptionsType) => {
       timeoutForDelay(() => {
         setActiveCreateLabelModal({
           type,
@@ -92,40 +87,25 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
       }
     };
 
+    // auto close menu on focus and blur
     useEffect(() => {
       const handleOnFocus: EventListener = (e) => {
-        if (
-          !disabled &&
-          inputRef.current &&
-          inputRef.current.contains(e.target as Node)
-        ) {
+        if (!disabled && inputRef.current && inputRef.current.contains(e.target as Node)) {
           timeoutForDelay(() => {
             setActiveMenu(true);
           });
         }
       };
       const handleOnBlur: EventListener = (e) => {
-        if (
-          autoCloseMenuFn &&
-          menuRef.current &&
-          !menuRef.current.contains(e.target as Node)
-        ) {
+        if (autoCloseMenuFn && menuRef.current && !menuRef.current.contains(e.target as Node)) {
           timeoutForDelay(() => {
             setActiveMenu(false);
           });
         }
       };
 
-      const cleanupOnFocusFn = timeoutForEventListener(
-        document,
-        "click",
-        handleOnFocus
-      );
-      const cleanupOnBlurFn = timeoutForEventListener(
-        document,
-        "click",
-        handleOnBlur
-      );
+      const cleanupOnFocusFn = timeoutForEventListener(document, "click", handleOnFocus);
+      const cleanupOnBlurFn = timeoutForEventListener(document, "click", handleOnBlur);
 
       return () => {
         cleanupOnFocusFn();
@@ -133,6 +113,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
       };
     }, [autoCloseMenuFn, disabled, inputRef, menuRef]);
 
+    // while selected options change, set form value and trigger
     useEffect(() => {
       const optIds = selectedOpts.map((opt) => opt.id);
       const optsContent = selectedOpts.map((opt) => opt.label).join(", ");
@@ -159,18 +140,16 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
       `}
       >
         {/* title */}
-        <>
-          {title && (
-            <p
-              className={`
-                text-sm
-                text-grey-custom/50
-              `}
-            >
-              {title}
-            </p>
-          )}
-        </>
+        {title && (
+          <p
+            className={`
+              text-sm
+              text-grey-custom/50
+            `}
+          >
+            {title}
+          </p>
+        )}
 
         {/* input box && options menu */}
         <div className={`relative`}>
@@ -209,67 +188,59 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
             `}
           >
             {/* Label options */}
-            <>
-              {labelOpts &&
-                labelOpts.map((labelType, index) => (
+            {labelOpts &&
+              labelOpts.map((labelType, index) => (
+                <div
+                  key={`label-type-${index}`}
+                  className={`
+                    flex
+                    flex-col
+                  `}
+                >
+                  {/* options */}
                   <div
-                    key={index}
                     className={`
-                      flex
-                      flex-col
+                      grid
+                      grid-cols-2
                     `}
                   >
                     {/* options */}
-                    <div
-                      className={`
-                        grid
-                        grid-cols-2
-                      `}
+                    {labelType &&
+                      labelType.map((opt) => {
+                        return (
+                          <OptionCheckboxItem
+                            key={`label-type-item-${opt.id}`}
+                            opt={opt}
+                            checked={selectedOpts.includes(opt)}
+                            onChange={(e) => handleOptMenuOnChange(opt, e)}
+                            deleteFunc={() => handleDeleteLabel(opt)}
+                            tw={{
+                              deleteBtn: `${index === 1 ? "flex" : "hidden"}`,
+                            }}
+                          />
+                        );
+                      })}
+
+                    {/* create new button */}
+                    <CreateNewBtn
+                      type="button"
+                      onClick={() => handleActiveCreateLabelModal(LabelOptions.LANGUAGE)}
+                      className={`${index === 0 ? "flex" : "hidden"}`}
                     >
-                      {/* options */}
-                      <>
-                        {labelType &&
-                          labelType.map((opt) => {
-                            return (
-                              <OptionCheckboxItem
-                                key={opt.id}
-                                opt={opt}
-                                checked={selectedOpts.includes(opt)}
-                                onChange={(e) => handleOptMenuOnChange(opt, e)}
-                                deleteFunc={() => handleDeleteLabel(opt)}
-                                tw={{
-                                  deleteBtn: `${
-                                    index === 1 ? "flex" : "hidden"
-                                  }`,
-                                }}
-                              />
-                            );
-                          })}
-                      </>
-
-                      {/* create new button */}
-                      <CreateNewBtn
-                        type="button"
-                        onClick={() =>
-                          handleActiveCreateLabelModal(LabelOptions.LANGUAGE)
-                        }
-                        className={`${index === 0 ? "flex" : "hidden"}`}
-                      >
-                        <p>Create new</p>
-                      </CreateNewBtn>
-                    </div>
-
-                    {/* separate line */}
-                    <hr
-                      className={`
-                        my-2
-                        ${labelOpts[index + 1]?.length ?? 0 ? "flex" : "hidden"}
-                        border-neutral-800
-                      `}
-                    />
+                      <p>Create new</p>
+                    </CreateNewBtn>
                   </div>
-                ))}
-            </>
+
+                  {/* separate line */}
+                  <hr
+                    className={`
+                      my-2
+                      ${labelOpts[index + 1]?.length ?? 0 ? "flex" : "hidden"}
+                      border-neutral-800
+                    `}
+                  />
+                </div>
+              ))}
           </AnimationWrapper>
         </div>
       </div>

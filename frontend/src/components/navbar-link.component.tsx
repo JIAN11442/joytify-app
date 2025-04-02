@@ -36,7 +36,7 @@ const NavbarLink = forwardRef<HTMLAnchorElement, NavbarLinkProps>(
           <Icon
             name={icon.name}
             opts={{ size: 22, ...icon?.opts }}
-            className={twMerge(``, tw?.icon)}
+            className={tw?.icon}
           />
         ) : (
           <>{children}</>

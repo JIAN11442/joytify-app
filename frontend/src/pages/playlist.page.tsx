@@ -1,30 +1,16 @@
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import ContentBoxHeader from "../components/content-box-header.component";
 import Loader from "../components/loader.component";
-import PlaylistHeader from "../components/playlist-header.component";
+import ContentBox from "../components/content-box.component";
 import PlaylistBody from "../components/playlist-body.component";
+import PlaylistHeader from "../components/playlist-header.component";
 
-import { QueryKey } from "../constants/query-client-key.constant";
-import queryClient from "../config/query-client.config";
-import { usePlaylistById } from "../hooks/playlist.hook";
+import { useGetPlaylistByIdQuery } from "../hooks/playlist-query.hook";
 
 const PlaylistPage = () => {
   const { id } = useParams();
 
-  const { playlist, refetch: playlistRefetch } = usePlaylistById(String(id));
-  const { paletee } = playlist ?? {};
-
-  useEffect(() => {
-    // refetch query playlist while id changed
-    playlistRefetch();
-
-    // clean up query data while unmount
-    return () => {
-      queryClient.setQueryData([QueryKey.GET_TARGET_PLAYLIST], null);
-    };
-  }, [id]);
+  const { playlist } = useGetPlaylistByIdQuery(String(id));
 
   // If any of these data are not available, show loader
   if (!playlist) {
@@ -39,14 +25,15 @@ const PlaylistPage = () => {
     );
   }
 
+  const { paletee } = playlist;
+
   return (
-    <ContentBoxHeader
-      options={false}
+    <ContentBox
       style={{
         backgroundImage: `linear-gradient(
           to bottom,
           ${paletee?.vibrant} 0%,
-          ${paletee?.darkVibrant} 10%,
+          ${paletee?.darkVibrant} 40%,
           #171717 70%
         )`,
       }}
@@ -54,15 +41,15 @@ const PlaylistPage = () => {
         h-full
         pt-10
         rounded-b-none
-        overflow-y-hidden
+        overflow-x-hidden
       `}
     >
       {/* Playlist header */}
-      <PlaylistHeader playlist={playlist} className={`px-6`} />
+      <PlaylistHeader playlist={playlist} />
 
       {/* Playlist content */}
       <PlaylistBody playlist={playlist} />
-    </ContentBoxHeader>
+    </ContentBox>
   );
 };
 

@@ -1,25 +1,20 @@
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { IoKey } from "react-icons/io5";
-import { FaCheckCircle } from "react-icons/fa";
-import { RiErrorWarningLine } from "react-icons/ri";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { RiErrorWarningLine } from "react-icons/ri";
+import { FaCheckCircle } from "react-icons/fa";
+import { IoKey } from "react-icons/io5";
 
+import Loader from "../components/loader.component";
 import InputBox from "../components/input-box.component";
 import WarningMsgBox from "./warning-message-box.component";
-import Loader from "../components/loader.component";
 
-import { resetUserPassword } from "../fetchs/user.fetch";
-import useVerifyResetPasswordLink from "../hooks/verification.hook";
-import {
-  defaultResetPasswordData,
-  ResetPasswordForm as ResetPasswordFormType,
-} from "../constants/form.constant";
-import WarningOptions, { WarningType } from "../constants/warning.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
-import { PasswordResetStatus } from "../constants/user.constant";
-import useUserState from "../states/user.state";
+import { useVerifyResetPasswordLinkQuery } from "../hooks/verification-query.hook";
+import { useResetPasswordMutation } from "../hooks/user-mutate.hook";
+import { defaultResetPasswordData } from "../constants/form.constant";
+import { WarningOptions } from "../constants/warning.constant";
+import { DefaultResetPasswordForm } from "../types/form.type";
+import { WarningType } from "../types/warning.type";
 import { isHighlight } from "../lib/icon-highlight.lib";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { passwordRegex } from "../utils/regex";
@@ -31,8 +26,7 @@ type ResetPasswordFormProps = {
 const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
   const [closeMsg, setCloseMsg] = useState(false);
 
-  const { setPasswordResetStatus } = useUserState();
-  const { verified, isFetching } = useVerifyResetPasswordLink(token, 1800);
+  const { verified, isFetching } = useVerifyResetPasswordLinkQuery(token, 1800);
 
   const {
     IS_FETCHING_TOKEN,
@@ -42,8 +36,6 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
     PASSWORD_IS_DUPLICATED,
     PASSWORD_IS_NOT_MATCH,
   } = WarningOptions;
-
-  const { SUCCESS, FAILED } = PasswordResetStatus;
 
   // get warning msg
   const getWarningMsg = (type: WarningType) => {
@@ -64,18 +56,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
   };
 
   // reset password mutation
-  const { mutate: resetUserPasswordFn, isPending } = useMutation({
-    mutationKey: [MutationKey.RESEND_VERIFICATION_CODE],
-    mutationFn: resetUserPassword,
-    onSuccess: () => {
-      setPasswordResetStatus(SUCCESS);
-    },
-    onError: (error) => {
-      if (error) {
-        setPasswordResetStatus(FAILED);
-      }
-    },
-  });
+  const { mutate: resetPasswordFn, isPending } = useResetPasswordMutation();
 
   const {
     register,
@@ -84,27 +65,26 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
     watch,
     trigger,
     formState: { isValid, errors },
-  } = useForm<ResetPasswordFormType>({
+  } = useForm<DefaultResetPasswordForm>({
     defaultValues: defaultResetPasswordData,
     mode: "onChange",
   });
 
   // show verify status msg
-  const visibleVerifyStatusMsg =
-    isFetching || (verified && !closeMsg) || !verified;
+  const visibleVerifyStatusMsg = isFetching || (verified && !closeMsg) || !verified;
 
   // disable edit
   const disabledEdit = !verified || isPending;
 
   // icon highlight
-  const isIconHighlight = (target: keyof ResetPasswordFormType) =>
+  const isIconHighlight = (target: keyof DefaultResetPasswordForm) =>
     isHighlight(watch, errors, target);
 
   // handle form submit
-  const onSubmit: SubmitHandler<ResetPasswordFormType> = (value) => {
+  const onSubmit: SubmitHandler<DefaultResetPasswordForm> = (value) => {
     const { currentPassword, newPassword } = value;
 
-    resetUserPasswordFn({ token, currentPassword, newPassword });
+    resetPasswordFn({ token, currentPassword, newPassword });
   };
 
   // auto close verified msg
@@ -140,11 +120,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
           visible={visibleVerifyStatusMsg}
           transition={{ duration: 0.2 }}
           warningMsg={getWarningMsg(
-            isFetching
-              ? IS_FETCHING_TOKEN
-              : verified
-              ? VALID_TOKEN
-              : INVALID_TOKEN
+            isFetching ? IS_FETCHING_TOKEN : verified ? VALID_TOKEN : INVALID_TOKEN
           )}
           headerIcon={{
             name: isFetching
@@ -167,11 +143,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
             }`,
             hdrIcon: isFetching ? "animate-spin" : "",
             msg: `tracking-wider ${
-              isFetching
-                ? "text-blue-300"
-                : verified
-                ? "text-green-500"
-                : "text-red-400"
+              isFetching ? "text-blue-300" : verified ? "text-green-500" : "text-red-400"
             }`,
             clsBtn: "hidden",
           }}
@@ -212,13 +184,9 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
           required
           {...register("currentPassword", {
             validate: (value) => {
-              return (
-                passwordRegex.test(value) ||
-                getWarningMsg(INVALID_PASSWORD_REGEX)
-              );
+              return passwordRegex.test(value) || getWarningMsg(INVALID_PASSWORD_REGEX);
             },
-            onChange: () =>
-              watch("newPassword").length > 0 && trigger("newPassword"),
+            onChange: () => watch("newPassword").length > 0 && trigger("newPassword"),
           })}
         />
 
@@ -239,8 +207,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
                 return getWarningMsg(PASSWORD_IS_DUPLICATED);
               }
             },
-            onChange: () =>
-              watch("confirmPassword").length > 0 && trigger("confirmPassword"),
+            onChange: () => watch("confirmPassword").length > 0 && trigger("confirmPassword"),
           })}
         />
 

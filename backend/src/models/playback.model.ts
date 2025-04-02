@@ -1,26 +1,15 @@
 import mongoose, { UpdateQuery } from "mongoose";
-import PlaybackStateOptions, {
-  PlaybackStateType,
-} from "../constants/playback.constant";
-import { getTotalPlaybackDurationAndCount } from "../services/playback.service";
+
 import { refreshSongPlaybackStats } from "../services/song.service";
-
-export type PlaybackStats = {
-  duration: number;
-  state: PlaybackStateType;
-  timestamp: Date;
-};
-
-export type PlaybackSong = {
-  id: mongoose.Types.ObjectId;
-  artist: mongoose.Types.ObjectId;
-  playbacks: PlaybackStats[];
-};
+import { PlaybackStateOptions } from "@joytify/shared-types/constants";
+import { PlaybackSong } from "@joytify/shared-types/types";
 
 export interface PlaybackDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
   songs: PlaybackSong[];
 }
+
+const { COMPLETED, PLAYING } = PlaybackStateOptions;
 
 const playbackSchema = new mongoose.Schema<PlaybackDocument>(
   {
@@ -51,10 +40,7 @@ const playbackSchema = new mongoose.Schema<PlaybackDocument>(
                 duration: { type: Number, required: true },
                 state: {
                   type: String,
-                  enum: [
-                    PlaybackStateOptions.COMPLETED,
-                    PlaybackStateOptions.PLAYING,
-                  ],
+                  enum: [COMPLETED, PLAYING],
                   required: true,
                 },
                 timestamp: { type: Date, required: true },
@@ -86,29 +72,28 @@ playbackSchema.post("save", async function (doc) {
 // after created playback, ...
 playbackSchema.post("findOneAndUpdate", async function (doc) {
   try {
-    if (doc) {
-      const query = this.getQuery();
-      const update = this.getUpdate() as UpdateQuery<PlaybackDocument>;
+    if (!doc) {
+      return;
+    }
 
-      const songId =
-        query.songs && query.songs.$elemMatch
-          ? query.songs.$elemMatch.id
-          : update && update.$push && update.$push.songs
-            ? update.$push.songs.id
-            : null;
+    const query = this.getQuery();
+    const update = this.getUpdate() as UpdateQuery<PlaybackDocument>;
 
-      if (songId !== null) {
-        await refreshSongPlaybackStats(songId.toString());
-      }
+    const songId =
+      query.songs && query.songs.$elemMatch
+        ? query.songs.$elemMatch.id
+        : update && update.$push && update.$push.songs
+          ? update.$push.songs.id
+          : null;
+
+    if (songId !== null) {
+      await refreshSongPlaybackStats(songId.toString());
     }
   } catch (error) {
     console.log(error);
   }
 });
 
-const PlaybackModel = mongoose.model<PlaybackDocument>(
-  "Playback",
-  playbackSchema
-);
+const PlaybackModel = mongoose.model<PlaybackDocument>("Playback", playbackSchema);
 
 export default PlaybackModel;

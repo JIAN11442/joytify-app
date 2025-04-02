@@ -1,25 +1,21 @@
 import { z } from "zod";
-import {
-  stringZodSchema,
-  fileUrlZodSchema,
-  objectIdZodSchema,
-} from "./util.zod";
+import { stringZodSchema, fileUrlZodSchema, objectIdZodSchema } from "./util.zod";
 
 export const songZodSchema = z.object({
   title: stringZodSchema,
-  artist: z.array(stringZodSchema),
+  artist: stringZodSchema,
   songUrl: fileUrlZodSchema,
   playlist_for: objectIdZodSchema,
   duration: z.number(),
-  imageUrl: fileUrlZodSchema.optional().nullable(),
-  album: z.union([objectIdZodSchema, z.null()]).optional(),
-  lyricists: z.array(objectIdZodSchema).optional().nullable(),
-  composers: z.array(objectIdZodSchema).optional().nullable(),
-  languages: z.array(objectIdZodSchema).optional().nullable(),
-  genres: z.array(objectIdZodSchema).optional().nullable(),
-  tags: z.array(objectIdZodSchema).optional().nullable(),
-  lyrics: z.array(stringZodSchema).optional().nullable(),
-  releaseDate: z.union([z.date(), z.string().optional().nullable()]),
+  imageUrl: fileUrlZodSchema.optional(),
+  album: objectIdZodSchema.optional(),
+  lyricists: z.array(objectIdZodSchema).optional(),
+  composers: z.array(objectIdZodSchema).optional(),
+  languages: z.array(objectIdZodSchema).optional(),
+  genres: z.array(objectIdZodSchema).optional(),
+  tags: z.array(objectIdZodSchema).optional(),
+  lyrics: z.array(stringZodSchema).optional(),
+  releaseDate: z.string().optional(),
 });
 
 export type SongZodSchemaType = z.infer<typeof songZodSchema>;

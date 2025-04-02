@@ -1,34 +1,22 @@
 import API from "../config/api-client.config";
 import {
-  RefactorResLabel,
-  ResLabel,
-} from "../constants/axios-response.constant";
-import { LabelType } from "../constants/label.constant";
-
-interface createLabelParams {
-  label: string;
-  type: LabelType;
-}
-
-interface getLabelIdsParams {
-  labels: string[] | null | undefined;
-  type: LabelType;
-  createIfAbsent?: boolean;
-}
+  CreateLabelRequest,
+  GetLabelsIdRequest,
+  LabelResponse,
+  RefactorLabelResponse,
+} from "@joytify/shared-types/types";
 
 // get user all labels
-export const getUserLabels = async (): Promise<RefactorResLabel> =>
-  API.get("/label");
+export const getUserLabels = async (): Promise<RefactorLabelResponse> => API.get("/label");
 
 // create label
-export const createLabel = async (
-  params: createLabelParams
-): Promise<ResLabel> => API.post("/label/create", params);
+export const createLabel = async (params: CreateLabelRequest): Promise<LabelResponse> =>
+  API.post("/label/create", params);
 
-// get label ids
-export const getLabelIds = async (params: getLabelIdsParams) =>
+// remove label
+export const removeLabel = async (id: string): Promise<LabelResponse> =>
+  API.patch(`/label/remove/${id}`);
+
+// get labels id(*)
+export const getLabelsId = async (params: GetLabelsIdRequest) =>
   await API.post("/label/getIds", params);
-
-// delete label
-export const deleteLabel = async (id: string): Promise<ResLabel> =>
-  API.delete(`/label/delete/${id}`);

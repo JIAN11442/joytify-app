@@ -1,41 +1,33 @@
 import { useEffect, useRef } from "react";
-import { AxiosResponse } from "axios";
-import { useMutation } from "@tanstack/react-query";
 import { LuLibrary } from "react-icons/lu";
 import { BiSearch } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { MdLibraryMusic, MdMusicNote } from "react-icons/md";
 
+import Menu from "./menu.component";
 import Icon from "./react-icons.component";
 import SidebarItem from "./sidebar-item.component";
-import Menu from "./menu.component";
 import InputSearchBar from "./input-searchbar.component";
 
-import AuthForOptions from "../constants/auth.constant";
-import { ResUser } from "../constants/axios-response.constant";
-import { MutationKey } from "../constants/query-client-key.constant";
-import useSidebarState from "../states/sidebar.state";
+import { useGetPlaylistsQuery } from "../hooks/playlist-query.hook";
+import { useCreatePlaylistMutation } from "../hooks/playlist-mutate.hook";
+import { AuthForOptions } from "@joytify/shared-types/constants";
+import { AuthUserResponse } from "@joytify/shared-types/types";
 import useUploadModalState from "../states/upload-modal.state";
 import useAuthModalState from "../states/auth-modal.state";
+import useSidebarState from "../states/sidebar.state";
 import useLibraryState from "../states/library.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { createPlaylist } from "../fetchs/playlist.fetch";
-import { usePlaylists } from "../hooks/playlist.hook";
-import { navigate } from "../lib/navigate.lib";
 
 type LibraryHeaderProps = {
-  user: AxiosResponse | ResUser | undefined;
+  authUser?: AuthUserResponse | null;
 };
 
-const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
+const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
   const addingMenuRef = useRef<HTMLDivElement>(null);
 
-  const {
-    collapseSideBarState,
-    floating,
-    setCollapseSideBarState,
-    setFloating,
-  } = useSidebarState();
+  const { collapseSideBarState, floating, setCollapseSideBarState, setFloating } =
+    useSidebarState();
   const { isCollapsed } = collapseSideBarState;
   const { openAuthModal } = useAuthModalState();
   const { openUploadModal } = useUploadModalState();
@@ -48,8 +40,8 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
     setLibrarySearchVal,
   } = useLibraryState();
 
-  const { refetch: playlistRefetch, playlists } =
-    usePlaylists(librarySearchVal);
+  const { playlists } = useGetPlaylistsQuery(librarySearchVal);
+  const { mutate: createPlaylistFn } = useCreatePlaylistMutation();
 
   // handle collapse sidebar
   const handleCollapseSidebar = () => {
@@ -87,9 +79,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
   };
 
   // handle active upload music modal
-  const handleActiveUploadMusicModal = (
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleActiveUploadMusicModal = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     timeoutForDelay(() => {
@@ -97,38 +87,19 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
         setFloating(false);
       }
 
-      return user ? openUploadModal() : openAuthModal(AuthForOptions.SIGN_IN);
+      return authUser ? openUploadModal() : openAuthModal(AuthForOptions.SIGN_IN);
     });
   };
 
-  // create playlist mutation
-  const { mutate: createUserPlaylist } = useMutation({
-    mutationKey: [MutationKey.CREATE_USER_PLAYLIST],
-    mutationFn: createPlaylist,
-    onSuccess: (data) => {
-      const { _id: id } = data;
-      const route = `/playlist/${id}`;
-
-      // refetch playlist query
-      playlistRefetch();
-
-      // navigate to target playlist page
-      navigate(route);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-
   // handle create new playlist
   const handleCreateNewPlaylist = () => {
-    createUserPlaylist(null);
+    timeoutForDelay(() => {
+      createPlaylistFn();
+    });
   };
 
   // handle library playlist search on change
-  const handleOnChangeLibrarySearch = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleOnChangeLibrarySearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
     timeoutForDelay(() => {
@@ -185,11 +156,11 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
           {/* Search button */}
           <button
             onClick={handleActiveSearchBar}
-            disabled={!user}
+            disabled={!authUser}
             className={`
               p-2
               ${
-                user
+                authUser
                   ? `
                   group
                   rounded-full
@@ -235,11 +206,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ user }) => {
                 name={AiOutlinePlus}
                 opts={{ size: !isCollapsed || floating ? 20 : 24 }}
                 className={`
-                  ${
-                    isCollapsed && !floating
-                      ? "text-neutral-700"
-                      : "text-neutral-400"
-                  }
+                  ${isCollapsed && !floating ? "text-neutral-700" : "text-neutral-400"}
                   group-hover:text-white  
                 `}
               />

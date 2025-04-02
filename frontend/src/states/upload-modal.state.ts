@@ -1,69 +1,73 @@
 import { create } from "zustand";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { OptionType } from "../components/multi-select-input-box.component";
-import LabelOptions, { LabelType } from "../constants/label.constant";
-import {
-  RefactorResLabel,
-  ResAlbum,
-} from "../constants/axios-response.constant";
+import { LabelOptions } from "@joytify/shared-types/constants";
+import { LabelOptionsType, RefactorLabelResponse } from "@joytify/shared-types/types";
 
 export type RefetchType<T> = (
   options?: RefetchOptions
 ) => Promise<QueryObserverResult<T | undefined, Error>>;
 
-type LabelModalType = {
-  type: LabelType;
+type ActiveCreateLabelModal = {
+  type: LabelOptionsType;
   active: boolean;
   options: OptionType | OptionType[] | null;
-  labelRefetch: RefetchType<RefactorResLabel> | null;
+  labelRefetch: RefetchType<RefactorLabelResponse> | null;
 };
 
-type PlaylistModalType = {
+type ActiveCreatePlaylistModal = {
   active: boolean;
   options: string[] | null;
 };
 
-type AlbumModalType = {
+type ActiveCreateAlbumModal = {
   active: boolean;
   options: string[] | null;
-  albumRefetch: RefetchType<ResAlbum[]> | null;
 };
 
 type UploadModalState = {
   activeUploadModal: boolean;
   activeAdvancedSettings: boolean;
-  activeCreateLabelModal: LabelModalType;
-  activeCreatePlaylistModal: PlaylistModalType;
-  activeCreateAlbumModal: AlbumModalType;
+  activeCreateLabelModal: ActiveCreateLabelModal;
+  activeCreatePlaylistModal: ActiveCreatePlaylistModal;
+  activeCreateAlbumModal: ActiveCreateAlbumModal;
 
   openUploadModal: () => void;
   closeUploadModal: () => void;
+  closeCreateAlbumModal: () => void;
+  closeCreateLabelModal: () => void;
+  closeCreatePlaylistModal: () => void;
+
   setActiveAdvancedSettings: (active: boolean) => void;
-  setActiveCreateLabelModal: (state: LabelModalType) => void;
-  setActiveCreatePlaylistModal: (state: PlaylistModalType) => void;
-  setActiveCreateAlbumModal: (state: AlbumModalType) => void;
+  setActiveCreateLabelModal: (state: ActiveCreateLabelModal) => void;
+  setActiveCreatePlaylistModal: (state: ActiveCreatePlaylistModal) => void;
+  setActiveCreateAlbumModal: (state: ActiveCreateAlbumModal) => void;
+};
+
+const initialLabelModalState: ActiveCreateLabelModal = {
+  type: LabelOptions.NULL,
+  active: false,
+  options: null,
+  labelRefetch: null,
 };
 
 const useUploadModalState = create<UploadModalState>((set) => ({
   activeUploadModal: false,
   activeAdvancedSettings: false,
-  activeCreateLabelModal: {
-    type: LabelOptions.NULL,
-    active: false,
-    options: null,
-    labelRefetch: null,
-  },
+  activeCreateLabelModal: initialLabelModalState,
+  activeCreateAlbumModal: { active: false, options: null },
   activeCreatePlaylistModal: { active: false, options: null },
-  activeCreateAlbumModal: { active: false, options: null, albumRefetch: null },
 
   openUploadModal: () => set({ activeUploadModal: true }),
-  closeUploadModal: () =>
-    set({ activeUploadModal: false, activeAdvancedSettings: false }),
-  setActiveAdvancedSettings: (active) =>
-    set({ activeAdvancedSettings: active }),
+  closeUploadModal: () => set({ activeUploadModal: false, activeAdvancedSettings: false }),
+  closeCreateLabelModal: () => set({ activeCreateLabelModal: initialLabelModalState }),
+  closeCreateAlbumModal: () => set({ activeCreateAlbumModal: { active: false, options: null } }),
+  closeCreatePlaylistModal: () =>
+    set({ activeCreatePlaylistModal: { active: false, options: null } }),
+
+  setActiveAdvancedSettings: (active) => set({ activeAdvancedSettings: active }),
   setActiveCreateLabelModal: (state) => set({ activeCreateLabelModal: state }),
-  setActiveCreatePlaylistModal: (state) =>
-    set({ activeCreatePlaylistModal: state }),
+  setActiveCreatePlaylistModal: (state) => set({ activeCreatePlaylistModal: state }),
   setActiveCreateAlbumModal: (state) => set({ activeCreateAlbumModal: state }),
 }));
 

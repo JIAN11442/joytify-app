@@ -3,14 +3,14 @@ import { IoTimeOutline } from "react-icons/io5";
 import Icon from "./react-icons.component";
 import SongListItem from "./song-list-item.component";
 
+import useOnPlay from "../hooks/play.hook";
+import { ArrangementOptions } from "../constants/arrangement.constant";
+import { RefactorSongResponse } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
 import usePlaylistState from "../states/playlist.state";
-import { RefactorResSong } from "../constants/axios-response.constant";
-import ArrangementOptions from "../constants/arrangement.constant";
-import useOnPlay from "../hooks/play.hook";
 
 type SongsListProps = {
-  songs: RefactorResSong[];
+  songs: RefactorSongResponse[];
 };
 
 const SongsList: React.FC<SongsListProps> = ({ songs }) => {
@@ -18,8 +18,7 @@ const SongsList: React.FC<SongsListProps> = ({ songs }) => {
   const { isCollapsed } = collapseSideBarState;
 
   const { songArrangementType } = usePlaylistState();
-
-  const compact = ArrangementOptions.COMPACT;
+  const { COMPACT } = ArrangementOptions;
 
   const { onPlay } = useOnPlay(songs);
 
@@ -51,7 +50,7 @@ const SongsList: React.FC<SongsListProps> = ({ songs }) => {
           className={`
             flex-1
             min-w-[100px]
-            ${songArrangementType === compact ? "block" : "hidden"}
+            ${songArrangementType === COMPACT ? "block" : "hidden"}
           `}
         >
           Artist
@@ -62,7 +61,7 @@ const SongsList: React.FC<SongsListProps> = ({ songs }) => {
           className={`
             flex-1
             min-w-[100px]
-            ${songArrangementType === compact && "max-sm:hidden"}
+            ${songArrangementType === COMPACT && "max-sm:hidden"}
           `}
         >
           Album
@@ -89,12 +88,7 @@ const SongsList: React.FC<SongsListProps> = ({ songs }) => {
       <div>
         {songs &&
           songs.map((song, index) => (
-            <SongListItem
-              key={song._id}
-              index={index}
-              song={song}
-              onPlay={onPlay}
-            />
+            <SongListItem key={song._id} index={index} song={song} onPlay={onPlay} />
           ))}
       </div>
     </div>

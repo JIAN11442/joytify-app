@@ -12,7 +12,6 @@ import useNavbarState from "../states/navbar.state";
 import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { navigate } from "../lib/navigate.lib";
 
 const Navbar = () => {
   const [searchBarVal, setSearchBarVal] = useState("");
@@ -38,7 +37,6 @@ const Navbar = () => {
   const handleActiveNavbarSearchBar = () => {
     timeoutForDelay(() => {
       setActiveNavSearchBar(!activeNavSearchBar);
-      navigate("/search");
     });
   };
 
@@ -135,6 +133,7 @@ const Navbar = () => {
               `}
             >
               <NavbarLink
+                to="/search"
                 icon={{ name: BiSearch }}
                 onClick={handleActiveNavbarSearchBar}
               />

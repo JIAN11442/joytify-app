@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { SoundOutputType } from "../hooks/sound.hook";
-import { RefactorResSong } from "../constants/axios-response.constant";
+import { RefactorSongResponse } from "@joytify/shared-types/types";
 
 type SoundState = {
   activeSongId: string;
-  songToPlay: RefactorResSong | null;
+  songToPlay: RefactorSongResponse | null;
   songIds: string[];
   sound: SoundOutputType | null;
   isPlaying: boolean;
@@ -12,7 +12,7 @@ type SoundState = {
   shuffleSongIds: ((id: string) => void) | null;
 
   setActiveSongId: (id: string) => void;
-  setSongToPlay: (song: RefactorResSong | null) => void;
+  setSongToPlay: (song: RefactorSongResponse | null) => void;
   setSongIds: (ids: string[]) => void;
   setSound: (sound: SoundOutputType | null) => void;
   setIsPlaying: (state: boolean) => void;
