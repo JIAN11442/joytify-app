@@ -23,7 +23,7 @@ const SidebarItem = forwardRef<HTMLDivElement, SidebarItemProps>(
     const navigate = useNavigate();
     const active = window.location.pathname === href;
 
-    const { floating } = useSidebarState();
+    const { activeFloatingSidebar } = useSidebarState();
 
     const handleOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
       if (href) {
@@ -45,15 +45,22 @@ const SidebarItem = forwardRef<HTMLDivElement, SidebarItemProps>(
           gap-x-4
           items-center
           cursor-pointer
+          rounded-md
           ${
             active
-              ? "text-white"
-              : collapse && !floating
+              ? `
+                bg-gradient-to-r
+                from-neutral-900 from-[0%]
+                via-green-400/50 via-[50%]
+                to-neutral-900 to-[100%]
+              `
+              : collapse && !activeFloatingSidebar
               ? "text-neutral-700"
-              : "text-neutral-400"
+              : "text-neutral-400 hover:text-white"
           }
-          hover:text-white
-          transition
+          hover:bg-neutral-800/50
+          gradient-animation
+          transition-all
         `,
           className
         )}
@@ -62,12 +69,11 @@ const SidebarItem = forwardRef<HTMLDivElement, SidebarItemProps>(
         <Icon name={name} opts={{ size: 24, ...opts }} />
 
         {/* Label */}
-        {(label?.length && !collapse) || floating ? (
+        {(label?.length && !collapse) || activeFloatingSidebar ? (
           <p
             className={twMerge(
               `
-                text-lgc
-                font-bold
+                ${active ? "font-semibold" : "font-normal"}
                 truncate
                 `,
               tw?.label

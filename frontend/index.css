@@ -306,7 +306,7 @@ body,
   }
 
   .gradient-animation {
-    background-size: 200% 200%;
-    animation: gradientAnimation 6s ease infinite alternate;
+    background-size: 250% 250%;
+    animation: gradientAnimation 8s ease infinite alternate;
   }
 }

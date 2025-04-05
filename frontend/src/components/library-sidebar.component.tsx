@@ -3,7 +3,7 @@ import LibraryBody from "./library-body.component";
 import LibraryHeader from "./library-header.component";
 import useUserState from "../states/user.state";
 
-const Library = () => {
+const LibrarySidebar = () => {
   const { authUser, isFetchingAuthUser } = useUserState();
 
   return (
@@ -25,4 +25,4 @@ const Library = () => {
   );
 };
 
-export default Library;
+export default LibrarySidebar;

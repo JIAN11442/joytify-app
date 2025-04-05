@@ -12,6 +12,7 @@ import * as Im from "react-icons/im";
 import * as Io from "react-icons/io";
 import * as Io5 from "react-icons/io5";
 import * as Ti from "react-icons/ti";
+import * as Tb from "react-icons/tb";
 import * as Wi from "react-icons/wi";
 import * as Si from "react-icons/si";
 import * as Sl from "react-icons/sl";
@@ -35,6 +36,7 @@ const IconModules = {
   Io,
   Io5,
   Ti,
+  Tb,
   Wi,
   Si,
   Sl,

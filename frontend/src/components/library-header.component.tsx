@@ -11,6 +11,7 @@ import InputSearchBar from "./input-searchbar.component";
 
 import { useGetPlaylistsQuery } from "../hooks/playlist-query.hook";
 import { useCreatePlaylistMutation } from "../hooks/playlist-mutate.hook";
+import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { AuthForOptions } from "@joytify/shared-types/constants";
 import { AuthUserResponse } from "@joytify/shared-types/types";
 import useUploadModalState from "../states/upload-modal.state";
@@ -26,8 +27,12 @@ type LibraryHeaderProps = {
 const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
   const addingMenuRef = useRef<HTMLDivElement>(null);
 
-  const { collapseSideBarState, floating, setCollapseSideBarState, setFloating } =
-    useSidebarState();
+  const {
+    collapseSideBarState,
+    activeFloatingSidebar,
+    setCollapseSideBarState,
+    setActiveFloatingSidebar,
+  } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
   const { openAuthModal } = useAuthModalState();
   const { openUploadModal } = useUploadModalState();
@@ -42,17 +47,22 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
 
   const { playlists } = useGetPlaylistsQuery(librarySearchVal);
   const { mutate: createPlaylistFn } = useCreatePlaylistMutation();
+  const { mutate: updateUserPreferences } = useUpdateUserPreferencesMutation();
 
   // handle collapse sidebar
   const handleCollapseSidebar = () => {
-    if (!floating) {
+    if (!activeFloatingSidebar) {
       setCollapseSideBarState({
         ...collapseSideBarState,
         isCollapsed: !isCollapsed,
-        changeForScreenResize: isCollapsed,
+        isManualToggle: true,
+      });
+
+      updateUserPreferences({
+        collapseSidebar: !isCollapsed,
       });
     } else {
-      setFloating(false);
+      setActiveFloatingSidebar(false);
     }
   };
 
@@ -83,8 +93,8 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
     e.preventDefault();
 
     timeoutForDelay(() => {
-      if (floating) {
-        setFloating(false);
+      if (activeFloatingSidebar) {
+        setActiveFloatingSidebar(false);
       }
 
       return authUser ? openUploadModal() : openAuthModal(AuthForOptions.SIGN_IN);
@@ -106,6 +116,9 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
       setLibrarySearchVal(value);
     });
   };
+
+  const isSidebarExpandedOrFloating = !isCollapsed || activeFloatingSidebar;
+  const isNonFloatingSidebarCollapsed = isCollapsed && !activeFloatingSidebar;
 
   // while sidebar is collapsed, clean search value and close the searchbar
   useEffect(() => {
@@ -129,7 +142,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
       <div
         className={`
           flex
-          ${!isCollapsed ? "relative" : !floating && "flex-col"}
+          ${!isCollapsed ? "relative" : !activeFloatingSidebar && "flex-col"}
           pt-4
           gap-y-4
           items-center
@@ -143,6 +156,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
           onClick={handleCollapseSidebar}
           collapse={isCollapsed}
           className={`w-fit`}
+          tw={{ label: "text-lgc" }}
         />
 
         {/* Buttons */}
@@ -170,7 +184,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
                 `
                   : "opacity-50"
               }
-              ${!isCollapsed || floating ? "flex" : "hidden"} 
+              ${isSidebarExpandedOrFloating ? "flex" : "hidden"} 
             `}
           >
             <Icon
@@ -191,7 +205,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
                 group
                 outline-none
                 ${
-                  (!isCollapsed || floating) &&
+                  isSidebarExpandedOrFloating &&
                   `
                     p-2
                     rounded-full
@@ -204,9 +218,9 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
             >
               <Icon
                 name={AiOutlinePlus}
-                opts={{ size: !isCollapsed || floating ? 20 : 24 }}
+                opts={{ size: isSidebarExpandedOrFloating ? 20 : 24 }}
                 className={`
-                  ${isCollapsed && !floating ? "text-neutral-700" : "text-neutral-400"}
+                  ${isNonFloatingSidebarCollapsed ? "text-neutral-700" : "text-neutral-400"}
                   group-hover:text-white  
                 `}
               />
@@ -263,7 +277,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
       <InputSearchBar
         id="library-searchbar"
         placeholder="Search your playlist"
-        visible={activeLibrarySearchBar && (!isCollapsed || floating)}
+        visible={activeLibrarySearchBar && isSidebarExpandedOrFloating}
         icon={{ name: BiSearch }}
         autoCloseFn={{
           active: true,

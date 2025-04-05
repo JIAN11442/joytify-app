@@ -10,14 +10,15 @@ type PlaylistItemProps = {
 const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
   const { _id, title, cover_image, songs } = playlist;
 
-  const { collapseSideBarState, floating, setFloating } = useSidebarState();
+  const { collapseSideBarState, activeFloatingSidebar, setActiveFloatingSidebar } =
+    useSidebarState();
   const { isCollapsed } = collapseSideBarState;
 
   // handle close floating menu
   const handleCloseFloatingMenu = () => {
-    if (floating) {
+    if (activeFloatingSidebar) {
       timeoutForDelay(() => {
-        setFloating(false);
+        setActiveFloatingSidebar(false);
       });
     }
   };
@@ -37,7 +38,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
             ? "bg-neutral-800 hover:bg-neutral-700/50"
             : "hover:bg-neutral-800/50"
         }
-        ${isCollapsed && !floating ? "p-0 hover:opacity-80" : "p-2"}
+        ${isCollapsed && !activeFloatingSidebar ? "p-0 hover:opacity-80" : "p-2"}
       `}
     >
       {/* cover image */}
@@ -53,7 +54,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
       />
 
       {/* content */}
-      {(!isCollapsed || floating) && (
+      {(!isCollapsed || activeFloatingSidebar) && (
         <div
           className={`
             flex

@@ -1,13 +1,15 @@
 import { useCallback, useEffect } from "react";
-import useSidebarState from "../states/sidebar.state";
+
+import useUserState from "../states/user.state";
 import useSoundState from "../states/sound.state";
+import useNavbarState from "../states/navbar.state";
+import useLibraryState from "../states/library.state";
+import useSidebarState from "../states/sidebar.state";
+import usePlaylistState from "../states/playlist.state";
+import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import { isEditableElement } from "../lib/element.lib";
 import { navigate } from "../lib/navigate.lib";
-import useNavbarState from "../states/navbar.state";
-import useLibraryState from "../states/library.state";
-import usePlaylistState from "../states/playlist.state";
-import useUserState from "../states/user.state";
 
 type ShortcutKeysProps = {
   children: React.ReactNode;
@@ -19,16 +21,20 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
   const { isCollapsed } = collapseSideBarState;
   const { isPlaying, sound, activeSongId } = useSoundState();
   const { activeNavSearchBar, setActiveNavSearchBar } = useNavbarState();
-  const { setActiveAddingOptions, setActiveLibrarySearchBar } =
-    useLibraryState();
-  const { setActivePlaylistEditOptionsMenu, setActivePlaylistListOptionsMenu } =
-    usePlaylistState();
+  const { setActiveAddingOptions, setActiveLibrarySearchBar } = useLibraryState();
+  const { setActivePlaylistEditOptionsMenu, setActivePlaylistListOptionsMenu } = usePlaylistState();
+
+  const { mutate: updateUserPreferences } = useUpdateUserPreferencesMutation();
 
   const toggleSidebar = useCallback(() => {
     timeoutForDelay(() => {
       setCollapseSideBarState({
         isCollapsed: !isCollapsed,
-        changeForScreenResize: false,
+        isManualToggle: true,
+      });
+
+      updateUserPreferences({
+        collapseSidebar: !isCollapsed,
       });
     });
   }, [isCollapsed]);

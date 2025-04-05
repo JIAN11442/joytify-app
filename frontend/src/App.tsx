@@ -11,6 +11,7 @@ import Sidebar from "./components/sidebar.component";
 import { setNavigate } from "./lib/navigate.lib";
 import ProfilePage from "./pages/profile.page";
 import ProfileSectionPage from "./pages/profile-section.page";
+import SettingsPage from "./pages/settings.page";
 
 function App() {
   // original navigate function can't be using outside of the component
@@ -29,6 +30,11 @@ function App() {
           <Route path="/playlist/:id" element={<PlaylistPage />} />
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/profile/:id/:section" element={<ProfileSectionPage />} />
+          <Route path="/settings">
+            <Route index element={<SettingsPage />} />
+            <Route path="/settings/account" element={<p>Account</p>} />
+            <Route path="/settings/notifications" element={<p>Notifications</p>} />
+          </Route>
         </Route>
       </Route>
 

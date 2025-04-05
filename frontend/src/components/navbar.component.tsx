@@ -16,7 +16,7 @@ import { timeoutForDelay } from "../lib/timeout.lib";
 const Navbar = () => {
   const [searchBarVal, setSearchBarVal] = useState("");
 
-  const { floating, setFloating } = useSidebarState();
+  const { activeFloatingSidebar, setActiveFloatingSidebar } = useSidebarState();
   const {
     activeNavSearchBar,
     adjustNavSearchBarPosition,
@@ -29,7 +29,7 @@ const Navbar = () => {
   // handle active float sidebar
   const handleActiveFloatSidebar = () => {
     timeoutForDelay(() => {
-      setFloating(!floating);
+      setActiveFloatingSidebar(!activeFloatingSidebar);
     });
   };
 
