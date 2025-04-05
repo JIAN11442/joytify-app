@@ -3,7 +3,7 @@ import { ErrorRequestHandler } from "express";
 
 import { AppError } from "@joytify/shared-types/classes";
 import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
-import { clearAuthCookies, cookiePath, setUnauthorizedCookies } from "../utils/cookies.util";
+import { clearAuthCookies, refreshCookiePath, setUnauthorizedCookies } from "../utils/cookies.util";
 import { deleteAwsFileUrl } from "../utils/aws-s3-url.util";
 import awsUrlParser from "../utils/aws-url-parser.util";
 import admin from "../config/firebase.config";
@@ -14,7 +14,7 @@ const { INVALID_FIREBASE_CREDENTIAL, CREATE_SONG_ERROR } = ErrorCode;
 const errorHandler = (): ErrorRequestHandler => {
   return async (error, req, res, next) => {
     // clear the cookies while refresh path throws an error
-    if (req.path === cookiePath) {
+    if (req.path === refreshCookiePath) {
       clearAuthCookies(res);
     }
 

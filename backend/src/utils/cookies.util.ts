@@ -11,6 +11,7 @@ type AuthCookiesParams = {
   res: Response;
   accessToken: string;
   refreshToken: string;
+  ui_prefs: string;
 };
 
 type VerificationCookiesParams = {
@@ -23,6 +24,11 @@ type UnauthorizedCookiesParams = {
   redirectUrl: string;
 };
 
+type UserPreferenceCookieParams = {
+  res: Response;
+  ui_prefs: string;
+};
+
 // ===================== Default =====================
 
 const secure = NODE_ENV !== "development";
@@ -33,7 +39,7 @@ const defaults: CookieOptions = {
   secure,
 };
 
-export const cookiePath = `${USE_NGINX_PROXY ? "/api" : ""}/auth/refresh`;
+export const refreshCookiePath = `${USE_NGINX_PROXY ? "/api" : ""}/auth/refresh`;
 
 // ===================== Cookies Options =====================
 
@@ -45,7 +51,7 @@ export const getAccessTokenCookieOptions = (): CookieOptions => ({
 export const getRefreshTokenCookieOptions = (): CookieOptions => ({
   ...defaults,
   expires: thirtyDaysFormNow(),
-  path: cookiePath, // only in this path can get the token
+  path: refreshCookiePath, // only in this path can get the token
 });
 
 export const getUnauthorizedCookieOptions = (): CookieOptions => ({
@@ -58,40 +64,39 @@ export const getVerificationCookieOptions = (): CookieOptions => ({
   expires: tenMinutesFromNow(),
 });
 
+export const getUserPreferenceCookieOptions = (): CookieOptions => ({
+  ...defaults,
+  expires: thirtyDaysFormNow(),
+});
+
 // ===================== Set Cookies =====================
-export const setAuthCookies = ({
-  res,
-  accessToken,
-  refreshToken,
-}: AuthCookiesParams) => {
+
+export const setAuthCookies = ({ res, accessToken, refreshToken, ui_prefs }: AuthCookiesParams) => {
   return clearUnauthorizedCookies(res)
     .cookie("accessToken", accessToken, getAccessTokenCookieOptions())
-    .cookie("refreshToken", refreshToken, getRefreshTokenCookieOptions());
+    .cookie("refreshToken", refreshToken, getRefreshTokenCookieOptions())
+    .cookie("ui_prefs", ui_prefs, getUserPreferenceCookieOptions());
 };
 
-export const setUnauthorizedCookies = ({
-  res,
-  redirectUrl,
-}: UnauthorizedCookiesParams) => {
-  return res.cookie(
-    "unauthorized",
-    redirectUrl,
-    getUnauthorizedCookieOptions()
-  );
+export const setUnauthorizedCookies = ({ res, redirectUrl }: UnauthorizedCookiesParams) => {
+  return res.cookie("unauthorized", redirectUrl, getUnauthorizedCookieOptions());
 };
 
-export const setVerificationCookies = ({
-  res,
-  sessionToken,
-}: VerificationCookiesParams) => {
+export const setVerificationCookies = ({ res, sessionToken }: VerificationCookiesParams) => {
   return res.cookie("vrfctToken", sessionToken, getVerificationCookieOptions());
 };
 
+export const setUserPreferenceCookie = ({ res, ui_prefs }: UserPreferenceCookieParams) => {
+  return res.cookie("ui_prefs", ui_prefs, getUserPreferenceCookieOptions());
+};
+
 // ===================== Clear Cookies =====================
+
 export const clearAuthCookies = (res: Response) => {
   return res
     .clearCookie("accessToken")
-    .clearCookie("refreshToken", { path: cookiePath });
+    .clearCookie("refreshToken", { path: refreshCookiePath })
+    .clearCookie("ui_prefs");
 };
 
 export const clearUnauthorizedCookies = (res: Response) => {

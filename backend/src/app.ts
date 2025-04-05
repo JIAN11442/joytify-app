@@ -12,13 +12,14 @@ import labelRoute from "./routes/label.route";
 import musicianRoute from "./routes/musician.route";
 import albumRoute from "./routes/album.route";
 import playbackRoute from "./routes/playback.route";
+import verificationRoute from "./routes/verification.route";
+import cookieRoute from "./routes/cookie.route";
 
 import authenticate from "./middlewares/authenticate.middleware";
 import firebaseInitialize from "./middlewares/firebase.middleware";
 import errorHandler from "./middlewares/error-handler.middleware";
 
 import { NODE_ENV, ORIGIN_APP } from "./constants/env-validate.constant";
-import verificationRoute from "./routes/verification.route";
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use("/label", authenticate, labelRoute);
 app.use("/musician", authenticate, musicianRoute);
 app.use("/album", authenticate, albumRoute);
 app.use("/playback", authenticate, playbackRoute);
+app.use("/cookie", cookieRoute);
 
 // error handler
 app.use(errorHandler());

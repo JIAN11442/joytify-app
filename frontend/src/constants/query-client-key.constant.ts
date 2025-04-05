@@ -25,6 +25,7 @@ export enum MutationKey {
   SEND_RESET_PASSWORD_EMAIL = "send-reset-password-email",
   VERIFY_VERIFICATION_CODE = "verify-verification-code",
   RESET_USER_PASSWORD = "reset-user-password",
+  UPDATE_USER_PREFERENCES = "update-user-preferences",
 }
 
 export enum QueryKey {
@@ -39,4 +40,5 @@ export enum QueryKey {
   GET_ALL_SONGS = "get-all-songs",
   GET_PROFILE_USER_INFO = "get-profile-user-info",
   VERIFY_RESET_PASSWORD_LINK = "verify-reset-password-link",
+  GET_USER_PREFERENCES = "get-user-preferences",
 }

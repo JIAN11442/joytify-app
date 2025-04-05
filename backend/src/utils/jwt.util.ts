@@ -5,24 +5,29 @@ import { UserDocument } from "../models/user.model";
 import {
   ACCESS_SECRET_KEY,
   REFRESH_SECRET_KEY,
+  USER_PREFERENCE_SECRET_KEY,
   VERIFICATION_SECRET_KEY,
 } from "../constants/env-validate.constant";
 
 // ===================== Defaults =====================
+
 const defaults: SignOptions = {
   audience: ["user"],
 };
 
 // ===================== Types =====================
+
 type SignOptionsAndSecret = SignOptions & { secret: string };
 type VerifyOptionsAndSecret = VerifyOptions & { secret: string };
 
 type TokenPayload =
   | AccessTokenPayload
   | RefreshTokenPayload
-  | VerificationTokenPayload;
+  | VerificationTokenPayload
+  | UserPreferenceTokenPayload;
 
 // ===================== Payload =====================
+
 export type RefreshTokenPayload = {
   sessionId: SessionDocument["_id"];
 };
@@ -34,6 +39,10 @@ export interface AccessTokenPayload extends RefreshTokenPayload {
 
 export type VerificationTokenPayload = {
   sessionId: string;
+};
+
+export type UserPreferenceTokenPayload = {
+  collapseSidebar: boolean;
 };
 
 // ===================== Options =====================
@@ -55,11 +64,14 @@ export const VerificationTokenSignOptions: SignOptionsAndSecret = {
   secret: VERIFICATION_SECRET_KEY,
 };
 
+export const UserPreferenceSignOptions: SignOptionsAndSecret = {
+  ...defaults,
+  expiresIn: "30d",
+  secret: USER_PREFERENCE_SECRET_KEY,
+};
+
 // ===================== Sign and Verify =====================
-export const signToken = (
-  payload: TokenPayload,
-  options: SignOptionsAndSecret
-) => {
+export const signToken = (payload: TokenPayload, options: SignOptionsAndSecret) => {
   const { secret, ...signOpts } = options;
 
   return jwt.sign(payload, secret, signOpts);

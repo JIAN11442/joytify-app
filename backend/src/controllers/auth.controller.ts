@@ -18,6 +18,7 @@ import { RegisterRequest, LoginRequest } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 import {
   clearAuthCookies,
+  clearUnauthorizedCookies,
   getAccessTokenCookieOptions,
   getRefreshTokenCookieOptions,
   setAuthCookies,
@@ -37,9 +38,9 @@ export const registerHandler: RequestHandler = async (req, res, next) => {
       userAgent: req.headers["user-agent"],
     });
 
-    const { user, accessToken, refreshToken } = await createAccount(request);
+    const { user, accessToken, refreshToken, ui_prefs } = await createAccount(request);
 
-    return setAuthCookies({ res, accessToken, refreshToken }).status(CREATED).json(user);
+    return setAuthCookies({ res, accessToken, refreshToken, ui_prefs }).status(CREATED).json(user);
   } catch (error) {
     next(error);
   }
@@ -53,9 +54,9 @@ export const loginHandler: RequestHandler = async (req, res, next) => {
       userAgent: req.headers["user-agent"],
     });
 
-    const { accessToken, refreshToken } = await loginUser(request);
+    const { accessToken, refreshToken, ui_prefs } = await loginUser(request);
 
-    return setAuthCookies({ res, accessToken, refreshToken })
+    return setAuthCookies({ res, accessToken, refreshToken, ui_prefs })
       .status(OK)
       .json({ message: "Login successfully" });
   } catch (error) {
@@ -92,7 +93,7 @@ export const refreshTokensHandler: RequestHandler = async (req, res, next) => {
       res.cookie("refreshToken", newRefreshToken, getRefreshTokenCookieOptions());
     }
 
-    return res
+    return clearUnauthorizedCookies(res)
       .cookie("accessToken", newAccessToken, getAccessTokenCookieOptions())
       .status(OK)
       .json({
@@ -110,9 +111,9 @@ export const registerWithThirdPartyHandler: RequestHandler = async (req, res, ne
     const { token } = firebaseAccessTokenZodSchema.parse(req.body);
 
     // register user with third party
-    const { user, accessToken, refreshToken } = await registerUserWithThirdParty(token);
+    const { user, accessToken, refreshToken, ui_prefs } = await registerUserWithThirdParty(token);
 
-    return setAuthCookies({ res, refreshToken, accessToken }).status(CREATED).json(user);
+    return setAuthCookies({ res, refreshToken, accessToken, ui_prefs }).status(CREATED).json(user);
   } catch (error) {
     next(error);
   }
@@ -125,9 +126,9 @@ export const loginWithThirdPartyHandler: RequestHandler = async (req, res, next)
     const { token } = firebaseAccessTokenZodSchema.parse(req.body);
 
     // verify that to get user info
-    const { accessToken, refreshToken } = await loginUserWithThirdParty(token);
+    const { accessToken, refreshToken, ui_prefs } = await loginUserWithThirdParty(token);
 
-    return setAuthCookies({ res, refreshToken, accessToken })
+    return setAuthCookies({ res, refreshToken, accessToken, ui_prefs })
       .status(OK)
       .json({ message: "Login successfully" });
   } catch (error) {

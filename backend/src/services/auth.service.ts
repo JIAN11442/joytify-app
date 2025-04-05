@@ -10,6 +10,7 @@ import {
   RefreshTokenPayload,
   RefreshTokenSignOptions,
   signToken,
+  UserPreferenceSignOptions,
   verifyToken,
 } from "../utils/jwt.util";
 
@@ -58,7 +59,7 @@ export const createAccount = async (data: CreateAccountServiceRequest) => {
     expiresAt: thirtyDaysFormNow(),
   });
 
-  // sign access token and refresh token
+  // sign access token
   const accessToken = signToken(
     {
       userId: user.id,
@@ -68,10 +69,14 @@ export const createAccount = async (data: CreateAccountServiceRequest) => {
     AccessTokenSignOptions
   );
 
+  // sign refresh token
   const refreshToken = signToken({ sessionId: session.id }, RefreshTokenSignOptions);
 
+  // sign user preferences
+  const ui_prefs = signToken({ collapseSidebar: false }, UserPreferenceSignOptions);
+
   // return user and tokens
-  return { user: user.omitPassword(), accessToken, refreshToken };
+  return { user: user.omitPassword(), accessToken, refreshToken, ui_prefs };
 };
 
 // login service
@@ -119,7 +124,7 @@ export const loginUser = async (data: LoginServiceRequest) => {
     expiresAt: thirtyDaysFormNow(),
   });
 
-  // sign access token and refresh token
+  // sign access token
   const accessToken = signToken(
     {
       userId: user.id,
@@ -129,10 +134,14 @@ export const loginUser = async (data: LoginServiceRequest) => {
     AccessTokenSignOptions
   );
 
+  // sign refresh token
   const refreshToken = signToken({ sessionId: session.id }, RefreshTokenSignOptions);
 
+  // sign user preferences
+  const ui_prefs = signToken({ collapseSidebar: false }, UserPreferenceSignOptions);
+
   // return tokens
-  return { accessToken, refreshToken };
+  return { accessToken, refreshToken, ui_prefs };
 };
 
 // logout service
@@ -252,14 +261,14 @@ export const loginUserWithThirdParty = async (token: string) => {
 
   // if those user is exist and auth for third party
   // then execute login service
-  const { accessToken, refreshToken } = await loginUser({
+  const { accessToken, refreshToken, ui_prefs } = await loginUser({
     email,
     password: "",
     authForThirdParty: true,
     firebaseUID: uid,
   });
 
-  return { accessToken, refreshToken };
+  return { accessToken, refreshToken, ui_prefs };
 };
 
 // register with third-party service
@@ -268,7 +277,7 @@ export const registerUserWithThirdParty = async (token: string) => {
   const { email, generatePicture, uid } = await verifyFirebaseAccessToken(token);
 
   // register service
-  const { user, accessToken, refreshToken } = await createAccount({
+  const { user, accessToken, refreshToken, ui_prefs } = await createAccount({
     email,
     password: "",
     profile_img: generatePicture,
@@ -276,5 +285,5 @@ export const registerUserWithThirdParty = async (token: string) => {
     firebaseUID: uid,
   });
 
-  return { user, accessToken, refreshToken };
+  return { user, accessToken, refreshToken, ui_prefs };
 };
