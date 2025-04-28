@@ -7,10 +7,31 @@ export const defaultLabelZodSchema = z.object({
   createIfAbsent: z.boolean().optional(),
 });
 
-export const labelZodSchema = defaultLabelZodSchema.extend({
+export const createLabelZodSchema = defaultLabelZodSchema.extend({
   label: stringZodSchema.min(0),
 });
 
-export const labelsZodSchema = defaultLabelZodSchema.extend({
-  labels: z.array(stringZodSchema.min(0)).optional(),
+export const getLabelsZodSchema = z.object({
+  types: z.preprocess(
+    (val: unknown) => {
+      if (typeof val === "string") {
+        return val.split(",").filter(Boolean);
+      } else if (Array.isArray(val)) {
+        return val;
+      } else {
+        return [];
+      }
+    },
+    z.array(z.nativeEnum(LabelOptions)).optional()
+  ),
+  sortBySequence: z
+    .union([z.literal("true").transform(() => true), z.literal("false").transform(() => false)])
+    .optional(),
 });
+
+export const getLabelIdZodSchema = defaultLabelZodSchema.extend({
+  default: z.boolean().optional(),
+  label: stringZodSchema.min(0),
+});
+
+export const labelTypesZodSchema = z.array(z.nativeEnum(LabelOptions));

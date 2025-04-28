@@ -1,17 +1,15 @@
 import { create } from "zustand";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { OptionType } from "../components/multi-select-input-box.component";
-import { LabelOptions } from "@joytify/shared-types/constants";
-import { LabelOptionsType, RefactorLabelResponse } from "@joytify/shared-types/types";
+import { RefactorLabelResponse } from "@joytify/shared-types/types";
 
 export type RefetchType<T> = (
   options?: RefetchOptions
 ) => Promise<QueryObserverResult<T | undefined, Error>>;
 
 type ActiveCreateLabelModal = {
-  type: LabelOptionsType;
   active: boolean;
-  options: OptionType | OptionType[] | null;
+  options: OptionType | null;
   labelRefetch: RefetchType<RefactorLabelResponse> | null;
 };
 
@@ -45,7 +43,6 @@ type UploadModalState = {
 };
 
 const initialLabelModalState: ActiveCreateLabelModal = {
-  type: LabelOptions.NULL,
   active: false,
   options: null,
   labelRefetch: null,

@@ -114,7 +114,7 @@ export const useGetProfileCollectionInfoQuery = (
         }
       }
     },
-    placeholderData: (prev) => prev,
+    placeholderData: (prev) => prev, // keep the previous data when the query is fetching
     staleTime: Infinity,
     enabled: !!userId && !isQueryError && page > 0,
     ...opts,

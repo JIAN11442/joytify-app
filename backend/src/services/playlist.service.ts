@@ -160,10 +160,16 @@ export const deletePlaylistById = async (params: DeletePlaylistServiceRequest) =
   }
 
   // delete target playlist
-  await PlaylistModel.findOneAndDelete({
+  const deletedPlaylist = await PlaylistModel.findOneAndDelete({
     _id: currentPlaylistId,
     user: userId,
   });
+
+  appAssert(
+    deletedPlaylist !== null,
+    INTERNAL_SERVER_ERROR,
+    `Failed to delete target playlist ${currentPlaylistId}`
+  );
 
   return { playlist };
 };

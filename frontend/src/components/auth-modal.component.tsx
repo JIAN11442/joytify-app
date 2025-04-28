@@ -5,8 +5,11 @@ import ForgotPasswordForm from "./forgot-password-form.component";
 import { AuthForOptions } from "@joytify/shared-types/constants";
 import useVerificationModalState from "../states/verification.state";
 import useAuthModalState from "../states/auth-modal.state";
+import { useState } from "react";
 
 const AuthModal = () => {
+  const [closeBtnDisabled, setCloseBtnDisabled] = useState(false);
+
   const { activeAuthModal, authFor, closeAuthModal } = useAuthModalState();
   const { activeVerificationCodeModal } = useVerificationModalState();
 
@@ -31,11 +34,15 @@ const AuthModal = () => {
       title={title}
       description={description}
       activeState={activeAuthModal}
-      closeModalFn={closeAuthModal}
-      autoCloseModalFn={!activeVerificationCodeModal.active}
+      closeModalFn={!closeBtnDisabled ? closeAuthModal : undefined}
+      autoCloseModal={!activeVerificationCodeModal.active}
       switchPage={{ initialPage: SIGN_UP, currentPage: authFor }}
     >
-      {authFor === FORGOT_PASSWORD ? <ForgotPasswordForm /> : <AuthForm />}
+      {authFor === FORGOT_PASSWORD ? (
+        <ForgotPasswordForm setModalCloseBtnDisabled={setCloseBtnDisabled} />
+      ) : (
+        <AuthForm setModalCloseBtnDisabled={setCloseBtnDisabled} />
+      )}
     </Modal>
   );
 };

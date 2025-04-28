@@ -1,9 +1,7 @@
-import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 
 import { useGetAuthUserInfoQuery } from "./user-query.hook";
-import { deregisterUserAccount } from "../fetchs/user.fetch";
 import { authWithThirdParty, logout, signin, signup } from "../fetchs/auth.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import { AuthForOptions } from "@joytify/shared-types/constants";
@@ -11,6 +9,8 @@ import { LoginRequest, RegisterRequest } from "@joytify/shared-types/types";
 import useAuthModalState from "../states/auth-modal.state";
 import queryClient from "../config/query-client.config";
 import { navigate } from "../lib/navigate.lib";
+import toast from "../lib/toast.lib";
+import useSoundState from "../states/sound.state";
 
 const { SIGN_IN } = AuthForOptions;
 
@@ -106,6 +106,7 @@ export const useThirdPartyAuthMutation = (opts: object = {}) => {
 // logout mutation
 export const useLogoutMutation = (opts: object = {}) => {
   const { clearQueriesData } = useAuthCommon();
+  const { setActiveSongId } = useSoundState();
 
   const mutation = useMutation({
     mutationKey: [MutationKey.LOGOUT],
@@ -114,39 +115,11 @@ export const useLogoutMutation = (opts: object = {}) => {
       // clear all queries data
       clearQueriesData();
 
+      // clear active song id
+      setActiveSongId("");
+
       // display success message
       toast.success("Logged out successfully");
-    },
-    onError: (error) => {
-      toast.error(error.message);
-      console.log(error);
-    },
-    ...opts,
-  });
-
-  return mutation;
-};
-
-// deregister mutation
-export const useDeregisterMutation = (opts: object = {}) => {
-  const { clearQueriesData } = useAuthCommon();
-
-  const mutation = useMutation({
-    mutationKey: [MutationKey.DEREGISTER_USER],
-    mutationFn: async () => {
-      try {
-        await deregisterUserAccount();
-        await logout();
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    onSuccess: () => {
-      // clear all queries data
-      clearQueriesData();
-
-      // display success message
-      toast.success("Deregister Successfully");
     },
     onError: (error) => {
       toast.error(error.message);

@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 
@@ -14,6 +13,7 @@ import { AppError } from "@joytify/shared-types/classes";
 import useVerificationModalState from "../states/verification.state";
 import useAuthModalState from "../states/auth-modal.state";
 import { navigate } from "../lib/navigate.lib";
+import toast from "../lib/toast.lib";
 
 const { VERIFICATION_CODE_RATE_LIMIT_EXCEEDED } = ErrorCode;
 
@@ -88,10 +88,10 @@ export const useSendResetPasswordEmailMutation = (opts: object = {}) => {
     mutationKey: [MutationKey.SEND_RESET_PASSWORD_EMAIL],
     mutationFn: sendResetPasswordEmail,
     onSuccess: () => {
-      // close auth modal
       closeAuthModal();
-      // display success toast
+
       toast.success("Reset password email sent successfully");
+
       // navigate to redirect path
       navigate(redirectPath, { replace: true });
     },

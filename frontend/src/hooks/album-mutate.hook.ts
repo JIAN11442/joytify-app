@@ -1,8 +1,8 @@
-import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { createAlbum, deleteAlbum, removeAlbum } from "../fetchs/album.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import queryClient from "../config/query-client.config";
+import toast from "../lib/toast.lib";
 
 // create album mutation
 export const useCreateAlbumMutation = (closeModalFn: () => void, opts: object = {}) => {

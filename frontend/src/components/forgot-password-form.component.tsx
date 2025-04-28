@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { MdAlternateEmail } from "react-icons/md";
 
@@ -14,7 +14,11 @@ import { isHighlight } from "../lib/icon-highlight.lib";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { emailRegex } from "../utils/regex";
 
-const ForgotPasswordForm = () => {
+type ForgotPasswordFormProps = {
+  setModalCloseBtnDisabled?: (state: boolean) => void;
+};
+
+const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBtnDisabled }) => {
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
   const { openAuthModal } = useAuthModalState();
@@ -48,6 +52,11 @@ const ForgotPasswordForm = () => {
   const onSubmit: SubmitHandler<DefaultForgotPasswordForm> = async (value) => {
     sendResetPasswordEmailFn(value.email);
   };
+
+  // handle parent modal close button disabled state through isPending
+  useEffect(() => {
+    setModalCloseBtnDisabled?.(isPending);
+  }, [isPending]);
 
   return (
     <form

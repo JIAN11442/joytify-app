@@ -1,10 +1,10 @@
-import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 
 import { createSongData } from "../fetchs/song.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import queryClient from "../config/query-client.config";
 import { navigate } from "../lib/navigate.lib";
+import toast from "../lib/toast.lib";
 
 // create song mutation
 export const useCreateSongMutation = (closeModalFn: () => void, opts: object = {}) => {
@@ -21,7 +21,8 @@ export const useCreateSongMutation = (closeModalFn: () => void, opts: object = {
           return (
             queryKey === QueryKey.GET_ALL_SONGS ||
             queryKey === QueryKey.GET_USER_PLAYLISTS ||
-            queryKey === QueryKey.GET_TARGET_PLAYLIST
+            queryKey === QueryKey.GET_TARGET_PLAYLIST ||
+            queryKey === QueryKey.GET_PROFILE_USER_INFO
           );
         },
       });

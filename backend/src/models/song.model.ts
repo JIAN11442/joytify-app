@@ -162,10 +162,12 @@ songSchema.post("save", async function (doc) {
         });
       }
 
-      // push created song ID to each relate label's "songs" property
+      // push created song ID to each relate label's "songs" property(according to model name)
+      // like language, genre, tag fields is reference to same model name, Label
       await bulkUpdateReferenceArrayFields(song, id, LabelModel, "songs", "$addToSet");
 
-      // push created song ID to each relate musician's "songs" property
+      // push created song ID to each relate musician's "songs" property(according to model name)
+      // like lyricist, composer fields is reference to same model name, Musician
       await bulkUpdateReferenceArrayFields(song, id, MusicianModel, "songs", "$addToSet");
     }
   } catch (error) {
@@ -220,10 +222,10 @@ songSchema.pre("findOneAndDelete", async function (next) {
       }
 
       // remove song ID from each relate label's "songs" property
-      await bulkUpdateReferenceArrayFields(song, songId, LabelModel, "songs", "$pull");
+      await LabelModel.updateMany({ songs: songId }, { $pull: { songs: songId } });
 
-      // push created song ID from each relate musician's "songs" property
-      await bulkUpdateReferenceArrayFields(song, songId, MusicianModel, "songs", "$pull");
+      // remove song ID from each relate musician's "songs" property
+      await MusicianModel.updateMany({ songs: songId }, { $pull: { songs: songId } });
     }
 
     next();

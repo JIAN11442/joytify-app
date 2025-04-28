@@ -28,7 +28,7 @@ export const defaultForgotPasswordData = {
   email: "",
 };
 
-export const defaultResetPasswordData = {
+export const defaultUpdatePasswordData = {
   currentPassword: "",
   newPassword: "",
   confirmPassword: "",
@@ -67,4 +67,10 @@ export const defaultVerificationCodeInput = {
 export const defaultProfileEditData = {
   profileImage: "",
   username: "",
+};
+
+export const defaultAccountDetailsData = {
+  gender: undefined as string | undefined,
+  country: undefined as string | undefined,
+  dateOfBirth: undefined as string | undefined,
 };

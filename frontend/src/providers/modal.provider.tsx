@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { lazy, Suspense } from "react";
+import useUserState from "../states/user.state";
+import usePlaylistState from "../states/playlist.state";
+import useSettingsState from "../states/settings.state";
 import useAuthModalState from "../states/auth-modal.state";
 import useUploadModalState from "../states/upload-modal.state";
-import usePlaylistState from "../states/playlist.state";
 import useVerificationModalState from "../states/verification.state";
-import useUserState from "../states/user.state";
 
 // import all components
 const components = import.meta.glob("../components/*.component.tsx");
@@ -31,6 +32,8 @@ const Modal = {
   playlistPrivacyModal: lazy(() => path("playlist-privacy-modal")),
   verificationCodeModal: lazy(() => path("verification-code-modal")),
   profileEditModal: lazy(() => path("profile-edit-modal")),
+  changePasswordModal: lazy(() => path("change-password-modal")),
+  accountDeregistrationModal: lazy(() => path("account-deregistration-modal")),
 };
 
 const ModalProvider = () => {
@@ -45,6 +48,7 @@ const ModalProvider = () => {
     usePlaylistState();
   const { activeVerificationCodeModal } = useVerificationModalState();
   const { activeProfileEditModal } = useUserState();
+  const { activeChangePasswordModal, activeAccountDeregistrationModal } = useSettingsState();
 
   return (
     <Suspense fallback={null}>
@@ -58,6 +62,8 @@ const ModalProvider = () => {
       {activePlaylistPrivacyModal.active && <Modal.playlistPrivacyModal />}
       {activeVerificationCodeModal.active && <Modal.verificationCodeModal />}
       {activeProfileEditModal.active && <Modal.profileEditModal />}
+      {activeChangePasswordModal && <Modal.changePasswordModal />}
+      {activeAccountDeregistrationModal.active && <Modal.accountDeregistrationModal />}
     </Suspense>
   );
 };

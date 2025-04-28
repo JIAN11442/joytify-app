@@ -29,11 +29,11 @@ const useSoundState = create<SoundState>((set) => ({
   onPlay: null,
   shuffleSongIds: null,
 
-  setActiveSongId: (id: string) => set({ activeSongId: id }),
+  setActiveSongId: (id) => set({ activeSongId: id }),
   setSongToPlay: (song) => set({ songToPlay: song }),
-  setSongIds: (ids: string[]) => set({ songIds: ids }),
+  setSongIds: (ids) => set({ songIds: ids }),
   setSound: (sound) => set({ sound }),
-  setIsPlaying: (state: boolean) => set({ isPlaying: state }),
+  setIsPlaying: (state) => set({ isPlaying: state }),
   setOnPlay: (callback) => set({ onPlay: callback }),
   setShuffleSongIds: (callback) => set({ shuffleSongIds: callback }),
 }));

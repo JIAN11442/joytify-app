@@ -2,6 +2,8 @@ import { RequestHandler } from "express";
 
 import UserModel from "../models/user.model";
 import {
+  changeUserPassword,
+  deregisterUserAccount,
   getProfileCollectionsInfo,
   getProfileUserInfo,
   resetUserPassword,
@@ -9,12 +11,17 @@ import {
 } from "../services/user.service";
 import { objectIdZodSchema, pageZodSchema } from "../schemas/util.zod";
 import {
+  deregisterUserZodSchema,
   profileCollectionsZodSchema,
-  resetPasswordZodSchema,
+  updatePasswordZodSchema,
   userZodSchema,
 } from "../schemas/user.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
-import { UpdateUserInfoRequest, ResetPasswordRequest } from "@joytify/shared-types/types";
+import {
+  UpdateUserInfoRequest,
+  ResetPasswordRequest,
+  ChangePasswordRequest,
+} from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 
 type ResetPasswordBodyRequest = Omit<ResetPasswordRequest, "token">;
@@ -81,7 +88,7 @@ export const updateUserHandler: RequestHandler = async (req, res, next) => {
 export const resetPasswordHandler: RequestHandler = async (req, res, next) => {
   try {
     const token = req.params.token;
-    const parsedParams: ResetPasswordBodyRequest = resetPasswordZodSchema.parse(req.body);
+    const parsedParams: ResetPasswordBodyRequest = updatePasswordZodSchema.parse(req.body);
 
     await resetUserPassword({ token, ...parsedParams });
 
@@ -91,13 +98,27 @@ export const resetPasswordHandler: RequestHandler = async (req, res, next) => {
   }
 };
 
+// change user password handler
+export const changePasswordHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = objectIdZodSchema.parse(req.userId);
+    const params: ChangePasswordRequest = updatePasswordZodSchema.parse(req.body);
+
+    await changeUserPassword({ userId, ...params });
+
+    return res.status(OK).json({ message: "Password changed successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // deregister user handler
 export const deregisterUserHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const deletedUser = await UserModel.findByIdAndDelete(userId);
+    const { shouldDeleteSongs } = deregisterUserZodSchema.parse(req.body);
 
-    appAssert(deletedUser, INTERNAL_SERVER_ERROR, "Failed to deregiter user account");
+    await deregisterUserAccount({ userId, shouldDeleteSongs });
 
     return res.status(OK).json({ message: "Deregister user account successfully" });
   } catch (error) {

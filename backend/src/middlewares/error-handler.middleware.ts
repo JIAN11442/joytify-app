@@ -8,8 +8,8 @@ import { deleteAwsFileUrl } from "../utils/aws-s3-url.util";
 import awsUrlParser from "../utils/aws-url-parser.util";
 import admin from "../config/firebase.config";
 
-const { BAD_REQUEST, INTERNAL_SERVER_ERROR, UNAUTHORIZED } = HttpCode;
-const { INVALID_FIREBASE_CREDENTIAL, CREATE_SONG_ERROR } = ErrorCode;
+const { BAD_REQUEST, INTERNAL_SERVER_ERROR, UNAUTHORIZED, CONFLICT } = HttpCode;
+const { INVALID_FIREBASE_CREDENTIAL, CREATE_SONG_ERROR, DUPLICATE_FIELD } = ErrorCode;
 
 const errorHandler = (): ErrorRequestHandler => {
   return async (error, req, res, next) => {
@@ -71,6 +71,19 @@ const errorHandler = (): ErrorRequestHandler => {
       return res
         .status(error.statusCode)
         .json({ message: error.message, errorCode: error.errorCode });
+    }
+
+    // Mongoose server error
+    if (error.name === "MongoServerError") {
+      if (error.code === 11000) {
+        const errorResponse = (error as any).errorResponse;
+        const duplicateField = Object.keys(errorResponse.keyPattern)[0];
+
+        return res.status(CONFLICT).json({
+          message: `${duplicateField.charAt(0).toUpperCase() + duplicateField.slice(1)} already exists`,
+          errorCode: DUPLICATE_FIELD,
+        });
+      }
     }
 
     // Other errors

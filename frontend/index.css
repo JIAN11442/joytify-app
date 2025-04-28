@@ -126,6 +126,14 @@ body,
     transition;
   }
 
+  .modal-btn {
+    @apply submit-btn
+    w-fit
+    px-5
+    mt-3
+    rounded-md;
+  }
+
   .hover-btn {
     @apply outline-none
     p-2

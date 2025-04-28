@@ -8,20 +8,19 @@ interface ModalProps extends React.InputHTMLAttributes<HTMLInputElement> {
   type: string;
   active: boolean;
   closeModalFn: () => void;
-  autoCloseModalFn?: boolean;
-  autoCapitalizeFn?: boolean;
+  autoCloseModal?: boolean;
   formOnSubmit: React.FormEventHandler<HTMLFormElement>;
   registerValidState: boolean;
 }
 
-const OptionCreateModal = forwardRef<HTMLInputElement, ModalProps>(
+const CreateOptionModal = forwardRef<HTMLInputElement, ModalProps>(
   (
     {
       type,
       active,
       closeModalFn,
-      autoCloseModalFn = true,
-      autoCapitalizeFn = true,
+      autoCloseModal = true,
+      autoCapitalize = false,
       formOnSubmit,
       registerValidState,
       onChange,
@@ -35,11 +34,9 @@ const OptionCreateModal = forwardRef<HTMLInputElement, ModalProps>(
       const val = e.target.value;
       const generateVal = `${val.charAt(0).toUpperCase()}${val.slice(1)}`;
 
-      setInputVal(autoCapitalizeFn ? generateVal : val);
+      setInputVal(autoCapitalize ? generateVal : val);
 
-      if (onChange) {
-        onChange(e);
-      }
+      onChange?.(e);
     };
 
     return (
@@ -47,13 +44,14 @@ const OptionCreateModal = forwardRef<HTMLInputElement, ModalProps>(
         title={`Create new ${type} option`}
         activeState={active}
         closeModalFn={closeModalFn}
-        autoCloseModalFn={autoCloseModalFn}
+        autoCloseModal={autoCloseModal}
       >
         <form
           onSubmit={formOnSubmit}
           className={`
             relative
             flex
+            flex-col
             gap-3
             items-center
           `}
@@ -79,10 +77,7 @@ const OptionCreateModal = forwardRef<HTMLInputElement, ModalProps>(
               disabled:text-neutral-500
             `}
           >
-            <Icon
-              name={BsFillSendFill}
-              className={`${registerValidState && " text-green-500"}`}
-            />
+            <Icon name={BsFillSendFill} className={`${registerValidState && " text-green-500"}`} />
           </button>
         </form>
       </Modal>
@@ -90,4 +85,4 @@ const OptionCreateModal = forwardRef<HTMLInputElement, ModalProps>(
   }
 );
 
-export default OptionCreateModal;
+export default CreateOptionModal;

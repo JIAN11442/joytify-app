@@ -23,7 +23,7 @@ const LibraryBody: React.FC<LibraryBodyProps> = ({ authUser, isLoading: isAuthLo
       `}
     >
       {isAuthLoading ? (
-        <Loader />
+        <Loader className={{ container: "mt-5" }} />
       ) : authUser ? (
         // already login
         <LibraryPlaylist />

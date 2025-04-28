@@ -1,15 +1,24 @@
-import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
-import { resetUserPassword, updateUserInfo } from "../fetchs/user.fetch";
+import {
+  changeUserPassword,
+  deregisterUserAccount,
+  resetUserPassword,
+  updateUserInfo,
+} from "../fetchs/user.fetch";
+import { logout } from "../fetchs/auth.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
-import { PasswordResetStatus } from "@joytify/shared-types/constants";
+import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
+import { DeregisterUserAccountRequest, UpdateUserInfoRequest } from "@joytify/shared-types/types";
+import useSettingsState from "../states/settings.state";
 import useUserState from "../states/user.state";
 import queryClient from "../config/query-client.config";
+import toast from "../lib/toast.lib";
+
+const { SUCCESS, FAILURE } = PasswordUpdateStatus;
 
 // reset user password mutation
 export const useResetPasswordMutation = (opts: object = {}) => {
   const { setPasswordResetStatus } = useUserState();
-  const { SUCCESS, FAILED } = PasswordResetStatus;
 
   const mutation = useMutation({
     mutationKey: [MutationKey.RESET_USER_PASSWORD],
@@ -19,7 +28,29 @@ export const useResetPasswordMutation = (opts: object = {}) => {
     },
     onError: (error) => {
       if (error) {
-        setPasswordResetStatus(FAILED);
+        setPasswordResetStatus(FAILURE);
+      }
+    },
+    ...opts,
+  });
+
+  return mutation;
+};
+
+// change user password mutation
+export const useChangePasswordMutation = (opts: object = {}) => {
+  const { setPasswordChangeStatus } = useSettingsState();
+
+  const mutation = useMutation({
+    mutationKey: [MutationKey.CHANGE_USER_PASSWORD],
+    mutationFn: changeUserPassword,
+    onSuccess: () => {
+      setPasswordChangeStatus(SUCCESS);
+    },
+    onError: (error) => {
+      if (error) {
+        setPasswordChangeStatus(FAILURE);
+        toast.error(error.message);
       }
     },
     ...opts,
@@ -29,10 +60,18 @@ export const useResetPasswordMutation = (opts: object = {}) => {
 };
 
 // update user mutation
-export const useUpdateUserMutation = (closeModalFn?: () => void, opts: object = {}) => {
+export const useUpdateUserMutation = (
+  delay?: number,
+  closeModalFn?: () => void,
+  opts: object = {}
+) => {
   const mutation = useMutation({
     mutationKey: [MutationKey.UPDATE_USER],
-    mutationFn: updateUserInfo,
+    mutationFn: async (data: UpdateUserInfoRequest) => {
+      await new Promise((resolve) => setTimeout(resolve, delay ?? 0));
+
+      return await updateUserInfo(data);
+    },
     onSuccess: () => {
       // refetch related queries
       queryClient.invalidateQueries({
@@ -52,8 +91,41 @@ export const useUpdateUserMutation = (closeModalFn?: () => void, opts: object = 
       // display success message
       toast.success("User info updated successfully");
     },
-    onError: () => {
-      toast.error("Failed to update user info");
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    ...opts,
+  });
+
+  return mutation;
+};
+
+// deregister user mutation
+export const useDeregisterMutation = (closeModalFn: () => void, opts: object = {}) => {
+  const mutation = useMutation({
+    mutationKey: [MutationKey.DEREGISTER_USER],
+    mutationFn: async (params: DeregisterUserAccountRequest) => {
+      try {
+        await deregisterUserAccount(params);
+        await logout();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onSuccess: () => {
+      // clear all queries data
+      queryClient.setQueryData([QueryKey.GET_AUTH_USER_INFO], null);
+      queryClient.setQueryData([QueryKey.GET_USER_PLAYLISTS], null);
+
+      // close modal
+      closeModalFn();
+
+      // display success message
+      toast.success("Your account has been deregistered successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      console.log(error);
     },
     ...opts,
   });

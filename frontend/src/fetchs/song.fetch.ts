@@ -74,8 +74,6 @@ export const createSongData = async (params: DefaultSongForm): Promise<SongRespo
             createIfAbsent: true,
           });
         }
-
-        console.log(musicianParams);
       } catch (error) {
         console.error(`failed to get ${name} IDs:`, error);
       }

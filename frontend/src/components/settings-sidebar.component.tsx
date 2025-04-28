@@ -1,75 +1,17 @@
-import { VscAccount } from "react-icons/vsc";
-import { IoNotificationsOutline } from "react-icons/io5";
-
 import ContentBox from "./content-box.component";
 import SidebarItem from "./sidebar-item.component";
-import { TbUsersPlus } from "react-icons/tb";
-import { MdDevices, MdOutlineLibraryMusic } from "react-icons/md";
-import { PiLockKey } from "react-icons/pi";
-import { LuLanguages } from "react-icons/lu";
-import { useGetProfileUserInfoQuery } from "../hooks/user-query.hook";
+import { SquareDualLineSkeleton } from "./skeleton-loading.component";
+
+import useUserState from "../states/user.state";
+import useSidebarState from "../states/sidebar.state";
+import { settingsSidebarCategories } from "../contents/settings-sidebar-categories.content";
 
 const SettingsSidebar = () => {
-  const { profileUser } = useGetProfileUserInfoQuery();
-  const { username, profile_img, email } = profileUser ?? {};
+  const { profileUser } = useUserState();
+  const { collapseSideBarState } = useSidebarState();
 
-  const settingsCategories = [
-    {
-      category: "Main Menu",
-      items: [
-        {
-          href: "/settings/account",
-          icon: { name: VscAccount, size: 18 },
-          label: "Account",
-        },
-        {
-          href: "/settings/notifications",
-          icon: { name: IoNotificationsOutline },
-          label: "Notifications",
-        },
-      ],
-    },
-    {
-      category: "Dashboard",
-      items: [
-        {
-          href: "/settings/songs",
-          icon: { name: MdOutlineLibraryMusic },
-          label: "Songs",
-        },
-        {
-          href: "/settings/following",
-          icon: { name: TbUsersPlus },
-          label: "Following",
-        },
-      ],
-    },
-    {
-      category: "Security",
-      items: [
-        {
-          href: "/settings/change-password",
-          icon: { name: PiLockKey },
-          label: "Change Password",
-        },
-        {
-          href: "/settings/connected-devices",
-          icon: { name: MdDevices },
-          label: "Connected Devices",
-        },
-      ],
-    },
-    {
-      category: "Other",
-      items: [
-        {
-          href: "/settings/languages",
-          icon: { name: LuLanguages },
-          label: "Languages",
-        },
-      ],
-    },
-  ];
+  const { isCollapsed } = collapseSideBarState;
+  const { username, profile_img, email } = profileUser ?? {};
 
   return (
     <>
@@ -79,14 +21,14 @@ const SettingsSidebar = () => {
           flex-col
           h-full
           pt-8
-          px-5
           pb-0
-          justify-between
+          ${isCollapsed ? "px-1" : "px-5"}
+          ${isCollapsed ? "justify-start items-center" : "justify-between"}
           overflow-y-auto
       `}
       >
         <div className={`flex flex-col gap-6`}>
-          {settingsCategories.map(({ category, items }) => (
+          {settingsSidebarCategories.map(({ category, items }, index) => (
             <div
               key={category}
               className={`
@@ -96,7 +38,19 @@ const SettingsSidebar = () => {
               `}
             >
               {/* category title */}
-              <p className={`text-sm text-neutral-600 font-bold`}>{category}</p>
+              {!isCollapsed ? (
+                <p
+                  className={`
+                    text-sm
+                    text-neutral-600
+                    font-bold
+                  `}
+                >
+                  {category}
+                </p>
+              ) : (
+                index > 0 && <hr className={`border-neutral-800/50`} />
+              )}
 
               {/* category items */}
               <div className={`flex flex-col gap-1`}>
@@ -104,13 +58,18 @@ const SettingsSidebar = () => {
                   <SidebarItem
                     key={label}
                     href={href}
-                    icon={{ name: Icon.name, opts: { size: Icon.size ?? 20 } }}
+                    icon={{
+                      name: Icon.name,
+                      opts: { size: Icon.getSize ? Icon.getSize(isCollapsed) : 22 },
+                    }}
                     label={label}
+                    collapse={isCollapsed}
                     className={`
+                      ${isCollapsed ? "w-fit" : "hover:bg-neutral-800/50"}
                       px-5
                       py-3.5
                     `}
-                    tw={{ label: `text-[14px]` }}
+                    tw={{ label: `text-sm` }}
                   />
                 ))}
               </div>
@@ -119,36 +78,38 @@ const SettingsSidebar = () => {
         </div>
       </ContentBox>
 
-      <ContentBox
-        className={`
-          flex
-          gap-2
-          p-5
-          items-center
-          justify-start
-        `}
-      >
-        {/* User Avatar */}
-        <img
-          src={profile_img}
-          className={`
-            w-[3rem]
-            h-[3rem]
-            rounded-md
-            object-cover
-          `}
-        />
-        <p
+      {!isCollapsed && (
+        <ContentBox
           className={`
             flex
-            flex-col
-            text-sm
+            p-5
+            gap-3
+            items-center
+            justify-start
           `}
         >
-          <span className={`font-bold`}>{username?.split("?nanoid=")[0]}</span>
-          <span className={`text-neutral-500`}>{email}</span>
-        </p>
-      </ContentBox>
+          {/* User Avatar */}
+          {profileUser ? (
+            <div className={`flex w-full gap-3 items-center`}>
+              <img
+                src={profile_img}
+                className={`
+                  w-[3rem]
+                  h-[3rem]
+                  rounded-md
+                  object-cover
+                `}
+              />
+              <p className={`flex flex-col text-sm`}>
+                <span className={`font-bold`}>{username?.split("?nanoid=")[0]}</span>
+                <span className={`text-neutral-500`}>{email}</span>
+              </p>
+            </div>
+          ) : (
+            <SquareDualLineSkeleton />
+          )}
+        </ContentBox>
+      )}
     </>
   );
 };

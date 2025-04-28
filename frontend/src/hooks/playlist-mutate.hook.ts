@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 
 import { createPlaylist, deletePlaylist, updatePlaylist } from "../fetchs/playlist.fetch";
@@ -6,6 +5,7 @@ import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import { UpdatePlaylistRequest } from "@joytify/shared-types/types";
 import queryClient from "../config/query-client.config";
 import { navigate } from "../lib/navigate.lib";
+import toast from "../lib/toast.lib";
 
 type UpdatePlaylistParams = Omit<UpdatePlaylistRequest, "playlistId">;
 

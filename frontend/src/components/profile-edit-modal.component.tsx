@@ -53,7 +53,7 @@ const ProfileEditModal = () => {
     });
   };
 
-  const { mutate: updateUserFn, isPending } = useUpdateUserMutation(handleCloseModal);
+  const { mutate: updateUserFn, isPending } = useUpdateUserMutation(0, handleCloseModal);
 
   // form state
   const {
@@ -134,6 +134,7 @@ const ProfileEditModal = () => {
 
         {/* submit button */}
         <button
+          type="submit"
           disabled={!isModified || isPending}
           className={`
             mt-2

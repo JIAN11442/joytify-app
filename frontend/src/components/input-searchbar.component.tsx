@@ -43,9 +43,7 @@ const InputSearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
 
     // handle input onChange
     const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (onChange) {
-        onChange(e);
-      }
+      onChange?.(e);
     };
 
     // auto disappear searchbar while click outside

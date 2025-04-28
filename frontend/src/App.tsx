@@ -1,17 +1,18 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 
-import HomePage from "./pages/home.page";
-import ResetPasswordPage from "./pages/reset-password.page";
-import AppContainerPage from "./pages/app-container.page";
-import PlaylistPage from "./pages/playlist.page";
-import SearchPage from "./pages/search.page";
-
 import Sidebar from "./components/sidebar.component";
 
-import { setNavigate } from "./lib/navigate.lib";
+import HomePage from "./pages/home.page";
+import SearchPage from "./pages/search.page";
 import ProfilePage from "./pages/profile.page";
-import ProfileSectionPage from "./pages/profile-section.page";
 import SettingsPage from "./pages/settings.page";
+import PlaylistPage from "./pages/playlist.page";
+import AppContainerPage from "./pages/app-container.page";
+import ResetPasswordPage from "./pages/reset-password.page";
+import ProfileSectionPage from "./pages/profile-section.page";
+import SettingsAccountPage from "./pages/settings-account.page";
+import AccountDeregistrationPolicyPage from "./pages/account-deregistration-policy.page";
+import { setNavigate } from "./lib/navigate.lib";
 
 function App() {
   // original navigate function can't be using outside of the component
@@ -32,13 +33,17 @@ function App() {
           <Route path="/profile/:id/:section" element={<ProfileSectionPage />} />
           <Route path="/settings">
             <Route index element={<SettingsPage />} />
-            <Route path="/settings/account" element={<p>Account</p>} />
+            <Route path="/settings/account" element={<SettingsAccountPage />} />
             <Route path="/settings/notifications" element={<p>Notifications</p>} />
           </Route>
         </Route>
       </Route>
 
       <Route path="/password/reset" element={<ResetPasswordPage />} />
+      <Route
+        path="/policies/account-deregistration"
+        element={<AccountDeregistrationPolicyPage />}
+      />
       <Route path="*" element={<h1>404</h1>} />
     </Routes>
   );

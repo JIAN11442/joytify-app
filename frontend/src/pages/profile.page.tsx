@@ -1,13 +1,12 @@
 import Loader from "../components/loader.component";
-import ContentBox from "../components/content-box.component";
 import ProfileBody from "../components/profile-body.component";
 import ProfileHeader from "../components/profile-header.component";
 
-import { useGetProfileUserInfoQuery } from "../hooks/user-query.hook";
 import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
+import useUserState from "../states/user.state";
 
 const ProfilePage = () => {
-  const { profileUser } = useGetProfileUserInfoQuery();
+  const { profileUser } = useUserState();
 
   if (!profileUser) {
     return <Loader className={{ container: "h-full" }} />;
@@ -16,7 +15,7 @@ const ProfilePage = () => {
   const { paletee } = profileUser as RefactorProfileUserResponse;
 
   return (
-    <ContentBox
+    <div
       style={{
         backgroundImage: `linear-gradient(
           to bottom,
@@ -34,7 +33,7 @@ const ProfilePage = () => {
     >
       <ProfileHeader profileUser={profileUser} />
       <ProfileBody profileUser={profileUser} />
-    </ContentBox>
+    </div>
   );
 };
 

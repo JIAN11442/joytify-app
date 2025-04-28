@@ -20,6 +20,7 @@ import firebaseInitialize from "./middlewares/firebase.middleware";
 import errorHandler from "./middlewares/error-handler.middleware";
 
 import { NODE_ENV, ORIGIN_APP } from "./constants/env-validate.constant";
+import sessionRoute from "./routes/session.route";
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use("/musician", authenticate, musicianRoute);
 app.use("/album", authenticate, albumRoute);
 app.use("/playback", authenticate, playbackRoute);
 app.use("/cookie", cookieRoute);
+app.use("/session", authenticate, sessionRoute);
 
 // error handler
 app.use(errorHandler());

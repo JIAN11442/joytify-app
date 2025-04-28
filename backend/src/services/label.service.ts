@@ -2,15 +2,21 @@ import mongoose, { FilterQuery } from "mongoose";
 
 import LabelModel, { LabelDocument } from "../models/label.model";
 import { HttpCode } from "@joytify/shared-types/constants";
-import { CreateLabelRequest } from "@joytify/shared-types/types";
+import {
+  CreateLabelRequest,
+  GetLabelIdRequest,
+  LabelOptionsType,
+} from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
+
+type GetLabelsServiceRequest = {
+  userId: string;
+  types?: LabelOptionsType[];
+  sortBySequence?: boolean;
+};
 
 interface CreateLabelServiceRequest extends CreateLabelRequest {
   userId: string;
-}
-
-interface GetLabelIdServiceRequest extends CreateLabelServiceRequest {
-  createIfAbsent?: boolean;
 }
 
 type RemoveLabelRequest = {
@@ -20,13 +26,16 @@ type RemoveLabelRequest = {
 
 const { INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;
 
-// get labels service
-export const getLabels = async (userId: string) => {
+// get all labels service
+export const getLabels = async (params: GetLabelsServiceRequest) => {
+  const { userId, types, sortBySequence } = params;
+
   const groupLabels = (isDefault: boolean, userId?: string) => [
     // Match labels based on default status
     {
       $match: {
         default: isDefault,
+        ...(types && types.length > 0 ? { type: { $in: types } } : {}),
         ...(userId ? { users: new mongoose.Types.ObjectId(userId) } : {}),
       },
     },
@@ -34,15 +43,18 @@ export const getLabels = async (userId: string) => {
     {
       $group: {
         _id: "$type",
-        labels: { $addToSet: { id: "$_id", label: "$label" } },
+        labels: { $addToSet: { id: "$_id", label: "$label", index: "$index" } },
       },
     },
-    // Project to sort labels alphabetically by their label property
+    // Project to sort labels by alphabetically or index
     {
       $project: {
         _id: 1,
         labels: {
-          $sortArray: { input: "$labels", sortBy: { label: 1 } },
+          $sortArray: {
+            input: "$labels",
+            sortBy: sortBySequence ? { index: 1 } : { label: 1 },
+          },
         },
       },
     },
@@ -80,6 +92,32 @@ export const getLabels = async (userId: string) => {
   ]);
 
   return { labels: labels[0] };
+};
+
+// get label ID service
+export const getLabelId = async (params: GetLabelIdRequest) => {
+  const { label: doc, type, default: isDefault, createIfAbsent } = params;
+
+  const findQuery: FilterQuery<LabelDocument> = {
+    type,
+    label: doc,
+    default: isDefault,
+  };
+
+  // find label if exist
+  let label = await LabelModel.findOne(findQuery);
+
+  // if not found, create and replace label
+  if (!label && createIfAbsent) {
+    label = await LabelModel.create({ ...findQuery });
+
+    appAssert(label, INTERNAL_SERVER_ERROR, "Failed to create label");
+  }
+
+  // if label still not found, return error
+  appAssert(label, NOT_FOUND, "Label is not found");
+
+  return { id: label._id };
 };
 
 // create label service
@@ -125,33 +163,4 @@ export const removeLabel = async (data: RemoveLabelRequest) => {
   appAssert(removedLabel, NOT_FOUND, "Label is not found");
 
   return { removedLabel };
-};
-
-// get label ID service(*)
-export const getLabelId = async (params: GetLabelIdServiceRequest) => {
-  const { userId, label: doc, type, createIfAbsent } = params;
-
-  const findQuery: FilterQuery<LabelDocument> = {
-    type,
-    label: doc,
-    default: false,
-  };
-
-  // find label if exist
-  let label = await LabelModel.findOne(findQuery);
-
-  // if not found, create and replace label
-  if (!label && createIfAbsent) {
-    label = await LabelModel.create({
-      ...findQuery,
-      author: userId,
-    });
-
-    appAssert(label, INTERNAL_SERVER_ERROR, "Failed to create label");
-  }
-
-  // if label still not found, return error
-  appAssert(label, NOT_FOUND, "Label is not found");
-
-  return { id: label._id };
 };

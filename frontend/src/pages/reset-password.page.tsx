@@ -2,23 +2,23 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import ContentBox from "../components/content-box.component";
-import ResetPasswordForm from "../components/reset-password-form.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
-import ResetStatusForm from "../components/reset-status-form.component";
+import ResetPasswordForm from "../components/reset-password-form.component";
+import PasswordUpdateStatusForm from "../components/password-update-status-form.component";
 import JoytifyLogo from "../../public/joytify-logo.svg";
 
-import { PasswordResetStatus } from "@joytify/shared-types/constants";
+import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
   const [direction, setDirection] = useState(0);
-  const { passwordResetStatus } = useUserState();
+  const { passwordResetStatus, setPasswordResetStatus } = useUserState();
 
   const token = searchParams.get("token") || "";
 
-  const { INITIAL, SUCCESS } = PasswordResetStatus;
+  const { INITIAL, SUCCESS } = PasswordUpdateStatus;
 
   // set switch direction
   useEffect(() => {
@@ -77,7 +77,11 @@ const ResetPasswordPage = () => {
           {passwordResetStatus === INITIAL ? (
             <ResetPasswordForm token={token} />
           ) : (
-            <ResetStatusForm isSuccess={passwordResetStatus === SUCCESS} />
+            <PasswordUpdateStatusForm
+              isSuccess={passwordResetStatus === SUCCESS}
+              setPasswordUpdateStatus={setPasswordResetStatus}
+              className={`mt-10`}
+            />
           )}
         </AnimationWrapper>
 

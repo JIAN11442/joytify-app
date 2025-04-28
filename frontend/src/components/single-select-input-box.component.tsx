@@ -1,244 +1,380 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import _ from "lodash";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
+import { forwardRef, useEffect, useRef, useState, useCallback, useMemo, memo } from "react";
 import { FieldValues } from "react-hook-form";
 import { IoIosClose } from "react-icons/io";
 
 import Icon from "./react-icons.component";
 import CreateNewBtn from "./create-new-button.component";
 import AnimationWrapper from "./animation-wrapper.component";
-
 import { FormMethods } from "../types/form.type";
-import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
-import mergeRefs from "../lib/merge-refs.lib";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 export type InputOptionType = {
   id: string;
   title: string;
 };
 
-interface InputProps<T extends FieldValues = any>
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+interface BaseInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
-  options: InputOptionType[];
-  formMethods: FormMethods<T>;
-  createNewFn?: () => void;
-  deleteOptFn?: (id: string) => void;
   autoCloseMenuFn?: boolean;
+  filterMode?: "contains" | "starts-with";
+  tw?: {
+    title?: string;
+    input?: string;
+    menu?: string;
+    option?: string;
+  };
 }
 
-const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
+type SelectInputBoxWithFormMethodsProps<T extends FieldValues = any> = BaseInputProps & {
+  formMethods: FormMethods<T>;
+  options: InputOptionType[];
+  createNewFn?: () => void;
+  deleteOptFn?: (id: string) => void;
+};
+
+type SelectInputBoxWithoutFormMethodsProps = BaseInputProps & {
+  formMethods?: never;
+  options: string[];
+  createNewFn?: never;
+  deleteOptFn?: never;
+};
+
+type SelectInputBoxProps =
+  | SelectInputBoxWithFormMethodsProps
+  | SelectInputBoxWithoutFormMethodsProps;
+
+export const NO_MATCH = "__NO_MATCH__";
+
+const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
   (
     {
       title,
-      options,
+      placeholder,
+      defaultValue,
+      disabled,
+      required,
+      onChange,
+      name,
       formMethods,
       createNewFn,
       deleteOptFn,
       autoCloseMenuFn = true,
-      name,
-      placeholder,
-      onChange,
-      required,
-      disabled,
+      filterMode = "contains",
+      options,
+      tw,
       ...props
     },
     ref
   ) => {
-    const { setFormValue, trigger } = formMethods;
+    const menuRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
-    const inputRef = useRef<HTMLInputElement | null>(null);
-    const menuRef = useRef<HTMLDivElement | null>(null);
-    const hiddenInputRef = useRef<HTMLInputElement | null>(null);
-
-    const [value, setValue] = useState("");
-    const [hoverVal, setHoverVal] = useState<string>("");
     const [activeMenu, setActiveMenu] = useState<boolean>(false);
-    const [filterOptions, setFilterOptions] = useState<InputOptionType[]>(options);
-    const [focusOptIndex, setFocusOptIndex] = useState(-1);
-    const [selectedOptId, setSelectedOptId] = useState("");
+    const [inputVal, setInputVal] = useState<string | null>(null);
+    const [hoverVal, setHoverVal] = useState<string | null>(null);
+    const [isError, setIsError] = useState<boolean>(false);
+    const [filterOptions, setFilterOptions] = useState<typeof options>(options);
 
-    // handle options onMouseEnter
-    const handleOptionsOnMouseEnter = (opt: string) => {
-      timeoutForDelay(() => {
-        setHoverVal(opt);
-      });
-    };
+    const showOptionsMenu = useMemo(() => activeMenu && !isError, [activeMenu, isError]);
 
-    // handle options onMouseLeave
-    const handleOptionsOnMouseLeave = () => {
-      timeoutForDelay(() => {
-        setHoverVal("");
-      });
-    };
+    const getFilterOptions = useCallback(
+      (value: string) => {
+        if (!value?.length) return options;
 
-    // handle options onClick
-    const handleOptionsOnClick = (opt: InputOptionType) => {
-      if (name) {
-        setFormValue(name, opt.id);
-        trigger(name);
-      }
+        return options.filter((opt) => {
+          const optionValue = (typeof opt === "string" ? opt : opt.title).toLowerCase();
+          const inputValue = value.toLowerCase();
 
-      setSelectedOptId(opt.id);
-      setValue(opt.title);
-      setActiveMenu(false);
-    };
+          return filterMode === "contains"
+            ? optionValue.includes(inputValue)
+            : optionValue.startsWith(inputValue);
+        });
+      },
+      [options, filterMode]
+    );
 
-    // handle input onChange
-    const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const eValue = e.target.value;
-      const inputOptionId = options.filter((opt) => opt.title === eValue)[0]?.id || "";
+    const getReturnValue = useCallback(
+      (value: string) => {
+        if (value) {
+          const option = options.find((opt) => {
+            const generatedOpt = typeof opt === "string" ? opt : opt.title;
+            return generatedOpt.toLowerCase() === value.toLowerCase();
+          });
 
-      // setting input value
-      setValue(eValue);
-      setHoverVal("");
+          if (option) {
+            return typeof option === "string" ? option : (option as InputOptionType).id;
+          }
 
-      if (name) {
-        setFormValue(name, inputOptionId);
-        trigger(name);
-      }
+          return NO_MATCH;
+        }
+      },
+      [options]
+    );
 
-      // find query options
-      if (eValue.length) {
-        // according input value to filter options
-        const newFilterOptions = options.filter((opt) =>
-          opt.title.toLowerCase().includes(eValue.toLowerCase())
-        );
+    const handleSetFormValue = useCallback(
+      (value: string, e?: React.ChangeEvent<HTMLInputElement>) => {
+        const returnValue = getReturnValue(value);
 
-        setFilterOptions(newFilterOptions);
-      } else {
-        setFilterOptions(options);
-      }
+        if (name && formMethods) {
+          formMethods.setFormValue(name, returnValue);
+        }
 
-      if (onChange) {
-        onChange(e);
-      }
-    };
+        if (value.length > 0) {
+          onChange?.({
+            target: {
+              name,
+              value: returnValue,
+            },
+          } as React.ChangeEvent<HTMLInputElement>);
+        } else if (e) {
+          onChange?.(e);
+        }
+      },
+      [getReturnValue, onChange, name, formMethods]
+    );
 
-    const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (activeMenu) {
-        const ekey = e.key;
+    const handleInputOnChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        // active menu if it's not active
+        if (!activeMenu) {
+          setActiveMenu(true);
+        }
 
-        if (ekey === "ArrowDown" || ekey === "ArrowUp") {
+        const value = e.target.value;
+        const newFilterOptions = getFilterOptions(value);
+
+        setHoverVal(null);
+        setInputVal(value);
+        setFilterOptions(newFilterOptions as typeof options);
+        setIsError(filterOptions.length !== 0 && newFilterOptions.length === 0);
+
+        handleSetFormValue(value, e);
+      },
+      [activeMenu, filterOptions, onChange, handleSetFormValue]
+    );
+
+    const handleInputOnKeyDown = useCallback(
+      (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!showOptionsMenu) return;
+
+        const titles = filterOptions.map((opt) => (typeof opt === "string" ? opt : opt.title));
+        const currentIndex = titles.findIndex((title) => title === hoverVal);
+
+        // find next valid index that doesn't match defaultValue
+        const findNextValidIndex = (startIndex: number, direction: number) => {
+          let nextIndex = startIndex;
+          let attempts = 0;
+
+          // loop through all options to find next valid one
+          while (attempts < titles.length) {
+            nextIndex = (nextIndex + direction + titles.length) % titles.length;
+            if (titles[nextIndex] !== defaultValue) {
+              return nextIndex;
+            }
+            attempts++;
+          }
+
+          // if all options match defaultValue, return current index
+          return startIndex;
+        };
+
+        if (e.key === "ArrowDown") {
           e.preventDefault();
-
-          const newFocusOptIndex =
-            ekey === "ArrowDown"
-              ? Math.min(focusOptIndex + 1, options.length - 1)
-              : Math.max(focusOptIndex - 1, 0);
-
-          setFocusOptIndex(newFocusOptIndex);
-        } else if (ekey === "Enter") {
-          const targetOpt = options[focusOptIndex >= 0 ? focusOptIndex : 0];
-          handleOptionsOnClick({ id: targetOpt.id, title: targetOpt.title });
+          const nextIndex = findNextValidIndex(currentIndex, 1);
+          setHoverVal(titles[nextIndex]);
         }
+
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          const nextIndex = findNextValidIndex(currentIndex, -1);
+          setHoverVal(titles[nextIndex]);
+        }
+
+        if (e.key === "Enter" && hoverVal) {
+          e.preventDefault();
+          setInputVal(hoverVal);
+          setActiveMenu(false);
+          handleSetFormValue(hoverVal);
+        }
+
+        if (e.key === "Escape") {
+          setActiveMenu(false);
+        }
+      },
+      [filterOptions, hoverVal, showOptionsMenu, handleSetFormValue, defaultValue]
+    );
+
+    const handleInputOnBlur = useCallback(() => {
+      if ((!inputVal || !hoverVal) && defaultValue) {
+        setInputVal(defaultValue as string);
       }
-    };
+    }, [inputVal, hoverVal, defaultValue]);
 
-    // handle delete option
-    const handleDeleteOption = (e: React.MouseEvent<HTMLButtonElement>, opt: InputOptionType) => {
-      // avoid parent elemet <div> execute onClick function
-      e.stopPropagation();
+    const handleOptionOnMouseEnter = useCallback(
+      (opt: string) => {
+        if (opt === defaultValue) return;
+        setHoverVal(opt);
+      },
+      [inputVal]
+    );
 
-      if (deleteOptFn) {
-        // delete option function
-        deleteOptFn(opt.id);
+    const handleOptionOnMouseLeave = useCallback(() => {
+      setHoverVal(null);
+    }, []);
 
-        // clear input value after deleted option
-        setValue("");
-        setHoverVal("");
-      }
-    };
+    const handleOptionOnClick = useCallback(
+      (option: string) => {
+        setInputVal(option);
+        setActiveMenu(false);
+        setHoverVal(null);
 
-    // open or close the menu when the input is focused or blurred
+        handleSetFormValue(option);
+      },
+      [handleSetFormValue]
+    );
+
+    const handleDeleteOption = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>, opt: InputOptionType) => {
+        e.stopPropagation();
+
+        setHoverVal(null);
+
+        // if delete option is the same as the input value,
+        // set input value and onChange value to null
+        if (inputVal === opt.title) {
+          setInputVal(null);
+
+          if (name && formMethods) {
+            formMethods.setFormValue(name, "");
+          }
+        }
+
+        deleteOptFn?.((opt as InputOptionType).id);
+      },
+      [deleteOptFn, inputVal]
+    );
+
+    // handle menu open or close(though click or keyboard)
     useEffect(() => {
-      const handleOnFocus: EventListener = (e) => {
-        if (!disabled && inputRef.current && inputRef.current.contains(e.target as Node)) {
-          timeoutForDelay(() => {
-            setActiveMenu(true);
-          });
-        }
-      };
-      const handleOnBlur: EventListener = (e) => {
-        if (autoCloseMenuFn && menuRef.current && !menuRef.current.contains(e.target as Node)) {
-          timeoutForDelay(() => {
-            setActiveMenu(false);
-          });
+      const inputEl = inputRef.current;
+
+      const isInside = (node: Node | null) =>
+        inputRef.current?.contains(node) || menuRef.current?.contains(node);
+
+      const openMenu = () => {
+        if (!disabled && !isError) {
+          timeoutForDelay(() => setActiveMenu(true));
         }
       };
 
-      // listening click events and return cleanup function
-      const cleanupOnFocusFn = timeoutForEventListener(document, "click", handleOnFocus);
-      const cleanupOnBlurFn = timeoutForEventListener(document, "click", handleOnBlur);
+      const closeMenu = () => {
+        if (autoCloseMenuFn) {
+          timeoutForDelay(() => setActiveMenu(false));
+        }
+      };
+
+      const handleFocus = openMenu;
+
+      const handleBlur = (e: FocusEvent) => {
+        const next = e.relatedTarget as Node | null;
+        if (!isInside(next)) {
+          closeMenu();
+        }
+      };
+
+      const handleClick = (e: MouseEvent) => {
+        const target = e.target as Node;
+        if (inputRef.current?.contains(target)) {
+          if (!activeMenu) openMenu();
+        } else if (!menuRef.current?.contains(target)) {
+          closeMenu();
+        }
+      };
+
+      inputEl?.addEventListener("focus", handleFocus);
+      inputEl?.addEventListener("blur", handleBlur);
+      document.addEventListener("click", handleClick);
 
       return () => {
-        cleanupOnFocusFn();
-        cleanupOnBlurFn();
+        inputEl?.removeEventListener("focus", handleFocus);
+        inputEl?.removeEventListener("blur", handleBlur);
+        document.removeEventListener("click", handleClick);
       };
-    }, [autoCloseMenuFn, disabled, inputRef, menuRef]);
+    }, [activeMenu, autoCloseMenuFn, disabled, isError]);
 
-    // renew filter options while parent options is refetch
+    // update filterOptions when options change
     useEffect(() => {
-      if (!_.isEqual(filterOptions, options)) {
-        setFilterOptions(options);
-      }
+      setFilterOptions(options);
     }, [options]);
 
     return (
-      <div
-        className={`
-          relative
-          flex
-          flex-col
-          gap-2
-        `}
-      >
+      <div className={`relative flex flex-col w-full gap-2`}>
         <p
-          className={`
+          className={twMerge(
+            `
             text-sm
             text-grey-custom/50
             ${title ? "block" : "hidden"}
-          `}
+          `,
+            tw?.title
+          )}
         >
           {title}
           {required && <span className={`text-red-500`}> *</span>}
         </p>
 
-        <div
-          className={`
-            relative
-            group
-          `}
-        >
-          {/* display input value */}
-          <input
-            ref={mergeRefs(ref, inputRef)}
-            type="text"
-            value={value || hoverVal}
-            placeholder={placeholder}
-            onChange={(e) => handleInputOnChange(e)}
-            onKeyDown={(e) => handleOnKeyDown(e)}
-            required={required}
-            disabled={disabled}
-            className={`
-              input-box
-              capitalize
-              placeholder:normal-case
-              ${activeMenu && "rounded-b-none"}
-            `}
-          />
+        <input
+          ref={inputRef}
+          type="text"
+          name={name}
+          value={hoverVal ?? inputVal ?? defaultValue ?? ""}
+          placeholder={placeholder}
+          required={required}
+          disabled={disabled}
+          onChange={handleInputOnChange}
+          onKeyDown={handleInputOnKeyDown}
+          onBlur={handleInputOnBlur}
+          autoComplete="off"
+          className={twMerge(
+            `
+            input-box 
+            capitalize
+            placeholder:normal-case
+            ${showOptionsMenu && "rounded-b-none"}
+            ${
+              isError &&
+              `
+              shadow-[0_0_2px_2px]
+              shadow-red-500/50
+              bg-red-500/10
+            `
+            }
+          `,
+            tw?.input
+          )}
+        />
 
-          {/* submit selected playlist id to useForm */}
-          <input ref={hiddenInputRef} type="hidden" value={selectedOptId} readOnly {...props} />
-        </div>
+        <input
+          ref={ref}
+          type="hidden"
+          name={name}
+          tabIndex={-1}
+          readOnly
+          {...props}
+          className={`w-full`}
+        />
 
         <AnimationWrapper
           ref={menuRef}
-          visible={activeMenu}
+          visible={showOptionsMenu}
           initial={{ opacity: 0, scaleY: "0%", transformOrigin: "top" }}
           animate={{ opacity: 1, scaleY: "100%", transformOrigin: "top" }}
           transition={{ duration: 0.2 }}
-          className={`
+          tabIndex={-1}
+          className={twMerge(
+            `
             absolute
             z-10
             top-full
@@ -250,39 +386,40 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
             border-neutral-700/50
             rounded-b-md
             overflow-y-auto
-          `}
+          `,
+            tw?.menu
+          )}
         >
-          <div>
-            {/* options button */}
-            {filterOptions.map((opt, index) => (
+          {filterOptions.map((option) => {
+            const content = typeof option === "string" ? option : option.title;
+            return (
               <div
-                key={opt.id}
-                onMouseEnter={() => handleOptionsOnMouseEnter(opt.title)}
-                onMouseLeave={() => handleOptionsOnMouseLeave()}
-                onClick={() => handleOptionsOnClick(opt)}
-                className={`
+                key={content}
+                onMouseEnter={() => handleOptionOnMouseEnter(content)}
+                onMouseLeave={handleOptionOnMouseLeave}
+                onClick={() => handleOptionOnClick(content)}
+                className={twMerge(
+                  `
                   menu-btn
                   flex
                   p-2
                   items-center
                   justify-between
                   rounded-sm
-                    ${
-                      index === focusOptIndex &&
-                      !hoverVal &&
-                      `
-                      bg-neutral-800/50
-                      text-white
-                      `
-                    }
-                `}
+                  ${hoverVal === content && "bg-neutral-800"}
+                  ${content === defaultValue && "no-hover opacity-50"}
+                `,
+                  tw?.option
+                )}
               >
-                {/* option title */}
-                <p>{opt.title}</p>
+                {content}
 
                 {/* option delete button */}
                 {deleteOptFn && (
-                  <button type="button" onClick={(e) => handleDeleteOption(e, opt)}>
+                  <button
+                    type="button"
+                    onClick={(e) => handleDeleteOption(e, option as InputOptionType)}
+                  >
                     <Icon
                       name={IoIosClose}
                       opts={{ size: 18 }}
@@ -297,24 +434,24 @@ const SingleSelectInputBox = forwardRef<HTMLInputElement, InputProps>(
                   </button>
                 )}
               </div>
-            ))}
+            );
+          })}
 
-            {/* create new button */}
-            {createNewFn && (
-              <CreateNewBtn
-                type="button"
-                onClick={() => createNewFn()}
-                className={`menu-btn p-2 rounded-sm`}
-                tw={{ icon: `hidden` }}
-              >
-                <p className={`normal-case text-sm`}>Create new</p>
-              </CreateNewBtn>
-            )}
-          </div>
+          {/* create new button */}
+          {createNewFn && (
+            <CreateNewBtn
+              type="button"
+              onClick={createNewFn}
+              className={`menu-btn p-2 rounded-sm`}
+              tw={{ icon: `hidden` }}
+            >
+              <p className={`normal-case text-sm`}>Create new</p>
+            </CreateNewBtn>
+          )}
         </AnimationWrapper>
       </div>
     );
   }
 );
 
-export default SingleSelectInputBox;
+export default memo(SelectInputBox);

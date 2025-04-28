@@ -50,10 +50,6 @@ const Sidebar = () => {
 
         setActiveFloatingSidebar(false);
       }
-      // mobile screen (width <= 640px)
-      else {
-        setActiveFloatingSidebar(true);
-      }
     }
   }, [screenWidth]);
 
@@ -87,6 +83,7 @@ const Sidebar = () => {
         className={`
           relative
           flex
+          h-full
           gap-x-2
           ${activeSongId ? "pb-[80px]" : "h-full"}
           overflow-hidden
@@ -122,7 +119,7 @@ const Sidebar = () => {
           exit={{ width: "20%", opacity: 0 }}
           transition={{ duration: 0.3 }}
           mode="sync"
-          className={`floating-menu`}
+          className={`floating-menu bg-neutral-900`}
         >
           <SidebarInnerContent />
         </AnimationWrapper>
@@ -138,7 +135,7 @@ const Sidebar = () => {
         </ContentBox>
       </div>
 
-      <AudioPlayer songId={activeSongId} />
+      {activeSongId && <AudioPlayer songId={activeSongId} />}
     </div>
   );
 };

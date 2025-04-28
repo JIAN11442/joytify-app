@@ -118,7 +118,6 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
   };
 
   const isSidebarExpandedOrFloating = !isCollapsed || activeFloatingSidebar;
-  const isNonFloatingSidebarCollapsed = isCollapsed && !activeFloatingSidebar;
 
   // while sidebar is collapsed, clean search value and close the searchbar
   useEffect(() => {
@@ -220,7 +219,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
                 name={AiOutlinePlus}
                 opts={{ size: isSidebarExpandedOrFloating ? 20 : 24 }}
                 className={`
-                  ${isNonFloatingSidebarCollapsed ? "text-neutral-700" : "text-neutral-400"}
+                  text-neutral-400
                   group-hover:text-white  
                 `}
               />

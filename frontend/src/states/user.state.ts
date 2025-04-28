@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import { PasswordResetStatus } from "@joytify/shared-types/constants";
+import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
 import {
   AuthUserResponse,
   RefactorProfileUserResponse,
-  PasswordResetStatusType,
   ProfileCollectionInfoResponse,
+  PasswordUpdateStatusType,
 } from "@joytify/shared-types/types";
 
 type ActiveEditProfileModal = {
@@ -21,7 +21,7 @@ type UserParams = {
   activeUserMenu: boolean;
   activeProfileOptionsMenu: boolean;
   activeProfileEditModal: ActiveEditProfileModal;
-  passwordResetStatus: PasswordResetStatusType;
+  passwordResetStatus: PasswordUpdateStatusType;
 
   closeProfileEditModal: () => void;
 
@@ -32,7 +32,7 @@ type UserParams = {
   setActiveUserMenu: (state: boolean) => void;
   setActiveProfileOptionsMenu: (state: boolean) => void;
   setActiveProfileEditModal: (state: ActiveEditProfileModal) => void;
-  setPasswordResetStatus: (state: PasswordResetStatusType) => void;
+  setPasswordResetStatus: (state: PasswordUpdateStatusType) => void;
 };
 
 const useUserState = create<UserParams>((set) => ({
@@ -43,7 +43,7 @@ const useUserState = create<UserParams>((set) => ({
   activeUserMenu: false,
   activeProfileOptionsMenu: false,
   activeProfileEditModal: { active: false, profileUser: null },
-  passwordResetStatus: PasswordResetStatus.INITIAL,
+  passwordResetStatus: PasswordUpdateStatus.INITIAL,
 
   closeProfileEditModal: () =>
     set({ activeProfileEditModal: { active: false, profileUser: null } }),

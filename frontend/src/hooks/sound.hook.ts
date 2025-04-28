@@ -5,6 +5,8 @@ import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 
 const useSound = (url: string) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isMountedRef = useRef(true);
+  const abortControllerRef = useRef(new AbortController());
   const prevAudioCurrentTimeRef = useRef<number>(0);
   const prevGeneratedDurationRef = useRef<number>(0);
 
@@ -14,63 +16,114 @@ const useSound = (url: string) => {
 
   const { setIsPlaying } = useSoundState();
 
-  useEffect(() => {
-    if (url) {
-      const audio = new Audio(url);
-      audioRef.current = audio;
-
-      const handleLoadedMetaData = () => {
-        timeoutForDelay(() => setDuration(audio.duration));
-      };
-
-      const handleTimeUpdate = () => {
-        const audioCurrentTime = audio.currentTime;
-        const duration = audioCurrentTime - prevAudioCurrentTimeRef.current;
-        const generatedDuration =
-          duration > 0.3 ? prevGeneratedDurationRef.current : duration < 0 ? 0 : duration;
-
-        timeoutForDelay(() => {
-          setTimestamp(audioCurrentTime);
-          setPlaybackTime((prev) => (audioCurrentTime === 0 ? 0 : prev + generatedDuration));
-
-          prevAudioCurrentTimeRef.current = audioCurrentTime;
-          prevGeneratedDurationRef.current = generatedDuration;
-        });
-      };
-
-      // listening duration and return cleanup function
-      const cleanupLoaded = timeoutForEventListener(audio, "loadedmetadata", handleLoadedMetaData);
-
-      // listening current time and return cleanup function
-      const cleanupTime = timeoutForEventListener(audio, "timeupdate", handleTimeUpdate);
-
-      return () => {
-        audio.pause();
-        audio.src = "";
-        setIsPlaying(false);
-        setDuration(0);
-        setTimestamp(0);
-        setPlaybackTime(0);
-
-        cleanupLoaded();
-        cleanupTime();
-      };
-    }
-  }, [url]);
-
-  const play = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.play();
-      setIsPlaying(true);
-    }
-  }, []);
-
-  const pause = useCallback(() => {
+  const resetAudio = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
-      setIsPlaying(false);
+      audioRef.current.src = "";
+      audioRef.current = null;
     }
+    abortControllerRef.current.abort();
+    abortControllerRef.current = new AbortController();
+    prevAudioCurrentTimeRef.current = 0;
+    prevGeneratedDurationRef.current = 0;
+    setDuration(0);
+    setTimestamp(0);
+    setPlaybackTime(0);
+    setIsPlaying(false);
   }, []);
+
+  useEffect(() => {
+    if (!url) {
+      resetAudio();
+      return;
+    }
+
+    isMountedRef.current = true;
+    const audio = new Audio(url);
+    audioRef.current = audio;
+
+    const handleLoadedMetaData = () => {
+      timeoutForDelay(() => {
+        if (isMountedRef.current) {
+          setDuration(audio.duration);
+        }
+      });
+    };
+
+    const handleTimeUpdate = () => {
+      if (!isMountedRef.current) return;
+
+      const audioCurrentTime = audio.currentTime;
+      const duration = audioCurrentTime - prevAudioCurrentTimeRef.current;
+      const generatedDuration =
+        duration > 0.3 ? prevGeneratedDurationRef.current : duration < 0 ? 0 : duration;
+
+      timeoutForDelay(() => {
+        setTimestamp(audioCurrentTime);
+        setPlaybackTime((prev) => (audioCurrentTime === 0 ? 0 : prev + generatedDuration));
+
+        prevAudioCurrentTimeRef.current = audioCurrentTime;
+        prevGeneratedDurationRef.current = generatedDuration;
+      });
+    };
+
+    // listening duration and return cleanup function
+    const cleanupLoaded = timeoutForEventListener(
+      audio,
+      "loadedmetadata",
+      handleLoadedMetaData,
+      abortControllerRef.current.signal
+    );
+
+    // listening current time and return cleanup function
+    const cleanupTime = timeoutForEventListener(
+      audio,
+      "timeupdate",
+      handleTimeUpdate,
+      abortControllerRef.current.signal
+    );
+
+    return () => {
+      isMountedRef.current = false;
+      resetAudio();
+      cleanupLoaded();
+      cleanupTime();
+    };
+  }, [url, resetAudio]);
+
+  const play = useCallback(async () => {
+    if (!audioRef.current || !isMountedRef.current) return;
+
+    try {
+      await audioRef.current.play();
+
+      if (isMountedRef.current) {
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        console.debug("Playback was aborted intentionally");
+      } else {
+        console.error("Error playing audio:", error);
+        resetAudio();
+      }
+    }
+  }, [resetAudio]);
+
+  const pause = useCallback(async () => {
+    if (!audioRef.current || !isMountedRef.current) return;
+
+    try {
+      audioRef.current.pause();
+
+      if (isMountedRef.current) {
+        setIsPlaying(false);
+      }
+    } catch (error) {
+      console.error("Pause error:", error);
+      resetAudio();
+    }
+  }, [resetAudio]);
 
   const stop = useCallback(() => {
     if (audioRef.current) {

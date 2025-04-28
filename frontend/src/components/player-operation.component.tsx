@@ -29,7 +29,6 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, sound, classNam
 
   const currentIndex = songIds.indexOf(activeSongId);
 
-  // handle switch play and pause
   const handleSwitchPlayOrPauseState = () => {
     if (isPlaying) {
       sound.pause();
@@ -38,7 +37,6 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, sound, classNam
     }
   };
 
-  // handle switch to previous song
   const handleSwitchToPreviousSong = () => {
     const previousIndex = currentIndex === 0 ? songIds.length - 1 : currentIndex - 1;
 
@@ -47,7 +45,6 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, sound, classNam
     }
   };
 
-  // handle switch to next song
   const handleSwitchToNextSong = () => {
     const nextIndex = currentIndex === songIds.length - 1 ? 0 : currentIndex + 1;
 
@@ -56,7 +53,6 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, sound, classNam
     }
   };
 
-  // handle change shuffle button state
   const handleChangeShuffleState = () => {
     setIsShuffle(!isShuffle);
 
@@ -70,7 +66,6 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, sound, classNam
     }
   };
 
-  // handle switch loop type
   const handleSwitchLoopState = () => {
     // prevent switching to playlist loop when only one song is available
     const nextLoopType = {

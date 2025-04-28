@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  changePasswordHandler,
   deregisterUserHandler,
   getAuthenticatedUserInfoHandler,
   getProfileCollectionsInfoHandler,
@@ -16,8 +17,10 @@ userRoute.get("/authenticated", authenticate, getAuthenticatedUserInfoHandler);
 userRoute.get("/profile", authenticate, getProfileUserInfoHandler);
 userRoute.get("/profile/:collection", authenticate, getProfileCollectionsInfoHandler);
 
-userRoute.post("/password/reset/:token", resetPasswordHandler);
 userRoute.patch("/update", authenticate, updateUserHandler);
+userRoute.patch("/password/reset/:token", resetPasswordHandler);
+userRoute.patch("/password/change", authenticate, changePasswordHandler);
+
 userRoute.delete("/deregister", authenticate, deregisterUserHandler);
 
 export default userRoute;

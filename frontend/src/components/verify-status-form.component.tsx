@@ -76,7 +76,7 @@ const VerifyStatusForm: React.FC<VerifyStatusFormProps> = ({
       >
         <Icon
           name={iconName}
-          opts={{ size: 60 }}
+          opts={{ size: 80 }}
           className={`
             ${isSuccess ? "text-green-500" : "text-red-500"}
           `}
@@ -95,8 +95,8 @@ const VerifyStatusForm: React.FC<VerifyStatusFormProps> = ({
       >
         <p
           className={`
-            text-xl
-            text-neutral-400 
+            text-2xl
+            ${isSuccess ? "text-neutral-400" : "text-red-500"} 
             font-medium
           `}
         >
@@ -126,10 +126,13 @@ const VerifyStatusForm: React.FC<VerifyStatusFormProps> = ({
         className={`
           submit-btn
           ${countdown > 0 ? "w-fit" : "w-20"}
+          ${!isSuccess && "bg-red-500 border-red-500"}
           rounded-md
         `}
       >
-        <p>OK {countdown > 0 && `(${getDuration(countdown)})`}</p>
+        <p>
+          {isSuccess ? "OK" : "Retry"} {countdown > 0 && `(${getDuration(countdown)})`}
+        </p>
       </button>
     </div>
   );

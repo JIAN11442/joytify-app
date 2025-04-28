@@ -25,7 +25,9 @@ export enum MutationKey {
   SEND_RESET_PASSWORD_EMAIL = "send-reset-password-email",
   VERIFY_VERIFICATION_CODE = "verify-verification-code",
   RESET_USER_PASSWORD = "reset-user-password",
+  CHANGE_USER_PASSWORD = "change-user-password",
   UPDATE_USER_PREFERENCES = "update-user-preferences",
+  SIGN_OUT_DEVICES = "sign-out-devices",
 }
 
 export enum QueryKey {
@@ -35,7 +37,8 @@ export enum QueryKey {
   GET_TARGET_PLAYLIST = "get-target-playlist",
   GET_PLAYLIST_PRIVACY_COUNTS = "get-playlist-privacy-counts",
   GET_SONG_BY_ID = "get-song-by-id",
-  GET_ALL_LABELS = "get-all-labels",
+  GET_UPLOAD_SONG_LABELS = "get-upload-song-labels",
+  GET_GENRE_LABELS = "get-genre-labels",
   GET_USER_ALBUMS = "get-user-albums",
   GET_ALL_SONGS = "get-all-songs",
   GET_PROFILE_USER_INFO = "get-profile-user-info",

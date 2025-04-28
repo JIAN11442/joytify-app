@@ -55,10 +55,10 @@ const SidebarItem = forwardRef<HTMLDivElement, SidebarItemProps>(
                 to-neutral-900 to-[100%]
               `
               : collapse && !activeFloatingSidebar
-              ? "text-neutral-700"
+              ? "text-neutral-400"
               : "text-neutral-400 hover:text-white"
           }
-          hover:bg-neutral-800/50
+          hover:text-white
           gradient-animation
           transition-all
         `,

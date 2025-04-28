@@ -1,6 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import OptionCreateModal from "./option-create-modal.component";
+import CreateOptionModal from "./create-option-modal.component";
 import { useCreatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { defaultCreatePlaylistData } from "../constants/form.constant";
 import { DefaultCreatePlaylistForm } from "../types/form.type";
@@ -11,7 +11,6 @@ const CreatePlaylistModal = () => {
   const { activeCreatePlaylistModal, closeCreatePlaylistModal } = useUploadModalState();
   const { active, options } = activeCreatePlaylistModal;
 
-  // handle close modal
   const handleCloseModal = () => {
     timeoutForDelay(() => {
       closeCreatePlaylistModal();
@@ -19,7 +18,6 @@ const CreatePlaylistModal = () => {
     });
   };
 
-  // create playlist mutation
   const { mutate: createPlaylistFn } = useCreatePlaylistMutation(handleCloseModal);
 
   const {
@@ -39,11 +37,11 @@ const CreatePlaylistModal = () => {
   };
 
   return (
-    <OptionCreateModal
+    <CreateOptionModal
       type="playlist"
       active={active}
       closeModalFn={handleCloseModal}
-      autoCloseModalFn={false}
+      autoCloseModal={false}
       formOnSubmit={handleSubmit(onSubmit)}
       registerValidState={isValid}
       {...register("playlist", {

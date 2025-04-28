@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import OptionCreateModal from "./option-create-modal.component";
 import { useCreateAlbumMutation } from "../hooks/album-mutate.hook";
+import CreateOptionModal from "./create-option-modal.component";
 import { defaultCreateAlbumData } from "../constants/form.constant";
 import { DefaultCreateAlbumForm } from "../types/form.type";
 import useUploadModalState from "../states/upload-modal.state";
@@ -11,7 +11,6 @@ const CreateAlbumModal = () => {
   const { activeCreateAlbumModal, closeCreateAlbumModal } = useUploadModalState();
   const { active, options } = activeCreateAlbumModal;
 
-  // handle close modal
   const handleCloseModal = () => {
     timeoutForDelay(() => {
       closeCreateAlbumModal();
@@ -19,7 +18,6 @@ const CreateAlbumModal = () => {
     });
   };
 
-  // create album mutation
   const { mutate: createAlbumFn } = useCreateAlbumMutation(handleCloseModal);
 
   const {
@@ -28,7 +26,7 @@ const CreateAlbumModal = () => {
     reset,
     formState: { isValid },
   } = useForm<DefaultCreateAlbumForm>({
-    defaultValues: { ...defaultCreateAlbumData },
+    defaultValues: defaultCreateAlbumData,
     mode: "onChange",
   });
 
@@ -41,11 +39,11 @@ const CreateAlbumModal = () => {
   };
 
   return (
-    <OptionCreateModal
+    <CreateOptionModal
       type="album"
       active={active}
       closeModalFn={handleCloseModal}
-      autoCloseModalFn={false}
+      autoCloseModal={false}
       formOnSubmit={handleSubmit(onSubmit)}
       registerValidState={isValid}
       {...register("title", {

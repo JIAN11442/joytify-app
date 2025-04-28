@@ -4,9 +4,10 @@ import { IoIosMenu } from "react-icons/io";
 import { BiSearch } from "react-icons/bi";
 import JoytifyLogo from "../../public/joytify-logo.svg";
 
-import AuthOperation from "./auth-operation.component";
-import NavbarSearchBar from "./navbar-searchbar.component";
 import NavbarLink from "./navbar-link.component";
+import UserEntryPoint from "./user-entry-point.component";
+import NavbarSearchBar from "./navbar-searchbar.component";
+import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 
 import useNavbarState from "../states/navbar.state";
 import useSidebarState from "../states/sidebar.state";
@@ -16,7 +17,8 @@ import { timeoutForDelay } from "../lib/timeout.lib";
 const Navbar = () => {
   const [searchBarVal, setSearchBarVal] = useState("");
 
-  const { activeFloatingSidebar, setActiveFloatingSidebar } = useSidebarState();
+  const { activeFloatingSidebar, setActiveFloatingSidebar, setCollapseSideBarState } =
+    useSidebarState();
   const {
     activeNavSearchBar,
     adjustNavSearchBarPosition,
@@ -26,28 +28,26 @@ const Navbar = () => {
 
   const { screenWidth } = useProviderState();
 
-  // handle active float sidebar
+  const { mutate: updateUserPreferences } = useUpdateUserPreferencesMutation();
+
   const handleActiveFloatSidebar = () => {
     timeoutForDelay(() => {
       setActiveFloatingSidebar(!activeFloatingSidebar);
     });
   };
 
-  // handle active navbar search bar
   const handleActiveNavbarSearchBar = () => {
     timeoutForDelay(() => {
       setActiveNavSearchBar(!activeNavSearchBar);
     });
   };
 
-  // handle searchbar onChange
   const handleSearchBarOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
 
     setSearchBarVal(val);
   };
 
-  // auto close searchbar function
   const autoCloseSearchBarFn = {
     active: true,
     closeFn: () => {
@@ -55,6 +55,7 @@ const Navbar = () => {
     },
   };
 
+  // adjust navbar searchbar position
   useEffect(() => {
     if (screenWidth <= 550) {
       setAdjustNavSearchBarPosition(true);
@@ -63,13 +64,16 @@ const Navbar = () => {
     }
   }, [screenWidth]);
 
+  // if floating sidebar is active, collapse sidebar
+  useEffect(() => {
+    if (activeFloatingSidebar) {
+      setCollapseSideBarState({ isCollapsed: false, isManualToggle: false });
+      updateUserPreferences({ collapseSidebar: false });
+    }
+  }, [activeFloatingSidebar]);
+
   return (
-    <div
-      className={`
-        flex-1
-        bg-black
-      `}
-    >
+    <div className={`flex flex-col`}>
       <div
         className={`
           flex
@@ -166,7 +170,7 @@ const Navbar = () => {
             justify-end
           `}
         >
-          <AuthOperation />
+          <UserEntryPoint />
         </div>
       </div>
 

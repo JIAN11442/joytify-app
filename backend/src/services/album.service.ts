@@ -74,7 +74,7 @@ export const deleteAlbum = async (data: DeleteAlbumServiceRequest) => {
     users: userId,
   });
 
-  appAssert(deletedAlbum, INTERNAL_SERVER_ERROR, "Failed to delete album");
+  appAssert(deletedAlbum !== null, INTERNAL_SERVER_ERROR, "Failed to delete album");
 
   return { deletedAlbum };
 };

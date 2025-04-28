@@ -1,34 +1,23 @@
 import { useParams } from "react-router-dom";
 
 import Loader from "../components/loader.component";
-import ContentBox from "../components/content-box.component";
 import PlaylistBody from "../components/playlist-body.component";
 import PlaylistHeader from "../components/playlist-header.component";
-
 import { useGetPlaylistByIdQuery } from "../hooks/playlist-query.hook";
 
 const PlaylistPage = () => {
   const { id } = useParams();
-
   const { playlist } = useGetPlaylistByIdQuery(String(id));
 
   // If any of these data are not available, show loader
   if (!playlist) {
-    return (
-      <Loader
-        className={{
-          container: `
-            h-full
-          `,
-        }}
-      />
-    );
+    return <Loader className={{ container: "h-full" }} />;
   }
 
   const { paletee } = playlist;
 
   return (
-    <ContentBox
+    <div
       style={{
         backgroundImage: `linear-gradient(
           to bottom,
@@ -49,7 +38,7 @@ const PlaylistPage = () => {
 
       {/* Playlist content */}
       <PlaylistBody playlist={playlist} />
-    </ContentBox>
+    </div>
   );
 };
 

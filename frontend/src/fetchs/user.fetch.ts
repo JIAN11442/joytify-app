@@ -7,7 +7,11 @@ import {
   AuthUserResponse,
   RefactorProfileUserResponse,
   ProfileCollectionInfoResponse,
+  ChangePasswordRequest,
+  DeregisterUserAccountRequest,
 } from "@joytify/shared-types/types";
+import { getLabelId } from "./label.fetch";
+import { LabelOptions } from "@joytify/shared-types/constants";
 
 // get authenticated user info
 export const getAuthUserInfo = async (): Promise<AuthUserResponse> =>
@@ -27,15 +31,37 @@ export const getProfileCollectionInfo = async (
 };
 
 // update user info
-export const updateUserInfo = async (params: UpdateUserInfoRequest): Promise<UserResponse> =>
-  API.patch("/user/update", params);
+export const updateUserInfo = async (params: UpdateUserInfoRequest): Promise<UserResponse> => {
+  const payload = { ...params };
 
-// reset user password
-export const resetUserPassword = async (params: ResetPasswordRequest): Promise<UserResponse> => {
-  const { token, ...rest } = params;
+  // if country is provided, get the id
+  if (payload.country && payload.country?.length > 0) {
+    try {
+      payload.country = await getLabelId({
+        label: payload.country,
+        type: LabelOptions.COUNTRY,
+        default: true,
+        createIfAbsent: true,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-  return API.post(`/user/password/reset/${token}`, rest);
+  return API.patch("/user/update", payload);
 };
 
+// reset user password
+export const resetUserPassword = async (params: ResetPasswordRequest) => {
+  const { token, ...rest } = params;
+
+  return API.patch(`/user/password/reset/${token}`, rest);
+};
+
+// change user password
+export const changeUserPassword = async (params: ChangePasswordRequest) =>
+  API.patch(`/user/password/change`, params);
+
 // deregister user account
-export const deregisterUserAccount = async () => API.delete("/user/deregister");
+export const deregisterUserAccount = async (params: DeregisterUserAccountRequest) =>
+  API.delete("/user/deregister", { data: params });

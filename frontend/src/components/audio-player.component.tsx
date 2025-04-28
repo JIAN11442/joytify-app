@@ -18,19 +18,15 @@ type AudioPlayerProps = {
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
   const navigate = useNavigate();
-
   const songPlayedRef = useRef<string | null>(null);
 
   const { setSound, songToPlay } = useSoundState();
   const { song, refetch: songRefetch } = useGetSongByIdQuery(songId);
-
-  const sound = useSound(song?.songUrl || "");
-  const { playbackTime } = sound;
-
-  // mutations
   const { mutate: recordPlaybackLog } = useRecordPlaybackLogMutation();
 
-  // handle navigate to target song playlist
+  const sound = useSound(song?.songUrl ?? "");
+  const { playbackTime } = sound;
+
   const handleNavigateToPlaylist = () => {
     navigate(`/playlist/${songToPlay?.playlist_for}`);
   };
@@ -86,7 +82,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
         h-[75px]
         bg-black
         shadow-[1px_0px_15px_5px]
-        shadow-black/50
+        shadow-neutral-700/50
       `}
     >
       <div

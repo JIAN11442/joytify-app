@@ -7,8 +7,7 @@ import { VerificationForOptions, VerificationCodeActions } from "@joytify/shared
 import useVerificationModalState from "../states/verification.state";
 
 const VerificationCodeModal = () => {
-  const { activeVerificationCodeModal, closeVerificationCodeModal, verifyCodePending } =
-    useVerificationModalState();
+  const { activeVerificationCodeModal, verifyCodePending } = useVerificationModalState();
   const { active, type, userEmail, isResendSuccessful, isVerified, action, registerFn } =
     activeVerificationCodeModal;
 
@@ -40,9 +39,6 @@ const VerificationCodeModal = () => {
       title={title}
       description={description}
       activeState={active}
-      closeModalFn={closeVerificationCodeModal}
-      closeBtnDisabled={true}
-      autoCloseModalFn={false}
       switchPage={{ initialPage: EMAIL_VERIFICATION, currentPage: type }}
       loading={verifyCodePending}
     >

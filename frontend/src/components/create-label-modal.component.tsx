@@ -1,8 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { OptionType } from "./multi-select-input-box.component";
-import OptionCreateModal from "./option-create-modal.component";
-
+import CreateOptionModal from "./create-option-modal.component";
 import { useCreateLabelMutation } from "../hooks/label-mutate.hook";
 import { defaultCreateLabelData } from "../constants/form.constant";
 import { DefaultCreateLabelForm } from "../types/form.type";
@@ -11,7 +10,8 @@ import { timeoutForDelay } from "../lib/timeout.lib";
 
 const CreateLabelModal = () => {
   const { activeCreateLabelModal, closeCreateLabelModal } = useUploadModalState();
-  const { type, active, options } = activeCreateLabelModal;
+  const { active, options } = activeCreateLabelModal;
+  const { type } = options as OptionType;
 
   // handle close modal
   const handleCloseModal = () => {
@@ -41,11 +41,11 @@ const CreateLabelModal = () => {
   };
 
   return (
-    <OptionCreateModal
+    <CreateOptionModal
       type="label"
       active={active}
       closeModalFn={handleCloseModal}
-      autoCloseModalFn={false}
+      autoCloseModal={false}
       formOnSubmit={handleSubmit(onSubmit)}
       registerValidState={isValid}
       {...register("label", {

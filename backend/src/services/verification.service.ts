@@ -157,7 +157,7 @@ export const verifyCode = async (params: VerifyCodeServiceRequest) => {
         const deletedVerificationCode = await VerificationModel.findOneAndDelete(queryParams);
 
         appAssert(
-          deletedVerificationCode,
+          deletedVerificationCode !== null,
           INTERNAL_SERVER_ERROR,
           "Failed to delete verification code"
         );

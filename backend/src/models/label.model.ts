@@ -5,6 +5,7 @@ import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
 export interface LabelDocument extends mongoose.Document {
   label: string;
   type: LabelOptions;
+  index: number;
   author: mongoose.Types.ObjectId;
   users: mongoose.Types.ObjectId[];
   songs: mongoose.Types.ObjectId[];
@@ -15,6 +16,7 @@ const labelSchema = new mongoose.Schema<LabelDocument>(
   {
     label: { type: String, required: true },
     type: { type: String, required: true },
+    index: { type: Number },
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

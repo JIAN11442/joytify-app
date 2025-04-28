@@ -1,9 +1,9 @@
-import Loader from "./loader.component";
 import PlaylistItem from "./playlist-item.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { useGetPlaylistsQuery } from "../hooks/playlist-query.hook";
 import useSidebarState from "../states/sidebar.state";
 import useLibraryState from "../states/library.state";
+import { LibraryPlaylistSkeleton } from "./skeleton-loading.component";
 
 const LibraryPlaylist = () => {
   const { librarySearchVal } = useLibraryState();
@@ -13,7 +13,7 @@ const LibraryPlaylist = () => {
   const { isCollapsed } = collapseSideBarState;
 
   if (isPlaylistLoading) {
-    return <Loader />;
+    return <LibraryPlaylistSkeleton />;
   }
 
   if (librarySearchVal && !playlists?.length) {
@@ -34,7 +34,7 @@ const LibraryPlaylist = () => {
     );
   }
 
-  if (!playlists) {
+  if (!isPlaylistLoading && !playlists) {
     return (
       !isCollapsed && (
         <div
@@ -57,7 +57,7 @@ const LibraryPlaylist = () => {
 
   return (
     <div className={`flex flex-col ${isCollapsed ? "gap-y-3" : "gap-y-1"}`}>
-      {playlists.map((playlist, index) => (
+      {playlists?.map((playlist, index) => (
         <AnimationWrapper key={playlist._id} transition={{ duration: 0.3, delay: index * 0.2 }}>
           <PlaylistItem playlist={playlist} />
         </AnimationWrapper>

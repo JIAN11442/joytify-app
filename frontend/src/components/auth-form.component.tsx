@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { AuthProvider } from "firebase/auth";
 import { MdAlternateEmail } from "react-icons/md";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -23,7 +23,11 @@ import { timeoutForDelay } from "../lib/timeout.lib";
 import { isHighlight } from "../lib/icon-highlight.lib";
 import { emailRegex, passwordRegex } from "../utils/regex";
 
-const AuthForm = () => {
+type AuthFormProps = {
+  setModalCloseBtnDisabled?: (state: boolean) => void;
+};
+
+const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
   const { authFor, openAuthModal } = useAuthModalState();
@@ -93,6 +97,11 @@ const AuthForm = () => {
       });
     }
   };
+
+  // handle parent modal close button disabled state through isPending
+  useEffect(() => {
+    setModalCloseBtnDisabled?.(localAuthPending || thirdPartyAuthPending);
+  }, [localAuthPending, thirdPartyAuthPending]);
 
   return (
     <form

@@ -57,6 +57,7 @@ playlistSchema.pre("save", async function (next) {
     let title = `${baseTitle} #${index}`;
 
     const existingPlaylist = await PlaylistModel.findOne({
+      user: this.user,
       title: new RegExp(`^${baseTitle} #\\d+$`),
     }).sort({ createdAt: -1 });
 

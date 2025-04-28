@@ -9,6 +9,7 @@ export type DefaultAnimationWrapperProps = {
   mode?: "sync" | "wait" | "popLayout";
   initialState?: AnimatePresenceProps["initial"] | undefined;
   visible?: boolean;
+  tabIndex?: number;
   style?: React.CSSProperties;
 };
 
@@ -29,6 +30,7 @@ const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
       mode = "wait",
       initialState = undefined,
       visible = true,
+      tabIndex,
       className,
       style,
       onClick,
@@ -50,6 +52,7 @@ const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
             className={className}
             style={style}
             onClick={onClick}
+            tabIndex={tabIndex}
             {...props}
           >
             {children}

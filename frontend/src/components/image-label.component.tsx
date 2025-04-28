@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { forwardRef, useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
-import { AiFillEdit } from "react-icons/ai";
+import { MdEdit } from "react-icons/md";
 
 import Loader from "./loader.component";
 import Icon from "./react-icons.component";
@@ -23,6 +23,7 @@ interface ImageLabelProps<T extends FieldValues = any>
     updateImgFn: (awsImageUrl: string) => void;
     isPending: boolean;
   };
+  visibleHoverText?: boolean;
   setImgSrc?: (src: string) => void;
   tw?: {
     mask?: string;
@@ -44,6 +45,7 @@ const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
       formMethods,
       updateConfig,
       isDefault,
+      visibleHoverText = true,
       setImgSrc,
       className,
       tw = {
@@ -125,7 +127,6 @@ const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
             )}
           >
             <img
-              alt="image-label"
               ref={ref}
               src={src}
               className={twMerge(
@@ -188,11 +189,14 @@ const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
               )}
             >
               {isPending || isUploading ? (
-                <Loader className={tw?.loader} />
+                <Loader
+                  loader={{ name: "BeatLoader", size: 10, color: "white" }}
+                  className={tw?.loader}
+                />
               ) : (
                 <>
-                  <Icon name={AiFillEdit} opts={{ size: 30 }} className={tw?.icon} />
-                  <p>Choose photo</p>
+                  <Icon name={MdEdit} opts={{ size: 30 }} className={tw?.icon} />
+                  {visibleHoverText && <p>Choose photo</p>}
                 </>
               )}
             </div>

@@ -5,39 +5,38 @@ import { IoIosPower, IoMdLogOut } from "react-icons/io";
 import AvatarMenu from "./avatar-menu.component";
 import MenuItem from "./menu-item.component";
 
-import { useDeregisterMutation, useLogoutMutation } from "../hooks/auth-mutate.hook";
+import { useLogoutMutation } from "../hooks/auth-mutate.hook";
+import { useGetProfileUserInfoQuery } from "../hooks/user-query.hook";
 import { AuthForOptions } from "@joytify/shared-types/constants";
-import { AuthUserResponse } from "@joytify/shared-types/types";
+import { AuthUserResponse, RefactorProfileUserResponse } from "@joytify/shared-types/types";
 import useAuthModalState from "../states/auth-modal.state";
+import useSettingsState from "../states/settings.state";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
-const AuthOperation = () => {
+const UserEntryPoint = () => {
   const { openAuthModal } = useAuthModalState();
   const { authUser, activeUserMenu, setActiveUserMenu } = useUserState();
+  const { openAccountDerergistrationModal } = useSettingsState();
 
-  // mutations
   const { mutate: logoutFn } = useLogoutMutation();
-  const { mutate: deregisterFn } = useDeregisterMutation();
+  const { profileUser } = useGetProfileUserInfoQuery();
 
-  // handle active auth modal(login or register)
   const handleActiveAuthModal = (authFor: AuthForOptions) => {
     timeoutForDelay(() => {
       openAuthModal(authFor);
     });
   };
 
-  // handle logout
   const handleLogoutUser = () => {
     timeoutForDelay(() => {
       logoutFn();
     });
   };
 
-  // handle deregister user
   const handleDeregisterUser = () => {
     timeoutForDelay(() => {
-      deregisterFn();
+      openAccountDerergistrationModal(profileUser as RefactorProfileUserResponse);
     });
   };
 
@@ -53,7 +52,7 @@ const AuthOperation = () => {
           }}
         >
           <MenuItem to={`/profile/${authUser._id}`} icon={{ name: BiUser }} label="profile" />
-          <MenuItem to={"/settings"} icon={{ name: IoSettingsOutline }} label="setting" />
+          <MenuItem to={"/settings/account"} icon={{ name: IoSettingsOutline }} label="setting" />
           <MenuItem onClick={handleLogoutUser} icon={{ name: IoIosPower }} label="logout" />
           <MenuItem onClick={handleDeregisterUser} icon={{ name: IoMdLogOut }} label="deregister" />
         </AvatarMenu>
@@ -96,4 +95,4 @@ const AuthOperation = () => {
   );
 };
 
-export default AuthOperation;
+export default UserEntryPoint;

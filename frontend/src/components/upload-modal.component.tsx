@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { RegisterOptions, SubmitHandler, useForm } from "react-hook-form";
 import { FaCircleInfo } from "react-icons/fa6";
 import { IoCaretBack } from "react-icons/io5";
@@ -9,9 +9,10 @@ import Icon from "./react-icons.component";
 import InputBox from "./input-box.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import SingleSelectInputBox from "./single-select-input-box.component";
-import MultiSelectInputBox, { OptionType } from "./multi-select-input-box.component";
+import MultiSelectInputBox from "./multi-select-input-box.component";
 import CalendarInputBox from "./calendar-input-box.component";
 import WarningMsgBox from "./warning-message-box.component";
+import SelectInputBox from "./single-select-input-box.component";
 
 import { useGetLabelsQuery } from "../hooks/label-query.hook";
 import { useGetAlbumsQuery } from "../hooks/album-query.hook";
@@ -20,10 +21,13 @@ import { useRemoveLabelMutation } from "../hooks/label-mutate.hook";
 import { useRemoveAlbumMutation } from "../hooks/album-mutate.hook";
 import { defaultSongData } from "../constants/form.constant";
 import { LabelOptions } from "@joytify/shared-types/constants";
+import { QueryKey } from "../constants/query-client-key.constant";
 import { DefaultSongForm, FormMethods } from "../types/form.type";
 import useUploadModalState from "../states/upload-modal.state";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import { getLabelOptions } from "../utils/get-label-options.util";
+import { validateDate } from "../utils/validate-date.util";
 
 type WarningState = {
   active: boolean;
@@ -52,54 +56,57 @@ const UploadModal = () => {
   const { userPlaylists } = usePlaylistState();
 
   const { albums } = useGetAlbumsQuery();
-  const { labels, refetch: labelRefetch } = useGetLabelsQuery();
 
-  // handle close upload modal
-  const handleCloseUploadModal = () => {
+  const { LANGUAGE, GENRE, TAG } = LabelOptions;
+  const { GET_UPLOAD_SONG_LABELS } = QueryKey;
+
+  const { labels, refetch: labelRefetch } = useGetLabelsQuery(GET_UPLOAD_SONG_LABELS, [
+    LANGUAGE,
+    GENRE,
+    TAG,
+  ]);
+
+  const handleCloseUploadModal = useCallback(() => {
     timeoutForDelay(() => {
       closeUploadModal();
       reset(defaultSongData);
     });
-  };
+  }, [closeUploadModal]);
 
   // mutations
-  const { mutate: removeLabelFn } = useRemoveLabelMutation();
+  const { mutate: removeLabelFn } = useRemoveLabelMutation(GET_UPLOAD_SONG_LABELS);
   const { mutate: removeAlbumFn } = useRemoveAlbumMutation();
   const { mutate: createSongFn, isPending } = useCreateSongMutation(handleCloseUploadModal);
 
-  // handle active advanced settings
-  const handleActiveAdvancedSettings = () => {
+  const handleActiveAdvancedSettings = useCallback(() => {
     timeoutForDelay(() => {
       setActiveAdvancedSettings(true);
     });
-  };
+  }, []);
 
-  // handle inactive advanced settings
-  const handleInactiveAdvancedSettings = () => {
+  const handleInactiveAdvancedSettings = useCallback(() => {
     timeoutForDelay(() => {
       setActiveAdvancedSettings(false);
     });
-  };
+  }, []);
 
-  // handle active create playlist modal
-  const handleActiveCreatePlaylistModal = () => {
+  const handleActiveCreatePlaylistModal = useCallback(() => {
     timeoutForDelay(() => {
       setActiveCreatePlaylistModal({
         active: true,
         options: userPlaylists?.map((playlist) => playlist.title) || null,
       });
     });
-  };
+  }, [userPlaylists]);
 
-  // handle active create album modal
-  const handleActiveCreateAlbumModal = () => {
+  const handleActiveCreateAlbumModal = useCallback(() => {
     timeoutForDelay(() => {
       // generate albums structure to string array
       const options = albums?.map((album) => album.title) || [];
 
       setActiveCreateAlbumModal({ active: true, options });
     });
-  };
+  }, [albums]);
 
   // get form data
   const {
@@ -112,6 +119,7 @@ const UploadModal = () => {
     watch,
     formState: { isValid },
   } = useForm<DefaultSongForm>({
+    defaultValues: defaultSongData,
     mode: "onChange",
   });
 
@@ -125,16 +133,7 @@ const UploadModal = () => {
     });
   };
 
-  const warningContent = () => {
-    return (
-      <span>
-        If there is more than one {visibleWarning.target}, please separate them with a comma.{" "}
-        <span className={`font-extrabold text-orange-400`}>[e.g., John, Jason]</span>
-      </span>
-    );
-  };
-
-  const warning = () => ({
+  const warningHandler = () => ({
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
       setVisibleWarning({
         active: Boolean(e.target.value.length),
@@ -147,6 +146,15 @@ const UploadModal = () => {
     },
   });
 
+  const warningContent = () => {
+    return (
+      <span>
+        If there is more than one {visibleWarning.target}, please separate them with a comma.{" "}
+        <span className={`font-extrabold text-orange-400`}>[e.g., John, Jason]</span>
+      </span>
+    );
+  };
+
   const formMethods: FormMethods<DefaultSongForm> = useMemo(
     () => ({
       setFormValue: setValue,
@@ -155,6 +163,24 @@ const UploadModal = () => {
     }),
     []
   );
+
+  const playlistOptions = useMemo(() => {
+    return (
+      userPlaylists?.map((playlist) => ({
+        id: playlist._id,
+        title: playlist.title,
+      })) || []
+    );
+  }, [userPlaylists]);
+
+  const albumOptions = useMemo(() => {
+    return (
+      albums?.map((album) => ({
+        id: album._id,
+        title: album.title,
+      })) || []
+    );
+  }, [albums]);
 
   const onSubmit: SubmitHandler<DefaultSongForm> = async (value) => {
     createSongFn(value);
@@ -165,16 +191,15 @@ const UploadModal = () => {
       title="Add a song"
       description="upload an mp3 file"
       activeState={activeUploadModal}
-      closeModalFn={handleCloseUploadModal}
-      closeBtnDisabled={isPending}
-      autoCloseModalFn={
+      closeModalFn={!isPending ? handleCloseUploadModal : undefined}
+      autoCloseModal={
         !activeCreateLabelModal.active &&
         !activeCreatePlaylistModal.active &&
         !activeCreateAlbumModal.active &&
         !isPending
       }
       className={`
-        ${activeAdvancedSettings && "md:w-[80vw] md:max-w-[700px]"}`}
+        ${activeAdvancedSettings && "md:w-[80vw] md:max-w-[750px]"}`}
     >
       {/* warning message box */}
       <WarningMsgBox
@@ -271,24 +296,18 @@ const UploadModal = () => {
             />
 
             {/* Song Playlist */}
-            <SingleSelectInputBox
+            <SelectInputBox
               title="Select a playlist"
               placeholder="Click to choose a playlist"
               formMethods={formMethods}
-              options={
-                userPlaylists?.map((playlist) => ({
-                  id: playlist._id,
-                  title: playlist.title,
-                })) || []
-              }
+              options={playlistOptions}
               createNewFn={handleActiveCreatePlaylistModal}
               autoCloseMenuFn={!activeCreatePlaylistModal.active}
               disabled={isPending}
               required
               {...register("playlist_for", {
                 required: true,
-                validate: (val) =>
-                  userPlaylists?.map((playlist) => playlist._id).includes(val ?? ""),
+                validate: (val) => userPlaylists?.some((playlist) => playlist._id === val) ?? false,
               })}
             />
           </div>
@@ -352,7 +371,7 @@ const UploadModal = () => {
               formMethods={formMethods}
               disabled={isPending}
               toArray={true}
-              {...normalizeRegister("lyricists", { ...warning() })}
+              {...normalizeRegister("lyricists", { ...warningHandler() })}
             />
 
             {/* Song composer */}
@@ -367,7 +386,7 @@ const UploadModal = () => {
               formMethods={formMethods}
               disabled={isPending}
               toArray={true}
-              {...normalizeRegister("composers", { ...warning() })}
+              {...normalizeRegister("composers", { ...warningHandler() })}
             />
 
             {/* Album */}
@@ -375,12 +394,7 @@ const UploadModal = () => {
               title="Select an album"
               placeholder="Click to choose an album"
               formMethods={formMethods}
-              options={
-                albums?.map((album) => ({
-                  id: album._id,
-                  title: album.title,
-                })) || []
-              }
+              options={albumOptions}
               createNewFn={handleActiveCreateAlbumModal}
               deleteOptFn={removeAlbumFn}
               autoCloseMenuFn={!activeCreateAlbumModal.active}
@@ -394,17 +408,7 @@ const UploadModal = () => {
               title="Select language(s) for the song"
               placeholder="Click to choose song language"
               formMethods={formMethods}
-              options={
-                {
-                  type: LabelOptions.LANGUAGE,
-                  labels: labels
-                    ? {
-                        defaults: labels.default?.language || null,
-                        created: labels.created?.language || null,
-                      }
-                    : null,
-                } as OptionType
-              }
+              options={getLabelOptions(labels, LANGUAGE)}
               deleteOptFn={removeLabelFn}
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
@@ -418,17 +422,7 @@ const UploadModal = () => {
               title="Select genre(s) for the song"
               placeholder="Click to choose song genre"
               formMethods={formMethods}
-              options={
-                {
-                  type: LabelOptions.GENRE,
-                  labels: labels
-                    ? {
-                        defaults: labels.default?.genre || null,
-                        created: labels.created?.genre || null,
-                      }
-                    : null,
-                } as OptionType
-              }
+              options={getLabelOptions(labels, GENRE)}
               deleteOptFn={removeLabelFn}
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
@@ -442,17 +436,7 @@ const UploadModal = () => {
               title="Select tag(s) for the song"
               placeholder="Click to choose song tags"
               formMethods={formMethods}
-              options={
-                {
-                  type: LabelOptions.TAG,
-                  labels: labels
-                    ? {
-                        defaults: labels.default?.tag || null,
-                        created: labels.created?.tag || null,
-                      }
-                    : null,
-                } as OptionType
-              }
+              options={getLabelOptions(labels, TAG)}
               deleteOptFn={removeLabelFn}
               queryRefetch={labelRefetch}
               autoCloseMenuFn={!activeCreateLabelModal.active}
@@ -462,10 +446,14 @@ const UploadModal = () => {
 
             {/* Release Date */}
             <CalendarInputBox
-              id="releaseDate"
-              title="Select the release date of song"
+              title="Release Date"
               disabled={isPending}
-              {...normalizeRegister("releaseDate")}
+              {...normalizeRegister("releaseDate", {
+                validate: (val) => {
+                  if (!val) return true;
+                  return validateDate(val as string);
+                },
+              })}
             />
           </AnimationWrapper>
         </div>

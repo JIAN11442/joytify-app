@@ -4,8 +4,8 @@ import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import { IoMdClose } from "react-icons/io";
 
-import Icon from "./react-icons.component";
 import Loader from "./loader.component";
+import Icon from "./react-icons.component";
 
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import mergeRefs from "../lib/merge-refs.lib";
@@ -16,16 +16,16 @@ type ModalProps = {
   activeState: boolean;
   children: React.ReactNode;
   activeOnChange?: () => void;
-  closeBtnDisabled?: boolean;
-  closeModalFn: () => void;
+  closeModalFn?: () => void;
+  autoCloseModal?: boolean;
+  switchPage?: { initialPage: string; currentPage: string };
+  loading?: boolean;
   className?: string;
   tw?: {
+    overlay?: string;
     title?: string;
     description?: string;
   };
-  autoCloseModalFn?: boolean;
-  switchPage?: { initialPage: string; currentPage: string };
-  loading?: boolean;
 };
 
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
@@ -36,13 +36,12 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       activeState,
       children,
       activeOnChange,
-      closeBtnDisabled,
       closeModalFn,
-      className,
-      tw,
-      autoCloseModalFn = true,
+      autoCloseModal = true,
       switchPage,
       loading = false,
+      className,
+      tw,
     },
     ref
   ) => {
@@ -54,24 +53,20 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
 
     const handleCloseModal = () => {
       timeoutForDelay(() => {
-        closeModalFn();
+        closeModalFn?.();
       });
     };
 
     // auto close modal while click outside
     useEffect(() => {
       const handleModalOnBlur: EventListener = (e) => {
-        if (
-          autoCloseModalFn &&
-          modalRef.current &&
-          !modalRef.current.contains(e.target as Node)
-        ) {
-          closeModalFn();
+        if (autoCloseModal && modalRef.current && !modalRef.current.contains(e.target as Node)) {
+          closeModalFn?.();
         }
       };
 
       return timeoutForEventListener(document, "click", handleModalOnBlur);
-    }, [autoCloseModalFn, modalRef]);
+    }, [autoCloseModal, modalRef]);
 
     const modalContent = (
       <>
@@ -114,18 +109,17 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
     );
 
     return (
-      <Dialog.Root
-        open={activeState}
-        defaultOpen={activeState}
-        onOpenChange={activeOnChange}
-      >
+      <Dialog.Root open={activeState} defaultOpen={activeState} onOpenChange={activeOnChange}>
         <Dialog.Portal>
           <Dialog.Overlay
-            className={`
+            className={twMerge(
+              `
               fixed
               inset-0
               bg-neutral-900/90
-            `}
+            `,
+              tw?.overlay
+            )}
           />
           <Dialog.Content
             ref={mergeRefs(modalRef, ref)}
@@ -194,21 +188,21 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             <Dialog.Close asChild>
               <button
                 onClick={handleCloseModal}
-                disabled={closeBtnDisabled}
+                disabled={!closeModalFn}
                 className={`
                   absolute
                   group
                   top-5
                   right-5
                   hover-btn
-                  ${closeBtnDisabled && "no-hover hidden"}
+                  ${!closeModalFn && "no-hover hidden"}
                 `}
               >
                 <Icon
                   name={IoMdClose}
                   className={`
                     text-neutral-400
-                    ${!closeBtnDisabled && "group-hover:text-white"}
+                    ${closeModalFn && "group-hover:text-white"}
                   `}
                 />
               </button>

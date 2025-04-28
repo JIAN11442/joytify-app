@@ -6,6 +6,10 @@ import LabelModel from "./label.model";
 import SessionModel from "./session.model";
 import PlaylistModel, { PlaylistDocument } from "./playlist.model";
 import VerificationModel from "./verification.model";
+import MusicianModel from "./musician.model";
+import PlaybackModel from "./playback.model";
+import HistoryModel from "./history.model";
+import StatsModel from "./stats.model";
 
 import usePalette from "../hooks/paletee.hook";
 import { profile_collections, profile_names } from "../constants/profile-img.constant";
@@ -32,6 +36,11 @@ export interface UserDocument extends mongoose.Document {
     total_songs: number;
     total_albums: number;
     total_following: number;
+  };
+  personal_info: {
+    gender: string;
+    country: string;
+    date_of_birth: Date;
   };
   comparePassword: (password: string) => Promise<boolean>;
   omitPassword(): Omit<this, "password">;
@@ -87,6 +96,11 @@ const userSchema = new mongoose.Schema<UserDocument>(
       total_songs: { type: Number, default: 0 },
       total_albums: { type: Number, default: 0 },
       total_following: { type: Number, default: 0 },
+    },
+    personal_info: {
+      gender: { type: mongoose.Schema.Types.ObjectId, ref: "Label", index: true, default: null },
+      country: { type: mongoose.Schema.Types.ObjectId, ref: "Label", index: true, default: null },
+      date_of_birth: { type: Date, default: null },
     },
   },
   { timestamps: true }
@@ -195,16 +209,28 @@ userSchema.pre("findOneAndDelete", async function (next) {
       // remove user ID from each relate label's "users" property
       await LabelModel.updateMany({ users: userId }, { $pull: { users: userId } });
 
+      // remove user ID from each relate musician's "followers" property
+      await MusicianModel.updateMany({ followers: userId }, { $pull: { followers: userId } });
+
+      // delete all relative sessions
+      await SessionModel.deleteMany({ user: user.id });
+
+      // delete all relative verification codes
+      await VerificationModel.deleteMany({ email: user.email });
+
+      // delete user playback
+      await PlaybackModel.findOneAndDelete({ user: user.id });
+
+      // delete user history
+      await HistoryModel.findOneAndDelete({ user: user.id });
+
+      // delete user stats
+      await StatsModel.findOneAndDelete({ user: user.id });
+
       // if the original document is not default image, delete it from AWS
       if (!user.profile_img.includes(profileImgBaseUrl)) {
         await deleteAwsFileUrlOnModel(user.profile_img);
       }
-
-      // delete all relative sessions
-      await SessionModel.deleteMany({ user: user?.id });
-
-      // delete all relative verification codes
-      await VerificationModel.deleteMany({ email: user?.email });
     }
 
     next();

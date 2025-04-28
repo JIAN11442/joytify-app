@@ -77,6 +77,8 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
             }
           } else if (key === "P" && authUser) {
             navigate(`/profile/${authUser?._id}`);
+          } else if (key === "S" && authUser) {
+            navigate(`/settings/account`);
           }
         }
       } else if (activeSongId && key === " ") {

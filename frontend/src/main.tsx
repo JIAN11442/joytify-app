@@ -7,19 +7,18 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import App from "./App.tsx";
 import "../index.css";
 
-import Loader from "./components/loader.component.tsx";
 import ModalProvider from "./providers/modal.provider.tsx";
 import ToasterProvider from "./providers/toaster.provider.tsx";
 import ScreenMonitorProvider from "./providers/screen.provider.tsx";
 import ShortcutKeysProvider from "./providers/shortcut-keys.provider.tsx";
 import UserPreferencesProvider from "./providers/user-preferences.provider.tsx";
-
 import queryClient from "./config/query-client.config.ts";
+import SkeletonThemeProvider from "./providers/skeleton-theme.provider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Suspense fallback={<Loader />}>
+      <Suspense>
         <BrowserRouter>
           <ScreenMonitorProvider>
             <ShortcutKeysProvider>
@@ -27,7 +26,9 @@ createRoot(document.getElementById("root")!).render(
               <ModalProvider />
               <ReactQueryDevtools initialIsOpen={false} />
               <UserPreferencesProvider />
-              <App />
+              <SkeletonThemeProvider>
+                <App />
+              </SkeletonThemeProvider>
             </ShortcutKeysProvider>
           </ScreenMonitorProvider>
         </BrowserRouter>

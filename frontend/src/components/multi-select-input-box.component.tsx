@@ -6,9 +6,8 @@ import CreateNewBtn from "./create-new-button.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import OptionCheckboxItem from "./option-checkbox-item.component";
 
-import { LabelOptions } from "@joytify/shared-types/constants";
-import { Label, LabelOptionsType, RefactorLabelResponse } from "@joytify/shared-types/types";
 import { FormMethods } from "../types/form.type";
+import { Label, LabelOptionsType, RefactorLabelResponse } from "@joytify/shared-types/types";
 import useUploadModalState, { RefetchType } from "../states/upload-modal.state";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import mergeRefs from "../lib/merge-refs.lib";
@@ -21,7 +20,7 @@ export type OptionType = {
 interface MultiSelectInputProps<T extends FieldValues = any>
   extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
-  options: OptionType | OptionType[];
+  options: OptionType;
   formMethods: FormMethods<T>;
   autoCloseMenuFn?: boolean;
   deleteOptFn?: (id: string) => void;
@@ -69,10 +68,9 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
     };
 
     // handle active create label modal
-    const handleActiveCreateLabelModal = (type: LabelOptionsType) => {
+    const handleActiveCreateLabelModal = () => {
       timeoutForDelay(() => {
         setActiveCreateLabelModal({
-          type,
           active: true,
           options,
           labelRefetch: queryRefetch,
@@ -173,6 +171,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
             initial={{ opacity: 0, scaleY: "0%", transformOrigin: "top" }}
             animate={{ opacity: 1, scaleY: "100%", transformOrigin: "top" }}
             transition={{ duration: 0.2 }}
+            tabIndex={-1}
             className={`
               absolute
               z-10
@@ -224,7 +223,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
                     {/* create new button */}
                     <CreateNewBtn
                       type="button"
-                      onClick={() => handleActiveCreateLabelModal(LabelOptions.LANGUAGE)}
+                      onClick={handleActiveCreateLabelModal}
                       className={`${index === 0 ? "flex" : "hidden"}`}
                     >
                       <p>Create new</p>

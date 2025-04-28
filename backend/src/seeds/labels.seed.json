@@ -950,5 +950,114 @@
       "$date": "2024-11-17T11:15:37.570Z"
     },
     "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f479dc8e69de6d5e0ceebe"
+    },
+    "label": "Male",
+    "type": "gender",
+    "index": 1,
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f47c048e69de6d5e0ceebf"
+    },
+    "label": "Female",
+    "type": "gender",
+    "index": 2,
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f47d378e69de6d5e0ceec0"
+    },
+    "label": "Non-binary",
+    "type": "gender",
+    "index": 3,
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f47e3d8e69de6d5e0ceec1"
+    },
+    "label": "Transgender",
+    "type": "gender",
+    "index": 4,
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f47e828e69de6d5e0ceec2"
+    },
+    "label": "Intersex",
+    "type": "gender",
+    "index": 5,
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f47ed98e69de6d5e0ceec3"
+    },
+    "label": "I prefer not to say",
+    "type": "gender",
+    "index": 6,
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "__v": 0
   }
 ]

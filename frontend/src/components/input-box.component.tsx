@@ -24,7 +24,7 @@ export interface InputProps<T extends FieldValues = any>
   };
   iconHighlight?: "success" | "error";
   className?: string;
-  tw?: { icon?: string };
+  tw?: { icon?: string; title?: string };
 }
 
 const InputBox = forwardRef<HTMLInputElement, InputProps>(
@@ -75,9 +75,7 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
       setInputVal(value);
       setIsFileSelected(!!files);
 
-      if (onChange) {
-        onChange(e);
-      }
+      onChange?.(e);
     };
 
     const handleCheckboxOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +111,7 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
 
         // convert a comma-separated string into an array of strings
         const generateInputVal = value
-          .split(",")
+          ?.split(",")
           .filter((val) => val.length)
           .map((val) => val.trim());
 
@@ -164,13 +162,19 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
             flex
             items-center
             justify-between
-            text-sm
-            text-grey-custom/50
           `}
         >
           {/* title */}
           {title && (
-            <p>
+            <p
+              className={twMerge(
+                `
+                  text-sm
+                  text-grey-custom/50
+                `,
+                tw?.title
+              )}
+            >
               {title}
               {required && <span className={`text-red-500`}> *</span>}
             </p>
@@ -192,7 +196,7 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
                   disabled={disabled}
                   className={`w-3 h-3`}
                 />
-                <p>sync</p>
+                <p className={`text-sm text-grey-custom/50`}>sync</p>
               </label>
             </AnimationWrapper>
           )}

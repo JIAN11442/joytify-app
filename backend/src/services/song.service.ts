@@ -123,6 +123,8 @@ export const deleteSongById = async (params: DeleteSongServiceRequest) => {
 
   const deletedSong = await SongModel.findOneAndDelete(queryParams);
 
+  appAssert(deletedSong !== null, INTERNAL_SERVER_ERROR, `Failed to delete target song ${songId}`);
+
   return { deletedSong };
 };
 

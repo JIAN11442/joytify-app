@@ -1,9 +1,10 @@
-import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 
 import { createLabel, removeLabel } from "../fetchs/label.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
+import { QueryKeyType } from "../types/query-client-key.type";
 import queryClient from "../config/query-client.config";
+import toast from "../lib/toast.lib";
 
 // create label mutation
 export const useCreateLabelMutation = (closeModalFn: () => void, opts: object = {}) => {
@@ -17,7 +18,7 @@ export const useCreateLabelMutation = (closeModalFn: () => void, opts: object = 
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey[0];
-          return queryKey === QueryKey.GET_ALL_LABELS;
+          return queryKey === QueryKey.GET_UPLOAD_SONG_LABELS;
         },
       });
 
@@ -37,7 +38,7 @@ export const useCreateLabelMutation = (closeModalFn: () => void, opts: object = 
 };
 
 // remove label mutation
-export const useRemoveLabelMutation = (opts: object = {}) => {
+export const useRemoveLabelMutation = (refetchQueryKey: QueryKeyType, opts: object = {}) => {
   const mutation = useMutation({
     mutationKey: [MutationKey.REMOVE_LABEL_OPTION],
     mutationFn: removeLabel,
@@ -48,7 +49,7 @@ export const useRemoveLabelMutation = (opts: object = {}) => {
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey[0];
-          return queryKey === QueryKey.GET_ALL_LABELS;
+          return queryKey === refetchQueryKey;
         },
       });
 

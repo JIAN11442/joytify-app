@@ -151,6 +151,10 @@ export const remapFields = <T extends Record<string, any>>(
   doc: T,
   fields: Partial<Record<keyof T, string>>
 ) => {
+  if (!doc) {
+    return null;
+  }
+
   // convert to plain object if it's a Mongoose document
   const plainDoc = doc.toObject ? doc.toObject() : doc;
   const result: Record<string, any> = {};
