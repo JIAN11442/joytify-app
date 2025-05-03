@@ -45,8 +45,8 @@ labelSchema.post("findOneAndUpdate", async function (doc) {
 
   const { users, songs } = doc;
 
-  // delete label if no users and songs
-  if (users.length === 0 && songs.length === 0) {
+  // delete non-default label if no users and songs
+  if (!doc.default && users.length === 0 && songs.length === 0) {
     await doc.deleteOne();
   }
 });

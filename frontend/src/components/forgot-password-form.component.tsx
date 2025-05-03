@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useIntl } from "react-intl";
+import { useCallback, useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { MdAlternateEmail } from "react-icons/md";
 
@@ -12,28 +13,25 @@ import { DefaultForgotPasswordForm } from "../types/form.type";
 import useAuthModalState from "../states/auth-modal.state";
 import { isHighlight } from "../lib/icon-highlight.lib";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { emailRegex } from "../utils/regex";
+import { emailRegex } from "../utils/regex.util";
 
 type ForgotPasswordFormProps = {
   setModalCloseBtnDisabled?: (state: boolean) => void;
 };
 
 const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBtnDisabled }) => {
+  const intl = useIntl();
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
   const { openAuthModal } = useAuthModalState();
-
-  // send reset password email mutation
   const { mutate: sendResetPasswordEmailFn, isPending } = useSendResetPasswordEmailMutation();
 
-  // handle navigate to sign in modal
   const handleNavigateToSignInModal = () => {
     timeoutForDelay(() => {
       openAuthModal(AuthForOptions.SIGN_IN);
     });
   };
 
-  // initialize form data
   const {
     handleSubmit,
     register,
@@ -44,18 +42,20 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBt
     mode: "onChange",
   });
 
-  // icon highlight
-  const isIconHighlight = (target: keyof DefaultForgotPasswordForm) =>
-    isHighlight(watch, errors, target);
+  const isIconHighlight = useCallback(
+    (target: keyof DefaultForgotPasswordForm) => isHighlight(watch, errors, target),
+    [watch, errors]
+  );
 
-  // handle submit
   const onSubmit: SubmitHandler<DefaultForgotPasswordForm> = async (value) => {
     sendResetPasswordEmailFn(value.email);
   };
 
   // handle parent modal close button disabled state through isPending
   useEffect(() => {
-    setModalCloseBtnDisabled?.(isPending);
+    timeoutForDelay(() => {
+      setModalCloseBtnDisabled?.(isPending);
+    });
   }, [isPending]);
 
   return (
@@ -70,7 +70,9 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBt
       {/* Email address */}
       <InputBox
         type="email"
-        placeholder="Your registered email address"
+        placeholder={intl.formatMessage({
+          id: "forgot.password.form.email.input.placeholder",
+        })}
         icon={{ name: MdAlternateEmail }}
         iconHighlight={isIconHighlight("email")}
         className={`py-4`}
@@ -95,7 +97,11 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBt
           capitalize
         `}
       >
-        {isPending ? <Loader loader={{ size: 20 }} /> : "Send"}
+        {isPending ? (
+          <Loader loader={{ size: 20 }} />
+        ) : (
+          intl.formatMessage({ id: "forgot.password.form.submit.button" })
+        )}
       </button>
 
       {/* Navigate link */}
@@ -106,7 +112,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBt
           text-center
         `}
       >
-        Already have an account?
+        {intl.formatMessage({ id: "forgot.password.form.switchAccount.prompt" })}
         <button
           type="button"
           onClick={handleNavigateToSignInModal}
@@ -118,7 +124,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBt
             disabled:text-neutral-600
           `}
         >
-          Sign in
+          {intl.formatMessage({ id: "forgot.password.form.switchAccount.button" })}
         </button>
       </p>
     </form>

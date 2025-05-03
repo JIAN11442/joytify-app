@@ -24,7 +24,7 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
   const { setActiveAddingOptions, setActiveLibrarySearchBar } = useLibraryState();
   const { setActivePlaylistEditOptionsMenu, setActivePlaylistListOptionsMenu } = usePlaylistState();
 
-  const { mutate: updateUserPreferences } = useUpdateUserPreferencesMutation();
+  const { mutate: updateUserPreferencesFn } = useUpdateUserPreferencesMutation();
 
   const toggleSidebar = useCallback(() => {
     timeoutForDelay(() => {
@@ -33,8 +33,8 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
         isManualToggle: true,
       });
 
-      updateUserPreferences({
-        collapseSidebar: !isCollapsed,
+      updateUserPreferencesFn({
+        sidebarCollapsed: !isCollapsed,
       });
     });
   }, [isCollapsed]);

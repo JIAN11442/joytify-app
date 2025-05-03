@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useIntl } from "react-intl";
 import { LuLibrary } from "react-icons/lu";
 import { BiSearch } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -7,7 +8,6 @@ import { MdLibraryMusic, MdMusicNote } from "react-icons/md";
 import Menu from "./menu.component";
 import Icon from "./react-icons.component";
 import SidebarItem from "./sidebar-item.component";
-import InputSearchBar from "./input-searchbar.component";
 
 import { useGetPlaylistsQuery } from "../hooks/playlist-query.hook";
 import { useCreatePlaylistMutation } from "../hooks/playlist-mutate.hook";
@@ -19,12 +19,14 @@ import useAuthModalState from "../states/auth-modal.state";
 import useSidebarState from "../states/sidebar.state";
 import useLibraryState from "../states/library.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import SearchBarInput from "./searchbar-input.component";
 
 type LibraryHeaderProps = {
   authUser?: AuthUserResponse | null;
 };
 
 const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
+  const intl = useIntl();
   const addingMenuRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -47,33 +49,65 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
 
   const { playlists } = useGetPlaylistsQuery(librarySearchVal);
   const { mutate: createPlaylistFn } = useCreatePlaylistMutation();
-  const { mutate: updateUserPreferences } = useUpdateUserPreferencesMutation();
+  const { mutate: updateUserPreferencesFn } = useUpdateUserPreferencesMutation();
 
-  // handle collapse sidebar
-  const handleCollapseSidebar = () => {
-    if (!activeFloatingSidebar) {
-      setCollapseSideBarState({
-        ...collapseSideBarState,
-        isCollapsed: !isCollapsed,
-        isManualToggle: true,
-      });
+  const { SIGN_IN } = AuthForOptions;
 
-      updateUserPreferences({
-        collapseSidebar: !isCollapsed,
-      });
-    } else {
-      setActiveFloatingSidebar(false);
-    }
-  };
-
-  // handle active library search bar
-  const handleActiveSearchBar = () => {
+  const handleCollapseSidebar = useCallback(() => {
     timeoutForDelay(() => {
+      if (!activeFloatingSidebar) {
+        setCollapseSideBarState({
+          isCollapsed: !isCollapsed,
+          isManualToggle: true,
+        });
+
+        if (authUser) {
+          updateUserPreferencesFn({
+            sidebarCollapsed: !isCollapsed,
+          });
+        }
+      } else {
+        setActiveFloatingSidebar(false);
+      }
+    });
+  }, [isCollapsed, activeFloatingSidebar]);
+
+  const handleActiveSearchBar = useCallback(() => {
+    timeoutForDelay(() => {
+      if (!authUser) {
+        openAuthModal(SIGN_IN);
+        return;
+      }
       setActiveLibrarySearchBar(!activeLibrarySearchBar);
     });
-  };
+  }, [authUser, activeLibrarySearchBar, openAuthModal]);
 
-  // handle close library search bar
+  const handleActiveAddingOptions = useCallback(() => {
+    timeoutForDelay(() => {
+      if (!authUser) {
+        openAuthModal(SIGN_IN);
+        return;
+      }
+
+      setActiveAddingOptions(!activeAddingOptions);
+    });
+  }, [authUser, activeAddingOptions]);
+
+  const handleActiveUploadMusicModal = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+
+      timeoutForDelay(() => {
+        if (activeFloatingSidebar) {
+          setActiveFloatingSidebar(false);
+        }
+
+        return authUser ? openUploadModal() : openAuthModal(SIGN_IN);
+      });
+    },
+    [activeFloatingSidebar, authUser]
+  );
+
   const handleCloseSearchBar = () => {
     timeoutForDelay(() => {
       setActiveLibrarySearchBar(false);
@@ -81,34 +115,12 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
     });
   };
 
-  // handle active adding options
-  const handleActiveAddingOptions = () => {
-    timeoutForDelay(() => {
-      setActiveAddingOptions(!activeAddingOptions);
-    });
-  };
-
-  // handle active upload music modal
-  const handleActiveUploadMusicModal = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    timeoutForDelay(() => {
-      if (activeFloatingSidebar) {
-        setActiveFloatingSidebar(false);
-      }
-
-      return authUser ? openUploadModal() : openAuthModal(AuthForOptions.SIGN_IN);
-    });
-  };
-
-  // handle create new playlist
   const handleCreateNewPlaylist = () => {
     timeoutForDelay(() => {
       createPlaylistFn();
     });
   };
 
-  // handle library playlist search on change
   const handleOnChangeLibrarySearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
@@ -117,7 +129,9 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
     });
   };
 
-  const isSidebarExpandedOrFloating = !isCollapsed || activeFloatingSidebar;
+  const isSidebarExpandedOrFloating = useMemo(() => {
+    return !isCollapsed || activeFloatingSidebar;
+  }, [isCollapsed, activeFloatingSidebar]);
 
   // while sidebar is collapsed, clean search value and close the searchbar
   useEffect(() => {
@@ -141,20 +155,21 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
       <div
         className={`
           flex
-          ${!isCollapsed ? "relative" : !activeFloatingSidebar && "flex-col"}
+          w-full
           pt-4
-          gap-y-4
+          gap-4
           items-center
           justify-between
+          ${!isSidebarExpandedOrFloating && "flex-col"}
         `}
       >
         {/* Title */}
         <SidebarItem
           icon={{ name: LuLibrary }}
-          label="Your Library"
+          label={intl.formatMessage({ id: "library.title" })}
           onClick={handleCollapseSidebar}
           collapse={isCollapsed}
-          className={`w-fit`}
+          className={`w-full`}
           tw={{ label: "text-lgc" }}
         />
 
@@ -163,26 +178,18 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
           className={`
             flex 
             gap-1
-            ${!isCollapsed && "absolute right-0"}
           `}
         >
           {/* Search button */}
           <button
             onClick={handleActiveSearchBar}
-            disabled={!authUser}
             className={`
               p-2
-              ${
-                authUser
-                  ? `
-                  group
-                  rounded-full
-                  hover:bg-neutral-800
-                  hover:scale-110
-                  transition
-                `
-                  : "opacity-50"
-              }
+              group
+              rounded-full
+              hover:bg-neutral-800
+              hover:scale-110
+              transition
               ${isSidebarExpandedOrFloating ? "flex" : "hidden"} 
             `}
           >
@@ -190,7 +197,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
               name={BiSearch}
               opts={{ size: 20 }}
               className={`
-                text-neutral-400
+                text-neutral-300
                 group-hover:text-white
               `}
             />
@@ -219,7 +226,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
                 name={AiOutlinePlus}
                 opts={{ size: isSidebarExpandedOrFloating ? 20 : 24 }}
                 className={`
-                  text-neutral-400
+                  text-neutral-300
                   group-hover:text-white  
                 `}
               />
@@ -233,10 +240,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
                 setVisible: setActiveAddingOptions,
               }}
               wrapper={{ transformOrigin: "top left" }}
-              className={`
-                fixed
-                w-[210px]
-              `}
+              className={`fixed w-[210px]`}
             >
               {/* Add new song button */}
               <button
@@ -250,7 +254,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
                 `}
               >
                 <Icon name={MdMusicNote} opts={{ size: 16 }} />
-                <p>Create a new song</p>
+                <p>{intl.formatMessage({ id: "library.actions.song.create" })}</p>
               </button>
 
               {/* Add new playlist button */}
@@ -265,7 +269,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
                 `}
               >
                 <Icon name={MdLibraryMusic} opts={{ size: 16 }} />
-                <p>Create a new playlist</p>
+                <p>{intl.formatMessage({ id: "library.actions.playlist.create" })}</p>
               </button>
             </Menu>
           </div>
@@ -273,9 +277,9 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
       </div>
 
       {/* Search bar */}
-      <InputSearchBar
+      <SearchBarInput
         id="library-searchbar"
-        placeholder="Search your playlist"
+        placeholder={intl.formatMessage({ id: "library.search.placeholder" })}
         visible={activeLibrarySearchBar && isSidebarExpandedOrFloating}
         icon={{ name: BiSearch }}
         autoCloseFn={{

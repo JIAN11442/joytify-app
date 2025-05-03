@@ -1,0 +1,11 @@
+{
+  "toast.verification.sendCode.success": "驗證碼已成功發送",
+  "toast.verification.sendCode.error": "請求次數過多，請稍後再試",
+  "toast.verification.resendCode.success": "驗證碼已重新發送",
+  "toast.verification.sendResetPassword.success": "重設密碼信已成功發送",
+  "toast.verification.sendResetPassword.error": "請求次數過多，請稍後再試",
+  "toast.verification.verifyCode.success": "驗證成功",
+  "toast.verification.verifyCode.error": "驗證碼錯誤，請再試一次",
+
+  "toast.settings.account.thirdParty.warning": "此功能不適用於第三方登入帳戶"
+}

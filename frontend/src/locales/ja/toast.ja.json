@@ -1,0 +1,11 @@
+{
+  "toast.verification.sendCode.success": "認証コードを送信しました",
+  "toast.verification.sendCode.error": "リクエストが多すぎます。しばらくしてから再試行してください",
+  "toast.verification.resendCode.success": "認証コードを再送信しました",
+  "toast.verification.sendResetPassword.success": "パスワードリセット用のメールを送信しました",
+  "toast.verification.sendResetPassword.error": "リクエストが多すぎます。しばらくしてから再試行してください",
+  "toast.verification.verifyCode.success": "コードの確認が完了しました",
+  "toast.verification.verifyCode.error": "コードの確認に失敗しました",
+
+  "toast.settings.account.thirdParty.warning": "この機能は外部サービスでログインしたユーザーには利用できません"
+}

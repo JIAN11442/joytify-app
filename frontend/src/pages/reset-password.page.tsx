@@ -46,7 +46,6 @@ const ResetPasswordPage = () => {
         <div
           className={`
             flex
-            items-center
             gap-1
             mt-10
             mb-12
@@ -57,8 +56,8 @@ const ResetPasswordPage = () => {
           <p
             className={`
               text-3xl
-              font-medium
               text-[#1cd760]
+              font-medium
               font-ubuntu
             `}
           >
@@ -73,6 +72,12 @@ const ResetPasswordPage = () => {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: direction * 50, opacity: 0 }}
           transition={{ type: "tween", duration: 0.2 }}
+          className={`
+            flex
+            w-[450px]
+            items-center
+            justify-center
+          `}
         >
           {passwordResetStatus === INITIAL ? (
             <ResetPasswordForm token={token} />
@@ -86,12 +91,7 @@ const ResetPasswordPage = () => {
         </AnimationWrapper>
 
         {/* copyright */}
-        <div
-          className={`
-            absolute
-            bottom-5
-          `}
-        >
+        <div className={`absolute bottom-5`}>
           <p
             className={`
               text-[12px]

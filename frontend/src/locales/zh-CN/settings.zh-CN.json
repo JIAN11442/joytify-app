@@ -1,0 +1,30 @@
+{
+  "settings.sidebar.categories.mainMenu": "主菜单",
+  "settings.sidebar.categories.mainMenu.account": "账户",
+  "settings.sidebar.categories.mainMenu.notifications": "通知",
+  "settings.sidebar.categories.other": "其他",
+  "settings.sidebar.categories.other.languages": "语言",
+  "settings.sidebar.categories.other.connectedDevices": "已连接的设备",
+
+  "settings.account.title": "账户设置",
+  "settings.account.description": "管理个人信息、密码和账户状态",
+  "settings.account.gender.title": "性别",
+  "settings.account.gender.placeholder": "选择你的性别",
+  "settings.account.dateOfBirth.title": "出生日期",
+  "settings.account.country.title": "国家",
+  "settings.account.country.placeholder": "选择你所属国家",
+  "settings.account.profile.card.button.edit": "编辑",
+  "settings.account.profile.card.button.save": "保存",
+  "settings.account.form.button.submit": "提交",
+  "settings.account.changePassword.title": "密码与身份验证",
+  "settings.account.changePassword.description": "更改密码以保障账户安全",
+  "settings.account.changePassword.button": "修改密码",
+  "settings.account.deregisterAccount.title": "注销账户",
+  "settings.account.deregisterAccount.description": "永久删除你的账户及相关数据",
+  "settings.account.deregisterAccount.button": "注销账户",
+
+  "settings.languages.title": "语言偏好设置",
+  "settings.languages.description": "选择你偏好的界面语言",
+  "settings.languages.search.placeholder": "搜索界面语言",
+  "settings.languages.currentlySelected": "当前使用语言"
+}

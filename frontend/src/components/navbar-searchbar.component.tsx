@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { BiSearch } from "react-icons/bi";
-import InputSearchBar from "./input-searchbar.component";
+import SearchBarInput from "./searchbar-input.component";
 
 type SearchBarProps = {
   visible: boolean;
@@ -20,7 +20,7 @@ const NavbarSearchBar: React.FC<SearchBarProps> = ({
   tw,
 }) => {
   return (
-    <InputSearchBar
+    <SearchBarInput
       id="navbar-searchbar"
       placeholder="What do you want to play?"
       visible={visible}

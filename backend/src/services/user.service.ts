@@ -38,6 +38,7 @@ import {
 import PlaybackModel from "../models/playback.model";
 import HistoryModel from "../models/history.model";
 import StatsModel from "../models/stats.model";
+import LabelModel from "../models/label.model";
 
 interface UpdateUserServiceRequest extends UpdateUserInfoRequest {
   userId: string;
@@ -326,8 +327,6 @@ export const deregisterUserAccount = async (params: DeregisterAccountServiceRequ
       // delete all user songs
       for (const songId of songs) {
         const deletedSong = await SongModel.findByIdAndDelete(songId);
-
-        console.log(deletedSong);
 
         appAssert(
           deletedSong,

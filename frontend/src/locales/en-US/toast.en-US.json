@@ -1,0 +1,11 @@
+{
+  "toast.verification.sendCode.success": "Verification code sent successfully",
+  "toast.verification.sendCode.error": "You've made too many requests, please try again later",
+  "toast.verification.resendCode.success": "Verification code resent successfully",
+  "toast.verification.sendResetPassword.success": "Reset password email sent successfully",
+  "toast.verification.sendResetPassword.error": "You've made too many requests, please try again later",
+  "toast.verification.verifyCode.success": "Code verified successfully",
+  "toast.verification.verifyCode.error": "Failed to verify code",
+
+  "toast.settings.account.thirdParty.warning": "This feature is not available for third-party user"
+}

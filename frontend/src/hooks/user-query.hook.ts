@@ -37,7 +37,6 @@ export const useGetAuthUserInfoQuery = (opts: object = {}) => {
         }
       }
     },
-    staleTime: Infinity, // the query result is never stale unless manually refetched (like refetch() or queryClient.invalidateQueries())
     enabled: !isQueryError, // if get the query error, then stop the query (for loading)
     ...opts,
   });
@@ -115,7 +114,6 @@ export const useGetProfileCollectionInfoQuery = (
       }
     },
     placeholderData: (prev) => prev, // keep the previous data when the query is fetching
-    staleTime: Infinity,
     enabled: !!userId && !isQueryError && page > 0,
     ...opts,
   });

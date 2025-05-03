@@ -13,8 +13,8 @@ import StatsModel from "./stats.model";
 
 import usePalette from "../hooks/paletee.hook";
 import { profile_collections, profile_names } from "../constants/profile-img.constant";
-import { HttpCode, PrivacyOptions } from "@joytify/shared-types/constants";
-import { HexPaletee } from "@joytify/shared-types/types";
+import { HttpCode, PrivacyOptions, SupportedLocale } from "@joytify/shared-types/constants";
+import { HexPaletee, SupportedLocaleType } from "@joytify/shared-types/types";
 import { compareHashValue, hashValue } from "../utils/bcrypt.util";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 import appAssert from "../utils/app-assert.util";
@@ -41,6 +41,15 @@ export interface UserDocument extends mongoose.Document {
     gender: string;
     country: string;
     date_of_birth: Date;
+  };
+  user_preferences: {
+    sidebarCollapsed: boolean;
+    locale: SupportedLocaleType;
+    notifications: {
+      monthlyStatistics: boolean;
+      artistFollowUpdates: boolean;
+      systemAnnouncements: boolean;
+    };
   };
   comparePassword: (password: string) => Promise<boolean>;
   omitPassword(): Omit<this, "password">;
@@ -101,6 +110,19 @@ const userSchema = new mongoose.Schema<UserDocument>(
       gender: { type: mongoose.Schema.Types.ObjectId, ref: "Label", index: true, default: null },
       country: { type: mongoose.Schema.Types.ObjectId, ref: "Label", index: true, default: null },
       date_of_birth: { type: Date, default: null },
+    },
+    user_preferences: {
+      sidebarCollapsed: { type: Boolean, default: false },
+      locale: {
+        type: String,
+        enum: Object.values(SupportedLocale),
+        default: SupportedLocale.EN_US,
+      },
+      notifications: {
+        monthlyStatistics: { type: Boolean, default: true },
+        followerArtistUpdates: { type: Boolean, default: true },
+        systemAnnouncements: { type: Boolean, default: true },
+      },
     },
   },
   { timestamps: true }
@@ -180,6 +202,32 @@ userSchema.pre("findOneAndUpdate", async function (next) {
   // if the username is modified, generate a new nanoid
   if (updateDoc.username) {
     updateDoc.username = `${updateDoc.username}?nanoid=${nanoid(5)}`;
+  }
+
+  if (updateDoc.$set) {
+    const originalDoc = await this.model.findById(findQuery._id);
+
+    if (updateDoc.$set["personal_info.gender"]) {
+      await Promise.all([
+        LabelModel.findByIdAndUpdate(originalDoc?.personal_info.gender, {
+          $pull: { users: findQuery._id },
+        }),
+        LabelModel.findByIdAndUpdate(updateDoc.$set["personal_info.gender"], {
+          $addToSet: { users: findQuery._id },
+        }),
+      ]);
+    }
+
+    if (updateDoc.$set["personal_info.country"]) {
+      await Promise.all([
+        LabelModel.findByIdAndUpdate(originalDoc?.personal_info.country, {
+          $pull: { users: findQuery._id },
+        }),
+        LabelModel.findByIdAndUpdate(updateDoc.$set["personal_info.country"], {
+          $addToSet: { users: findQuery._id },
+        }),
+      ]);
+    }
   }
 
   next();

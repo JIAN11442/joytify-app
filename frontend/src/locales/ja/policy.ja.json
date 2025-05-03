@@ -1,0 +1,35 @@
+{
+  "deregistration.policy.title": "アカウント削除の規約",
+  "deregistration.policy.description": "お客様のプライバシー保護のため、アカウントおよび関連データは下記の法的要件に基づき削除されます",
+
+  "deregistration.policy.effectOfDeletion.title": "削除の影響",
+  "deregistration.policy.effectOfDeletion.description.1": "個人情報および認証情報（メールアドレス、ユーザー名、連携デバイスを含む）は完全に消去されます。",
+  "deregistration.policy.effectOfDeletion.description.2": "プラットフォーム上の記録（楽曲、プレイリスト、アルバム、タグ、再生履歴など）もすべて削除されます。",
+  "deregistration.policy.effectOfDeletion.description.3.1": "アップロードされたコンテンツは、以下の「",
+  "deregistration.policy.effectOfDeletion.description.3.2": "共有コンテンツの取り扱い方針",
+  "deregistration.policy.effectOfDeletion.description.3.3": "」に従って処理されます。",
+  "deregistration.policy.effectOfDeletion.description.4": "削除後はログインやデータの復元ができなくなりますので、ご了承ください。",
+
+  "deregistration.policy.treatmentOfSharedContent.title": "共有コンテンツの取り扱い",
+  "deregistration.policy.treatmentOfSharedContent.description.1": "以前に公開されたコンテンツ（例：アップロードされた音楽など）は、他のユーザーのアクセス継続やプラットフォーム分析のために保持される場合があります。",
+  "deregistration.policy.treatmentOfSharedContent.description.2": "保持されるすべてのコンテンツは匿名化され、削除されたアカウントと関連付けられることはありません。",
+  "deregistration.policy.treatmentOfSharedContent.description.3": "未公開または下書き中のコンテンツは、アカウントと共に完全に削除されます。",
+
+  "deregistration.policy.impactOnLinkedServices.title": "連携サービスへの影響",
+  "deregistration.policy.impactOnLinkedServices.description.1": "GoogleやGithubログインなど、外部サービスとの連携は自動的に解除されます。",
+  "deregistration.policy.impactOnLinkedServices.description.2": "有効なサブスクリプションは終了されます。（現在、有料のサブスクリプションサービスは提供されていません）",
+
+  "deregistration.policy.dataDeletionTimeline.title": "データ削除のタイムライン",
+  "deregistration.policy.dataDeletionTimeline.description.1": "アカウントの無効化：確認後すぐに実施されます。",
+  "deregistration.policy.dataDeletionTimeline.description.2": "公開コンテンツの削除（該当する場合）：5分以内に完了します。",
+  "deregistration.policy.dataDeletionTimeline.description.3": "データベースからの完全削除：30日以内に完了します。",
+  "deregistration.policy.dataDeletionTimeline.description.4": "バックアップシステムからの消去：次回のメンテナンス時までに完了（最長60日以内）。",
+
+  "deregistration.policy.confirmationAndAppeal.title": "確認と異議申し立て",
+  "deregistration.policy.confirmationAndAppeal.description.1": "手続き完了後、ご登録のメールアドレス宛に終了確認メールが送信されます。",
+  "deregistration.policy.confirmationAndAppeal.description.2.1": "削除処理に異議がある場合は、30日以内にメール（",
+  "deregistration.policy.confirmationAndAppeal.description.2.2": "joytify35@gmail.com",
+  "deregistration.policy.confirmationAndAppeal.description.2.3": "）にてご連絡ください。",
+
+  "deregistration.policy.lastUpdatedDate": "最終更新日：{date}"
+}

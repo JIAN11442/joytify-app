@@ -126,6 +126,29 @@ body,
     transition;
   }
 
+  .profile-card-content-box {
+    @apply input-box
+    flex
+    w-fit
+    min-w-[50px]
+    shrink-0
+    items-center
+    justify-center
+    bg-transparent
+    border-none
+    disabled:no-hover;
+  }
+
+  .locale-submit-btn {
+    @apply submit-btn
+    w-fit
+    px-5
+    py-3
+    text-sm
+    rounded-md
+    transition-all;
+  }
+
   .modal-btn {
     @apply submit-btn
     w-fit

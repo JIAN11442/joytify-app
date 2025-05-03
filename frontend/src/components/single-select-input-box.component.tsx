@@ -17,7 +17,8 @@ export type InputOptionType = {
 
 interface BaseInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
-  autoCloseMenuFn?: boolean;
+  autoCloseMenu?: boolean;
+  transformValueFn?: (val: any) => string;
   filterMode?: "contains" | "starts-with";
   tw?: {
     title?: string;
@@ -60,7 +61,8 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
       formMethods,
       createNewFn,
       deleteOptFn,
-      autoCloseMenuFn = true,
+      transformValueFn,
+      autoCloseMenu = true,
       filterMode = "contains",
       options,
       tw,
@@ -116,23 +118,24 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
     const handleSetFormValue = useCallback(
       (value: string, e?: React.ChangeEvent<HTMLInputElement>) => {
         const returnValue = getReturnValue(value);
+        const transformedValue = transformValueFn ? transformValueFn(returnValue) : returnValue;
 
         if (name && formMethods) {
-          formMethods.setFormValue(name, returnValue);
+          formMethods.setFormValue(name, transformedValue);
         }
 
         if (value.length > 0) {
           onChange?.({
             target: {
               name,
-              value: returnValue,
+              value: transformedValue,
             },
           } as React.ChangeEvent<HTMLInputElement>);
         } else if (e) {
           onChange?.(e);
         }
       },
-      [getReturnValue, onChange, name, formMethods]
+      [getReturnValue, onChange, name, formMethods, transformValueFn]
     );
 
     const handleInputOnChange = useCallback(
@@ -270,7 +273,7 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
       };
 
       const closeMenu = () => {
-        if (autoCloseMenuFn) {
+        if (autoCloseMenu) {
           timeoutForDelay(() => setActiveMenu(false));
         }
       };
@@ -302,7 +305,7 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
         inputEl?.removeEventListener("blur", handleBlur);
         document.removeEventListener("click", handleClick);
       };
-    }, [activeMenu, autoCloseMenuFn, disabled, isError]);
+    }, [activeMenu, autoCloseMenu, disabled, isError]);
 
     // update filterOptions when options change
     useEffect(() => {
@@ -340,7 +343,6 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
           className={twMerge(
             `
             input-box 
-            capitalize
             placeholder:normal-case
             ${showOptionsMenu && "rounded-b-none"}
             ${

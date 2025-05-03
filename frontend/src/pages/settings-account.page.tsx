@@ -1,12 +1,17 @@
+import { useIntl } from "react-intl";
+import { RiUserSettingsLine } from "react-icons/ri";
 import Loader from "../components/loader.component";
 import AccountProfileCard from "../components/account-profile-card.component";
 import AccountDetailsForm from "../components/account-details-form.component";
-import useSidebarState from "../states/sidebar.state";
+import SettingSectionTitle from "../components/settings-section-title.component";
+import AnimationWrapper from "../components/animation-wrapper.component";
 import useSettingsState from "../states/settings.state";
-import { timeoutForDelay } from "../lib/timeout.lib";
+import useSidebarState from "../states/sidebar.state";
 import useUserState from "../states/user.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const SettingsAccountPage = () => {
+  const intl = useIntl();
   const { profileUser } = useUserState();
   const { collapseSideBarState } = useSidebarState();
   const { openAccountDerergistrationModal, setActiveChangePasswordModal } = useSettingsState();
@@ -45,16 +50,20 @@ const SettingsAccountPage = () => {
       `}
     >
       {/* title */}
-      <h1 className={`mb-5 text-3xl font-bold`}>Account</h1>
+      <AnimationWrapper initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+        <SettingSectionTitle
+          icon={{ name: RiUserSettingsLine }}
+          title={intl.formatMessage({ id: "settings.account.title" })}
+          description={intl.formatMessage({ id: "settings.account.description" })}
+        />
+      </AnimationWrapper>
 
-      <div
-        className={`
-          flex
-          flex-col
-          gap-10
-        `}
+      {/* account settings */}
+      <AnimationWrapper
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={`flex flex-col gap-10`}
       >
-        {/* account settings */}
         <div
           className={`
             flex
@@ -79,15 +88,15 @@ const SettingsAccountPage = () => {
         {/* change password */}
         {!isThirdPartyUser && (
           <div className={`flex flex-col gap-5`}>
-            {/* title and description */}
             <div className={`flex flex-col gap-2`}>
-              <p className={`text-xl font-bold`}>Password and Authentication</p>
+              <p className={`text-xl font-bold`}>
+                {intl.formatMessage({ id: "settings.account.changePassword.title" })}
+              </p>
               <p className={`text-sm text-neutral-500`}>
-                Change your password to keep your account secure.
+                {intl.formatMessage({ id: "settings.account.changePassword.description" })}
               </p>
             </div>
 
-            {/* change password button */}
             <button
               onClick={handleActiveChangePasswordModal}
               className={`
@@ -98,22 +107,22 @@ const SettingsAccountPage = () => {
                 rounded-md
               `}
             >
-              Change Password
+              {intl.formatMessage({ id: "settings.account.changePassword.button" })}
             </button>
           </div>
         )}
 
         {/* deregister account */}
         <div className={`flex flex-col gap-5`}>
-          {/* title and description */}
           <div className={`flex flex-col gap-2`}>
-            <p className={`text-xl font-bold`}>Deregister Account</p>
+            <p className={`text-xl font-bold`}>
+              {intl.formatMessage({ id: "settings.account.deregisterAccount.title" })}
+            </p>
             <p className={`text-sm text-neutral-500`}>
-              Permanently delete your account from the platform.
+              {intl.formatMessage({ id: "settings.account.deregisterAccount.description" })}
             </p>
           </div>
 
-          {/* deregister account button */}
           <button
             onClick={handleActiveAccountDeregistrationModal}
             className={`
@@ -121,15 +130,15 @@ const SettingsAccountPage = () => {
               w-fit
               p-3
               text-sm
-              rounded-md
               bg-red-500
               border-red-500
+              rounded-md
             `}
           >
-            Deregister Account
+            {intl.formatMessage({ id: "settings.account.deregisterAccount.button" })}
           </button>
         </div>
-      </div>
+      </AnimationWrapper>
     </div>
   );
 };

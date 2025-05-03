@@ -1,0 +1,11 @@
+{
+  "toast.verification.sendCode.success": "Kod pengesahan berjaya dihantar",
+  "toast.verification.sendCode.error": "Terlalu banyak permintaan, sila cuba lagi nanti",
+  "toast.verification.resendCode.success": "Kod pengesahan telah dihantar semula",
+  "toast.verification.sendResetPassword.success": "Emel tetapan semula kata laluan telah berjaya dihantar",
+  "toast.verification.sendResetPassword.error": "Terlalu banyak permintaan, sila cuba lagi nanti",
+  "toast.verification.verifyCode.success": "Kod berjaya disahkan",
+  "toast.verification.verifyCode.error": "Gagal mengesahkan kod",
+
+  "toast.settings.account.thirdParty.warning": "Ciri ini tidak tersedia untuk pengguna pihak ketiga"
+}

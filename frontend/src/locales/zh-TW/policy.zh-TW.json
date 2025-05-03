@@ -1,0 +1,35 @@
+{
+  "deregistration.policy.title": "帳號註銷政策",
+  "deregistration.policy.description": "為保障您的資料隱私，您的帳號及相關資料將依照以下法律規定進行刪除",
+
+  "deregistration.policy.effectOfDeletion.title": "刪除影響",
+  "deregistration.policy.effectOfDeletion.description.1": "個人資料與帳號資訊（包含電子郵件、使用者名稱及已綁定的裝置）將被永久刪除。",
+  "deregistration.policy.effectOfDeletion.description.2": "平台上的紀錄（例如歌曲、播放清單、專輯、標籤及播放紀錄）將全面移除。",
+  "deregistration.policy.effectOfDeletion.description.3.1": "您上傳的內容將依照下方的「",
+  "deregistration.policy.effectOfDeletion.description.3.2": "共享內容處理辦法",
+  "deregistration.policy.effectOfDeletion.description.3.3": "」進行處理。",
+  "deregistration.policy.effectOfDeletion.description.4": "資料刪除後，您將無法再次登入帳號，也無法復原任何資料。",
+
+  "deregistration.policy.treatmentOfSharedContent.title": "共享內容處理辦法",
+  "deregistration.policy.treatmentOfSharedContent.description.1": "您過去公開分享的內容（如上傳的音樂）可能會保留，以維持其他使用者的正常存取與平台數據分析所需。",
+  "deregistration.policy.treatmentOfSharedContent.description.2": "所有保留的內容將進行匿名化處理，無法再與您已刪除的帳號建立連結。",
+  "deregistration.policy.treatmentOfSharedContent.description.3": "尚未發佈或仍為草稿的內容將隨帳號一併永久刪除。",
+
+  "deregistration.policy.impactOnLinkedServices.title": "對已連結服務的影響",
+  "deregistration.policy.impactOnLinkedServices.description.1": "第三方連結（如 Google 或 Github 登入）將自動解除綁定。",
+  "deregistration.policy.impactOnLinkedServices.description.2": "任何正在進行的訂閱服務將會終止。（目前平台尚未提供付費訂閱服務）",
+
+  "deregistration.policy.dataDeletionTimeline.title": "資料刪除時程",
+  "deregistration.policy.dataDeletionTimeline.description.1": "帳號停用：確認後立即生效。",
+  "deregistration.policy.dataDeletionTimeline.description.2": "公開內容移除（若有）：五分鐘內完成。",
+  "deregistration.policy.dataDeletionTimeline.description.3": "資料庫內部刪除：30 天內完成。",
+  "deregistration.policy.dataDeletionTimeline.description.4": "備份系統清除：最遲於下次維護作業內完成（最長 60 天）。",
+
+  "deregistration.policy.confirmationAndAppeal.title": "確認與申訴",
+  "deregistration.policy.confirmationAndAppeal.description.1": "流程完成後，您將收到一封帳號終止確認信件，寄至您的註冊電子郵件。",
+  "deregistration.policy.confirmationAndAppeal.description.2.1": "若您對帳號刪除流程有任何異議，請於 30 天內透過電子郵件向 ",
+  "deregistration.policy.confirmationAndAppeal.description.2.2": "joytify35@gmail.com",
+  "deregistration.policy.confirmationAndAppeal.description.2.3": " 提出申訴。",
+
+  "deregistration.policy.lastUpdatedDate": "最後更新日期：{date}"
+}

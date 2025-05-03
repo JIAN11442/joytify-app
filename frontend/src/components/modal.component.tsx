@@ -114,13 +114,14 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
           <Dialog.Overlay
             className={twMerge(
               `
-              fixed
-              inset-0
-              bg-neutral-900/90
-            `,
+                fixed
+                inset-0
+                bg-neutral-900/90
+              `,
               tw?.overlay
             )}
           />
+
           <Dialog.Content
             ref={mergeRefs(modalRef, ref)}
             className={twMerge(
@@ -157,8 +158,8 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                     flex
                     items-center
                     justify-center
-                    z-10
                     bg-neutral-900/50
+                    z-10
                   `}
                 >
                   <Loader />

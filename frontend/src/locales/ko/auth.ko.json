@@ -1,0 +1,25 @@
+{
+  "auth.modal.title.signIn": "다시 만나서 반가워요",
+  "auth.modal.title.signUp": "회원가입",
+  "auth.modal.description.signIn": "계정에 로그인",
+  "auth.modal.description.signUp": "새 계정 만들기",
+
+  "auth.form.thirdParty.Google.signIn": "Google 계정으로 로그인",
+  "auth.form.thirdParty.Google.signUp": "Google 계정으로 가입",
+  "auth.form.thirdParty.Github.signIn": "GitHub 계정으로 로그인",
+  "auth.form.thirdParty.Github.signUp": "GitHub 계정으로 가입",
+  "auth.form.divider.text": "또는",
+  "auth.form.email.input.title": "이메일 주소",
+  "auth.form.email.input.placeholder": "이메일을 입력하세요",
+  "auth.form.password.input.title": "비밀번호",
+  "auth.form.password.input.placeholder": "비밀번호를 입력하세요",
+  "auth.form.forgotPassword.text": "비밀번호를 잊으셨나요?",
+  "auth.form.confirmPassword.input.title": "비밀번호 확인",
+  "auth.form.confirmPassword.input.placeholder": "비밀번호를 다시 입력하세요",
+  "auth.form.submit.button.signIn": "로그인",
+  "auth.form.submit.button.signUp": "회원가입",
+  "auth.form.switchAccount.prompt.signIn": "아직 계정이 없으신가요?",
+  "auth.form.switchAccount.prompt.signUp": "이미 계정이 있으신가요?",
+  "auth.form.switchAccount.button.signIn": "회원가입",
+  "auth.form.switchAccount.button.signUp": "로그인"
+}

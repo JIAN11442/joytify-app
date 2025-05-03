@@ -1,0 +1,35 @@
+{
+  "deregistration.policy.title": "Account Deregistration Policy",
+  "deregistration.policy.description": "To protect your data privacy, your account and related data will be deleted according to the legal requirements below",
+
+  "deregistration.policy.effectOfDeletion.title": "Effect of Deletion",
+  "deregistration.policy.effectOfDeletion.description.1": "Personal information and credentials (including email, username, and linked devices) will be permanently erased.",
+  "deregistration.policy.effectOfDeletion.description.2": "Platform records (including songs, playlists, albums, labels, and playback history) will be completely deleted.",
+  "deregistration.policy.effectOfDeletion.description.3.1": "Uploaded content will be handled according to the ",
+  "deregistration.policy.effectOfDeletion.description.3.2": "Treatment of Shared Content",
+  "deregistration.policy.effectOfDeletion.description.3.3": " policy described below.",
+  "deregistration.policy.effectOfDeletion.description.4": "After deletion, you will no longer be able to log in or recover any data.",
+
+  "deregistration.policy.treatmentOfSharedContent.title": "Treatment of Shared Content",
+  "deregistration.policy.treatmentOfSharedContent.description.1": "Content you have previously shared publicly (such as uploaded music) may be retained to ensure continuous access for other users and platform analytics.",
+  "deregistration.policy.treatmentOfSharedContent.description.2": "All retained content will be anonymized and will no longer be linked to your deleted account.",
+  "deregistration.policy.treatmentOfSharedContent.description.3": "Unpublished or draft content will be permanently deleted along with the account.",
+
+  "deregistration.policy.impactOnLinkedServices.title": "Impact on Linked Services",
+  "deregistration.policy.impactOnLinkedServices.description.1": "Third-party connections (e.g., Google Sign-In, Github Login) will be automatically disconnected.",
+  "deregistration.policy.impactOnLinkedServices.description.2": "Any active subscriptions will be terminated. (Currently, no paid subscription services are provided.)",
+
+  "deregistration.policy.dataDeletionTimeline.title": "Data Deletion Timeline",
+  "deregistration.policy.dataDeletionTimeline.description.1": "Account deactivation: Immediately after confirmation.",
+  "deregistration.policy.dataDeletionTimeline.description.2": "Public content removal (if applicable): Within 5 minutes.",
+  "deregistration.policy.dataDeletionTimeline.description.3": "Database hard deletion: Within 30 days.",
+  "deregistration.policy.dataDeletionTimeline.description.4": "Backup system erasure: By the next maintenance cycle (up to 60 days).",
+
+  "deregistration.policy.confirmationAndAppeal.title": "Confirmation and Appeal",
+  "deregistration.policy.confirmationAndAppeal.description.1": "After the process is complete, a termination confirmation will be sent to your registered email.",
+  "deregistration.policy.confirmationAndAppeal.description.2.1": "If you have any objections to the deletion process, you may file an appeal within 30 days via email at ",
+  "deregistration.policy.confirmationAndAppeal.description.2.2": "joytify35@gmail.com",
+  "deregistration.policy.confirmationAndAppeal.description.2.3": ".",
+
+  "deregistration.policy.lastUpdatedDate": "Last updated: {date}"
+}

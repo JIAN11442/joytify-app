@@ -1,12 +1,13 @@
+import { useIntl } from "react-intl";
 import { useState, useEffect } from "react";
 import { MdEmail } from "react-icons/md";
 import {
   useForm,
   UseFormReturn,
   FieldErrors,
-  UseFormSetValue,
   UseFormSetFocus,
   UseFormRegister,
+  UseFormReset,
 } from "react-hook-form";
 import { FaUserCircle } from "react-icons/fa";
 import { GoInfo } from "react-icons/go";
@@ -19,7 +20,7 @@ import { useUpdateUserMutation } from "../hooks/user-mutate.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
 import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
-import { emailRegex } from "../utils/regex";
+import { emailRegex } from "../utils/regex.util";
 import toast from "../lib/toast.lib";
 
 type FieldName = "username" | "email";
@@ -48,9 +49,9 @@ type AccountProfileCardProps = {
 const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) => {
   const { auth_for_third_party: isThirdPartyUser } = profileUser;
 
+  const intl = useIntl();
   const [editEmail, setEditEmail] = useState(false);
   const [editUsername, setEditUsername] = useState(false);
-
   const { collapseSideBarState } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
 
@@ -155,7 +156,7 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
             register,
             handleSubmit,
             setFocus,
-            setValue,
+            reset,
             formState: { dirtyFields, errors },
           } = form;
 
@@ -166,8 +167,10 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
           const isFormValid = isFieldDirty && isFieldValid;
 
           const itemRegister = register as UseFormRegister<FormData<typeof name>>;
-          const itemSetValue = setValue as UseFormSetValue<FormData<typeof name>>;
           const itemSetFocus = setFocus as UseFormSetFocus<FormData<typeof name>>;
+          const itemReset = reset as UseFormReset<FormData<typeof name>>;
+
+          const isIconHighlight = isFieldDirty ? (isFieldValid ? "success" : "error") : undefined;
 
           return (
             <form
@@ -184,13 +187,14 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
                 icon={{ name: icon }}
                 defaultValue={defaultValue}
                 readOnly={!active}
+                iconHighlight={isIconHighlight}
                 className={`${!active && "opacity-60"}`}
                 tw={{ title: "text-md" }}
                 {...itemRegister(name, {
                   validate: (value: string) => {
                     if (name === "username") {
                       return (
-                        value !== generateUsername ||
+                        (value.length > 0 && value !== generateUsername) ||
                         "Username must be different from current username"
                       );
                     } else if (name === "email") {
@@ -204,7 +208,7 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
                   onBlur: () => {
                     if (active && !isFormValid) {
                       setActive(false);
-                      itemSetValue(name, defaultValue);
+                      itemReset({ [name]: defaultValue }, { keepDirty: false });
                     }
                   },
                 })}
@@ -213,14 +217,11 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
               {disabled ? (
                 <button
                   onClick={() => {
-                    toast.warning("This feature is not available for third-party user");
+                    toast.warning(
+                      intl.formatMessage({ id: "toast.settings.account.thirdParty.warning" })
+                    );
                   }}
-                  className={`
-                    input-box
-                    w-fit
-                    bg-transparent
-                    border-none
-                `}
+                  className={`profile-card-content-box`}
                 >
                   <Icon
                     name={GoInfo}
@@ -237,17 +238,19 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
                   <button
                     type="submit"
                     className={`
-                      input-box
-                      w-fit
+                      profile-card-content-box
                       bg-green-600
                       hover:bg-green-500
                       disabled:no-hover
                     `}
                   >
-                    Save
+                    {intl.formatMessage({ id: "settings.account.profile.card.button.save" })}
                   </button>
                 ) : (
-                  <Loader />
+                  <Loader
+                    loader={{ size: 20 }}
+                    className={{ container: "profile-card-content-box" }}
+                  />
                 )
               ) : (
                 <button
@@ -258,14 +261,12 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
                   }}
                   disabled={active}
                   className={`
-                    input-box
-                    w-fit
+                    profile-card-content-box 
                     bg-neutral-700/50
                     hover:bg-neutral-600/50
-                    disabled:no-hover
                   `}
                 >
-                  Edit
+                  {intl.formatMessage({ id: "settings.account.profile.card.button.edit" })}
                 </button>
               )}
             </form>

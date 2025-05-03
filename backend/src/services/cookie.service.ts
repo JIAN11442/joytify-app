@@ -7,8 +7,9 @@ import {
 } from "@joytify/shared-types/types";
 import { signToken, UserPreferenceSignOptions, verifyToken } from "../utils/jwt.util";
 import appAssert from "../utils/app-assert.util";
+import UserModel from "../models/user.model";
 
-const { UNAUTHORIZED } = HttpCode;
+const { UNAUTHORIZED, INTERNAL_SERVER_ERROR } = HttpCode;
 
 type GetVerifiedPrefsCookieServiceRequest = {
   cookie: string;
@@ -16,6 +17,7 @@ type GetVerifiedPrefsCookieServiceRequest = {
 };
 
 type UpdatePrefsCookieServiceRequest = {
+  userId: string;
   cookie: string;
   updatePayload: UpdateUserPreferencesCookieRequest;
 };
@@ -48,12 +50,32 @@ export const getVerifiedUserPreferencesCookie = async (
 
 // update user preferences cookie
 export const updateUserPreferencesCookie = async (params: UpdatePrefsCookieServiceRequest) => {
-  const { cookie, updatePayload } = params;
+  const { userId, cookie, updatePayload } = params;
+
   const { payload } = await getVerifiedUserPreferencesCookie({ cookie, strict: true });
+
   const currentPayload = _.omit(payload, ["iat", "exp", "aud"]);
   const mergedPayload = { ...currentPayload, ...updatePayload } as UserPreferencesCookieParams;
 
+  // sign new jwt token
   const newCookie = signToken(mergedPayload, UserPreferenceSignOptions);
+
+  // update user preferences
+  const updatedUserPreferences = await UserModel.findByIdAndUpdate(
+    userId,
+    {
+      $set: Object.entries(updatePayload).reduce(
+        (acc, [key, value]) => ({
+          ...acc,
+          [`user_preferences.${key}`]: value,
+        }),
+        {}
+      ),
+    },
+    { new: true }
+  );
+
+  appAssert(updatedUserPreferences, INTERNAL_SERVER_ERROR, "Failed to update user preferences");
 
   return { newCookie };
 };

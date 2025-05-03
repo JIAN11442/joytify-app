@@ -1,0 +1,8 @@
+{
+  "library.title": "Your Library",
+  "library.status.notLoggedIn.question": "Ready to create your music world?",
+  "library.status.notLoggedIn.action": "Sign in now to unlock your personal playlists!",
+  "library.actions.song.create": "Create a new song",
+  "library.actions.playlist.create": "Create a new playlist",
+  "library.search.placeholder": "Search your playlist"
+}

@@ -302,7 +302,7 @@ const UploadModal = () => {
               formMethods={formMethods}
               options={playlistOptions}
               createNewFn={handleActiveCreatePlaylistModal}
-              autoCloseMenuFn={!activeCreatePlaylistModal.active}
+              autoCloseMenu={!activeCreatePlaylistModal.active}
               disabled={isPending}
               required
               {...register("playlist_for", {
@@ -397,7 +397,7 @@ const UploadModal = () => {
               options={albumOptions}
               createNewFn={handleActiveCreateAlbumModal}
               deleteOptFn={removeAlbumFn}
-              autoCloseMenuFn={!activeCreateAlbumModal.active}
+              autoCloseMenu={!activeCreateAlbumModal.active}
               disabled={isPending}
               {...normalizeRegister("album")}
             />
@@ -411,7 +411,7 @@ const UploadModal = () => {
               options={getLabelOptions(labels, LANGUAGE)}
               deleteOptFn={removeLabelFn}
               queryRefetch={labelRefetch}
-              autoCloseMenuFn={!activeCreateLabelModal.active}
+              autoCloseMenu={!activeCreateLabelModal.active}
               disabled={isPending}
               {...normalizeRegister("languages")}
             />
@@ -425,7 +425,7 @@ const UploadModal = () => {
               options={getLabelOptions(labels, GENRE)}
               deleteOptFn={removeLabelFn}
               queryRefetch={labelRefetch}
-              autoCloseMenuFn={!activeCreateLabelModal.active}
+              autoCloseMenu={!activeCreateLabelModal.active}
               disabled={isPending}
               {...normalizeRegister("genres")}
             />
@@ -439,7 +439,7 @@ const UploadModal = () => {
               options={getLabelOptions(labels, TAG)}
               deleteOptFn={removeLabelFn}
               queryRefetch={labelRefetch}
-              autoCloseMenuFn={!activeCreateLabelModal.active}
+              autoCloseMenu={!activeCreateLabelModal.active}
               disabled={isPending}
               {...normalizeRegister("tags")}
             />

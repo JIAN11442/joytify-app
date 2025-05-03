@@ -4,7 +4,6 @@ import { getMusicianId } from "../services/musician.service";
 import { musicianZodSchema } from "../schemas/musician.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
 import { GetMusicianIdRequest } from "@joytify/shared-types/types";
-import { objectIdZodSchema } from "../schemas/util.zod";
 
 const { OK } = HttpCode;
 

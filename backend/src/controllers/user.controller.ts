@@ -22,11 +22,10 @@ import {
   ResetPasswordRequest,
   ChangePasswordRequest,
 } from "@joytify/shared-types/types";
-import appAssert from "../utils/app-assert.util";
 
 type ResetPasswordBodyRequest = Omit<ResetPasswordRequest, "token">;
 
-const { OK, INTERNAL_SERVER_ERROR } = HttpCode;
+const { OK } = HttpCode;
 
 // get authenticated user info handler
 export const getAuthenticatedUserInfoHandler: RequestHandler = async (req, res, next) => {

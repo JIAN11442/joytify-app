@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useIntl } from "react-intl";
+import { twMerge } from "tailwind-merge";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { RiErrorWarningLine } from "react-icons/ri";
@@ -13,10 +15,9 @@ import { defaultUpdatePasswordData } from "../constants/form.constant";
 import { WarningOptions } from "../constants/warning.constant";
 import { DefaultUpdatePasswordForm } from "../types/form.type";
 import { WarningType } from "../types/warning.type";
-import { isHighlight } from "../lib/icon-highlight.lib";
-import { passwordRegex } from "../utils/regex";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { twMerge } from "tailwind-merge";
+import { isHighlight } from "../lib/icon-highlight.lib";
+import { passwordRegex } from "../utils/regex.util";
 
 type UpdateFnParams = {
   currentPassword: string;
@@ -50,6 +51,7 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
   className,
   tw,
 }) => {
+  const intl = useIntl();
   const [closeMsg, setCloseMsg] = useState(false);
 
   const {
@@ -65,17 +67,17 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
   const getWarningMsg = (type: WarningType) => {
     switch (type) {
       case IS_FETCHING_TOKEN:
-        return "Verifying your password reset link...";
+        return intl.formatMessage({ id: "update.password.warning.fetchingToken" });
       case VALID_TOKEN:
-        return "Verification complete! You can now change your password";
+        return intl.formatMessage({ id: "update.password.warning.validToken" });
       case INVALID_TOKEN:
-        return "Your password reset link is not valid, expired, or already used";
+        return intl.formatMessage({ id: "update.password.warning.invalidToken" });
       case INVALID_PASSWORD_REGEX:
-        return "Password should be 6 to 20 characters long with a numeric, 1 lowercase and 1 uppercase letters";
+        return intl.formatMessage({ id: "update.password.warning.invalidPasswordRegex" });
       case PASSWORD_IS_DUPLICATED:
-        return "Your new password should not match your current password";
+        return intl.formatMessage({ id: "update.password.warning.passwordIsDuplicated" });
       case PASSWORD_IS_NOT_MATCH:
-        return "Please ensure the confirmation password matches the new password";
+        return intl.formatMessage({ id: "update.password.warning.passwordIsNotMatch" });
     }
   };
 
@@ -91,16 +93,16 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
     mode: "onChange",
   });
 
-  // show verify status msg
   const visibleVerifyStatusMsg = useMemo(() => {
     if (isFetching === undefined && verified === undefined) return false;
 
     return isFetching || (verified && !closeMsg) || !verified;
   }, [isFetching, verified, closeMsg]);
 
-  // icon highlight
-  const isIconHighlight = (target: keyof DefaultUpdatePasswordForm) =>
-    isHighlight(watch, errors, target);
+  const isIconHighlight = useCallback(
+    (target: keyof DefaultUpdatePasswordForm) => isHighlight(watch, errors, target),
+    [watch, errors]
+  );
 
   // handle form submit
   const onSubmit: SubmitHandler<DefaultUpdatePasswordForm> = (value) => {
@@ -125,8 +127,9 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
         `
         flex
         flex-col
+        w-full
         gap-4
-        max-w-[380px]
+        text-center
       `,
         className
       )}
@@ -206,7 +209,7 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
         <InputBox
           id="reset-current-password"
           type="password"
-          placeholder="Current Password"
+          placeholder={intl.formatMessage({ id: "update.currentPassword.input.placeholder" })}
           icon={{ name: IoKey }}
           iconHighlight={isIconHighlight("currentPassword")}
           disabled={disabled}
@@ -223,7 +226,7 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
         {/* new password */}
         <InputBox
           type="password"
-          placeholder="New Password"
+          placeholder={intl.formatMessage({ id: "update.newPassword.input.placeholder" })}
           icon={{ name: IoKey }}
           iconHighlight={isIconHighlight("newPassword")}
           disabled={disabled}
@@ -244,7 +247,7 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
         {/* confirm password */}
         <InputBox
           type="password"
-          placeholder="Confirm Password"
+          placeholder={intl.formatMessage({ id: "update.confirmPassword.input.placeholder" })}
           icon={{ name: IoKey }}
           iconHighlight={isIconHighlight("confirmPassword")}
           disabled={disabled}
@@ -272,7 +275,11 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
             rounded-full
           `}
         >
-          {isPending ? <Loader loader={{ size: 20 }} /> : "Reset password"}
+          {isPending ? (
+            <Loader loader={{ size: 20 }} />
+          ) : (
+            intl.formatMessage({ id: "update.password.form.submit.button" })
+          )}
         </button>
       </form>
     </div>

@@ -1,0 +1,25 @@
+{
+  "auth.modal.title.signIn": "歡迎回來",
+  "auth.modal.title.signUp": "加入我們",
+  "auth.modal.description.signIn": "登入你的帳號",
+  "auth.modal.description.signUp": "註冊新帳號",
+
+  "auth.form.thirdParty.Google.signIn": "使用 Google 帳號登入",
+  "auth.form.thirdParty.Google.signUp": "使用 Google 帳號註冊",
+  "auth.form.thirdParty.Github.signIn": "使用 Github 帳號登入",
+  "auth.form.thirdParty.Github.signUp": "使用 Github 帳號註冊",
+  "auth.form.divider.text": "或",
+  "auth.form.email.input.title": "郵件地址",
+  "auth.form.email.input.placeholder": "請輸入你的郵件地址",
+  "auth.form.password.input.title": "密碼",
+  "auth.form.password.input.placeholder": "請輸入你的密碼",
+  "auth.form.forgotPassword.text": "忘記密碼？",
+  "auth.form.confirmPassword.input.title": "確認密碼",
+  "auth.form.confirmPassword.input.placeholder": "再次輸入你的密碼",
+  "auth.form.submit.button.signIn": "登入",
+  "auth.form.submit.button.signUp": "註冊",
+  "auth.form.switchAccount.prompt.signIn": "還沒有帳號？",
+  "auth.form.switchAccount.prompt.signUp": "已經有帳號？",
+  "auth.form.switchAccount.button.signIn": "立即註冊",
+  "auth.form.switchAccount.button.signUp": "立即登入"
+}

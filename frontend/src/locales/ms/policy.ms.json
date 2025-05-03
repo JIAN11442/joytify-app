@@ -1,0 +1,35 @@
+{
+  "deregistration.policy.title": "Polisi Penamatan Akaun",
+  "deregistration.policy.description": "Untuk melindungi privasi data anda, akaun serta data berkaitan akan dipadam mengikut keperluan undang-undang seperti berikut",
+
+  "deregistration.policy.effectOfDeletion.title": "Kesan Pemadaman",
+  "deregistration.policy.effectOfDeletion.description.1": "Maklumat peribadi dan kelayakan (termasuk emel, nama pengguna dan peranti yang dipautkan) akan dipadam secara kekal.",
+  "deregistration.policy.effectOfDeletion.description.2": "Rekod platform (termasuk lagu, senarai main, album, label dan sejarah main balik) akan dipadam sepenuhnya.",
+  "deregistration.policy.effectOfDeletion.description.3.1": "Kandungan yang dimuat naik akan dikendalikan mengikut dasar ",
+  "deregistration.policy.effectOfDeletion.description.3.2": "Pengendalian Kandungan Perkongsian",
+  "deregistration.policy.effectOfDeletion.description.3.3": " yang dinyatakan di bawah.",
+  "deregistration.policy.effectOfDeletion.description.4": "Selepas pemadaman, anda tidak lagi boleh log masuk atau mendapatkan semula sebarang data.",
+
+  "deregistration.policy.treatmentOfSharedContent.title": "Pengendalian Kandungan Perkongsian",
+  "deregistration.policy.treatmentOfSharedContent.description.1": "Kandungan yang telah anda kongsikan secara umum (seperti muzik yang dimuat naik) mungkin akan dikekalkan untuk memastikan akses berterusan bagi pengguna lain serta tujuan analitik platform.",
+  "deregistration.policy.treatmentOfSharedContent.description.2": "Semua kandungan yang dikekalkan akan dinyahidentitikan dan tidak lagi dikaitkan dengan akaun anda yang telah dipadam.",
+  "deregistration.policy.treatmentOfSharedContent.description.3": "Kandungan yang belum diterbitkan atau dalam bentuk draf akan dipadam sepenuhnya bersama akaun anda.",
+
+  "deregistration.policy.impactOnLinkedServices.title": "Kesan kepada Perkhidmatan Terpaut",
+  "deregistration.policy.impactOnLinkedServices.description.1": "Sambungan pihak ketiga (contohnya Google Sign-In, Github Login) akan ditamatkan secara automatik.",
+  "deregistration.policy.impactOnLinkedServices.description.2": "Sebarang langganan aktif akan ditamatkan. (Buat masa ini, tiada perkhidmatan langganan berbayar disediakan.)",
+
+  "deregistration.policy.dataDeletionTimeline.title": "Garis Masa Pemadaman Data",
+  "deregistration.policy.dataDeletionTimeline.description.1": "Nyahaktif akaun: Segera selepas pengesahan.",
+  "deregistration.policy.dataDeletionTimeline.description.2": "Pemadaman kandungan awam (jika ada): Dalam masa 5 minit.",
+  "deregistration.policy.dataDeletionTimeline.description.3": "Pemadaman penuh dari pangkalan data: Dalam masa 30 hari.",
+  "deregistration.policy.dataDeletionTimeline.description.4": "Penghapusan daripada sistem sandaran: Menjelang kitaran penyelenggaraan seterusnya (maksimum 60 hari).",
+
+  "deregistration.policy.confirmationAndAppeal.title": "Pengesahan dan Rayuan",
+  "deregistration.policy.confirmationAndAppeal.description.1": "Setelah proses selesai, pengesahan penamatan akan dihantar ke emel yang telah didaftarkan.",
+  "deregistration.policy.confirmationAndAppeal.description.2.1": "Jika anda mempunyai bantahan terhadap proses pemadaman, anda boleh menghantar rayuan dalam tempoh 30 hari melalui emel ke ",
+  "deregistration.policy.confirmationAndAppeal.description.2.2": "joytify35@gmail.com",
+  "deregistration.policy.confirmationAndAppeal.description.2.3": ".",
+
+  "deregistration.policy.lastUpdatedDate": "Tarikh kemas kini terakhir: {date}"
+}

@@ -1,0 +1,25 @@
+{
+  "auth.modal.title.signIn": "Welcome back",
+  "auth.modal.title.signUp": "Join use today",
+  "auth.modal.description.signIn": "Login to your account",
+  "auth.modal.description.signUp": "Sign up to get own account",
+
+  "auth.form.thirdParty.Google.signIn": "Continue with Google",
+  "auth.form.thirdParty.Google.signUp": "Sign up with Google",
+  "auth.form.thirdParty.Github.signIn": "Continue with Github",
+  "auth.form.thirdParty.Github.signUp": "Sign up with Github",
+  "auth.form.divider.text": "OR",
+  "auth.form.email.input.title": "Email address",
+  "auth.form.email.input.placeholder": "Your email address",
+  "auth.form.password.input.title": "Password",
+  "auth.form.password.input.placeholder": "Your password",
+  "auth.form.forgotPassword.text": "Forgot password?",
+  "auth.form.confirmPassword.input.title": "Confirm Password",
+  "auth.form.confirmPassword.input.placeholder": "Confirm your password",
+  "auth.form.submit.button.signIn": "Sign in",
+  "auth.form.submit.button.signUp": "Sign up",
+  "auth.form.switchAccount.prompt.signIn": "Don't have an account?",
+  "auth.form.switchAccount.prompt.signUp": "Already have an account?",
+  "auth.form.switchAccount.button.signIn": "Sign up",
+  "auth.form.switchAccount.button.signUp": "Sign in"
+}

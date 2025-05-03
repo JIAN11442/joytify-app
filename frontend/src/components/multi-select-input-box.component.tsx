@@ -22,7 +22,7 @@ interface MultiSelectInputProps<T extends FieldValues = any>
   title?: string;
   options: OptionType;
   formMethods: FormMethods<T>;
-  autoCloseMenuFn?: boolean;
+  autoCloseMenu?: boolean;
   deleteOptFn?: (id: string) => void;
   queryRefetch: RefetchType<RefactorLabelResponse>;
 }
@@ -32,7 +32,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
     {
       title,
       options,
-      autoCloseMenuFn = true,
+      autoCloseMenu = true,
       deleteOptFn,
       queryRefetch,
       formMethods,
@@ -95,7 +95,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
         }
       };
       const handleOnBlur: EventListener = (e) => {
-        if (autoCloseMenuFn && menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        if (autoCloseMenu && menuRef.current && !menuRef.current.contains(e.target as Node)) {
           timeoutForDelay(() => {
             setActiveMenu(false);
           });
@@ -109,7 +109,7 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
         cleanupOnFocusFn();
         cleanupOnBlurFn();
       };
-    }, [autoCloseMenuFn, disabled, inputRef, menuRef]);
+    }, [autoCloseMenu, disabled, inputRef, menuRef]);
 
     // while selected options change, set form value and trigger
     useEffect(() => {

@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useIntl } from "react-intl";
 import Modal from "./modal.component";
 import AuthForm from "./auth-form.component";
 import ForgotPasswordForm from "./forgot-password-form.component";
@@ -5,11 +7,11 @@ import ForgotPasswordForm from "./forgot-password-form.component";
 import { AuthForOptions } from "@joytify/shared-types/constants";
 import useVerificationModalState from "../states/verification.state";
 import useAuthModalState from "../states/auth-modal.state";
-import { useState } from "react";
 
 const AuthModal = () => {
   const [closeBtnDisabled, setCloseBtnDisabled] = useState(false);
 
+  const intl = useIntl();
   const { activeAuthModal, authFor, closeAuthModal } = useAuthModalState();
   const { activeVerificationCodeModal } = useVerificationModalState();
 
@@ -17,16 +19,16 @@ const AuthModal = () => {
 
   const title =
     authFor === SIGN_IN
-      ? "Welcome back"
+      ? intl.formatMessage({ id: "auth.modal.title.signIn" })
       : authFor === SIGN_UP
-      ? "Join use today"
-      : "Get a reset password link";
+      ? intl.formatMessage({ id: "auth.modal.title.signUp" })
+      : intl.formatMessage({ id: "forgot.password.form.title" });
 
   const description =
     authFor === SIGN_IN
-      ? "Login to your account"
+      ? intl.formatMessage({ id: "auth.modal.description.signIn" })
       : authFor === SIGN_UP
-      ? "Sign up to get own account"
+      ? intl.formatMessage({ id: "auth.modal.description.signUp" })
       : "";
 
   return (

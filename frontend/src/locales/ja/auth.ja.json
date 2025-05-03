@@ -1,0 +1,25 @@
+{
+  "auth.modal.title.signIn": "おかえりなさい",
+  "auth.modal.title.signUp": "新規登録",
+  "auth.modal.description.signIn": "アカウントにログイン",
+  "auth.modal.description.signUp": "新規アカウントを作成",
+
+  "auth.form.thirdParty.Google.signIn": "Google アカウントでログイン",
+  "auth.form.thirdParty.Google.signUp": "Google アカウントで登録",
+  "auth.form.thirdParty.Github.signIn": "GitHub アカウントでログイン",
+  "auth.form.thirdParty.Github.signUp": "GitHub アカウントで登録",
+  "auth.form.divider.text": "または",
+  "auth.form.email.input.title": "メールアドレス",
+  "auth.form.email.input.placeholder": "メールアドレスを入力してください",
+  "auth.form.password.input.title": "パスワード",
+  "auth.form.password.input.placeholder": "パスワードを入力してください",
+  "auth.form.forgotPassword.text": "パスワードをお忘れですか？",
+  "auth.form.confirmPassword.input.title": "パスワードの確認",
+  "auth.form.confirmPassword.input.placeholder": "もう一度パスワードを入力してください",
+  "auth.form.submit.button.signIn": "ログイン",
+  "auth.form.submit.button.signUp": "登録する",
+  "auth.form.switchAccount.prompt.signIn": "アカウントをお持ちでない方",
+  "auth.form.switchAccount.prompt.signUp": "すでにアカウントをお持ちですか？",
+  "auth.form.switchAccount.button.signIn": "アカウント作成",
+  "auth.form.switchAccount.button.signUp": "ログイン"
+}

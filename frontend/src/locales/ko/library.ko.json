@@ -1,0 +1,8 @@
+{
+  "library.title": "내 라이브러리",
+  "library.status.notLoggedIn.question": "나만의 음악 세계를 만들어볼까요?",
+  "library.status.notLoggedIn.action": "로그인하고 나만의 플레이리스트를 시작해보세요!",
+  "library.actions.song.create": "새로운 곡 추가",
+  "library.actions.playlist.create": "새로운 플레이리스트 만들기",
+  "library.search.placeholder": "플레이리스트 검색"
+}

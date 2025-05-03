@@ -1,13 +1,17 @@
 import { useMemo } from "react";
+import { useIntl } from "react-intl";
+
 import Modal from "./modal.component";
 import UpdatePasswordForm from "./update-password-form.component";
 import PasswordUpdateStatusForm from "./password-update-status-form.component";
+
 import { useChangePasswordMutation } from "../hooks/user-mutate.hook";
 import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
 import useSettingsState from "../states/settings.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const ChangePasswordModal = () => {
+  const intl = useIntl();
   const { INITIAL, SUCCESS, FAILURE } = PasswordUpdateStatus;
 
   const {
@@ -29,20 +33,20 @@ const ChangePasswordModal = () => {
   const title = useMemo(() => {
     switch (passwordChangeStatus) {
       case INITIAL:
-        return "Change password";
+        return intl.formatMessage({ id: "change.password.initial.title" });
       case SUCCESS:
-        return "Password changed";
+        return intl.formatMessage({ id: "change.password.success.title" });
       case FAILURE:
-        return "Password change failed";
+        return intl.formatMessage({ id: "change.password.failure.title" });
       default:
-        return "Change password";
+        return intl.formatMessage({ id: "change.password.default.title" });
     }
   }, [passwordChangeStatus]);
 
   const description = useMemo(() => {
     switch (passwordChangeStatus) {
       case INITIAL:
-        return "Enter your current password and your new password.";
+        return intl.formatMessage({ id: "change.password.initial.description" });
     }
   }, [passwordChangeStatus]);
 

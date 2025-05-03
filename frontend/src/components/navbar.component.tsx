@@ -8,15 +8,16 @@ import NavbarLink from "./navbar-link.component";
 import UserEntryPoint from "./user-entry-point.component";
 import NavbarSearchBar from "./navbar-searchbar.component";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
-
 import useNavbarState from "../states/navbar.state";
 import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import useUserState from "../states/user.state";
 
 const Navbar = () => {
   const [searchBarVal, setSearchBarVal] = useState("");
 
+  const { authUser } = useUserState();
   const { activeFloatingSidebar, setActiveFloatingSidebar, setCollapseSideBarState } =
     useSidebarState();
   const {
@@ -28,7 +29,7 @@ const Navbar = () => {
 
   const { screenWidth } = useProviderState();
 
-  const { mutate: updateUserPreferences } = useUpdateUserPreferencesMutation();
+  const { mutate: updateUserPreferencesFn } = useUpdateUserPreferencesMutation();
 
   const handleActiveFloatSidebar = () => {
     timeoutForDelay(() => {
@@ -68,7 +69,10 @@ const Navbar = () => {
   useEffect(() => {
     if (activeFloatingSidebar) {
       setCollapseSideBarState({ isCollapsed: false, isManualToggle: false });
-      updateUserPreferences({ collapseSidebar: false });
+
+      if (authUser) {
+        updateUserPreferencesFn({ sidebarCollapsed: false });
+      }
     }
   }, [activeFloatingSidebar]);
 

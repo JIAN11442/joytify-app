@@ -5,8 +5,8 @@ import { IconBaseProps } from "react-icons";
 import { IconName } from "./react-icons.component";
 import InputBox, { InputProps } from "./input-box.component";
 import AnimationWrapper, { DefaultAnimationWrapperProps } from "./animation-wrapper.component";
-import mergeRefs from "../lib/merge-refs.lib";
 import { timeoutForEventListener } from "../lib/timeout.lib";
+import mergeRefs from "../lib/merge-refs.lib";
 
 interface SearchBarProps extends DefaultAnimationWrapperProps, InputProps {
   visible?: boolean;
@@ -15,7 +15,7 @@ interface SearchBarProps extends DefaultAnimationWrapperProps, InputProps {
   tw?: { wrapper?: string; icon?: string };
 }
 
-const InputSearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
+const SearchBarInput = forwardRef<HTMLInputElement, SearchBarProps>(
   (
     {
       id,
@@ -98,4 +98,4 @@ const InputSearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
   }
 );
 
-export default InputSearchBar;
+export default SearchBarInput;

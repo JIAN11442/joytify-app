@@ -1,0 +1,8 @@
+{
+  "library.title": "あなたの音楽ライブラリ",
+  "library.status.notLoggedIn.question": "あなただけの音楽空間を作ってみませんか？",
+  "library.status.notLoggedIn.action": "ログインして、オリジナルのプレイリストを始めましょう！",
+  "library.actions.song.create": "曲を追加",
+  "library.actions.playlist.create": "プレイリストを作成",
+  "library.search.placeholder": "プレイリストを検索"
+}

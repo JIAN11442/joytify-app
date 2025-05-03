@@ -1,8 +1,9 @@
+import { useIntl } from "react-intl";
+
 import Loader from "./loader.component";
 import LibraryPlaylist from "./library-playlist.component";
-
-import useSidebarState from "../states/sidebar.state";
 import { AuthUserResponse } from "@joytify/shared-types/types";
+import useSidebarState from "../states/sidebar.state";
 
 type LibraryBodyProps = {
   authUser?: AuthUserResponse | null;
@@ -10,8 +11,10 @@ type LibraryBodyProps = {
 };
 
 const LibraryBody: React.FC<LibraryBodyProps> = ({ authUser, isLoading: isAuthLoading }) => {
-  const { collapseSideBarState } = useSidebarState();
+  const intl = useIntl();
+  const { collapseSideBarState, activeFloatingSidebar } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
+  const isFixedSidebarExpanded = !isCollapsed && !activeFloatingSidebar;
 
   return (
     <div
@@ -19,7 +22,7 @@ const LibraryBody: React.FC<LibraryBodyProps> = ({ authUser, isLoading: isAuthLo
         overflow-y-auto
         hidden-scrollbar
         text-neutral-600/50
-        ${!isCollapsed && "pl-3 pr-3"}
+        ${!isCollapsed && "px-3"}
       `}
     >
       {isAuthLoading ? (
@@ -33,14 +36,19 @@ const LibraryBody: React.FC<LibraryBodyProps> = ({ authUser, isLoading: isAuthLo
           {!isCollapsed && (
             <p
               className={`
+               flex
+               flex-col
+               gap-2
                mt-5
                pr-2
                text-[15px]
-               font-medium
                text-neutral-500
+               leading-7
              `}
             >
-              The playlist is empty before logging into your account.
+              {intl.formatMessage({ id: "library.status.notLoggedIn.question" })}
+              <br className={`block ${isFixedSidebarExpanded && "max-lg:hidden"}`} />
+              {intl.formatMessage({ id: "library.status.notLoggedIn.action" })}
             </p>
           )}
         </>

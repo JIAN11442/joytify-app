@@ -1,0 +1,8 @@
+{
+  "library.title": "你的音樂庫",
+  "library.status.notLoggedIn.question": "想打造自己的音樂天地嗎？",
+  "library.status.notLoggedIn.action": "立即登入解鎖你的專屬播放清單吧！",
+  "library.actions.song.create": "新增歌曲",
+  "library.actions.playlist.create": "建立歌單",
+  "library.search.placeholder": "搜尋你的歌單"
+}

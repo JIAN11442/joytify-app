@@ -1,0 +1,30 @@
+{
+  "settings.sidebar.categories.mainMenu": "Main Menu",
+  "settings.sidebar.categories.mainMenu.account": "Account",
+  "settings.sidebar.categories.mainMenu.notifications": "Notifications",
+  "settings.sidebar.categories.other": "Other",
+  "settings.sidebar.categories.other.languages": "Languages",
+  "settings.sidebar.categories.other.connectedDevices": "Connected Devices",
+
+  "settings.account.title": "Account Settings",
+  "settings.account.description": "Manage personal information, password, and account status",
+  "settings.account.gender.title": "Gender",
+  "settings.account.gender.placeholder": "Click to choose your gender",
+  "settings.account.dateOfBirth.title": "Date of birth",
+  "settings.account.country.title": "Country",
+  "settings.account.country.placeholder": "Click to choose your country",
+  "settings.account.profile.card.button.edit": "Edit",
+  "settings.account.profile.card.button.save": "Save",
+  "settings.account.form.button.submit": "Submit",
+  "settings.account.changePassword.title": "Password and Authentication",
+  "settings.account.changePassword.description": "Change your password to keep your account secure.",
+  "settings.account.changePassword.button": "Change Password",
+  "settings.account.deregisterAccount.title": "Deregister Account",
+  "settings.account.deregisterAccount.description": "Permanently delete your account from the platform.",
+  "settings.account.deregisterAccount.button": "Deregister Account",
+
+  "settings.languages.title": "Language Preferences",
+  "settings.languages.description": "Select your preferred interface language",
+  "settings.languages.search.placeholder": "Search interface language",
+  "settings.languages.currentlySelected": "Currently Selected"
+}

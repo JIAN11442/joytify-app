@@ -1,0 +1,30 @@
+{
+  "settings.sidebar.categories.mainMenu": "メインメニュー",
+  "settings.sidebar.categories.mainMenu.account": "アカウント",
+  "settings.sidebar.categories.mainMenu.notifications": "通知",
+  "settings.sidebar.categories.other": "その他",
+  "settings.sidebar.categories.other.languages": "言語",
+  "settings.sidebar.categories.other.connectedDevices": "接続済みデバイス",
+
+  "settings.account.title": "アカウント設定",
+  "settings.account.description": "個人情報、パスワード、アカウントの状態を管理します",
+  "settings.account.gender.title": "性別",
+  "settings.account.gender.placeholder": "性別を選択してください",
+  "settings.account.dateOfBirth.title": "生年月日",
+  "settings.account.country.title": "国",
+  "settings.account.country.placeholder": "国を選択してください",
+  "settings.account.profile.card.button.edit": "編集",
+  "settings.account.profile.card.button.save": "保存",
+  "settings.account.form.button.submit": "送信",
+  "settings.account.changePassword.title": "パスワードと認証",
+  "settings.account.changePassword.description": "アカウントの安全を保つためにパスワードを変更してください。",
+  "settings.account.changePassword.button": "パスワードを変更",
+  "settings.account.deregisterAccount.title": "アカウントの削除",
+  "settings.account.deregisterAccount.description": "アカウントを完全に削除します。",
+  "settings.account.deregisterAccount.button": "アカウントを削除",
+
+  "settings.languages.title": "言語設定",
+  "settings.languages.description": "インターフェースの表示言語を選択してください",
+  "settings.languages.search.placeholder": "表示言語を検索",
+  "settings.languages.currentlySelected": "現在の表示言語"
+}

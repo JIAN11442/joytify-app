@@ -4,14 +4,27 @@ import { SquareDualLineSkeleton } from "./skeleton-loading.component";
 
 import useUserState from "../states/user.state";
 import useSidebarState from "../states/sidebar.state";
-import { settingsSidebarCategories } from "../contents/settings-sidebar-categories.content";
+import { timeoutForDelay } from "../lib/timeout.lib";
+import { useIntl } from "react-intl";
+import { getSettingsSidebarCategories } from "../contents/settings-sidebar-categories.content";
 
 const SettingsSidebar = () => {
+  const intl = useIntl();
   const { profileUser } = useUserState();
-  const { collapseSideBarState } = useSidebarState();
+  const { collapseSideBarState, activeFloatingSidebar, closeFloatingSidebar } = useSidebarState();
 
   const { isCollapsed } = collapseSideBarState;
   const { username, profile_img, email } = profileUser ?? {};
+
+  const settingsSidebarCategories = getSettingsSidebarCategories(intl);
+
+  const handleCloseFloatingMenu = () => {
+    timeoutForDelay(() => {
+      if (activeFloatingSidebar) {
+        closeFloatingSidebar();
+      }
+    });
+  };
 
   return (
     <>
@@ -46,7 +59,7 @@ const SettingsSidebar = () => {
                     font-bold
                   `}
                 >
-                  {category}
+                  {category.toUpperCase()}
                 </p>
               ) : (
                 index > 0 && <hr className={`border-neutral-800/50`} />
@@ -64,12 +77,13 @@ const SettingsSidebar = () => {
                     }}
                     label={label}
                     collapse={isCollapsed}
+                    onClick={handleCloseFloatingMenu}
                     className={`
                       ${isCollapsed ? "w-fit" : "hover:bg-neutral-800/50"}
                       px-5
                       py-3.5
                     `}
-                    tw={{ label: `text-sm` }}
+                    tw={{ label: `text-[14px]` }}
                   />
                 ))}
               </div>

@@ -1,0 +1,11 @@
+{
+  "toast.verification.sendCode.success": "인증 코드가 성공적으로 전송되었습니다",
+  "toast.verification.sendCode.error": "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요",
+  "toast.verification.resendCode.success": "인증 코드가 다시 전송되었습니다",
+  "toast.verification.sendResetPassword.success": "비밀번호 재설정 이메일이 전송되었습니다",
+  "toast.verification.sendResetPassword.error": "요청이 너무 많습니다. 나중에 다시 시도해 주세요",
+  "toast.verification.verifyCode.success": "인증이 완료되었습니다",
+  "toast.verification.verifyCode.error": "인증에 실패했습니다",
+
+  "toast.settings.account.thirdParty.warning": "이 기능은 제3자 로그인 사용자에게 제공되지 않습니다"
+}

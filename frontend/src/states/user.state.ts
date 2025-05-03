@@ -35,6 +35,8 @@ type UserParams = {
   setPasswordResetStatus: (state: PasswordUpdateStatusType) => void;
 };
 
+const { INITIAL } = PasswordUpdateStatus;
+
 const useUserState = create<UserParams>((set) => ({
   authUser: null,
   profileUser: null,
@@ -43,7 +45,7 @@ const useUserState = create<UserParams>((set) => ({
   activeUserMenu: false,
   activeProfileOptionsMenu: false,
   activeProfileEditModal: { active: false, profileUser: null },
-  passwordResetStatus: PasswordUpdateStatus.INITIAL,
+  passwordResetStatus: INITIAL,
 
   closeProfileEditModal: () =>
     set({ activeProfileEditModal: { active: false, profileUser: null } }),

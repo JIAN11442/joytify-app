@@ -1,0 +1,8 @@
+{
+  "library.title": "Pustaka Musik Anda",
+  "library.status.notLoggedIn.question": "Sedia cipta dunia muzik anda sendiri?",
+  "library.status.notLoggedIn.action": "Log masuk sekarang dan mula bina senarai main anda!",
+  "library.actions.song.create": "Tambah Lagu",
+  "library.actions.playlist.create": "Cipta Senarai Main",
+  "library.search.placeholder": "Cari senarai main anda"
+}

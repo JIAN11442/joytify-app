@@ -55,8 +55,8 @@ const SidebarItem = forwardRef<HTMLDivElement, SidebarItemProps>(
                 to-neutral-900 to-[100%]
               `
               : collapse && !activeFloatingSidebar
-              ? "text-neutral-400"
-              : "text-neutral-400 hover:text-white"
+              ? "text-neutral-300"
+              : "text-neutral-300 hover:text-white"
           }
           hover:text-white
           gradient-animation
@@ -66,7 +66,7 @@ const SidebarItem = forwardRef<HTMLDivElement, SidebarItemProps>(
         )}
       >
         {/* Icon */}
-        <Icon name={name} opts={{ size: 24, ...opts }} />
+        <Icon name={name} opts={{ size: 24, ...opts }} className={`mb-1`} />
 
         {/* Label */}
         {(label?.length && !collapse) || activeFloatingSidebar ? (

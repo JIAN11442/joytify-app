@@ -1,0 +1,30 @@
+{
+  "settings.sidebar.categories.mainMenu": "主選單",
+  "settings.sidebar.categories.mainMenu.account": "帳號",
+  "settings.sidebar.categories.mainMenu.notifications": "通知",
+  "settings.sidebar.categories.other": "其他",
+  "settings.sidebar.categories.other.languages": "語言",
+  "settings.sidebar.categories.other.connectedDevices": "已連接的裝置",
+
+  "settings.account.title": "帳號設定",
+  "settings.account.description": "管理個人資訊、密碼與帳號狀態",
+  "settings.account.gender.title": "性別",
+  "settings.account.gender.placeholder": "選擇你的性別",
+  "settings.account.dateOfBirth.title": "出生日期",
+  "settings.account.country.title": "國家",
+  "settings.account.country.placeholder": "選擇你所屬國家",
+  "settings.account.profile.card.button.edit": "編輯",
+  "settings.account.profile.card.button.save": "儲存",
+  "settings.account.form.button.submit": "提交",
+  "settings.account.changePassword.title": "密碼與驗證",
+  "settings.account.changePassword.description": "修改密碼以確保帳號安全",
+  "settings.account.changePassword.button": "變更密碼",
+  "settings.account.deregisterAccount.title": "帳號註銷",
+  "settings.account.deregisterAccount.description": "永久刪除你的帳號與相關資料",
+  "settings.account.deregisterAccount.button": "註銷帳號",
+
+  "settings.languages.title": "語言偏好設定",
+  "settings.languages.description": "選擇你偏好的介面語言",
+  "settings.languages.search.placeholder": "搜尋介面語言",
+  "settings.languages.currentlySelected": "當前使用語言"
+}

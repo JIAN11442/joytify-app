@@ -1,6 +1,7 @@
+import { useIntl } from "react-intl";
 import { NavLink } from "react-router-dom";
-import useSidebarState from "../states/sidebar.state";
 import { PlaylistResponse } from "@joytify/shared-types/types";
+import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type PlaylistItemProps = {
@@ -10,17 +11,16 @@ type PlaylistItemProps = {
 const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
   const { _id, title, cover_image, songs } = playlist;
 
-  const { collapseSideBarState, activeFloatingSidebar, setActiveFloatingSidebar } =
-    useSidebarState();
+  const intl = useIntl();
+  const { collapseSideBarState, activeFloatingSidebar, closeFloatingSidebar } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
 
-  // handle close floating menu
   const handleCloseFloatingMenu = () => {
-    if (activeFloatingSidebar) {
-      timeoutForDelay(() => {
-        setActiveFloatingSidebar(false);
-      });
-    }
+    timeoutForDelay(() => {
+      if (activeFloatingSidebar) {
+        closeFloatingSidebar();
+      }
+    });
   };
 
   return (
@@ -31,14 +31,18 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
         flex
         w-full
         gap-x-3
-        rounded-md
-        transition
         ${
           !isCollapsed && isActive
             ? "bg-neutral-800 hover:bg-neutral-700/50"
             : "hover:bg-neutral-800/50"
         }
-        ${isCollapsed && !activeFloatingSidebar ? "p-0 hover:opacity-80" : "p-2"}
+        ${
+          isCollapsed && !activeFloatingSidebar
+            ? "p-0 hover:opacity-80"
+            : `p-2 ${!isActive && "pl-0 hover:pl-2"}`
+        }
+        rounded-md
+        transition-all
       `}
     >
       {/* cover image */}
@@ -76,9 +80,11 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
               text-neutral-500
             `}
           >
-            <p>Playlist</p>
+            <p>{intl.formatMessage({ id: "playlist.item.content.type" })}</p>
             <p>•</p>
-            <p>{songs.length} songs</p>
+            <p>
+              {intl.formatMessage({ id: "playlist.item.content.songs" }, { count: songs.length })}
+            </p>
           </div>
         </div>
       )}

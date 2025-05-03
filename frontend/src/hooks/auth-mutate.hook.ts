@@ -25,6 +25,7 @@ const useAuthCommon = () => {
   const clearQueriesData = () => {
     queryClient.setQueryData([QueryKey.GET_AUTH_USER_INFO], null);
     queryClient.setQueryData([QueryKey.GET_USER_PLAYLISTS], null);
+    queryClient.setQueryData([QueryKey.GET_USER_PREFERENCES], null);
   };
 
   return {

@@ -37,7 +37,6 @@ const { INVALID_FIREBASE_CREDENTIAL } = ErrorCode;
 
 // create account service
 export const createAccount = async (data: CreateAccountServiceRequest) => {
-  // verify email if exist
   const isEmailExist = await UserModel.findOne({ email: data.email });
 
   appAssert(!isEmailExist, CONFLICT, "Email is already in use");
@@ -73,7 +72,7 @@ export const createAccount = async (data: CreateAccountServiceRequest) => {
   const refreshToken = signToken({ sessionId: session.id }, RefreshTokenSignOptions);
 
   // sign user preferences
-  const ui_prefs = signToken({ collapseSidebar: false }, UserPreferenceSignOptions);
+  const ui_prefs = signToken(user.toObject().user_preferences, UserPreferenceSignOptions);
 
   // return user and tokens
   return { user: user.omitPassword(), accessToken, refreshToken, ui_prefs };
@@ -81,7 +80,6 @@ export const createAccount = async (data: CreateAccountServiceRequest) => {
 
 // login service
 export const loginUser = async (data: LoginServiceRequest) => {
-  // find user by email
   const user = await UserModel.findOne({ email: data.email });
 
   appAssert(user, UNAUTHORIZED, "Invalid email or password");
@@ -138,7 +136,7 @@ export const loginUser = async (data: LoginServiceRequest) => {
   const refreshToken = signToken({ sessionId: session.id }, RefreshTokenSignOptions);
 
   // sign user preferences
-  const ui_prefs = signToken({ collapseSidebar: false }, UserPreferenceSignOptions);
+  const ui_prefs = signToken(user.toObject().user_preferences, UserPreferenceSignOptions);
 
   // return tokens
   return { accessToken, refreshToken, ui_prefs };

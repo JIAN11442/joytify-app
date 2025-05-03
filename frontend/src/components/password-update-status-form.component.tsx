@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useIntl } from "react-intl";
 import { twMerge } from "tailwind-merge";
+import { useEffect, useRef, useState } from "react";
 import { IoCheckmark, IoClose } from "react-icons/io5";
 
+import Loader from "./loader.component";
 import Icon from "./react-icons.component";
+import { useSignOutDevicesMutation } from "../hooks/session-mutate.hook";
 import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
 import { PasswordUpdateStatusType } from "@joytify/shared-types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { getDuration } from "../utils/get-time.util";
-import { useSignOutDevicesMutation } from "../hooks/session-mutate.hook";
-import Loader from "./loader.component";
 
 type PasswordStatusProps = {
   isSuccess: boolean;
@@ -25,6 +26,7 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
   closeModalFn,
   className,
 }) => {
+  const intl = useIntl();
   const btnRef = useRef<HTMLButtonElement>(null);
   const [countdown, setCountdown] = useState(10);
 
@@ -52,15 +54,26 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
   };
 
   const iconName = isSuccess ? IoCheckmark : IoClose;
-  const title = isSuccess ? "Success!" : "Failed!";
-  const content = isSuccess
-    ? `Your password has been changed successfully. ${
-        logoutAllDevices
-          ? "For enhanced security, would you like to sign out from all other active devices?"
-          : "Now You can log in with your new password."
-      }`
-    : "Something went wrong. Please try again later.";
-  const btnContent = isSuccess ? (logoutAllDevices ? "Back" : "Sign in") : "Retry";
+
+  const title = isSuccess
+    ? intl.formatMessage({ id: "password.update.status.success.title" })
+    : intl.formatMessage({ id: "password.update.status.failure.title" });
+
+  const mainContent = isSuccess
+    ? intl.formatMessage({ id: "password.update.status.success.content" })
+    : intl.formatMessage({ id: "password.update.status.failure.content" });
+
+  const subContent = isSuccess
+    ? logoutAllDevices
+      ? intl.formatMessage({ id: "password.update.status.success.logoutAllDevices.allow" })
+      : intl.formatMessage({ id: "password.update.status.success.logoutAllDevices.deny" })
+    : "";
+
+  const btnContent = isSuccess
+    ? logoutAllDevices
+      ? intl.formatMessage({ id: "password.update.status.success.button.logoutAllDevices.allow" })
+      : intl.formatMessage({ id: "password.update.status.success.button.logoutAllDevices.deny" })
+    : intl.formatMessage({ id: "password.update.status.failure.button" });
 
   // auto switch to main form
   useEffect(() => {
@@ -82,8 +95,8 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
         `
         flex
         flex-col
+        w-full
         gap-8
-        max-w-[380px]
         items-center
         justify-center
       `,
@@ -114,7 +127,7 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
       >
         <p
           className={`
-            text-5xl 
+            text-5xl
             font-extrabold
             font-ubuntu
             ${isSuccess ? "text-green-500" : "text-red-500"}
@@ -122,7 +135,10 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
         >
           {title}
         </p>
-        <p className={`text-neutral-500`}>{content}</p>
+        <p className={`flex flex-col text-neutral-500`}>
+          <span>{mainContent}</span>
+          <span>{subContent}</span>
+        </p>
       </div>
 
       {/* Button */}
@@ -143,7 +159,11 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
               border-red-500
           `}
           >
-            {isPending ? <Loader className={{ container: "h-full" }} /> : "Sign out all devices"}
+            {isPending ? (
+              <Loader className={{ container: "h-full" }} />
+            ) : (
+              intl.formatMessage({ id: "sign.out.all.devices.button" })
+            )}
           </button>
         )}
 

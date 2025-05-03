@@ -1,0 +1,35 @@
+{
+  "deregistration.policy.title": "帐号注销政策",
+  "deregistration.policy.description": "为了保护您的数据隐私，您的账户及相关数据将根据以下法律要求进行删除",
+
+  "deregistration.policy.effectOfDeletion.title": "删除影响",
+  "deregistration.policy.effectOfDeletion.description.1": "个人信息及账户凭证（包括邮箱、用户名和绑定设备）将被永久清除。",
+  "deregistration.policy.effectOfDeletion.description.2": "平台记录（包括歌曲、歌单、专辑、标签和播放历史）将被完全删除。",
+  "deregistration.policy.effectOfDeletion.description.3.1": "您上传的内容将根据以下的「",
+  "deregistration.policy.effectOfDeletion.description.3.2": "共享内容处理政策",
+  "deregistration.policy.effectOfDeletion.description.3.3": "」进行处理。",
+  "deregistration.policy.effectOfDeletion.description.4": "数据删除后，您将无法再次登录或恢复任何信息。",
+
+  "deregistration.policy.treatmentOfSharedContent.title": "共享内容处理政策",
+  "deregistration.policy.treatmentOfSharedContent.description.1": "您曾公开分享的内容（如上传的音乐）可能会被保留，以确保其他用户的持续访问及平台的数据分析。",
+  "deregistration.policy.treatmentOfSharedContent.description.2": "所有保留的内容将被匿名化，不再与您的已删除账户相关联。",
+  "deregistration.policy.treatmentOfSharedContent.description.3": "未发布或处于草稿状态的内容将与账户一并永久删除。",
+
+  "deregistration.policy.impactOnLinkedServices.title": "关联服务影响",
+  "deregistration.policy.impactOnLinkedServices.description.1": "所有第三方连接（如 Google 登录、Github 登录）将自动解除。",
+  "deregistration.policy.impactOnLinkedServices.description.2": "任何正在进行的订阅将会终止。（目前平台未提供付费订阅服务）",
+
+  "deregistration.policy.dataDeletionTimeline.title": "数据删除时间表",
+  "deregistration.policy.dataDeletionTimeline.description.1": "账户停用：确认后立即生效。",
+  "deregistration.policy.dataDeletionTimeline.description.2": "公开内容移除（如适用）：5 分钟内完成。",
+  "deregistration.policy.dataDeletionTimeline.description.3": "数据库彻底删除：30 天内完成。",
+  "deregistration.policy.dataDeletionTimeline.description.4": "备份系统清除：在下一个维护周期内完成（最多 60 天）。",
+
+  "deregistration.policy.confirmationAndAppeal.title": "确认与申诉",
+  "deregistration.policy.confirmationAndAppeal.description.1": "流程完成后，终止确认将发送至您注册的电子邮箱。",
+  "deregistration.policy.confirmationAndAppeal.description.2.1": "如您对删除流程有异议，可在 30 天内通过邮箱向 ",
+  "deregistration.policy.confirmationAndAppeal.description.2.2": "joytify35@gmail.com",
+  "deregistration.policy.confirmationAndAppeal.description.2.3": " 提出申诉。",
+
+  "deregistration.policy.lastUpdatedDate": "最后更新日期：{date}"
+}

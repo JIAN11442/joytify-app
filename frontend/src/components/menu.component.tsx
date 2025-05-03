@@ -60,16 +60,16 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>(
         transition={{ duration: duration }}
         className={twMerge(
           `
-           absolute
+            absolute
+            flex
+            flex-col
+            w-[200px]
             p-1
             bg-neutral-900
             border
             border-neutral-700/50
-            flex
-            flex-col
-            w-[200px]
+            shadow-[0_0_10px_0_rgba(0,0,0,0.1)]
             rounded-md
-            shadow-lg
             z-10
           `,
           className

@@ -1,0 +1,25 @@
+{
+  "auth.modal.title.signIn": "Selamat Datang Kembali",
+  "auth.modal.title.signUp": "Daftar Sekarang",
+  "auth.modal.description.signIn": "Log masuk ke akaun anda",
+  "auth.modal.description.signUp": "Daftar akaun baru",
+
+  "auth.form.thirdParty.Google.signIn": "Log masuk dengan Google",
+  "auth.form.thirdParty.Google.signUp": "Daftar dengan Google",
+  "auth.form.thirdParty.Github.signIn": "Log masuk dengan GitHub",
+  "auth.form.thirdParty.Github.signUp": "Daftar dengan GitHub",
+  "auth.form.divider.text": "Atau",
+  "auth.form.email.input.title": "Alamat emel",
+  "auth.form.email.input.placeholder": "Masukkan alamat emel anda",
+  "auth.form.password.input.title": "Kata laluan",
+  "auth.form.password.input.placeholder": "Masukkan kata laluan anda",
+  "auth.form.forgotPassword.text": "Terlupa kata laluan?",
+  "auth.form.confirmPassword.input.title": "Sahkan Kata Laluan",
+  "auth.form.confirmPassword.input.placeholder": "Sahkan kata laluan anda",
+  "auth.form.submit.button.signIn": "Log masuk",
+  "auth.form.submit.button.signUp": "Daftar",
+  "auth.form.switchAccount.prompt.signIn": "Belum ada akaun?",
+  "auth.form.switchAccount.prompt.signUp": "Sudah ada akaun?",
+  "auth.form.switchAccount.button.signIn": "Daftar sekarang",
+  "auth.form.switchAccount.button.signUp": "Log masuk"
+}

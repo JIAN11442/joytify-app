@@ -1,0 +1,35 @@
+{
+  "deregistration.policy.title": "계정 탈퇴 안내",
+  "deregistration.policy.description": "개인정보 보호를 위해, 회원님의 계정과 관련된 데이터는 아래의 법적 기준에 따라 삭제됩니다",
+
+  "deregistration.policy.effectOfDeletion.title": "삭제 시 영향",
+  "deregistration.policy.effectOfDeletion.description.1": "이메일, 사용자 이름, 연결된 기기 등을 포함한 개인정보 및 인증 정보는 영구적으로 삭제됩니다.",
+  "deregistration.policy.effectOfDeletion.description.2": "플랫폼 기록(노래, 재생목록, 앨범, 태그 및 재생 이력 등)은 완전히 제거됩니다.",
+  "deregistration.policy.effectOfDeletion.description.3.1": "업로드된 콘텐츠는 아래의 ",
+  "deregistration.policy.effectOfDeletion.description.3.2": "공유 콘텐츠 처리 정책",
+  "deregistration.policy.effectOfDeletion.description.3.3": "에 따라 처리됩니다.",
+  "deregistration.policy.effectOfDeletion.description.4": "삭제 후에는 로그인하거나 데이터를 복구할 수 없습니다.",
+
+  "deregistration.policy.treatmentOfSharedContent.title": "공유 콘텐츠 처리",
+  "deregistration.policy.treatmentOfSharedContent.description.1": "과거에 공개한 콘텐츠(예: 업로드한 음악)는 다른 사용자들의 지속적인 이용과 플랫폼 분석을 위해 보관될 수 있습니다.",
+  "deregistration.policy.treatmentOfSharedContent.description.2": "보관된 모든 콘텐츠는 익명화 처리되며 삭제된 계정과 연결되지 않습니다.",
+  "deregistration.policy.treatmentOfSharedContent.description.3": "공개되지 않았거나 임시 저장된 콘텐츠는 계정과 함께 완전히 삭제됩니다.",
+
+  "deregistration.policy.impactOnLinkedServices.title": "연결된 서비스에 대한 영향",
+  "deregistration.policy.impactOnLinkedServices.description.1": "Google 로그인, Github 로그인 등의 제3자 연동은 자동으로 해제됩니다.",
+  "deregistration.policy.impactOnLinkedServices.description.2": "활성화된 구독은 모두 종료됩니다. (현재 유료 구독 서비스는 제공되지 않습니다.)",
+
+  "deregistration.policy.dataDeletionTimeline.title": "데이터 삭제 일정",
+  "deregistration.policy.dataDeletionTimeline.description.1": "계정 비활성화: 확인 즉시 적용됩니다.",
+  "deregistration.policy.dataDeletionTimeline.description.2": "공개 콘텐츠 삭제(해당 시): 5분 이내 완료됩니다.",
+  "deregistration.policy.dataDeletionTimeline.description.3": "데이터베이스에서 완전 삭제: 30일 이내 완료됩니다.",
+  "deregistration.policy.dataDeletionTimeline.description.4": "백업 시스템에서 삭제: 다음 정기 점검 내에 완료(최대 60일).",
+
+  "deregistration.policy.confirmationAndAppeal.title": "확인 및 이의 제기",
+  "deregistration.policy.confirmationAndAppeal.description.1": "처리가 완료되면 등록된 이메일로 탈퇴 확인 메일이 발송됩니다.",
+  "deregistration.policy.confirmationAndAppeal.description.2.1": "삭제 절차에 대해 이의가 있는 경우, 30일 이내에 이메일 ",
+  "deregistration.policy.confirmationAndAppeal.description.2.2": "joytify35@gmail.com",
+  "deregistration.policy.confirmationAndAppeal.description.2.3": " 으로 이의를 제기할 수 있습니다.",
+
+  "deregistration.policy.lastUpdatedDate": "최종 업데이트일: {date}"
+}

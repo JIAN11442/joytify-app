@@ -8,6 +8,7 @@ import {
   USER_PREFERENCE_SECRET_KEY,
   VERIFICATION_SECRET_KEY,
 } from "../constants/env-validate.constant";
+import { SupportedLocaleType } from "@joytify/shared-types/types";
 
 // ===================== Defaults =====================
 
@@ -42,7 +43,8 @@ export type VerificationTokenPayload = {
 };
 
 export type UserPreferenceTokenPayload = {
-  collapseSidebar: boolean;
+  sidebarCollapsed: boolean;
+  locale: SupportedLocaleType;
 };
 
 // ===================== Options =====================

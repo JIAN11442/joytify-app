@@ -1,0 +1,25 @@
+{
+  "auth.modal.title.signIn": "欢迎回来",
+  "auth.modal.title.signUp": "加入我们",
+  "auth.modal.description.signIn": "登录你的账户",
+  "auth.modal.description.signUp": "注册以获取自己的账户",
+
+  "auth.form.thirdParty.Google.signIn": "使用 Google 帐户登录",
+  "auth.form.thirdParty.Google.signUp": "使用 Google 帐户注册",
+  "auth.form.thirdParty.Github.signIn": "使用 Github 帐户登录",
+  "auth.form.thirdParty.Github.signUp": "使用 Github 帐户注册",
+  "auth.form.divider.text": "或",
+  "auth.form.email.input.title": "邮箱地址",
+  "auth.form.email.input.placeholder": "请输入你的邮箱地址",
+  "auth.form.password.input.title": "密码",
+  "auth.form.password.input.placeholder": "请输入你的密码",
+  "auth.form.forgotPassword.text": "忘记密码？",
+  "auth.form.confirmPassword.input.title": "确认密码",
+  "auth.form.confirmPassword.input.placeholder": "再次输入你的密码",
+  "auth.form.submit.button.signIn": "登录",
+  "auth.form.submit.button.signUp": "注册",
+  "auth.form.switchAccount.prompt.signIn": "还没有账户？",
+  "auth.form.switchAccount.prompt.signUp": "已经有账户？",
+  "auth.form.switchAccount.button.signIn": "立即注册",
+  "auth.form.switchAccount.button.signUp": "立即登录"
+}
