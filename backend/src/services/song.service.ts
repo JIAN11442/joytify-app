@@ -136,14 +136,14 @@ export const refreshSongPlaybackStats = async (songId: string) => {
   const updatedSong = await SongModel.findByIdAndUpdate(
     songId,
     {
-      "activity.total_playback_count": totalCount,
-      "activity.total_playback_duration": parseToFloat(totalDuration),
-      "activity.weighted_average_playback_duration": parseToFloat(weightedAvgDuration),
+      "activities.totalPlaybackCount": totalCount,
+      "activities.totalPlaybackDuration": parseToFloat(totalDuration),
+      "activities.weightedAveragePlaybackDuration": parseToFloat(weightedAvgDuration),
     },
     { new: true }
   );
 
-  appAssert(updatedSong, INTERNAL_SERVER_ERROR, "Failed to update song's activity");
+  appAssert(updatedSong, INTERNAL_SERVER_ERROR, "Failed to update song's activities");
 
   return { updatedSong };
 };

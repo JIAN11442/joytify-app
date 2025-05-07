@@ -4,18 +4,18 @@ import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
 export interface AlbumDocument extends mongoose.Document {
   title: string;
   description: string;
-  cover_image: string;
+  coverImage: string;
   artist: mongoose.Types.ObjectId;
   songs: mongoose.Types.ObjectId[];
   users: mongoose.Types.ObjectId[];
-  total_duration: number;
+  totalDuration: number;
 }
 
 const albumSchema = new mongoose.Schema<AlbumDocument>(
   {
     title: { type: String, required: true },
     description: { type: String },
-    cover_image: {
+    coverImage: {
       type: String,
       default:
         "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-album-image.png",
@@ -27,7 +27,7 @@ const albumSchema = new mongoose.Schema<AlbumDocument>(
     },
     songs: { type: [mongoose.Schema.Types.ObjectId], ref: "Song", index: true },
     users: { type: [mongoose.Schema.Types.ObjectId], ref: "User", index: true },
-    total_duration: { type: Number, default: 0 },
+    totalDuration: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

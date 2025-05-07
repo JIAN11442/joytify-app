@@ -1,10 +1,10 @@
-import { useIntl } from "react-intl";
 import { twMerge } from "tailwind-merge";
 import { useEffect, useRef, useState } from "react";
 import { IoCheckmark, IoClose } from "react-icons/io5";
 
 import Loader from "./loader.component";
 import Icon from "./react-icons.component";
+import { useScopedIntl } from "../hooks/intl.hook";
 import { useSignOutDevicesMutation } from "../hooks/session-mutate.hook";
 import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
 import { PasswordUpdateStatusType } from "@joytify/shared-types/types";
@@ -26,7 +26,10 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
   closeModalFn,
   className,
 }) => {
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
+  const passwordUpdateStatusFm = fm("password.update.status");
+  const signOutAllDevicesFm = fm("sign.out.all.devices");
+
   const btnRef = useRef<HTMLButtonElement>(null);
   const [countdown, setCountdown] = useState(10);
 
@@ -56,24 +59,24 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
   const iconName = isSuccess ? IoCheckmark : IoClose;
 
   const title = isSuccess
-    ? intl.formatMessage({ id: "password.update.status.success.title" })
-    : intl.formatMessage({ id: "password.update.status.failure.title" });
+    ? passwordUpdateStatusFm("success.title")
+    : passwordUpdateStatusFm("failure.title");
 
   const mainContent = isSuccess
-    ? intl.formatMessage({ id: "password.update.status.success.content" })
-    : intl.formatMessage({ id: "password.update.status.failure.content" });
+    ? passwordUpdateStatusFm("success.content")
+    : passwordUpdateStatusFm("failure.content");
 
   const subContent = isSuccess
     ? logoutAllDevices
-      ? intl.formatMessage({ id: "password.update.status.success.logoutAllDevices.allow" })
-      : intl.formatMessage({ id: "password.update.status.success.logoutAllDevices.deny" })
+      ? passwordUpdateStatusFm("success.logoutAllDevices.allow")
+      : passwordUpdateStatusFm("success.logoutAllDevices.deny")
     : "";
 
   const btnContent = isSuccess
     ? logoutAllDevices
-      ? intl.formatMessage({ id: "password.update.status.success.button.logoutAllDevices.allow" })
-      : intl.formatMessage({ id: "password.update.status.success.button.logoutAllDevices.deny" })
-    : intl.formatMessage({ id: "password.update.status.failure.button" });
+      ? passwordUpdateStatusFm("success.button.logoutAllDevices.allow")
+      : passwordUpdateStatusFm("success.button.logoutAllDevices.deny")
+    : passwordUpdateStatusFm("failure.button");
 
   // auto switch to main form
   useEffect(() => {
@@ -162,7 +165,7 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
             {isPending ? (
               <Loader className={{ container: "h-full" }} />
             ) : (
-              intl.formatMessage({ id: "sign.out.all.devices.button" })
+              signOutAllDevicesFm("button")
             )}
           </button>
         )}

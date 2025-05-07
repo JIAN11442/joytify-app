@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useIntl } from "react-intl";
 import { LuLibrary } from "react-icons/lu";
 import { BiSearch } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -8,7 +7,9 @@ import { MdLibraryMusic, MdMusicNote } from "react-icons/md";
 import Menu from "./menu.component";
 import Icon from "./react-icons.component";
 import SidebarItem from "./sidebar-item.component";
+import SearchBarInput from "./searchbar-input.component";
 
+import { useScopedIntl } from "../hooks/intl.hook";
 import { useGetPlaylistsQuery } from "../hooks/playlist-query.hook";
 import { useCreatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
@@ -19,14 +20,15 @@ import useAuthModalState from "../states/auth-modal.state";
 import useSidebarState from "../states/sidebar.state";
 import useLibraryState from "../states/library.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import SearchBarInput from "./searchbar-input.component";
 
 type LibraryHeaderProps = {
   authUser?: AuthUserResponse | null;
 };
 
 const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
+  const libraryFm = fm("library");
+
   const addingMenuRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -166,7 +168,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
         {/* Title */}
         <SidebarItem
           icon={{ name: LuLibrary }}
-          label={intl.formatMessage({ id: "library.title" })}
+          label={libraryFm("title")}
           onClick={handleCollapseSidebar}
           collapse={isCollapsed}
           className={`w-full`}
@@ -254,7 +256,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
                 `}
               >
                 <Icon name={MdMusicNote} opts={{ size: 16 }} />
-                <p>{intl.formatMessage({ id: "library.actions.song.create" })}</p>
+                <p>{libraryFm("actions.song.create")}</p>
               </button>
 
               {/* Add new playlist button */}
@@ -269,7 +271,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
                 `}
               >
                 <Icon name={MdLibraryMusic} opts={{ size: 16 }} />
-                <p>{intl.formatMessage({ id: "library.actions.playlist.create" })}</p>
+                <p>{libraryFm("actions.playlist.create")}</p>
               </button>
             </Menu>
           </div>
@@ -279,7 +281,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
       {/* Search bar */}
       <SearchBarInput
         id="library-searchbar"
-        placeholder={intl.formatMessage({ id: "library.search.placeholder" })}
+        placeholder={libraryFm("search.placeholder")}
         visible={activeLibrarySearchBar && isSidebarExpandedOrFloating}
         icon={{ name: BiSearch }}
         autoCloseFn={{

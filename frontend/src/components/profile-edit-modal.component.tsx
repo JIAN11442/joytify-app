@@ -23,7 +23,8 @@ const ProfileEditModal = () => {
   const { activeProfileEditModal, closeProfileEditModal } = useUserState();
   const { active, profileUser } = activeProfileEditModal;
 
-  const { profile_img, username } = (profileUser as RefactorProfileUserResponse) ?? {};
+  const { profileImage: userProfileImage, username } =
+    (profileUser as RefactorProfileUserResponse) ?? {};
   const generateUsername = username.split("?nanoid=")[0];
 
   // handle close modal
@@ -34,7 +35,7 @@ const ProfileEditModal = () => {
 
       // while profileImage is changed but not submitted,
       // delete that file store in AWS
-      if (!isSubmitted && watch("profileImage") && watch("profileImage") !== profile_img) {
+      if (!isSubmitted && watch("profileImage") && watch("profileImage") !== userProfileImage) {
         try {
           await deleteFileFromAws(watch("profileImage"));
         } catch (error) {
@@ -53,7 +54,9 @@ const ProfileEditModal = () => {
     });
   };
 
-  const { mutate: updateUserFn, isPending } = useUpdateUserMutation(0, handleCloseModal);
+  const { mutate: updateUserFn, isPending } = useUpdateUserMutation({
+    closeModalFn: handleCloseModal,
+  });
 
   // form state
   const {
@@ -82,9 +85,9 @@ const ProfileEditModal = () => {
 
   // submit form
   const onSubmit: SubmitHandler<DefaultEditProfileForm> = (value) => {
-    const { profileImage, ...rest } = getModifiedFormData(value, dirtyFields);
+    const modifiedValues = getModifiedFormData(value, dirtyFields);
 
-    updateUserFn({ profile_img: profileImage, ...rest });
+    updateUserFn(modifiedValues);
 
     setIsSubmitted(true);
   };
@@ -112,7 +115,7 @@ const ProfileEditModal = () => {
       >
         {/* profile image */}
         <ImageLabel
-          src={profileImage ?? profile_img}
+          src={profileImage ?? userProfileImage}
           subfolder={UploadFolder.USERS_IMAGE}
           formMethods={formMethods}
           setImgSrc={setProfileImage}

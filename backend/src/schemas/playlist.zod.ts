@@ -5,7 +5,7 @@ import { PrivacyOptions } from "@joytify/shared-types/constants";
 export const playlistZodSchema = z.object({
   title: stringZodSchema.min(1).optional(),
   description: stringZodSchema.optional(),
-  cover_image: stringZodSchema.optional(),
+  coverImage: stringZodSchema.optional(),
   privacy: z.nativeEnum(PrivacyOptions).optional(),
 });
 

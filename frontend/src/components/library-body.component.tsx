@@ -1,7 +1,7 @@
-import { useIntl } from "react-intl";
-
 import Loader from "./loader.component";
 import LibraryPlaylist from "./library-playlist.component";
+import { useScopedIntl } from "../hooks/intl.hook";
+
 import { AuthUserResponse } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
 
@@ -11,7 +11,9 @@ type LibraryBodyProps = {
 };
 
 const LibraryBody: React.FC<LibraryBodyProps> = ({ authUser, isLoading: isAuthLoading }) => {
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
+  const libraryStatusNotLoggedInFm = fm("library.status.notLoggedIn");
+
   const { collapseSideBarState, activeFloatingSidebar } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
   const isFixedSidebarExpanded = !isCollapsed && !activeFloatingSidebar;
@@ -46,9 +48,9 @@ const LibraryBody: React.FC<LibraryBodyProps> = ({ authUser, isLoading: isAuthLo
                leading-7
              `}
             >
-              {intl.formatMessage({ id: "library.status.notLoggedIn.question" })}
+              {libraryStatusNotLoggedInFm("question")}
               <br className={`block ${isFixedSidebarExpanded && "max-lg:hidden"}`} />
-              {intl.formatMessage({ id: "library.status.notLoggedIn.action" })}
+              {libraryStatusNotLoggedInFm("action")}
             </p>
           )}
         </>

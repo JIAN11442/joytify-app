@@ -13,6 +13,7 @@ import SettingsAccountPage from "./pages/settings-account.page";
 import SettingsLanguagesPage from "./pages/settings-languages.page";
 import AuthGuardContainerPage from "./pages/auth-guard-container.page";
 import AccountDeregistrationPolicyPage from "./pages/account-deregistration-policy.page";
+import SettingsNotificationsPage from "./pages/settings-notifications.page";
 import { setNavigate } from "./lib/navigate.lib";
 
 function App() {
@@ -34,7 +35,7 @@ function App() {
           <Route path="/profile/:id/:section" element={<ProfileSectionPage />} />
           <Route path="/settings">
             <Route path="account" element={<SettingsAccountPage />} />
-            <Route path="notifications" element={<p>Notifications</p>} />
+            <Route path="notifications" element={<SettingsNotificationsPage />} />
             <Route path="languages" element={<SettingsLanguagesPage />} />
           </Route>
         </Route>

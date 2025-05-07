@@ -12,7 +12,7 @@ export const useCreateSongMutation = (closeModalFn: () => void, opts: object = {
     mutationKey: [MutationKey.CREATE_NEW_SONG],
     mutationFn: createSongData,
     onSuccess: (data) => {
-      const { title, playlist_for } = data;
+      const { title, playlistFor } = data;
 
       // refetch related queries
       queryClient.invalidateQueries({
@@ -31,7 +31,7 @@ export const useCreateSongMutation = (closeModalFn: () => void, opts: object = {
       closeModalFn();
 
       // navigate to playlist
-      navigate(`/playlist/${playlist_for}`);
+      navigate(`/playlist/${playlistFor}`);
 
       // display success message
       toast.success(`“${title}” has been created successfully`);

@@ -1,9 +1,13 @@
-import UserModel, { UserDocument } from "../models/user.model";
 import SongModel from "../models/song.model";
 import AlbumModel from "../models/album.model";
+import StatsModel from "../models/stats.model";
+import HistoryModel from "../models/history.model";
+import PlaybackModel from "../models/playback.model";
 import PlaylistModel from "../models/playlist.model";
 import MusicianModel from "../models/musician.model";
 import VerificationModel from "../models/verification.model";
+import UserModel, { UserDocument } from "../models/user.model";
+
 import { sendEmail } from "./verification.service";
 
 import { JoytifyPasswordChangedEmail } from "../templates/password-changed.template";
@@ -35,10 +39,6 @@ import {
   VerificationTokenSignOptions,
   verifyToken,
 } from "../utils/jwt.util";
-import PlaybackModel from "../models/playback.model";
-import HistoryModel from "../models/history.model";
-import StatsModel from "../models/stats.model";
-import LabelModel from "../models/label.model";
 
 interface UpdateUserServiceRequest extends UpdateUserInfoRequest {
   userId: string;
@@ -86,8 +86,8 @@ export const getProfileUserInfo = async (userId: string, page: number) => {
     .populate({
       path: "playlists",
       match: { default: false, privacy: PUBLIC },
-      select: "title cover_image",
-      transform: (doc: Playlist) => remapFields(doc, { cover_image: "imageUrl" }),
+      select: "title coverImage",
+      transform: (doc: Playlist) => remapFields(doc, { coverImage: "imageUrl" }),
       options: opts,
     })
     .populate({
@@ -101,19 +101,19 @@ export const getProfileUserInfo = async (userId: string, page: number) => {
     })
     .populate({
       path: "albums",
-      select: "title cover_image",
+      select: "title coverImage",
       options: opts,
-      transform: (doc: Album) => remapFields(doc, { cover_image: "imageUrl" }),
+      transform: (doc: Album) => remapFields(doc, { coverImage: "imageUrl" }),
     })
     .populate({
       path: "following",
-      select: "name cover_image roles",
+      select: "name coverImage roles",
       transform: (doc: Musician) =>
-        remapFields(doc, { name: "title", cover_image: "imageUrl", roles: "description" }),
+        remapFields(doc, { name: "title", coverImage: "imageUrl", roles: "description" }),
       options: opts,
     })
     .populate({
-      path: "personal_info",
+      path: "personalInfo",
       populate: [
         { path: "gender", select: "label" },
         { path: "country", select: "label" },
@@ -173,8 +173,8 @@ export const getProfileCollectionsInfo = async (
         filter: { user: userId, default: false, privacy: PUBLIC },
         ...opts,
       })
-        .select("title cover_image")
-        .remapFields({ cover_image: "imageUrl" })
+        .select("title coverImage")
+        .remapFields({ coverImage: "imageUrl" })
         .forPagination(page);
 
       break;
@@ -198,8 +198,8 @@ export const getProfileCollectionsInfo = async (
         filter: { _id: { $in: user?.albums } },
         ...opts,
       })
-        .select("title cover_image")
-        .remapFields({ cover_image: "imageUrl" })
+        .select("title coverImage")
+        .remapFields({ coverImage: "imageUrl" })
         .forPagination(page);
 
       break;
@@ -209,8 +209,8 @@ export const getProfileCollectionsInfo = async (
         filter: { followers: { $in: [userId] } },
         ...opts,
       })
-        .select("name cover_image roles")
-        .remapFields({ name: "title", roles: "description", cover_image: "imageUrl" })
+        .select("name coverImage roles")
+        .remapFields({ name: "title", roles: "description", coverImage: "imageUrl" })
         .forPagination(page);
 
       break;
@@ -221,7 +221,16 @@ export const getProfileCollectionsInfo = async (
 
 // update user service
 export const updateUserInfoById = async (params: UpdateUserServiceRequest) => {
-  const { userId, gender, country, dateOfBirth, ...rest } = params;
+  const {
+    userId,
+    gender,
+    country,
+    dateOfBirth,
+    monthlyStatistics,
+    followingArtistUpdates,
+    systemAnnouncements,
+    ...rest
+  } = params;
 
   const updatedUserInfo = await UserModel.findByIdAndUpdate(
     userId,
@@ -230,9 +239,12 @@ export const updateUserInfoById = async (params: UpdateUserServiceRequest) => {
       // only update personal info if it's provided
       // so use $set to update
       $set: {
-        "personal_info.gender": gender,
-        "personal_info.country": country,
-        "personal_info.date_of_birth": dateOfBirth,
+        "personalInfo.gender": gender,
+        "personalInfo.country": country,
+        "personalInfo.dateOfBirth": dateOfBirth,
+        "userPreferences.notifications.monthlyStatistics": monthlyStatistics,
+        "userPreferences.notifications.followingArtistUpdates": followingArtistUpdates,
+        "userPreferences.notifications.systemAnnouncements": systemAnnouncements,
       },
     },
     { new: true }

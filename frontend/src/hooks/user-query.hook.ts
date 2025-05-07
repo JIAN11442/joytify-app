@@ -74,7 +74,7 @@ export const useGetProfileUserInfoQuery = ({
         }
       }
     },
-    staleTime: Infinity,
+    placeholderData: (prev) => prev,
     enabled: !!userId && !isQueryError && page > 0,
     ...opts,
   });

@@ -8,7 +8,11 @@ import {
 import { logout } from "../fetchs/auth.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
-import { DeregisterUserAccountRequest, UpdateUserInfoRequest } from "@joytify/shared-types/types";
+import {
+  DeregisterUserAccountRequest,
+  UpdateUserInfoRequest,
+  UserResponse,
+} from "@joytify/shared-types/types";
 import useSettingsState from "../states/settings.state";
 import useUserState from "../states/user.state";
 import queryClient from "../config/query-client.config";
@@ -59,12 +63,22 @@ export const useChangePasswordMutation = (opts: object = {}) => {
   return mutation;
 };
 
+type UpdateUserMutation = {
+  delay?: number;
+  refetchRelatedQueries?: boolean;
+  closeModalFn?: () => void;
+  onSuccessFn?: (data: UserResponse) => void;
+  opts?: object;
+};
+
 // update user mutation
-export const useUpdateUserMutation = (
-  delay?: number,
-  closeModalFn?: () => void,
-  opts: object = {}
-) => {
+export const useUpdateUserMutation = ({
+  delay,
+  refetchRelatedQueries = true,
+  closeModalFn,
+  onSuccessFn,
+  opts = {},
+}: UpdateUserMutation = {}) => {
   const mutation = useMutation({
     mutationKey: [MutationKey.UPDATE_USER],
     mutationFn: async (data: UpdateUserInfoRequest) => {
@@ -72,16 +86,22 @@ export const useUpdateUserMutation = (
 
       return await updateUserInfo(data);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       // refetch related queries
-      queryClient.invalidateQueries({
-        predicate: (query) => {
-          const queryKey = query.queryKey[0];
-          return (
-            queryKey === QueryKey.GET_AUTH_USER_INFO || queryKey === QueryKey.GET_PROFILE_USER_INFO
-          );
-        },
-      });
+      if (refetchRelatedQueries) {
+        queryClient.invalidateQueries({
+          predicate: (query) => {
+            const queryKey = query.queryKey[0];
+            return (
+              queryKey === QueryKey.GET_AUTH_USER_INFO ||
+              queryKey === QueryKey.GET_PROFILE_USER_INFO
+            );
+          },
+        });
+      }
+
+      // call on success function
+      onSuccessFn?.(data);
 
       // close modal
       if (closeModalFn) {

@@ -1,4 +1,3 @@
-import { useIntl } from "react-intl";
 import { twMerge } from "tailwind-merge";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -11,6 +10,7 @@ import Loader from "../components/loader.component";
 import InputBox from "../components/input-box.component";
 import WarningMsgBox from "./warning-message-box.component";
 
+import { useScopedIntl } from "../hooks/intl.hook";
 import { defaultUpdatePasswordData } from "../constants/form.constant";
 import { WarningOptions } from "../constants/warning.constant";
 import { DefaultUpdatePasswordForm } from "../types/form.type";
@@ -51,7 +51,13 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
   className,
   tw,
 }) => {
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
+  const updatePasswordWarningFm = fm("update.password.warning");
+  const updateCurrentPasswordFm = fm("update.currentPassword");
+  const updateNewPasswordFm = fm("update.newPassword");
+  const updateConfirmPasswordFm = fm("update.confirmPassword");
+  const updatePasswordFormFm = fm("update.password.form");
+
   const [closeMsg, setCloseMsg] = useState(false);
 
   const {
@@ -67,17 +73,17 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
   const getWarningMsg = (type: WarningType) => {
     switch (type) {
       case IS_FETCHING_TOKEN:
-        return intl.formatMessage({ id: "update.password.warning.fetchingToken" });
+        return updatePasswordWarningFm("fetchingToken");
       case VALID_TOKEN:
-        return intl.formatMessage({ id: "update.password.warning.validToken" });
+        return updatePasswordWarningFm("validToken");
       case INVALID_TOKEN:
-        return intl.formatMessage({ id: "update.password.warning.invalidToken" });
+        return updatePasswordWarningFm("invalidToken");
       case INVALID_PASSWORD_REGEX:
-        return intl.formatMessage({ id: "update.password.warning.invalidPasswordRegex" });
+        return updatePasswordWarningFm("invalidPasswordRegex");
       case PASSWORD_IS_DUPLICATED:
-        return intl.formatMessage({ id: "update.password.warning.passwordIsDuplicated" });
+        return updatePasswordWarningFm("passwordIsDuplicated");
       case PASSWORD_IS_NOT_MATCH:
-        return intl.formatMessage({ id: "update.password.warning.passwordIsNotMatch" });
+        return updatePasswordWarningFm("passwordIsNotMatch");
     }
   };
 
@@ -104,7 +110,6 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
     [watch, errors]
   );
 
-  // handle form submit
   const onSubmit: SubmitHandler<DefaultUpdatePasswordForm> = (value) => {
     const { currentPassword, newPassword } = value;
 
@@ -209,7 +214,7 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
         <InputBox
           id="reset-current-password"
           type="password"
-          placeholder={intl.formatMessage({ id: "update.currentPassword.input.placeholder" })}
+          placeholder={updateCurrentPasswordFm("input.placeholder")}
           icon={{ name: IoKey }}
           iconHighlight={isIconHighlight("currentPassword")}
           disabled={disabled}
@@ -226,7 +231,7 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
         {/* new password */}
         <InputBox
           type="password"
-          placeholder={intl.formatMessage({ id: "update.newPassword.input.placeholder" })}
+          placeholder={updateNewPasswordFm("input.placeholder")}
           icon={{ name: IoKey }}
           iconHighlight={isIconHighlight("newPassword")}
           disabled={disabled}
@@ -247,7 +252,7 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
         {/* confirm password */}
         <InputBox
           type="password"
-          placeholder={intl.formatMessage({ id: "update.confirmPassword.input.placeholder" })}
+          placeholder={updateConfirmPasswordFm("input.placeholder")}
           icon={{ name: IoKey }}
           iconHighlight={isIconHighlight("confirmPassword")}
           disabled={disabled}
@@ -275,11 +280,7 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
             rounded-full
           `}
         >
-          {isPending ? (
-            <Loader loader={{ size: 20 }} />
-          ) : (
-            intl.formatMessage({ id: "update.password.form.submit.button" })
-          )}
+          {isPending ? <Loader loader={{ size: 20 }} /> : updatePasswordFormFm("submit.button")}
         </button>
       </form>
     </div>

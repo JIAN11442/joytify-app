@@ -4,7 +4,7 @@ import { stringZodSchema, objectIdZodSchema } from "./util.zod";
 export const albumZodSchema = z.object({
   title: stringZodSchema.min(1),
   description: stringZodSchema.optional(),
-  cover_image: stringZodSchema.optional(),
+  coverImage: stringZodSchema.optional(),
   artist: objectIdZodSchema.optional(),
 });
 

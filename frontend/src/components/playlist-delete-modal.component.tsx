@@ -41,7 +41,7 @@ const PlaylistDeleteModal = () => {
   const onSubmit: SubmitHandler<DefaultMovingPlaylistForm> = async (value) => {
     deletePlaylistFn({
       currentPlaylistId: playlist?._id || "",
-      targetPlaylistId: value.playlist_for || "",
+      targetPlaylistId: value.playlistFor || "",
     });
   };
 
@@ -82,7 +82,7 @@ const PlaylistDeleteModal = () => {
               trigger,
             }}
             disabled={isPending}
-            {...register("playlist_for", { required: false })}
+            {...register("playlistFor", { required: false })}
           />
         )}
       </PlaylistWarningContent>

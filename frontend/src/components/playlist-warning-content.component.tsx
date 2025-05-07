@@ -27,7 +27,7 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
     return <Loader />;
   }
 
-  const { title, cover_image, description, songs, paletee } = playlist;
+  const { title, coverImage, description, songs, paletee } = playlist;
 
   return (
     <form
@@ -59,7 +59,7 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
       >
         {/* cover image */}
         <img
-          src={cover_image}
+          src={coverImage}
           className={`
             w-[8rem]
             h-[8rem]

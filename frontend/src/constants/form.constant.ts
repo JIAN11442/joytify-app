@@ -2,7 +2,7 @@ export const defaultSongData = {
   title: "",
   artist: "",
   songFile: null as FileList | null,
-  playlist_for: "",
+  playlistFor: "",
   imageFile: undefined as FileList | undefined,
   album: undefined as string | undefined,
   lyricists: undefined as string[] | undefined,
@@ -45,7 +45,7 @@ export const defaultCreateLabelData = {
 };
 
 export const defaultMovingPlaylistData = {
-  playlist_for: "",
+  playlistFor: "",
 };
 
 export const defaultCreatePlaylistData = {
@@ -73,4 +73,10 @@ export const defaultAccountDetailsData = {
   gender: undefined as string | undefined,
   country: undefined as string | undefined,
   dateOfBirth: undefined as string | undefined,
+};
+
+export const defaultNotificationPreferencesData = {
+  monthlyStatistics: undefined as boolean | undefined,
+  followingArtistUpdates: undefined as boolean | undefined,
+  systemAnnouncements: undefined as boolean | undefined,
 };

@@ -1,4 +1,3 @@
-import { useIntl } from "react-intl";
 import { useState, useEffect } from "react";
 import { MdEmail } from "react-icons/md";
 import {
@@ -17,6 +16,7 @@ import InputBox from "../components/input-box.component";
 import ImageLabel from "../components/image-label.component";
 import Icon, { IconName } from "../components/react-icons.component";
 import { useUpdateUserMutation } from "../hooks/user-mutate.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
 import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
@@ -47,9 +47,12 @@ type AccountProfileCardProps = {
 };
 
 const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) => {
-  const { auth_for_third_party: isThirdPartyUser } = profileUser;
+  const { authForThirdParty: isThirdPartyUser } = profileUser;
 
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
+  const toastSettingsAccountFm = fm("toast.settings.account");
+  const settingsAccountProfileCardButtonFm = fm("settings.account.profile.card.button");
+
   const [editEmail, setEditEmail] = useState(false);
   const [editUsername, setEditUsername] = useState(false);
   const { collapseSideBarState } = useSidebarState();
@@ -90,7 +93,7 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
     return <Loader className={{ container: "h-full" }} />;
   }
 
-  const { username, email, profile_img, paletee } = profileUser as RefactorProfileUserResponse;
+  const { username, email, profileImage, paletee } = profileUser as RefactorProfileUserResponse;
   const generateUsername = username?.split("?nanoid=")[0];
   const inputUsername = useForms.username.watch("username");
 
@@ -217,9 +220,7 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
               {disabled ? (
                 <button
                   onClick={() => {
-                    toast.warning(
-                      intl.formatMessage({ id: "toast.settings.account.thirdParty.warning" })
-                    );
+                    toast.warning(toastSettingsAccountFm("thirdParty.warning"));
                   }}
                   className={`profile-card-content-box`}
                 >
@@ -244,7 +245,7 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
                       disabled:no-hover
                     `}
                   >
-                    {intl.formatMessage({ id: "settings.account.profile.card.button.save" })}
+                    {settingsAccountProfileCardButtonFm("save")}
                   </button>
                 ) : (
                   <Loader
@@ -266,7 +267,7 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
                     hover:bg-neutral-600/50
                   `}
                 >
-                  {intl.formatMessage({ id: "settings.account.profile.card.button.edit" })}
+                  {settingsAccountProfileCardButtonFm("edit")}
                 </button>
               )}
             </form>
@@ -299,10 +300,10 @@ const AccountProfileCard: React.FC<AccountProfileCardProps> = ({ profileUser }) 
           {/* profile image */}
           <div className={`relative`}>
             <ImageLabel
-              src={profile_img}
+              src={profileImage}
               subfolder={UploadFolder.USERS_IMAGE}
               updateConfig={{
-                updateImgFn: (profile_img) => updateUserInfoFn({ profile_img }),
+                updateImgFn: (profileImage) => updateUserInfoFn({ profileImage }),
                 isPending,
               }}
               visibleHoverText={false}

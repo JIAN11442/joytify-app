@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useIntl } from "react-intl";
 import { FaCheck } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
 import { HiOutlineTranslate } from "react-icons/hi";
@@ -12,13 +11,15 @@ import SearchBarInput from "../components/searchbar-input.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import SettingSectionTitle from "../components/settings-section-title.component";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
 import { LocaleMap, localeMap } from "../contents/locale.content";
 import { SupportedLocaleType } from "@joytify/shared-types/types";
 import useLocaleState from "../states/locale.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const SettingsLanguagesPage = () => {
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
+  const settingsLanguagesFm = fm("settings.languages");
 
   const { themeLocale, setThemeLocale } = useLocaleState();
   const [filterLocales, setFilterLocales] = useState<LocaleMap | null>(null);
@@ -95,16 +96,7 @@ const SettingsLanguagesPage = () => {
   }, [themeLocale]);
 
   return (
-    <div
-      className={`
-        flex
-        flex-col
-        min-w-[400px]
-        my-8
-        px-8
-        gap-4
-      `}
-    >
+    <div className={`settings-page-container`}>
       {/* title */}
       <AnimationWrapper
         initial={{ opacity: 0, y: -10 }}
@@ -114,8 +106,8 @@ const SettingsLanguagesPage = () => {
         {/* title */}
         <SettingSectionTitle
           icon={{ name: HiOutlineTranslate }}
-          title={intl.formatMessage({ id: "settings.languages.title" })}
-          description={intl.formatMessage({ id: "settings.languages.description" })}
+          title={settingsLanguagesFm("title")}
+          description={settingsLanguagesFm("description")}
         />
 
         {/* currently selected locale */}
@@ -138,7 +130,7 @@ const SettingsLanguagesPage = () => {
               max-sm:hidden
             `}
           >
-            {intl.formatMessage({ id: "settings.languages.currentlySelected" })}
+            {settingsLanguagesFm("currentlySelected")}
           </p>
 
           <div
@@ -159,7 +151,7 @@ const SettingsLanguagesPage = () => {
         {/* searchbar */}
         <SearchBarInput
           id="settings-languages-searchbar"
-          placeholder={intl.formatMessage({ id: "settings.languages.search.placeholder" })}
+          placeholder={settingsLanguagesFm("search.placeholder")}
           icon={{ name: BiSearch, opts: { size: 22 } }}
           onChange={handleFilterLocales}
           visible={true}

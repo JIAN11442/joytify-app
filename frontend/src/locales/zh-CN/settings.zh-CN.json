@@ -26,5 +26,14 @@
   "settings.languages.title": "语言偏好设置",
   "settings.languages.description": "选择你偏好的界面语言",
   "settings.languages.search.placeholder": "搜索界面语言",
-  "settings.languages.currentlySelected": "当前使用语言"
+  "settings.languages.currentlySelected": "当前使用语言",
+
+  "settings.notifications.title": "通知偏好设置",
+  "settings.notifications.description": "管理你想接收哪些平台通知",
+  "settings.notifications.monthlyStatisticsReport.title": "每月统计报告",
+  "settings.notifications.monthlyStatisticsReport.description": "每月接收你的收听活动、播放时间与热门内容摘要",
+  "settings.notifications.followingArtistUpdates.title": "关注艺人更新",
+  "settings.notifications.followingArtistUpdates.description": "接收你关注的艺人最新发行与重要更新通知",
+  "settings.notifications.systemAnnouncements.title": "系统公告",
+  "settings.notifications.systemAnnouncements.description": "掌握系统更新与平台公告等重要信息"
 }

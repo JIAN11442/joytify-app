@@ -26,5 +26,14 @@
   "settings.languages.title": "Language Preferences",
   "settings.languages.description": "Select your preferred interface language",
   "settings.languages.search.placeholder": "Search interface language",
-  "settings.languages.currentlySelected": "Currently Selected"
+  "settings.languages.currentlySelected": "Currently Selected",
+
+  "settings.notifications.title": "Notifications Preferences",
+  "settings.notifications.description": "Manage what notifications you receive from the platform",
+  "settings.notifications.monthlyStatisticsReport.title": "Monthly statistics reports",
+  "settings.notifications.monthlyStatisticsReport.description": "Monthly reports on your listening habits, play time, and favorite content",
+  "settings.notifications.followingArtistUpdates.title": "Following artist updates",
+  "settings.notifications.followingArtistUpdates.description": "Updates about artists you follow, including new content and announcements",
+  "settings.notifications.systemAnnouncements.title": "System announcements",
+  "settings.notifications.systemAnnouncements.description": "Important system updates and announcements"
 }

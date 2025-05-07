@@ -15,7 +15,7 @@ type PlaylistHeaderProps = {
 };
 
 const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ playlist, className }) => {
-  const { _id: playlistId, title, songs, description, cover_image, default: isDefault } = playlist;
+  const { _id: playlistId, title, songs, description, coverImage, default: isDefault } = playlist;
 
   const { setActivePlaylistEditModal } = usePlaylistState();
   const { collapseSideBarState } = useSidebarState();
@@ -47,10 +47,10 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ playlist, className }) 
     >
       {/* Playlist cover image */}
       <ImageLabel
-        src={cover_image}
+        src={coverImage}
         subfolder={UploadFolder.PLAYLISTS_IMAGE}
         updateConfig={{
-          updateImgFn: (awsImageUrl) => updatePlaylistFn({ cover_image: awsImageUrl }),
+          updateImgFn: (awsImageUrl) => updatePlaylistFn({ coverImage: awsImageUrl }),
           isPending,
         }}
         isDefault={isDefault}

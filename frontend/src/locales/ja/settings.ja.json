@@ -26,5 +26,14 @@
   "settings.languages.title": "言語設定",
   "settings.languages.description": "インターフェースの表示言語を選択してください",
   "settings.languages.search.placeholder": "表示言語を検索",
-  "settings.languages.currentlySelected": "現在の表示言語"
+  "settings.languages.currentlySelected": "現在の表示言語",
+
+  "settings.notifications.title": "通知の設定",
+  "settings.notifications.description": "プラットフォームから受け取りたい通知を管理します",
+  "settings.notifications.monthlyStatisticsReport.title": "月間統計レポート",
+  "settings.notifications.monthlyStatisticsReport.description": "月ごとの再生時間、リスニング活動、人気コンテンツの概要を受け取る",
+  "settings.notifications.followingArtistUpdates.title": "フォロー中のアーティストの更新",
+  "settings.notifications.followingArtistUpdates.description": "フォローしているアーティストの新作リリースや重要なお知らせを通知",
+  "settings.notifications.systemAnnouncements.title": "システムからのお知らせ",
+  "settings.notifications.systemAnnouncements.description": "重要なシステム更新やプラットフォームのお知らせを受け取る"
 }

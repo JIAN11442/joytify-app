@@ -21,7 +21,7 @@ export interface SongDocument extends mongoose.Document {
   songUrl: string; // 歌曲連結
   imageUrl: string; //封面連結
   duration: number;
-  playlist_for: mongoose.Types.ObjectId[]; // 歌曲所屬歌單
+  playlistFor: mongoose.Types.ObjectId[]; // 歌曲所屬歌單
   languages: mongoose.Types.ObjectId[]; // 語言
   genres: mongoose.Types.ObjectId[]; // 流派
   tags: mongoose.Types.ObjectId[]; // 標籤
@@ -30,12 +30,12 @@ export interface SongDocument extends mongoose.Document {
   releaseDate: Date; // 發行日期
   followers: mongoose.Types.ObjectId[];
   ratings: SongRating[];
-  activity: {
-    total_rating_count: number;
-    average_rating: number;
-    total_playback_count: number;
-    total_playback_duration: number;
-    weighted_average_playback_duration: number;
+  activities: {
+    totalRatingCount: number;
+    averageRating: number;
+    totalPlaybackCount: number;
+    totalPlaybackDuration: number;
+    weightedAveragePlaybackDuration: number;
   };
 }
 
@@ -71,7 +71,7 @@ const songSchema = new mongoose.Schema<SongDocument>(
         "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-unknown-image.png",
     },
     duration: { type: Number, required: true },
-    playlist_for: {
+    playlistFor: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Playlist",
       index: true,
@@ -119,11 +119,12 @@ const songSchema = new mongoose.Schema<SongDocument>(
         { _id: false, timestamps: true }
       ),
     ],
-    activity: {
-      average_rating: { type: Number, default: 0 },
-      total_playback_count: { type: Number, default: 0 },
-      total_playback_duration: { type: Number, default: 0 },
-      weighted_average_playback_duration: { type: Number, default: 0 },
+    activities: {
+      totalRatingCount: { type: Number, default: 0 },
+      averageRating: { type: Number, default: 0 },
+      totalPlaybackCount: { type: Number, default: 0 },
+      totalPlaybackDuration: { type: Number, default: 0 },
+      weightedAveragePlaybackDuration: { type: Number, default: 0 },
     },
   },
   { timestamps: true }
@@ -131,34 +132,34 @@ const songSchema = new mongoose.Schema<SongDocument>(
 
 // after created song, ...
 songSchema.post("save", async function (doc) {
-  const { id, playlist_for, creator, album } = doc;
+  const { id, playlistFor, creator, album } = doc;
   const song = await SongModel.findById(id);
 
   try {
     if (song) {
-      // increase count in user's account_info and push id to songs
+      // increase count in user's accountInfo and push id to songs
       if (creator) {
         await UserModel.findByIdAndUpdate(creator, {
           $addToSet: { songs: id, albums: album },
           $inc: {
-            "account_info.total_songs": 1,
-            ...(!!album && { "account_info.total_albums": 1 }),
+            "accountInfo.totalSongs": 1,
+            ...(!!album && { "accountInfo.totalAlbums": 1 }),
           },
         });
       }
 
       // adding song ID to target playlist's songs array
-      if (playlist_for) {
-        await PlaylistModel.findByIdAndUpdate(playlist_for, {
+      if (playlistFor) {
+        await PlaylistModel.findByIdAndUpdate(playlistFor, {
           $addToSet: { songs: id },
         });
       }
 
-      // increate song duration to album's total_duration
+      // increate song duration to album's totalDuration
       if (album) {
         await AlbumModel.findByIdAndUpdate(album, {
           $addToSet: { songs: id },
-          $inc: { total_duration: song.duration },
+          $inc: { totalDuration: song.duration },
         });
       }
 
@@ -183,31 +184,31 @@ songSchema.pre("findOneAndDelete", async function (next) {
     const song = await SongModel.findById(songId);
 
     if (song) {
-      const { creator, playlist_for, songUrl, imageUrl, album } = song;
+      const { creator, playlistFor, songUrl, imageUrl, album } = song;
 
-      // reduce count in user's total_songs and remove id from songs
+      // reduce count in user's totalSongs and remove id from songs
       if (creator) {
         await UserModel.findByIdAndUpdate(creator, {
           $pull: { songs: songId, albums: album },
           $inc: {
-            "account_info.total_songs": -1,
-            ...(!!album && { "account_info.total_albums": -1 }),
+            "accountInfo.totalSongs": -1,
+            ...(!!album && { "accountInfo.totalAlbums": -1 }),
           },
         });
       }
 
       // remove song ID to target playlist's songs array
-      if (playlist_for) {
-        await PlaylistModel.findByIdAndUpdate(playlist_for, {
+      if (playlistFor) {
+        await PlaylistModel.findByIdAndUpdate(playlistFor, {
           $pull: { songs: songId },
         });
       }
 
-      // decrease song duration to album's total_duration
+      // decrease song duration to album's totalDuration
       if (album) {
         await AlbumModel.findByIdAndUpdate(album, {
           $pull: { songs: songId },
-          $inc: { total_duration: song.duration * -1 },
+          $inc: { totalDuration: song.duration * -1 },
         });
       }
 

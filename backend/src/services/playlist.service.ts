@@ -140,10 +140,10 @@ export const deletePlaylistById = async (params: DeletePlaylistServiceRequest) =
         { $addToSet: { songs: { $each: playlist.songs } } },
         { new: true }
       ),
-      // add target playlist ID to songs's playlist_for property
+      // add target playlist ID to songs's playlistFor property
       SongModel.updateMany(
         { _id: { $in: playlist.songs } },
-        { $addToSet: { playlist_for: targetPlaylistId } },
+        { $addToSet: { playlistFor: targetPlaylistId } },
         { new: true }
       ),
     ]);
@@ -155,7 +155,7 @@ export const deletePlaylistById = async (params: DeletePlaylistServiceRequest) =
     appAssert(
       updatedSongs.modifiedCount > 0,
       INTERNAL_SERVER_ERROR,
-      "Failed to add target playlist ID to songs's s playlist_for property "
+      "Failed to add target playlist ID to songs's s playlistFor property "
     );
   }
 

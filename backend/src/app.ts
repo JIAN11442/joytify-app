@@ -14,13 +14,13 @@ import albumRoute from "./routes/album.route";
 import playbackRoute from "./routes/playback.route";
 import verificationRoute from "./routes/verification.route";
 import cookieRoute from "./routes/cookie.route";
+import sessionRoute from "./routes/session.route";
 
 import authenticate from "./middlewares/authenticate.middleware";
 import firebaseInitialize from "./middlewares/firebase.middleware";
 import errorHandler from "./middlewares/error-handler.middleware";
 
 import { NODE_ENV, ORIGIN_APP } from "./constants/env-validate.constant";
-import sessionRoute from "./routes/session.route";
 
 const app = express();
 

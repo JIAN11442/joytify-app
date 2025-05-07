@@ -5,7 +5,7 @@ export const songZodSchema = z.object({
   title: stringZodSchema,
   artist: stringZodSchema,
   songUrl: fileUrlZodSchema,
-  playlist_for: objectIdZodSchema,
+  playlistFor: objectIdZodSchema,
   duration: z.number(),
   imageUrl: fileUrlZodSchema.optional(),
   album: objectIdZodSchema.optional(),

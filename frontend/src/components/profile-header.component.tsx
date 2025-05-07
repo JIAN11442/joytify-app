@@ -12,8 +12,8 @@ type ProfileHeaderProps = {
 };
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ profileUser }) => {
-  const { username, profile_img, account_info } = profileUser;
-  const { total_playlists, total_songs } = account_info;
+  const { username, profileImage, accountInfo } = profileUser;
+  const { totalPlaylists, totalSongs } = accountInfo;
 
   const { setActiveProfileEditModal } = useUserState();
   const { collapseSideBarState } = useSidebarState();
@@ -39,10 +39,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ profileUser }) => {
     >
       {/* profile image */}
       <ImageLabel
-        src={profile_img}
+        src={profileImage}
         subfolder={UploadFolder.USERS_IMAGE}
         updateConfig={{
-          updateImgFn: (profile_img) => updateUserInfoFn({ profile_img }),
+          updateImgFn: (profileImage) => updateUserInfoFn({ profileImage }),
           isPending,
         }}
         tw={{ mask: "rounded-full" }}
@@ -82,7 +82,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ profileUser }) => {
             line-clamp-1
           `}
         >
-          {total_playlists} playlists · {total_songs} songs
+          {totalPlaylists} playlists · {totalSongs} songs
         </p>
       </div>
     </div>

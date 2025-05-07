@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useIntl } from "react-intl";
+
 import Modal from "./modal.component";
 import AuthForm from "./auth-form.component";
 import ForgotPasswordForm from "./forgot-password-form.component";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 import { AuthForOptions } from "@joytify/shared-types/constants";
 import useVerificationModalState from "../states/verification.state";
@@ -11,7 +12,10 @@ import useAuthModalState from "../states/auth-modal.state";
 const AuthModal = () => {
   const [closeBtnDisabled, setCloseBtnDisabled] = useState(false);
 
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
+  const authModalFm = fm("auth.modal");
+  const forgotPasswordFormFm = fm("forgot.password.form");
+
   const { activeAuthModal, authFor, closeAuthModal } = useAuthModalState();
   const { activeVerificationCodeModal } = useVerificationModalState();
 
@@ -19,16 +23,16 @@ const AuthModal = () => {
 
   const title =
     authFor === SIGN_IN
-      ? intl.formatMessage({ id: "auth.modal.title.signIn" })
+      ? authModalFm("title.signIn")
       : authFor === SIGN_UP
-      ? intl.formatMessage({ id: "auth.modal.title.signUp" })
-      : intl.formatMessage({ id: "forgot.password.form.title" });
+      ? authModalFm("title.signUp")
+      : forgotPasswordFormFm("title");
 
   const description =
     authFor === SIGN_IN
-      ? intl.formatMessage({ id: "auth.modal.description.signIn" })
+      ? authModalFm("description.signIn")
       : authFor === SIGN_UP
-      ? intl.formatMessage({ id: "auth.modal.description.signUp" })
+      ? authModalFm("description.signUp")
       : "";
 
   return (

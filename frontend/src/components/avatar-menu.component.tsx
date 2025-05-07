@@ -44,7 +44,7 @@ const AvatarMenu: React.FC<AvatarMenuType> = ({ authUser, activeMenuState, child
         "
       >
         <img
-          src={authUser?.profile_img || ""}
+          src={authUser?.profileImage || ""}
           className="
             w-full
             h-full

@@ -305,7 +305,7 @@ const UploadModal = () => {
               autoCloseMenu={!activeCreatePlaylistModal.active}
               disabled={isPending}
               required
-              {...register("playlist_for", {
+              {...register("playlistFor", {
                 required: true,
                 validate: (val) => userPlaylists?.some((playlist) => playlist._id === val) ?? false,
               })}

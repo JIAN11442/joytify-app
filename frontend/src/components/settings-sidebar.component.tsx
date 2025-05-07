@@ -1,22 +1,22 @@
 import ContentBox from "./content-box.component";
 import SidebarItem from "./sidebar-item.component";
 import { SquareDualLineSkeleton } from "./skeleton-loading.component";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 import useUserState from "../states/user.state";
 import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { useIntl } from "react-intl";
 import { getSettingsSidebarCategories } from "../contents/settings-sidebar-categories.content";
 
 const SettingsSidebar = () => {
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
   const { profileUser } = useUserState();
   const { collapseSideBarState, activeFloatingSidebar, closeFloatingSidebar } = useSidebarState();
 
   const { isCollapsed } = collapseSideBarState;
-  const { username, profile_img, email } = profileUser ?? {};
+  const { username, profileImage, email } = profileUser ?? {};
 
-  const settingsSidebarCategories = getSettingsSidebarCategories(intl);
+  const settingsSidebarCategories = getSettingsSidebarCategories(fm);
 
   const handleCloseFloatingMenu = () => {
     timeoutForDelay(() => {
@@ -106,7 +106,7 @@ const SettingsSidebar = () => {
           {profileUser ? (
             <div className={`flex w-full gap-3 items-center`}>
               <img
-                src={profile_img}
+                src={profileImage}
                 className={`
                   w-[3rem]
                   h-[3rem]

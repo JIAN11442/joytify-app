@@ -10,7 +10,7 @@ export interface VerificationDocument extends mongoose.Document {
   email: string;
   type: VerificationForType;
   session: string;
-  verification_code: string;
+  verificationCode: string;
   times: number;
   expiresAt: Date;
   createdAt: Date;
@@ -22,7 +22,7 @@ const verificationSchema = new mongoose.Schema<VerificationDocument>({
   email: { type: String, required: true },
   type: { type: String, required: true },
   session: { type: String },
-  verification_code: { type: String },
+  verificationCode: { type: String },
   times: { type: Number, default: 0 },
   expiresAt: { type: Date, required: true, index: { expireAfterSeconds: 0 } },
   createdAt: { type: Date, required: true, default: Date.now },
@@ -30,11 +30,11 @@ const verificationSchema = new mongoose.Schema<VerificationDocument>({
 
 // hash verification code before saving
 verificationSchema.pre("save", async function (next) {
-  if (!this.isModified("verification_code")) {
+  if (!this.isModified("verificationCode")) {
     return next();
   }
 
-  this.verification_code = await hashValue(this.verification_code);
+  this.verificationCode = await hashValue(this.verificationCode);
 
   return next();
 });
@@ -43,7 +43,7 @@ verificationSchema.pre("save", async function (next) {
 verificationSchema.pre("findOneAndUpdate", async function (next) {
   const query = this.getQuery();
   const update = this.getUpdate() as UpdateQuery<VerificationDocument>;
-  const updateCode = update.verification_code;
+  const updateCode = update.verificationCode;
 
   const doc = await VerificationModel.findOne(query);
 
@@ -57,8 +57,8 @@ verificationSchema.pre("findOneAndUpdate", async function (next) {
       );
     }
 
-    if (update.verification_code) {
-      update.verification_code = await hashValue(updateCode);
+    if (update.verificationCode) {
+      update.verificationCode = await hashValue(updateCode);
     }
 
     update.times = doc.times + 1;

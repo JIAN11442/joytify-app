@@ -230,6 +230,15 @@ body,
     border-grey-custom/5;
   }
 
+  .settings-page-container {
+    @apply flex
+    flex-col
+    min-w-[400px]
+    my-8
+    px-8
+    gap-4;
+  }
+
   th {
     @apply font-light text-[14px] text-grey-custom/50;
   }

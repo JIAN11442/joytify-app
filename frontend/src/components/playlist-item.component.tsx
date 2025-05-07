@@ -1,5 +1,6 @@
-import { useIntl } from "react-intl";
 import { NavLink } from "react-router-dom";
+
+import { useScopedIntl } from "../hooks/intl.hook";
 import { PlaylistResponse } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
@@ -9,9 +10,10 @@ type PlaylistItemProps = {
 };
 
 const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
-  const { _id, title, cover_image, songs } = playlist;
+  const { _id, title, coverImage, songs } = playlist;
 
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
+  const playlistItemContentFm = fm("playlist.item.content");
   const { collapseSideBarState, activeFloatingSidebar, closeFloatingSidebar } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
 
@@ -48,7 +50,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
       {/* cover image */}
       <img
         alt="playlist-cover-image"
-        src={cover_image}
+        src={coverImage}
         className={`
           w-[3.3rem]
           h-[3.3rem]
@@ -80,11 +82,9 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
               text-neutral-500
             `}
           >
-            <p>{intl.formatMessage({ id: "playlist.item.content.type" })}</p>
+            <p>{playlistItemContentFm("type")}</p>
             <p>•</p>
-            <p>
-              {intl.formatMessage({ id: "playlist.item.content.songs" }, { count: songs.length })}
-            </p>
+            <p>{playlistItemContentFm("songs", { count: songs.length })}</p>
           </div>
         </div>
       )}

@@ -1,4 +1,3 @@
-import { useIntl } from "react-intl";
 import { useLocation } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 
@@ -7,6 +6,7 @@ import {
   sendVerificationCode,
   verifyVerificationCode,
 } from "../fetchs/verification.fetch";
+import { useScopedIntl } from "./intl.hook";
 import { MutationKey } from "../constants/query-client-key.constant";
 import { ErrorCode } from "@joytify/shared-types/constants";
 import { SendCodeRequest } from "@joytify/shared-types/types";
@@ -18,9 +18,14 @@ import toast from "../lib/toast.lib";
 
 const { VERIFICATION_CODE_RATE_LIMIT_EXCEEDED } = ErrorCode;
 
+const useToastFm = (prefix: string) => {
+  const { fm } = useScopedIntl();
+  return fm(prefix);
+};
+
 // send verification code mutation
 export const useSendCodeMutation = (opts: object = {}) => {
-  const intl = useIntl();
+  const toastVerificationSendCodeFm = useToastFm("toast.verification.sendCode");
   const { setVerificationProcessPending, openVerificationCodeModal } = useVerificationModalState();
 
   const mutation = useMutation({
@@ -39,11 +44,11 @@ export const useSendCodeMutation = (opts: object = {}) => {
       });
     },
     onSuccess: () => {
-      toast.success(intl.formatMessage({ id: "toast.verification.sendCode.success" }));
+      toast.success(toastVerificationSendCodeFm("success"));
     },
     onError: (error) => {
       if ((error as AppError).errorCode === VERIFICATION_CODE_RATE_LIMIT_EXCEEDED) {
-        toast.error(intl.formatMessage({ id: "toast.verification.sendCode.error" }));
+        toast.error(toastVerificationSendCodeFm("error"));
       } else {
         toast.error(error.message);
       }
@@ -58,7 +63,7 @@ export const useSendCodeMutation = (opts: object = {}) => {
 
 // resend verification code mutation
 export const useResendCodeMutation = (opts: object = {}) => {
-  const intl = useIntl();
+  const toastVerificationResendCodeFm = useToastFm("toast.verification.resendCode");
   const { openResendStatusModal } = useVerificationModalState();
 
   const mutation = useMutation({
@@ -68,7 +73,7 @@ export const useResendCodeMutation = (opts: object = {}) => {
     },
     onSuccess: () => {
       openResendStatusModal(true);
-      toast.success(intl.formatMessage({ id: "toast.verification.resendCode.success" }));
+      toast.success(toastVerificationResendCodeFm("success"));
     },
     onError: (error) => {
       openResendStatusModal(false);
@@ -82,9 +87,9 @@ export const useResendCodeMutation = (opts: object = {}) => {
 
 // send reset password email mutation
 export const useSendResetPasswordEmailMutation = (opts: object = {}) => {
-  const intl = useIntl();
   const location = useLocation();
   const { closeAuthModal } = useAuthModalState();
+  const toastVerificationSendResetPasswordFm = useToastFm("toast.verification.sendResetPassword");
 
   const redirectPath = location.state?.redirectUrl || "/";
 
@@ -94,14 +99,14 @@ export const useSendResetPasswordEmailMutation = (opts: object = {}) => {
     onSuccess: () => {
       closeAuthModal();
 
-      toast.success(intl.formatMessage({ id: "toast.verification.sendResetPassword.success" }));
+      toast.success(toastVerificationSendResetPasswordFm("success"));
 
       // navigate to redirect path
       navigate(redirectPath, { replace: true });
     },
     onError: (error) => {
       if ((error as AppError).errorCode === VERIFICATION_CODE_RATE_LIMIT_EXCEEDED) {
-        toast.error(intl.formatMessage({ id: "toast.verification.sendResetPassword.error" }));
+        toast.error(toastVerificationSendResetPasswordFm("error"));
       } else {
         toast.error(error.message);
       }
@@ -114,8 +119,8 @@ export const useSendResetPasswordEmailMutation = (opts: object = {}) => {
 
 // verify verification code mutation
 export const useVerifyCodeMutation = (opts: object = {}) => {
-  const intl = useIntl();
   const { openVerifyStatusModal } = useVerificationModalState();
+  const toastVerificationVerifyCodeFm = useToastFm("toast.verification.verifyCode");
 
   const mutation = useMutation({
     mutationKey: [MutationKey.VERIFY_VERIFICATION_CODE],
@@ -126,9 +131,9 @@ export const useVerifyCodeMutation = (opts: object = {}) => {
       openVerifyStatusModal(verified);
 
       if (verified) {
-        toast.success(intl.formatMessage({ id: "toast.verification.verifyCode.success" }));
+        toast.success(toastVerificationVerifyCodeFm("success"));
       } else {
-        toast.error(intl.formatMessage({ id: "toast.verification.verifyCode.error" }));
+        toast.error(toastVerificationVerifyCodeFm("error"));
       }
     },
     onError: (error) => {

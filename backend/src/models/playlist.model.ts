@@ -11,7 +11,7 @@ export interface PlaylistDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
   title: string;
   description: string;
-  cover_image: string;
+  coverImage: string;
   privacy: PrivacyType;
   default: boolean;
   paletee: HexPaletee;
@@ -28,7 +28,7 @@ const playlistSchema = new mongoose.Schema<PlaylistDocument>(
     },
     title: { type: String },
     description: { type: String },
-    cover_image: {
+    coverImage: {
       type: String,
       default:
         "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
@@ -71,8 +71,8 @@ playlistSchema.pre("save", async function (next) {
   }
 
   // parser image to get relate paletee
-  if (this.cover_image) {
-    this.paletee = await usePalette(this.cover_image);
+  if (this.coverImage) {
+    this.paletee = await usePalette(this.coverImage);
   }
 
   next();
@@ -83,9 +83,9 @@ playlistSchema.post("save", async function (doc) {
   const { id, user } = doc;
 
   try {
-    // update user tatol_playlists and push playlist id to user playlists array
+    // update user totalPlaylists and push playlist id to user playlists array
     await UserModel.findByIdAndUpdate(user, {
-      $inc: { "account_info.total_playlists": 1 },
+      $inc: { "accountInfo.totalPlaylists": 1 },
       $push: { playlists: id },
     });
   } catch (error) {
@@ -100,17 +100,17 @@ playlistSchema.pre("findOneAndUpdate", async function (next) {
   // get query data from "findOneAndUpdate" operation
   const findQuery = this.getQuery();
 
-  // if the "cover_image" property has a value, it means it will be updated
-  // we need to find the original document, delete the existing cover_image before updating it
+  // if the "coverImage" property has a value, it means it will be updated
+  // we need to find the original document, delete the existing coverImage before updating it
   // update paletee at the same time
-  if (updateDoc.cover_image) {
+  if (updateDoc.coverImage) {
     const originalDoc = await PlaylistModel.findById(findQuery);
-    const paletee = await usePalette(updateDoc.cover_image);
+    const paletee = await usePalette(updateDoc.coverImage);
 
     updateDoc.paletee = paletee;
 
     if (originalDoc) {
-      await deleteAwsFileUrlOnModel(originalDoc.cover_image);
+      await deleteAwsFileUrlOnModel(originalDoc.coverImage);
     }
   }
 
@@ -129,7 +129,7 @@ playlistSchema.pre("findOneAndDelete", async function (next) {
 
       // update all songs from playlist to be delete
       if (songs.length) {
-        await SongModel.updateMany({ _id: { $in: songs } }, { $pull: { playlist_for: id } });
+        await SongModel.updateMany({ _id: { $in: songs } }, { $pull: { playlistFor: id } });
       }
     }
 
@@ -141,17 +141,17 @@ playlistSchema.pre("findOneAndDelete", async function (next) {
 
 // after delete playlist, ...
 playlistSchema.post("findOneAndDelete", async function (doc) {
-  const { id, user, cover_image } = doc;
+  const { id, user, coverImage } = doc;
 
   try {
-    // update user tatol_playlists of account_info
+    // update user totalPlaylists of accountInfo
     await UserModel.findByIdAndUpdate(user, {
-      $inc: { "account_info.total_playlists": -1 },
+      $inc: { "accountInfo.totalPlaylists": -1 },
       $pull: { playlists: id },
     });
 
     // delete AWS url
-    await deleteAwsFileUrlOnModel(cover_image);
+    await deleteAwsFileUrlOnModel(coverImage);
   } catch (error) {
     console.log(error);
   }

@@ -17,8 +17,12 @@ import { FieldNamesMarkedBoolean, FieldValues } from "react-hook-form";
 
 export const getModifiedFormData = <T extends FieldValues>(
   value: T,
-  dirtyFields: Partial<Readonly<FieldNamesMarkedBoolean<T>>>
+  dirtyFields?: Partial<Readonly<FieldNamesMarkedBoolean<T>>>
 ) => {
+  if (!dirtyFields) {
+    return Object.fromEntries(Object.entries(value).filter(([, v]) => v !== undefined));
+  }
+
   const values = Object.keys(dirtyFields).reduce((acc, field) => {
     acc[field as keyof T] = value[field as keyof T];
     return acc;

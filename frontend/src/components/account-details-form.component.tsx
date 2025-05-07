@@ -1,4 +1,3 @@
-import { useIntl } from "react-intl";
 import { useCallback, useEffect, useMemo } from "react";
 import { RegisterOptions, SubmitHandler, useForm } from "react-hook-form";
 import { allCountries } from "country-region-data";
@@ -9,6 +8,7 @@ import SingleSelectInputBox from "./single-select-input-box.component";
 import { InputOptionType, NO_MATCH } from "./single-select-input-box.component";
 import { useGetLabelsQuery } from "../hooks/label-query.hook";
 import { useUpdateUserMutation } from "../hooks/user-mutate.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 import { QueryKey } from "../constants/query-client-key.constant";
 import { defaultAccountDetailsData } from "../constants/form.constant";
@@ -23,14 +23,18 @@ type AccountDetailsFormProps = {
 };
 
 const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({ profileUser }) => {
-  const intl = useIntl();
-  const { gender, country, date_of_birth } = profileUser.personal_info ?? {};
+  const { fm, intl } = useScopedIntl();
+  const genderFm = fm("gender");
+  const countryFm = fm("country");
+  const settingsAccountFm = fm("settings.account");
+
+  const { gender, country, dateOfBirth } = profileUser.personalInfo ?? {};
 
   const { GENDER } = LabelOptions;
   const { labels } = useGetLabelsQuery(QueryKey.GET_GENRE_LABELS, [GENDER], true);
   const genderLabels = labels?.default.gender;
 
-  const { mutate: updateUserFn, isPending } = useUpdateUserMutation(2000);
+  const { mutate: updateUserFn, isPending } = useUpdateUserMutation({ delay: 2000 });
 
   const genderOptions = useMemo(() => {
     return (
@@ -39,11 +43,11 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({ profileUser }) 
 
         return {
           id: option.id,
-          title: intl.formatMessage({ id: `gender.${gender}` }),
+          title: genderFm(gender),
         };
       }) || []
     );
-  }, [intl, genderLabels]);
+  }, [genderFm, genderLabels]);
 
   const enCountryOptions = useMemo(() => {
     return allCountries.map((country) => ({
@@ -55,27 +59,23 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({ profileUser }) 
   const intlCountryOptions = useMemo(() => {
     return allCountries.map((country) => ({
       id: country[1],
-      title: intl.formatMessage({ id: `country.${country[1]}` }),
+      title: countryFm(country[1]),
     }));
-  }, [intl, allCountries]);
+  }, [countryFm, allCountries]);
 
   const defaultGender = useMemo(() => {
-    return gender?.label
-      ? intl.formatMessage({ id: `gender.${gender?.label.toLowerCase()}` })
-      : gender?.label;
-  }, [intl, gender]);
+    return gender?.label ? genderFm(gender?.label.toLowerCase()) : gender?.label;
+  }, [genderFm, gender]);
 
   const defaultCountry = useMemo(() => {
-    return country?.label
-      ? intl.formatMessage({
-          id: `country.${enCountryOptions.find((opt) => opt.title === country?.label)?.id}`,
-        })
-      : country?.label;
-  }, [intl, country, enCountryOptions]);
+    const targetCountryObj =
+      country?.label && enCountryOptions.find((opt) => opt.title === country?.label);
+    return targetCountryObj ? countryFm(targetCountryObj.id) : country?.label;
+  }, [countryFm, country, enCountryOptions]);
 
   const defaultDateOfBirth = useMemo(
-    () => (date_of_birth ? new Date(date_of_birth).toISOString().slice(0, 10) : undefined),
-    [date_of_birth]
+    () => (dateOfBirth ? new Date(dateOfBirth).toISOString().slice(0, 10) : undefined),
+    [dateOfBirth]
   );
 
   const {
@@ -168,8 +168,8 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({ profileUser }) 
       {/* Gender */}
       <SingleSelectInputBox
         key={`gender-${gender?.label}`}
-        title={intl.formatMessage({ id: "settings.account.gender.title" })}
-        placeholder={intl.formatMessage({ id: "settings.account.gender.placeholder" })}
+        title={settingsAccountFm("gender.title")}
+        placeholder={settingsAccountFm("gender.placeholder")}
         defaultValue={defaultGender}
         formMethods={formMethods}
         options={genderOptions}
@@ -181,7 +181,7 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({ profileUser }) 
 
       {/* Date of birth */}
       <CalendarInputBox
-        title={intl.formatMessage({ id: "settings.account.dateOfBirth.title" })}
+        title={settingsAccountFm("dateOfBirth.title")}
         defaultValue={defaultDateOfBirth}
         intl={intl}
         disabled={isPending}
@@ -196,8 +196,8 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({ profileUser }) 
       {/* Country */}
       <SingleSelectInputBox
         key={`country-${country?.label}`}
-        title={intl.formatMessage({ id: "settings.account.country.title" })}
-        placeholder={intl.formatMessage({ id: "settings.account.country.placeholder" })}
+        title={settingsAccountFm("country.title")}
+        placeholder={settingsAccountFm("country.placeholder")}
         defaultValue={defaultCountry}
         options={intlCountryOptions}
         formMethods={formMethods}
@@ -221,11 +221,7 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({ profileUser }) 
           ${disabled && "hidden"}
         `}
       >
-        {isPending ? (
-          <Loader loader={{ size: 20 }} />
-        ) : (
-          intl.formatMessage({ id: "settings.account.form.button.submit" })
-        )}
+        {isPending ? <Loader loader={{ size: 20 }} /> : settingsAccountFm("form.button.submit")}
       </button>
     </form>
   );

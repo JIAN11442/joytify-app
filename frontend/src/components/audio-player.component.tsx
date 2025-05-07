@@ -28,7 +28,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
   const { playbackTime } = sound;
 
   const handleNavigateToPlaylist = () => {
-    navigate(`/playlist/${songToPlay?.playlist_for}`);
+    navigate(`/playlist/${songToPlay?.playlistFor}`);
   };
 
   // Refetch song hook when songId changes

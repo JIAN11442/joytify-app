@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { useIntl } from "react-intl";
 import UpdatePasswordForm from "./update-password-form.component";
 import { useResetPasswordMutation } from "../hooks/user-mutate.hook";
 import { useVerifyResetPasswordLinkQuery } from "../hooks/verification-query.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 type ResetPasswordFormProps = {
   token: string;
@@ -10,7 +10,9 @@ type ResetPasswordFormProps = {
 };
 
 const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token, className }) => {
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
+  const resetPasswordFormFm = fm("reset.password.form");
+
   const { verified, isFetching } = useVerifyResetPasswordLinkQuery(token, 1800);
   const { mutate: resetPasswordFn, isPending } = useResetPasswordMutation();
 
@@ -20,8 +22,8 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token, className 
 
   return (
     <UpdatePasswordForm
-      title={intl.formatMessage({ id: "reset.password.form.title" })}
-      description={intl.formatMessage({ id: "reset.password.form.description" })}
+      title={resetPasswordFormFm("title")}
+      description={resetPasswordFormFm("description")}
       updatePasswordFn={(params) => resetPasswordFn({ token, ...params })}
       isFetching={isFetching}
       verified={verified as boolean}

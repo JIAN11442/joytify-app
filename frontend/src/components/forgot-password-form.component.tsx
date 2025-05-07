@@ -1,4 +1,3 @@
-import { useIntl } from "react-intl";
 import { useCallback, useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { MdAlternateEmail } from "react-icons/md";
@@ -6,6 +5,7 @@ import { MdAlternateEmail } from "react-icons/md";
 import Loader from "./loader.component";
 import InputBox from "./input-box.component";
 
+import { useScopedIntl } from "../hooks/intl.hook";
 import { useSendResetPasswordEmailMutation } from "../hooks/verification-mutate.hook";
 import { defaultForgotPasswordData } from "../constants/form.constant";
 import { AuthForOptions } from "@joytify/shared-types/constants";
@@ -20,7 +20,9 @@ type ForgotPasswordFormProps = {
 };
 
 const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBtnDisabled }) => {
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
+  const forgotPasswordFormFm = fm("forgot.password.form");
+
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
   const { openAuthModal } = useAuthModalState();
@@ -70,9 +72,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBt
       {/* Email address */}
       <InputBox
         type="email"
-        placeholder={intl.formatMessage({
-          id: "forgot.password.form.email.input.placeholder",
-        })}
+        placeholder={forgotPasswordFormFm("email.input.placeholder")}
         icon={{ name: MdAlternateEmail }}
         iconHighlight={isIconHighlight("email")}
         className={`py-4`}
@@ -97,11 +97,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBt
           capitalize
         `}
       >
-        {isPending ? (
-          <Loader loader={{ size: 20 }} />
-        ) : (
-          intl.formatMessage({ id: "forgot.password.form.submit.button" })
-        )}
+        {isPending ? <Loader loader={{ size: 20 }} /> : forgotPasswordFormFm("submit.button")}
       </button>
 
       {/* Navigate link */}
@@ -112,7 +108,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBt
           text-center
         `}
       >
-        {intl.formatMessage({ id: "forgot.password.form.switchAccount.prompt" })}
+        {forgotPasswordFormFm("switchAccount.prompt")}
         <button
           type="button"
           onClick={handleNavigateToSignInModal}
@@ -124,7 +120,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ setModalCloseBt
             disabled:text-neutral-600
           `}
         >
-          {intl.formatMessage({ id: "forgot.password.form.switchAccount.button" })}
+          {forgotPasswordFormFm("switchAccount.button")}
         </button>
       </p>
     </form>

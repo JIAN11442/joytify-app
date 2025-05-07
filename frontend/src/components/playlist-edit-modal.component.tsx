@@ -26,7 +26,7 @@ const PlaylistEditModal = () => {
     _id: playlistId,
     title,
     description,
-    cover_image,
+    coverImage,
   } = (playlist as RefactorPlaylistResponse) ?? {};
 
   // handle close modal
@@ -37,7 +37,7 @@ const PlaylistEditModal = () => {
 
       // while coverImage is changed but not submitted,
       // delete that file store in AWS
-      if (!isSubmitted && watch("coverImage") && watch("coverImage") !== cover_image) {
+      if (!isSubmitted && watch("coverImage") && watch("coverImage") !== coverImage) {
         try {
           await deleteFileFromAws(watch("coverImage"));
         } catch (error) {
@@ -89,9 +89,9 @@ const PlaylistEditModal = () => {
 
   // submit form
   const onSubmit: SubmitHandler<DefaultEditPlaylistForm> = async (value) => {
-    const { coverImage: cover_image, ...rest } = getModifiedFormData(value, dirtyFields);
+    const modifiedValues = getModifiedFormData(value, dirtyFields);
 
-    updatePlaylistFn({ cover_image, ...rest });
+    updatePlaylistFn(modifiedValues);
 
     setIsSubmitted(true);
   };
@@ -117,7 +117,7 @@ const PlaylistEditModal = () => {
       >
         {/* Image input */}
         <ImageLabel
-          src={playlistImage ?? cover_image}
+          src={playlistImage ?? coverImage}
           subfolder={UploadFolder.PLAYLISTS_IMAGE}
           formMethods={formMethods}
           setImgSrc={setPlaylistImage}

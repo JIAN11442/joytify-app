@@ -4,8 +4,8 @@ import { TbUsersPlus } from "react-icons/tb";
 import { VscAccount } from "react-icons/vsc";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { MdOutlineLibraryMusic } from "react-icons/md";
-import { IntlShape } from "react-intl";
 import { HiOutlineTranslate } from "react-icons/hi";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 
 interface MenuItem {
   href: string;
@@ -21,15 +21,17 @@ interface MenuCategory {
   items: MenuItem[];
 }
 
-export const getSettingsSidebarCategories = (intl: IntlShape): MenuCategory[] => {
+export const getSettingsSidebarCategories = (fm: ScopedFormatMessage): MenuCategory[] => {
+  const settingsSidebarCategoriesFm = fm("settings.sidebar.categories");
+
   const categories = [
     {
-      category: intl.formatMessage({ id: "settings.sidebar.categories.mainMenu" }),
+      category: settingsSidebarCategoriesFm("mainMenu"),
       items: [
         {
           href: "/settings/account",
           icon: { name: VscAccount },
-          label: intl.formatMessage({ id: "settings.sidebar.categories.mainMenu.account" }),
+          label: settingsSidebarCategoriesFm("mainMenu.account"),
         },
         {
           href: "/settings/notifications",
@@ -37,7 +39,7 @@ export const getSettingsSidebarCategories = (intl: IntlShape): MenuCategory[] =>
             name: IoNotificationsOutline,
             getSize: (isCollapsed: boolean) => (isCollapsed ? 24 : 22),
           },
-          label: intl.formatMessage({ id: "settings.sidebar.categories.mainMenu.notifications" }),
+          label: settingsSidebarCategoriesFm("mainMenu.notifications"),
         },
       ],
     },
@@ -57,17 +59,17 @@ export const getSettingsSidebarCategories = (intl: IntlShape): MenuCategory[] =>
     //   ],
     // },
     {
-      category: intl.formatMessage({ id: "settings.sidebar.categories.other" }),
+      category: settingsSidebarCategoriesFm("other"),
       items: [
         {
           href: "/settings/languages",
           icon: { name: HiOutlineTranslate },
-          label: intl.formatMessage({ id: "settings.sidebar.categories.other.languages" }),
+          label: settingsSidebarCategoriesFm("other.languages"),
         },
         {
           href: "/settings/connected-devices",
           icon: { name: PiDevices, getSize: (isCollapsed: boolean) => (isCollapsed ? 24 : 22) },
-          label: intl.formatMessage({ id: "settings.sidebar.categories.other.connectedDevices" }),
+          label: settingsSidebarCategoriesFm("other.connectedDevices"),
         },
       ],
     },

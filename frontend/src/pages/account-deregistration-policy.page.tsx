@@ -1,15 +1,17 @@
-import { useIntl } from "react-intl";
 import logo from "../images/logo-r.png";
 import Modal from "../components/modal.component";
 import Icon from "../components/react-icons.component";
 import LocaleSwitcher from "../components/locale-switcher.component";
-import { getAccountDeregistrationPolicyContents } from "../contents/account-deregistration-policy.content";
+import { useScopedIntl } from "../hooks/intl.hook";
 import useLocaleState from "../states/locale.state";
+import { getAccountDeregistrationPolicyContents } from "../contents/account-deregistration-policy.content";
 
 const AccountDeregistrationPolicyPage = () => {
-  const intl = useIntl();
+  const { fm, intl } = useScopedIntl();
+  const deregistrationPolicyFm = fm("deregistration.policy");
+
   const { deregistrationPolicyLocale, setDeregistrationPolicyLocale } = useLocaleState();
-  const policyContents = getAccountDeregistrationPolicyContents(intl);
+  const policyContents = getAccountDeregistrationPolicyContents(fm);
 
   return (
     <div className={`relative`}>
@@ -57,7 +59,7 @@ const AccountDeregistrationPolicyPage = () => {
             text-center
           `}
         >
-          {intl.formatMessage({ id: "deregistration.policy.title" })}
+          {deregistrationPolicyFm("title")}
         </h1>
 
         {/* description */}
@@ -70,7 +72,7 @@ const AccountDeregistrationPolicyPage = () => {
             text-center
           `}
         >
-          {intl.formatMessage({ id: "deregistration.policy.description" })}
+          {deregistrationPolicyFm("description")}
         </p>
 
         {/* contents */}
@@ -147,10 +149,7 @@ const AccountDeregistrationPolicyPage = () => {
               text-right
             `}
           >
-            {intl.formatMessage(
-              { id: "deregistration.policy.lastUpdatedDate" },
-              { date: intl.formatDate("2025/04/23") }
-            )}
+            {deregistrationPolicyFm("lastUpdatedDate", { date: intl.formatDate("2025/04/23") })}
           </div>
         </div>
       </Modal>

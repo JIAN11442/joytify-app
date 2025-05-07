@@ -97,7 +97,7 @@ export const sendCodeEmailToUser = async (params: SendCodeServiceRequest) => {
   const queryParams: FilterQueryParams = { email, type: EMAIL_VERIFICATION };
   const payloadParams: FilterQueryParams = {
     session: hashedSession,
-    verification_code: code,
+    verificationCode: code,
     expiresAt: tenMinutesFromNow(),
   };
 
@@ -150,7 +150,7 @@ export const verifyCode = async (params: VerifyCodeServiceRequest) => {
     const verifyDoc = await VerificationModel.findOne(queryParams);
 
     if (verifyDoc) {
-      verified = await compareHashValue(code, verifyDoc.verification_code);
+      verified = await compareHashValue(code, verifyDoc.verificationCode);
 
       if (verified) {
         // delete verification code
@@ -175,7 +175,7 @@ export const sendLinkEmailToUser = async (email: string) => {
 
   appAssert(user, NOT_FOUND, "User not found");
   appAssert(
-    !user.auth_for_third_party,
+    !user.authForThirdParty,
     FORBIDDEN,
     "This account was registered using a third-party service. Password reset is not supported."
   );

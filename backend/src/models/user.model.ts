@@ -23,31 +23,31 @@ export interface UserDocument extends mongoose.Document {
   email: string;
   password: string;
   username: string;
-  profile_img: string;
+  profileImage: string;
   verified: boolean;
-  auth_for_third_party: boolean;
+  authForThirdParty: boolean;
   paletee: HexPaletee;
   playlists: mongoose.Types.ObjectId[];
   songs: mongoose.Types.ObjectId[];
   albums: mongoose.Types.ObjectId[];
   following: mongoose.Types.ObjectId[];
-  account_info: {
-    total_playlists: number;
-    total_songs: number;
-    total_albums: number;
-    total_following: number;
+  accountInfo: {
+    totalPlaylists: number;
+    totalSongs: number;
+    totalAlbums: number;
+    totalFollowing: number;
   };
-  personal_info: {
+  personalInfo: {
     gender: string;
     country: string;
-    date_of_birth: Date;
+    dateOfBirth: Date;
   };
-  user_preferences: {
+  userPreferences: {
     sidebarCollapsed: boolean;
     locale: SupportedLocaleType;
     notifications: {
       monthlyStatistics: boolean;
-      artistFollowUpdates: boolean;
+      followingArtistUpdates: boolean;
       systemAnnouncements: boolean;
     };
   };
@@ -63,7 +63,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
     email: { type: String, unique: true, required: true },
     password: { type: String },
     username: { type: String, unique: true, required: true },
-    profile_img: {
+    profileImage: {
       type: String,
       default: () =>
         `${profileImgBaseUrl}/${
@@ -71,7 +71,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
         }/svg?seed=${profile_names[Math.floor(Math.random() * profile_names.length)]}`,
     },
     verified: { type: Boolean, default: false, required: true },
-    auth_for_third_party: { type: Boolean, default: false },
+    authForThirdParty: { type: Boolean, default: false },
     paletee: {
       vibrant: { type: String },
       darkVibrant: { type: String },
@@ -100,18 +100,18 @@ const userSchema = new mongoose.Schema<UserDocument>(
       ref: "Musician",
       index: true,
     },
-    account_info: {
-      total_playlists: { type: Number, default: 0 },
-      total_songs: { type: Number, default: 0 },
-      total_albums: { type: Number, default: 0 },
-      total_following: { type: Number, default: 0 },
+    accountInfo: {
+      totalPlaylists: { type: Number, default: 0 },
+      totalSongs: { type: Number, default: 0 },
+      totalAlbums: { type: Number, default: 0 },
+      totalFollowing: { type: Number, default: 0 },
     },
-    personal_info: {
+    personalInfo: {
       gender: { type: mongoose.Schema.Types.ObjectId, ref: "Label", index: true, default: null },
       country: { type: mongoose.Schema.Types.ObjectId, ref: "Label", index: true, default: null },
-      date_of_birth: { type: Date, default: null },
+      dateOfBirth: { type: Date, default: null },
     },
-    user_preferences: {
+    userPreferences: {
       sidebarCollapsed: { type: Boolean, default: false },
       locale: {
         type: String,
@@ -120,7 +120,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
       },
       notifications: {
         monthlyStatistics: { type: Boolean, default: true },
-        followerArtistUpdates: { type: Boolean, default: true },
+        followingArtistUpdates: { type: Boolean, default: true },
         systemAnnouncements: { type: Boolean, default: true },
       },
     },
@@ -137,8 +137,8 @@ userSchema.pre("save", async function (next) {
   this.password = await hashValue(this.password);
   this.username = `${this.username}?nanoid=${nanoid(5)}`;
 
-  if (this.profile_img) {
-    this.paletee = await usePalette(this.profile_img);
+  if (this.profileImage) {
+    this.paletee = await usePalette(this.profileImage);
   }
 
   return next();
@@ -168,7 +168,7 @@ userSchema.post("save", async function (doc) {
         user: id,
         title: "Liked Songs",
         description: "All your liked songs will be here",
-        cover_image: defaultCoverImg,
+        coverImage: defaultCoverImg,
         paletee: paletee,
         default: true,
         privacy: PrivacyOptions.PRIVATE,
@@ -187,15 +187,15 @@ userSchema.pre("findOneAndUpdate", async function (next) {
   let updateDoc = this.getUpdate() as UpdateQuery<UserDocument>;
 
   // if the profile image is modified, update the paletee
-  if (updateDoc.profile_img) {
+  if (updateDoc.profileImage) {
     const originalDoc = await UserModel.findById(findQuery);
-    const paletee = await usePalette(updateDoc.profile_img);
+    const paletee = await usePalette(updateDoc.profileImage);
 
     updateDoc.paletee = paletee;
 
     // if the original document is not default image, delete it AWS
-    if (originalDoc && !originalDoc?.profile_img.includes(profileImgBaseUrl)) {
-      await deleteAwsFileUrlOnModel(originalDoc.profile_img);
+    if (originalDoc && !originalDoc?.profileImage.includes(profileImgBaseUrl)) {
+      await deleteAwsFileUrlOnModel(originalDoc.profileImage);
     }
   }
 
@@ -207,23 +207,23 @@ userSchema.pre("findOneAndUpdate", async function (next) {
   if (updateDoc.$set) {
     const originalDoc = await this.model.findById(findQuery._id);
 
-    if (updateDoc.$set["personal_info.gender"]) {
+    if (updateDoc.$set["personalInfo.gender"]) {
       await Promise.all([
-        LabelModel.findByIdAndUpdate(originalDoc?.personal_info.gender, {
+        LabelModel.findByIdAndUpdate(originalDoc?.personalInfo.gender, {
           $pull: { users: findQuery._id },
         }),
-        LabelModel.findByIdAndUpdate(updateDoc.$set["personal_info.gender"], {
+        LabelModel.findByIdAndUpdate(updateDoc.$set["personalInfo.gender"], {
           $addToSet: { users: findQuery._id },
         }),
       ]);
     }
 
-    if (updateDoc.$set["personal_info.country"]) {
+    if (updateDoc.$set["personalInfo.country"]) {
       await Promise.all([
-        LabelModel.findByIdAndUpdate(originalDoc?.personal_info.country, {
+        LabelModel.findByIdAndUpdate(originalDoc?.personalInfo.country, {
           $pull: { users: findQuery._id },
         }),
-        LabelModel.findByIdAndUpdate(updateDoc.$set["personal_info.country"], {
+        LabelModel.findByIdAndUpdate(updateDoc.$set["personalInfo.country"], {
           $addToSet: { users: findQuery._id },
         }),
       ]);
@@ -276,8 +276,8 @@ userSchema.pre("findOneAndDelete", async function (next) {
       await StatsModel.findOneAndDelete({ user: user.id });
 
       // if the original document is not default image, delete it from AWS
-      if (!user.profile_img.includes(profileImgBaseUrl)) {
-        await deleteAwsFileUrlOnModel(user.profile_img);
+      if (!user.profileImage.includes(profileImgBaseUrl)) {
+        await deleteAwsFileUrlOnModel(user.profileImage);
       }
     }
 

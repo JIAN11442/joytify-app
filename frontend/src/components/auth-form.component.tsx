@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useIntl } from "react-intl";
 import { AuthProvider } from "firebase/auth";
+import { IoKey } from "react-icons/io5";
 import { MdAlternateEmail } from "react-icons/md";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
-import { IoKey } from "react-icons/io5";
 import googleLogo from "../images/google.png";
 import githubLogo from "../images/github.png";
 
-import Icon from "./react-icons.component";
 import Loader from "./loader.component";
+import Icon from "./react-icons.component";
 import InputBox from "./input-box.component";
 
+import { useScopedIntl } from "../hooks/intl.hook";
 import { useSendCodeMutation } from "../hooks/verification-mutate.hook";
 import { useLocalAuthMutation, useThirdPartyAuthMutation } from "../hooks/auth-mutate.hook";
 import { defaultLoginData, defaultRegisterData } from "../constants/form.constant";
@@ -29,19 +29,21 @@ type AuthFormProps = {
 };
 
 const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
-  const intl = useIntl();
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
+  const { fm } = useScopedIntl();
   const { authFor, openAuthModal } = useAuthModalState();
   const { verificationProcessPending } = useVerificationModalState();
-
-  const { SIGN_IN, SIGN_UP } = AuthForOptions;
-  const { GOOGLE, GITHUB } = FirebaseProvider;
 
   const { mutate: sendCodeFn } = useSendCodeMutation();
   const { mutate: localAuthFn, isPending: localAuthPending } = useLocalAuthMutation();
   const { mutate: thirdPartyAuthFn, isPending: thirdPartyAuthPending } =
     useThirdPartyAuthMutation();
+
+  const authFormFm = fm("auth.form");
+
+  const { SIGN_IN, SIGN_UP } = AuthForOptions;
+  const { GOOGLE, GITHUB } = FirebaseProvider;
 
   const handleSwitchAuthModal = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -132,8 +134,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
           <img alt="google logo" src={googleLogo} className={`w-5 h-5`} />
           <p>
             {authFor === SIGN_IN
-              ? intl.formatMessage({ id: "auth.form.thirdParty.Google.signIn" })
-              : intl.formatMessage({ id: "auth.form.thirdParty.Google.signUp" })}
+              ? authFormFm("thirdParty.Google.signIn")
+              : authFormFm("thirdParty.Google.signUp")}
           </p>
         </button>
 
@@ -155,8 +157,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
           />
           <p>
             {authFor === SIGN_IN
-              ? intl.formatMessage({ id: "auth.form.thirdParty.Github.signIn" })
-              : intl.formatMessage({ id: "auth.form.thirdParty.Github.signUp" })}
+              ? authFormFm("thirdParty.Github.signIn")
+              : authFormFm("thirdParty.Github.signUp")}
           </p>
         </button>
       </div>
@@ -178,7 +180,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
             whitespace-nowrap
           `}
         >
-          {intl.formatMessage({ id: "auth.form.divider.text" })}
+          {authFormFm("divider.text")}
         </p>
         <hr className={`divider`} />
       </div>
@@ -186,8 +188,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
       {/* Email */}
       <InputBox
         type="email"
-        title={intl.formatMessage({ id: "auth.form.email.input.title" })}
-        placeholder={intl.formatMessage({ id: "auth.form.email.input.placeholder" })}
+        title={authFormFm("email.input.title")}
+        placeholder={authFormFm("email.input.placeholder")}
         icon={{ name: MdAlternateEmail }}
         iconHighlight={isIconHighlight("email")}
         disabled={disabledEdit}
@@ -207,8 +209,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
       >
         <InputBox
           type="password"
-          title={intl.formatMessage({ id: "auth.form.password.input.title" })}
-          placeholder={intl.formatMessage({ id: "auth.form.password.input.placeholder" })}
+          title={authFormFm("password.input.title")}
+          placeholder={authFormFm("password.input.placeholder")}
           icon={{ name: IoKey }}
           iconHighlight={isIconHighlight("password")}
           disabled={disabledEdit}
@@ -243,7 +245,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
               `}
             >
               <Icon name={BsFillQuestionCircleFill} />
-              <p>{intl.formatMessage({ id: "auth.form.forgotPassword.text" })}</p>
+              <p>{authFormFm("forgotPassword.text")}</p>
             </button>
           </div>
         ) : (
@@ -255,8 +257,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
       {authFor !== SIGN_IN && (
         <InputBox
           type="password"
-          title={intl.formatMessage({ id: "auth.form.confirmPassword.input.title" })}
-          placeholder={intl.formatMessage({ id: "auth.form.confirmPassword.input.placeholder" })}
+          title={authFormFm("confirmPassword.input.title")}
+          placeholder={authFormFm("confirmPassword.input.placeholder")}
           icon={{ name: IoKey }}
           iconHighlight={isIconHighlight("confirmPassword")}
           disabled={disabledEdit}
@@ -285,9 +287,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
         {disabledEdit ? (
           <Loader loader={{ size: 20 }} />
         ) : authFor === SIGN_IN ? (
-          intl.formatMessage({ id: "auth.form.submit.button.signIn" })
+          authFormFm("submit.button.signIn")
         ) : (
-          intl.formatMessage({ id: "auth.form.submit.button.signUp" })
+          authFormFm("submit.button.signUp")
         )}
       </button>
 
@@ -300,8 +302,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
         `}
       >
         {authFor === SIGN_IN
-          ? intl.formatMessage({ id: "auth.form.switchAccount.prompt.signIn" })
-          : intl.formatMessage({ id: "auth.form.switchAccount.prompt.signUp" })}
+          ? authFormFm("switchAccount.prompt.signIn")
+          : authFormFm("switchAccount.prompt.signUp")}
 
         <button
           onClick={handleSwitchAuthModal}
@@ -314,8 +316,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
           `}
         >
           {authFor === SIGN_IN
-            ? intl.formatMessage({ id: "auth.form.switchAccount.button.signIn" })
-            : intl.formatMessage({ id: "auth.form.switchAccount.button.signUp" })}
+            ? authFormFm("switchAccount.button.signIn")
+            : authFormFm("switchAccount.button.signUp")}
         </button>
       </p>
     </form>

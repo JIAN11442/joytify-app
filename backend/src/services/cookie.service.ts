@@ -67,7 +67,7 @@ export const updateUserPreferencesCookie = async (params: UpdatePrefsCookieServi
       $set: Object.entries(updatePayload).reduce(
         (acc, [key, value]) => ({
           ...acc,
-          [`user_preferences.${key}`]: value,
+          [`userPreferences.${key}`]: value,
         }),
         {}
       ),

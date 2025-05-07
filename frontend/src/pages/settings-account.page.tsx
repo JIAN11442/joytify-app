@@ -1,17 +1,19 @@
-import { useIntl } from "react-intl";
 import { RiUserSettingsLine } from "react-icons/ri";
 import Loader from "../components/loader.component";
 import AccountProfileCard from "../components/account-profile-card.component";
 import AccountDetailsForm from "../components/account-details-form.component";
 import SettingSectionTitle from "../components/settings-section-title.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
+import { useScopedIntl } from "../hooks/intl.hook";
 import useSettingsState from "../states/settings.state";
 import useSidebarState from "../states/sidebar.state";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const SettingsAccountPage = () => {
-  const intl = useIntl();
+  const { fm } = useScopedIntl();
+  const settingsAccountFm = fm("settings.account");
+
   const { profileUser } = useUserState();
   const { collapseSideBarState } = useSidebarState();
   const { openAccountDerergistrationModal, setActiveChangePasswordModal } = useSettingsState();
@@ -34,27 +36,22 @@ const SettingsAccountPage = () => {
     });
   };
 
-  const { auth_for_third_party: isThirdPartyUser } = profileUser;
+  const { authForThirdParty: isThirdPartyUser } = profileUser;
 
   return (
     <div
       className={`
-        flex
-        flex-col
-        min-w-[400px]
-        ${isCollapsed && "md:w-[95%] lg:w-[85%]"}
+        settings-page-container
         h-fit
-        my-8
-        px-8
-        gap-4
+        ${isCollapsed && "md:w-[95%] lg:w-[85%]"}
       `}
     >
       {/* title */}
       <AnimationWrapper initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <SettingSectionTitle
           icon={{ name: RiUserSettingsLine }}
-          title={intl.formatMessage({ id: "settings.account.title" })}
-          description={intl.formatMessage({ id: "settings.account.description" })}
+          title={settingsAccountFm("title")}
+          description={settingsAccountFm("description")}
         />
       </AnimationWrapper>
 
@@ -89,11 +86,9 @@ const SettingsAccountPage = () => {
         {!isThirdPartyUser && (
           <div className={`flex flex-col gap-5`}>
             <div className={`flex flex-col gap-2`}>
-              <p className={`text-xl font-bold`}>
-                {intl.formatMessage({ id: "settings.account.changePassword.title" })}
-              </p>
+              <p className={`text-xl font-bold`}>{settingsAccountFm("changePassword.title")}</p>
               <p className={`text-sm text-neutral-500`}>
-                {intl.formatMessage({ id: "settings.account.changePassword.description" })}
+                {settingsAccountFm("changePassword.description")}
               </p>
             </div>
 
@@ -107,7 +102,7 @@ const SettingsAccountPage = () => {
                 rounded-md
               `}
             >
-              {intl.formatMessage({ id: "settings.account.changePassword.button" })}
+              {settingsAccountFm("changePassword.button")}
             </button>
           </div>
         )}
@@ -115,11 +110,9 @@ const SettingsAccountPage = () => {
         {/* deregister account */}
         <div className={`flex flex-col gap-5`}>
           <div className={`flex flex-col gap-2`}>
-            <p className={`text-xl font-bold`}>
-              {intl.formatMessage({ id: "settings.account.deregisterAccount.title" })}
-            </p>
+            <p className={`text-xl font-bold`}>{settingsAccountFm("deregisterAccount.title")}</p>
             <p className={`text-sm text-neutral-500`}>
-              {intl.formatMessage({ id: "settings.account.deregisterAccount.description" })}
+              {settingsAccountFm("deregisterAccount.description")}
             </p>
           </div>
 
@@ -135,7 +128,7 @@ const SettingsAccountPage = () => {
               rounded-md
             `}
           >
-            {intl.formatMessage({ id: "settings.account.deregisterAccount.button" })}
+            {settingsAccountFm("deregisterAccount.button")}
           </button>
         </div>
       </AnimationWrapper>

@@ -5,11 +5,11 @@ export interface MusicianDocument extends mongoose.Document {
   name: string;
   roles: string[];
   bio: string;
-  cover_image: string;
+  coverImage: string;
   songs: mongoose.Types.ObjectId[];
   followers: mongoose.Types.ObjectId[];
-  activity: {
-    total_follower: number;
+  activities: {
+    totalFollowerCount: number;
   };
 }
 
@@ -18,7 +18,7 @@ const musicianSchema = new mongoose.Schema<MusicianDocument>(
     name: { type: String, required: true },
     roles: { type: [String], required: true },
     bio: { type: String },
-    cover_image: {
+    coverImage: {
       type: String,
       default:
         "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-album-image.png",
@@ -33,8 +33,8 @@ const musicianSchema = new mongoose.Schema<MusicianDocument>(
       ref: "User",
       index: true,
     },
-    activity: {
-      total_follower: { type: Number, default: 0 },
+    activities: {
+      totalFollowerCount: { type: Number, default: 0 },
     },
   },
   { timestamps: true }

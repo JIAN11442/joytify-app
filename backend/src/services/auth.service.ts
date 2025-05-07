@@ -1,3 +1,4 @@
+import _ from "lodash";
 import * as admin from "firebase-admin";
 
 import UserModel from "../models/user.model";
@@ -18,7 +19,7 @@ type AuthServiceRequest = {
   email: string;
   password?: string;
   userAgent?: string;
-  profile_img?: string;
+  profileImage?: string;
   authForThirdParty?: boolean;
   firebaseUID?: string;
 };
@@ -46,8 +47,8 @@ export const createAccount = async (data: CreateAccountServiceRequest) => {
     email: data.email,
     username: data.email.split("@")[0],
     password: data.password,
-    profile_img: data.profile_img,
-    auth_for_third_party: data.authForThirdParty,
+    profileImage: data.profileImage,
+    authForThirdParty: data.authForThirdParty,
     verified: true,
   });
 
@@ -72,7 +73,10 @@ export const createAccount = async (data: CreateAccountServiceRequest) => {
   const refreshToken = signToken({ sessionId: session.id }, RefreshTokenSignOptions);
 
   // sign user preferences
-  const ui_prefs = signToken(user.toObject().user_preferences, UserPreferenceSignOptions);
+  const ui_prefs = signToken(
+    _.omit(user.toObject().userPreferences, "notifications"),
+    UserPreferenceSignOptions
+  );
 
   // return user and tokens
   return { user: user.omitPassword(), accessToken, refreshToken, ui_prefs };
@@ -88,7 +92,7 @@ export const loginUser = async (data: LoginServiceRequest) => {
   if (!data.authForThirdParty) {
     // if user is registered with third-party service, but try to login with password
     appAssert(
-      !user.auth_for_third_party,
+      !user.authForThirdParty,
       FORBIDDEN,
       "This account was registered using a third-party service. Please log in with related service to access the account."
     );
@@ -135,8 +139,11 @@ export const loginUser = async (data: LoginServiceRequest) => {
   // sign refresh token
   const refreshToken = signToken({ sessionId: session.id }, RefreshTokenSignOptions);
 
+  // only get sidebarCollapsed and locale to sign jwt
+  const { sidebarCollapsed, locale } = user.toObject().userPreferences;
+
   // sign user preferences
-  const ui_prefs = signToken(user.toObject().user_preferences, UserPreferenceSignOptions);
+  const ui_prefs = signToken({ sidebarCollapsed, locale }, UserPreferenceSignOptions);
 
   // return tokens
   return { accessToken, refreshToken, ui_prefs };
@@ -250,7 +257,7 @@ export const loginUserWithThirdParty = async (token: string) => {
 
   // if those user is exist but not auth for third party
   appAssert(
-    user.auth_for_third_party,
+    user.authForThirdParty,
     FORBIDDEN,
     "This account was registered without using third-party service. Please log in with password to access the account.",
     INVALID_FIREBASE_CREDENTIAL,
@@ -278,7 +285,7 @@ export const registerUserWithThirdParty = async (token: string) => {
   const { user, accessToken, refreshToken, ui_prefs } = await createAccount({
     email,
     password: "",
-    profile_img: generatePicture,
+    profileImage: generatePicture,
     authForThirdParty: true,
     firebaseUID: uid,
   });
