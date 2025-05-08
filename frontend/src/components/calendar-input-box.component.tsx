@@ -4,6 +4,11 @@ import { IntlShape } from "react-intl";
 
 interface CalendarInputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
+  datePlaceholder?: {
+    day?: string;
+    month?: string;
+    year?: string;
+  };
   intl?: IntlShape;
   tw?: {
     input?: string;
@@ -43,17 +48,22 @@ const getMonthName = (month: string, monthMap: Record<string, string>) => {
 };
 
 const CalendarInputBox = forwardRef<HTMLInputElement, CalendarInputBoxProps>(
-  ({ title, intl, onChange, disabled, name, defaultValue = "", ...props }, ref) => {
+  (
+    { title, datePlaceholder, intl, onChange, disabled, name, defaultValue = "", ...props },
+    ref
+  ) => {
     const [date, setDate] = useState<DateType>({ day: "", month: "", year: "" });
 
     // memoized month map
     const monthMap = useMemo(() => {
-      return Object.fromEntries(
-        Object.entries(MONTH_MAP).map(([key, value]) => [
-          intl?.formatMessage({ id: `month.${key}` }),
-          value,
-        ])
-      );
+      return intl
+        ? Object.fromEntries(
+            Object.entries(MONTH_MAP).map(([key, value]) => [
+              intl?.formatMessage({ id: `month.${key}` }),
+              value,
+            ])
+          )
+        : MONTH_MAP;
     }, [intl, MONTH_MAP]);
 
     // memoized options
@@ -78,7 +88,7 @@ const CalendarInputBox = forwardRef<HTMLInputElement, CalendarInputBoxProps>(
     const computedISODate = useMemo(() => {
       const { day, month, year } = date;
       if (day && month && year) {
-        return `${year}-${monthMap[month]}-${day.padStart(2, "0")}`;
+        return `${year}-${monthMap[month as keyof typeof monthMap]}-${day.padStart(2, "0")}`;
       }
       return "";
     }, [monthMap, date]);
@@ -125,7 +135,7 @@ const CalendarInputBox = forwardRef<HTMLInputElement, CalendarInputBoxProps>(
 
         <div className="flex gap-2 items-center justify-evenly">
           <SingleSelectInputBox
-            placeholder="DD"
+            placeholder={datePlaceholder?.day ?? "DD"}
             defaultValue={defaultDate.day}
             options={DAYS}
             filterMode="starts-with"
@@ -135,7 +145,7 @@ const CalendarInputBox = forwardRef<HTMLInputElement, CalendarInputBoxProps>(
           />
 
           <SingleSelectInputBox
-            placeholder="MM"
+            placeholder={datePlaceholder?.month ?? "MM"}
             defaultValue={defaultDate.month}
             options={MONTHS}
             filterMode="starts-with"
@@ -145,7 +155,7 @@ const CalendarInputBox = forwardRef<HTMLInputElement, CalendarInputBoxProps>(
           />
 
           <SingleSelectInputBox
-            placeholder="YYYY"
+            placeholder={datePlaceholder?.year ?? "YYYY"}
             defaultValue={defaultDate.year}
             options={YEARS}
             filterMode="starts-with"

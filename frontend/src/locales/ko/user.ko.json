@@ -1,0 +1,8 @@
+{
+  "user.entry.menu.profile": "내 정보",
+  "user.entry.menu.setting": "설정",
+  "user.entry.menu.logout": "로그아웃",
+  "user.entry.menu.deregister": "계정 삭제",
+  "user.entry.button.signUp": "회원가입",
+  "user.entry.button.signIn": "로그인"
+}

@@ -6,6 +6,8 @@ import policyJSON from "./policy.en-US.json";
 import settingsJSON from "./settings.en-US.json";
 import toastJSON from "./toast.en-US.json";
 import commonJSON from "./common.en-US.json";
+import userJSON from "./user.en-US.json";
+import songJSON from "./song.en-US.json";
 
 const modules = [
   authJSON,
@@ -16,6 +18,8 @@ const modules = [
   settingsJSON,
   toastJSON,
   commonJSON,
+  userJSON,
+  songJSON,
 ];
 
 export default Object.assign({}, ...modules);

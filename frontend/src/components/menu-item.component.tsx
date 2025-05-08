@@ -18,7 +18,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ icon, label, to, className, ...prop
   const twMergeClass = twMerge(`menu-btn py-2`, className);
   const menuContent = (
     <>
-      {icon && <Icon name={icon.name} opts={{ size: 16, ...icon.opts }} />}
+      {icon && <Icon name={icon.name} opts={{ size: 16, ...icon.opts }} className={`shrink-0`} />}
       {label && <p>{label}</p>}
     </>
   );

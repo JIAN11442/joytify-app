@@ -21,6 +21,10 @@
   "month.November": "11月",
   "month.December": "12月",
 
+  "date.format.year": "年",
+  "date.format.month": "月",
+  "date.format.day": "日",
+
   "country.AF": "アフガニスタン",
   "country.AX": "オーランド諸島",
   "country.AL": "アルバニア",

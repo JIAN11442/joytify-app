@@ -1,0 +1,8 @@
+{
+  "user.entry.menu.profile": "マイページ",
+  "user.entry.menu.setting": "設定",
+  "user.entry.menu.logout": "ログアウト",
+  "user.entry.menu.deregister": "アカウント削除",
+  "user.entry.button.signUp": "サインアップ",
+  "user.entry.button.signIn": "サインイン"
+}

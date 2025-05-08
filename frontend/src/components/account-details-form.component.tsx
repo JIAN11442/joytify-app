@@ -26,6 +26,7 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({ profileUser }) 
   const { fm, intl } = useScopedIntl();
   const genderFm = fm("gender");
   const countryFm = fm("country");
+  const dateFormatFm = fm("date.format");
   const settingsAccountFm = fm("settings.account");
 
   const { gender, country, dateOfBirth } = profileUser.personalInfo ?? {};
@@ -182,6 +183,11 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({ profileUser }) 
       {/* Date of birth */}
       <CalendarInputBox
         title={settingsAccountFm("dateOfBirth.title")}
+        datePlaceholder={{
+          day: dateFormatFm("day"),
+          month: dateFormatFm("month"),
+          year: dateFormatFm("year"),
+        }}
         defaultValue={defaultDateOfBirth}
         intl={intl}
         disabled={isPending}

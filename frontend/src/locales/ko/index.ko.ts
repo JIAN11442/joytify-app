@@ -6,6 +6,8 @@ import policyJSON from "./policy.ko.json";
 import settingsJSON from "./settings.ko.json";
 import toastJSON from "./toast.ko.json";
 import commonJSON from "./common.ko.json";
+import userJSON from "./user.ko.json";
+import songJSON from "./song.ko.json";
 
 const modules = [
   authJSON,
@@ -16,6 +18,8 @@ const modules = [
   settingsJSON,
   toastJSON,
   commonJSON,
+  userJSON,
+  songJSON,
 ];
 
 export default Object.assign({}, ...modules);

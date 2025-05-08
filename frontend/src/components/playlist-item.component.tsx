@@ -43,6 +43,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
             ? "p-0 hover:opacity-80"
             : `p-2 ${!isActive && "pl-0 hover:pl-2"}`
         }
+        items-center
         rounded-md
         transition-all
       `}

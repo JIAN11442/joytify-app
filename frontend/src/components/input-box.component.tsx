@@ -3,6 +3,7 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { IoEye, IoEyeOff } from "react-icons/io5";
+import { LuUpload } from "react-icons/lu";
 import { IconBaseProps } from "react-icons";
 
 import Icon, { IconName } from "./react-icons.component";
@@ -32,6 +33,7 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
     {
       title,
       icon,
+      placeholder,
       formMethods,
       syncWithOtherInput,
       toArray = false,
@@ -56,10 +58,8 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
 
     const [inputVal, setInputVal] = useState<string>("");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [isFileSelected, setIsFileSelected] = useState(false);
     const [isSyncChecked, setIsSyncChecked] = useState(false);
 
-    // switch password visibility
     const handleSwitchPasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       timeoutForDelay(() => {
@@ -67,13 +67,10 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
       });
     };
 
-    // handle the file onchange
     const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files?.length;
       const value = e.target.value;
 
       setInputVal(value);
-      setIsFileSelected(!!files);
 
       onChange?.(e);
     };
@@ -84,7 +81,6 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
       setIsSyncChecked(!!checked);
     };
 
-    // handle input keydown
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       timeoutForDelay(() => {
         if (onKeyDown) {
@@ -93,7 +89,6 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
       });
     };
 
-    // handle input on blur
     const handleInputOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       timeoutForDelay(() => {
         formatAndSetFormValue(inputVal);
@@ -204,29 +199,79 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
 
         {/* input */}
         <div className={`relative`}>
-          <input
-            name={name}
-            ref={mergeRefs(ref, inputRef)}
-            type={type === "password" ? (isPasswordVisible ? "text" : "password") : type}
-            disabled={disabled}
-            onChange={(e) => handleInputOnChange(e)}
-            onKeyDown={(e) => handleInputKeyDown(e)}
-            onBlur={(e) => handleInputOnBlur(e)}
-            required={required}
-            readOnly={isSyncChecked}
-            className={twMerge(
-              `
+          {type === "file" ? (
+            // custom file input
+            <label
+              className={`
+                group
+                flex
+                flex-col
+                gap-1
+                cursor-pointer
+            `}
+            >
+              <div
+                className={twMerge(
+                  `
+                  input-box
+                  flex
+                  items-center
+                  justify-between
+                `,
+                  className
+                )}
+              >
+                <span
+                  className={` 
+                    truncate
+                    ${!inputVal && "text-grey-custom/30"}
+                  `}
+                >
+                  {inputVal || placeholder}
+                </span>
+                <Icon
+                  name={LuUpload}
+                  opts={{ size: 15 }}
+                  className={`text-blue-500/50 group-hover:text-blue-400 transition-all`}
+                />
+              </div>
+              <input
+                name={name}
+                ref={mergeRefs(ref, inputRef)}
+                type="file"
+                disabled={disabled}
+                onChange={(e) => handleInputOnChange(e)}
+                onKeyDown={(e) => handleInputKeyDown(e)}
+                onBlur={(e) => handleInputOnBlur(e)}
+                required={required}
+                readOnly={isSyncChecked}
+                className={`hidden`}
+                {...props}
+              />
+            </label>
+          ) : (
+            // other type input
+            <input
+              name={name}
+              placeholder={placeholder}
+              ref={mergeRefs(ref, inputRef)}
+              type={type === "password" ? (isPasswordVisible ? "text" : "password") : type}
+              disabled={disabled}
+              onChange={(e) => handleInputOnChange(e)}
+              onKeyDown={(e) => handleInputKeyDown(e)}
+              onBlur={(e) => handleInputOnBlur(e)}
+              required={required}
+              readOnly={isSyncChecked}
+              className={twMerge(
+                `
                 input-box
                 ${icon && "pl-[3.5rem]"}
-                ${
-                  type === "file" &&
-                  ` ${isFileSelected ? "text-grey-custom/80" : "text-grey-custom/30"}`
-                }
               `,
-              className
-            )}
-            {...props}
-          />
+                className
+              )}
+              {...props}
+            />
+          )}
 
           {/* input icon */}
           {icon && (

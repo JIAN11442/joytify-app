@@ -28,6 +28,7 @@ import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { getLabelOptions } from "../utils/get-label-options.util";
 import { validateDate } from "../utils/validate-date.util";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 type WarningState = {
   active: boolean;
@@ -35,6 +36,11 @@ type WarningState = {
 };
 
 const UploadModal = () => {
+  const { fm, intl } = useScopedIntl();
+  const songUploadModalFm = fm("song.upload.modal");
+  const songInputTargetFm = fm("song.input.target");
+  const dateFormatFm = fm("date.format");
+
   const submitBtnRef = useRef<HTMLButtonElement>(null);
   const [visibleWarning, setVisibleWarning] = useState<WarningState>({
     active: false,
@@ -52,14 +58,12 @@ const UploadModal = () => {
     setActiveAdvancedSettings,
     setActiveCreatePlaylistModal,
   } = useUploadModalState();
-
   const { userPlaylists } = usePlaylistState();
-
-  const { albums } = useGetAlbumsQuery();
 
   const { LANGUAGE, GENRE, TAG } = LabelOptions;
   const { GET_UPLOAD_SONG_LABELS } = QueryKey;
 
+  const { albums } = useGetAlbumsQuery();
   const { labels, refetch: labelRefetch } = useGetLabelsQuery(GET_UPLOAD_SONG_LABELS, [
     LANGUAGE,
     GENRE,
@@ -147,10 +151,16 @@ const UploadModal = () => {
   });
 
   const warningContent = () => {
+    if (!visibleWarning.active) return null;
+
     return (
       <span>
-        If there is more than one {visibleWarning.target}, please separate them with a comma.{" "}
-        <span className={`font-extrabold text-orange-400`}>[e.g., John, Jason]</span>
+        {songUploadModalFm("warning.content.1", {
+          target: songInputTargetFm(`${visibleWarning.target}`),
+        })}
+        <span className={`font-extrabold text-orange-400`}>
+          [{songUploadModalFm("warning.content.2")}]
+        </span>
       </span>
     );
   };
@@ -188,8 +198,8 @@ const UploadModal = () => {
 
   return (
     <Modal
-      title="Add a song"
-      description="upload an mp3 file"
+      title={songUploadModalFm("title")}
+      description={songUploadModalFm("description")}
       activeState={activeUploadModal}
       closeModalFn={!isPending ? handleCloseUploadModal : undefined}
       autoCloseModal={
@@ -214,6 +224,7 @@ const UploadModal = () => {
       {/* upload song form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
+        // noValidate
         className={`
           flex
           flex-col
@@ -252,7 +263,7 @@ const UploadModal = () => {
             flex
             flex-col
             w-full
-            gap-4
+            gap-5
           `}
         >
           {/* Basic setting */}
@@ -267,8 +278,8 @@ const UploadModal = () => {
             {/* Song title */}
             <InputBox
               type="text"
-              title="Enter a song title"
-              placeholder="Song title"
+              title={songUploadModalFm("basic.title.label")}
+              placeholder={songUploadModalFm("basic.title.placeholder")}
               disabled={isPending}
               required
               {...register("title", { required: true })}
@@ -277,8 +288,8 @@ const UploadModal = () => {
             {/* Song artist */}
             <InputBox
               type="text"
-              title="Enter song artist"
-              placeholder="Song artist"
+              title={songUploadModalFm("basic.artist.title")}
+              placeholder={songUploadModalFm("basic.artist.placeholder")}
               disabled={isPending}
               required
               {...register("artist", { required: true })}
@@ -288,17 +299,17 @@ const UploadModal = () => {
             <InputBox
               type="file"
               accept=".mp3"
-              title="Select a song file (*.mp3)"
+              title={songUploadModalFm("basic.songFile.title")}
+              placeholder={songUploadModalFm("basic.songFile.placeholder")}
               disabled={isPending}
-              className={`p-3`}
               required
               {...register("songFile", { required: true })}
             />
 
             {/* Song Playlist */}
             <SelectInputBox
-              title="Select a playlist"
-              placeholder="Click to choose a playlist"
+              title={songUploadModalFm("basic.playlist.title")}
+              placeholder={songUploadModalFm("basic.playlist.placeholder")}
               formMethods={formMethods}
               options={playlistOptions}
               createNewFn={handleActiveCreatePlaylistModal}
@@ -312,7 +323,7 @@ const UploadModal = () => {
             />
           </div>
 
-          {/* Advance setting button */}
+          {/* Advanced setting button */}
           {!activeAdvancedSettings && (
             <div
               className={`
@@ -338,12 +349,12 @@ const UploadModal = () => {
                 `}
               >
                 <Icon name={FaCircleInfo} />
-                <p>Advance Settings</p>
+                <p>{songUploadModalFm("advanced.title")}</p>
               </button>
             </div>
           )}
 
-          {/* Advance setting */}
+          {/* Advanced setting */}
           <AnimationWrapper
             key="advance-setting"
             visible={activeAdvancedSettings}
@@ -354,11 +365,12 @@ const UploadModal = () => {
                ${activeAdvancedSettings && "md:grid md:grid-cols-2"}
             `}
           >
-            {/* Song cover art file */}
+            {/* Song image file */}
             <InputBox
               type="file"
               accept=".png, .jpg, .jpeg"
-              title="Select an image file (*.png)"
+              title={songUploadModalFm("advanced.imageFile.title")}
+              placeholder={songUploadModalFm("advanced.imageFile.placeholder")}
               disabled={isPending}
               {...normalizeRegister("imageFile")}
             />
@@ -366,8 +378,8 @@ const UploadModal = () => {
             {/* Song lyricist */}
             <InputBox
               type="text"
-              title="Enter song lyricist"
-              placeholder="Song lyricist"
+              title={songUploadModalFm("advanced.lyricist.title")}
+              placeholder={songUploadModalFm("advanced.lyricist.placeholder")}
               formMethods={formMethods}
               disabled={isPending}
               toArray={true}
@@ -377,8 +389,8 @@ const UploadModal = () => {
             {/* Song composer */}
             <InputBox
               type="text"
-              title="Enter song composer"
-              placeholder="Song composer"
+              title={songUploadModalFm("advanced.composer.title")}
+              placeholder={songUploadModalFm("advanced.composer.placeholder")}
               syncWithOtherInput={{
                 active: !!watch("lyricists")?.length,
                 syncVal: watch("lyricists"),
@@ -391,8 +403,8 @@ const UploadModal = () => {
 
             {/* Album */}
             <SingleSelectInputBox
-              title="Select an album"
-              placeholder="Click to choose an album"
+              title={songUploadModalFm("advanced.album.title")}
+              placeholder={songUploadModalFm("advanced.album.placeholder")}
               formMethods={formMethods}
               options={albumOptions}
               createNewFn={handleActiveCreateAlbumModal}
@@ -405,8 +417,8 @@ const UploadModal = () => {
             {/* Language */}
             <MultiSelectInputBox
               id="language"
-              title="Select language(s) for the song"
-              placeholder="Click to choose song language"
+              title={songUploadModalFm("advanced.language.title")}
+              placeholder={songUploadModalFm("advanced.language.placeholder")}
               formMethods={formMethods}
               options={getLabelOptions(labels, LANGUAGE)}
               deleteOptFn={removeLabelFn}
@@ -419,8 +431,8 @@ const UploadModal = () => {
             {/* Genres */}
             <MultiSelectInputBox
               id="genre"
-              title="Select genre(s) for the song"
-              placeholder="Click to choose song genre"
+              title={songUploadModalFm("advanced.genre.title")}
+              placeholder={songUploadModalFm("advanced.genre.placeholder")}
               formMethods={formMethods}
               options={getLabelOptions(labels, GENRE)}
               deleteOptFn={removeLabelFn}
@@ -433,8 +445,8 @@ const UploadModal = () => {
             {/* Tags */}
             <MultiSelectInputBox
               id="tag"
-              title="Select tag(s) for the song"
-              placeholder="Click to choose song tags"
+              title={songUploadModalFm("advanced.tag.title")}
+              placeholder={songUploadModalFm("advanced.tag.placeholder")}
               formMethods={formMethods}
               options={getLabelOptions(labels, TAG)}
               deleteOptFn={removeLabelFn}
@@ -446,7 +458,13 @@ const UploadModal = () => {
 
             {/* Release Date */}
             <CalendarInputBox
-              title="Release Date"
+              title={songUploadModalFm("advanced.releaseDate.title")}
+              datePlaceholder={{
+                day: dateFormatFm("day"),
+                month: dateFormatFm("month"),
+                year: dateFormatFm("year"),
+              }}
+              intl={intl}
               disabled={isPending}
               {...normalizeRegister("releaseDate", {
                 validate: (val) => {
@@ -479,7 +497,11 @@ const UploadModal = () => {
               outline-none
             `}
           >
-            {isPending ? <Loader loader={{ size: 20 }} /> : "Create Song"}
+            {isPending ? (
+              <Loader loader={{ size: 20 }} />
+            ) : (
+              songUploadModalFm("advanced.button.submit")
+            )}
           </button>
         </div>
       </form>

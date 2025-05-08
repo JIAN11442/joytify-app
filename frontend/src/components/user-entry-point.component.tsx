@@ -5,6 +5,7 @@ import { IoIosPower, IoMdLogOut } from "react-icons/io";
 import AvatarMenu from "./avatar-menu.component";
 import MenuItem from "./menu-item.component";
 
+import { useScopedIntl } from "../hooks/intl.hook";
 import { useLogoutMutation } from "../hooks/auth-mutate.hook";
 import { useGetProfileUserInfoQuery } from "../hooks/user-query.hook";
 import { AuthForOptions } from "@joytify/shared-types/constants";
@@ -15,6 +16,9 @@ import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const UserEntryPoint = () => {
+  const { fm } = useScopedIntl();
+  const userEntryFm = fm("user.entry");
+
   const { openAuthModal } = useAuthModalState();
   const { authUser, activeUserMenu, setActiveUserMenu } = useUserState();
   const { openAccountDerergistrationModal } = useSettingsState();
@@ -51,10 +55,26 @@ const UserEntryPoint = () => {
             setActiveMenu: setActiveUserMenu,
           }}
         >
-          <MenuItem to={`/profile/${authUser._id}`} icon={{ name: BiUser }} label="profile" />
-          <MenuItem to={"/settings/account"} icon={{ name: IoSettingsOutline }} label="setting" />
-          <MenuItem onClick={handleLogoutUser} icon={{ name: IoIosPower }} label="logout" />
-          <MenuItem onClick={handleDeregisterUser} icon={{ name: IoMdLogOut }} label="deregister" />
+          <MenuItem
+            to={`/profile/${authUser._id}`}
+            icon={{ name: BiUser }}
+            label={userEntryFm("menu.profile")}
+          />
+          <MenuItem
+            to={"/settings/account"}
+            icon={{ name: IoSettingsOutline }}
+            label={userEntryFm("menu.setting")}
+          />
+          <MenuItem
+            onClick={handleLogoutUser}
+            icon={{ name: IoIosPower }}
+            label={userEntryFm("menu.logout")}
+          />
+          <MenuItem
+            onClick={handleDeregisterUser}
+            icon={{ name: IoMdLogOut }}
+            label={userEntryFm("menu.deregister")}
+          />
         </AvatarMenu>
       ) : (
         // Sign up and login button
@@ -78,7 +98,7 @@ const UserEntryPoint = () => {
               transition
             `}
           >
-            Sign up
+            {userEntryFm("button.signUp")}
           </button>
 
           {/* login button */}
@@ -87,7 +107,7 @@ const UserEntryPoint = () => {
             onClick={() => handleActiveAuthModal(AuthForOptions.SIGN_IN)}
             className={`auth-btn`}
           >
-            Log in
+            {userEntryFm("button.signIn")}
           </button>
         </div>
       )}

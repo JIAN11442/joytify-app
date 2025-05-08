@@ -21,6 +21,10 @@
   "month.November": "November",
   "month.December": "Disember",
 
+  "date.format.year": "YYYY",
+  "date.format.month": "MM",
+  "date.format.day": "DD",
+
   "country.AF": "Afghanistan",
   "country.AX": "Kepulauan Aland",
   "country.AL": "Albania",

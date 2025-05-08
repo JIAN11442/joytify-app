@@ -1,0 +1,8 @@
+{
+  "user.entry.menu.profile": "個人中心",
+  "user.entry.menu.setting": "設定",
+  "user.entry.menu.logout": "登出",
+  "user.entry.menu.deregister": "刪除帳號",
+  "user.entry.button.signUp": "註冊",
+  "user.entry.button.signIn": "登入"
+}
