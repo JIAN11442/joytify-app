@@ -1,8 +1,11 @@
+import { twMerge } from "tailwind-merge";
 import { useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
+
 import AnimationWrapper from "./animation-wrapper.component";
 import TermsAgreementLabel from "./terms-agreement-label.component";
+import { useScopedIntl } from "../hooks/intl.hook";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { twMerge } from "tailwind-merge";
 
 export type TermsChecked = {
   understandTerms: boolean;
@@ -10,6 +13,7 @@ export type TermsChecked = {
 };
 
 type AccountDeregistrationAgreementProps = {
+  isPending: boolean;
   onTermsChange?: (state: TermsChecked) => void;
   className?: string;
   tw?: {
@@ -22,10 +26,15 @@ type AccountDeregistrationAgreementProps = {
 };
 
 const AccountDeregistrationAgreement = ({
+  isPending,
   onTermsChange,
   className,
   tw,
 }: AccountDeregistrationAgreementProps) => {
+  const { fm } = useScopedIntl();
+  const prefix = "settings.account.deregistration.agreement";
+  const deregistrationAgreementFm = fm(prefix);
+
   const [termsChecked, setTermsChecked] = useState<TermsChecked>({
     understandTerms: false,
     agreeToTerms: false,
@@ -42,6 +51,11 @@ const AccountDeregistrationAgreement = ({
         return newState;
       });
     });
+  };
+
+  const termsAgreementLabelTw = {
+    label: twMerge(`mb-0 ${isPending ? "no-hover opacity-80" : "hover:bg-red-400/10"}`, tw?.label),
+    input: twMerge(`accent-red-500`, tw?.input),
   };
 
   // initialize terms checked state
@@ -67,81 +81,70 @@ const AccountDeregistrationAgreement = ({
         className
       )}
     >
+      {/* title */}
       <p
         className={twMerge(
           `
-          text-[14px] 
+          text-[14px]
           text-red-500
           font-bold
           `,
           tw?.title
         )}
       >
-        * Terms of Agreement
+        {deregistrationAgreementFm("title")}
       </p>
 
-      {/* terms of agreement */}
+      {/* terms of agreement 1 */}
       <TermsAgreementLabel
         checked={termsChecked.understandTerms}
+        disabled={isPending}
         onChange={() => handleCheckboxChange("understandTerms")}
-        tw={{
-          label: twMerge(`mb-0 hover:bg-red-400/10`, tw?.label),
-          input: twMerge(`accent-red-500`, tw?.input),
-        }}
+        tw={termsAgreementLabelTw}
       >
-        <span className={`text-sm text-neutral-300`}>
-          <span>
-            I understand that this operation will{" "}
-            <strong className={twMerge(`text-red-400`, tw?.strong)}>
-              permanently delete the account and all associated data
-            </strong>
-            , including:
-          </span>
-
-          <ul className={`list-disc mt-2 ml-10`}>
-            <li>Personal information and credentials</li>
-            <li>Playback history and statistics</li>
-          </ul>
+        <span className="text-sm text-neutral-300">
+          <FormattedMessage
+            id={`${prefix}.1`}
+            values={{
+              strong: (chunks) => <strong className="text-red-400">{chunks}</strong>,
+              ul: (chunks) => <ul className="list-disc mt-2 ml-10">{chunks}</ul>,
+              li: (chunks) => <li>{chunks}</li>,
+            }}
+          />
         </span>
       </TermsAgreementLabel>
 
+      {/* terms of agreement 2 */}
       <TermsAgreementLabel
         checked={termsChecked.agreeToTerms}
+        disabled={isPending}
         onChange={() => handleCheckboxChange("agreeToTerms")}
-        tw={{
-          label: twMerge(`mb-0 hover:bg-red-400/10`, tw?.label),
-          input: twMerge(`accent-red-500`, tw?.input),
-        }}
+        tw={termsAgreementLabelTw}
       >
         <span className={`text-sm text-neutral-300`}>
-          I have read and agree to the{" "}
-          <a
-            href="/policies/account-deregistration"
-            target="_blank"
-            className={twMerge(
-              `
-                text-red-400 
-                hover:text-red-300
-                underline
-                transition-all
-              `,
-              tw?.href
-            )}
-          >
-            account deregistration policy
-          </a>{" "}
-          and conditions and confirm that all data will be{" "}
-          <strong
-            className={twMerge(
-              `
-                text-red-400
-                font-medium
-              `,
-              tw?.strong
-            )}
-          >
-            completely deleted
-          </strong>
+          <FormattedMessage
+            id={`${prefix}.2`}
+            values={{
+              a: (chunks) => (
+                <a
+                  href="/policies/account-deregistration"
+                  target="_blank"
+                  className={twMerge(
+                    `
+                      text-red-400 
+                      hover:text-red-300
+                      underline
+                      transition-all
+                    `,
+                    tw?.href
+                  )}
+                >
+                  {chunks}
+                </a>
+              ),
+              strong: (chunks) => <strong className="text-red-400 font-medium">{chunks}</strong>,
+            }}
+          />
         </span>
       </TermsAgreementLabel>
     </AnimationWrapper>

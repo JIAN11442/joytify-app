@@ -7,13 +7,16 @@ import { defaultCreateLabelData } from "../constants/form.constant";
 import { DefaultCreateLabelForm } from "../types/form.type";
 import useUploadModalState from "../states/upload-modal.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 const CreateLabelModal = () => {
+  const { fm } = useScopedIntl();
+  const createOptionTypeFm = fm("song.create.option.type");
+
   const { activeCreateLabelModal, closeCreateLabelModal } = useUploadModalState();
   const { active, options } = activeCreateLabelModal;
   const { type } = options as OptionType;
 
-  // handle close modal
   const handleCloseModal = () => {
     timeoutForDelay(() => {
       closeCreateLabelModal();
@@ -42,7 +45,7 @@ const CreateLabelModal = () => {
 
   return (
     <CreateOptionModal
-      type="label"
+      type={createOptionTypeFm("label")}
       active={active}
       closeModalFn={handleCloseModal}
       autoCloseModal={false}

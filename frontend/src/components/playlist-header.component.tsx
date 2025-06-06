@@ -2,6 +2,7 @@ import { twMerge } from "tailwind-merge";
 
 import ImageLabel from "./image-label.component";
 
+import { useScopedIntl } from "../hooks/intl.hook";
 import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
 import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
@@ -16,6 +17,10 @@ type PlaylistHeaderProps = {
 
 const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ playlist, className }) => {
   const { _id: playlistId, title, songs, description, coverImage, default: isDefault } = playlist;
+
+  const { fm } = useScopedIntl();
+  const playlistItemFm = fm("playlist.item");
+  const playlistBannerSectionFm = fm("playlist.banner.section");
 
   const { setActivePlaylistEditModal } = usePlaylistState();
   const { collapseSideBarState } = useSidebarState();
@@ -69,13 +74,11 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ playlist, className }) 
       >
         {/* type */}
         <p>
-          <span>Playlist</span>
-          {description && (
-            <>
-              <span> · </span>
-              <span>{songs.length} songs</span>
-            </>
-          )}
+          {playlistBannerSectionFm("type", {
+            type: playlistItemFm("type"),
+            separator: description ? " · " : "",
+            description: description ? playlistItemFm("songs.count", { count: songs.length }) : "",
+          })}
         </p>
 
         {/* title */}
@@ -98,18 +101,9 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ playlist, className }) 
         </button>
 
         {/* other - description or songs count */}
-        {description ? (
-          <p
-            className={`
-              text-grey-custom/50
-              line-clamp-1
-            `}
-          >
-            {description}
-          </p>
-        ) : (
-          <p>{songs?.length} songs</p>
-        )}
+        <p className={`text-grey-custom/50 line-clamp-1`}>
+          {description ? description : playlistItemFm("songs.count", { count: songs.length })}
+        </p>
       </div>
     </div>
   );

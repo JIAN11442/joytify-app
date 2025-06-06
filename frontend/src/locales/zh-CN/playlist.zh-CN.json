@@ -1,4 +1,35 @@
 {
-  "playlist.item.content.type": "歌单",
-  "playlist.item.content.songs": "{count} 首歌曲"
+  "playlist.item.type": "歌单",
+  "playlist.item.songs.count": "{count} 首歌曲",
+  "playlist.item.description": "{type} · {count}",
+
+  "playlist.banner.section.type": "{type}{separator}{description}",
+  "playlist.content.songList.header.title": "标题",
+  "playlist.content.songList.header.artist": "艺人",
+  "playlist.content.songList.header.album": "专辑",
+  "playlist.content.songList.header.date": "创建日期",
+
+  "playlist.menu.action.editDetails": "编辑信息",
+  "playlist.menu.action.deletePlaylist": "删除播放列表",
+  "playlist.menu.action.makePrivate": "设为私密",
+  "playlist.menu.action.makePublic": "设为公开",
+  "playlist.menu.layout.title": "查看方式",
+  "playlist.menu.layout.grid": "网格",
+  "playlist.menu.layout.list": "列表",
+  "playlist.menu.layout.compact": "简洁",
+
+  "playlist.edit.modal.title": "编辑播放列表",
+  "playlist.edit.modal.input.title.placeholder": "名称",
+  "playlist.edit.modal.input.description.placeholder": "说明",
+  "playlist.edit.modal.input.button.submit": "保存更改",
+
+  "playlist.delete.modal.warning.text": "将从你的音乐库中删除播放列表 <strong>{playlist}</strong>（此操作执行后将无法再恢复数据）。{additionalWarning}",
+  "playlist.delete.modal.warning.additional.text": "另外，你可以选择將該播放列表中的所有歌曲转移到其他播放列表，或直接删除而不转移。",
+  "playlist.delete.modal.select.input.placeholder": "选择要转移的播放列表",
+  "playlist.delete.modal.execute.button.delete": "删除",
+
+  "playlist.privacy.modal.warning.text": "歌单 <strong>{playlist}</strong> 将被设为私密（其他用户无法查看且会从你个人主页中隐藏）。当然，你可以随时将其重新公开。",
+  "playlist.privacy.modal.execute.button.submit": "设为私密",
+
+  "playlist.warning.content.reject.button.cancel": "取消"
 }

@@ -1,8 +1,9 @@
 import { forwardRef, useState } from "react";
 import { BsFillSendFill } from "react-icons/bs";
 import Modal from "./modal.component";
-import InputBox from "./input-box.component";
 import Icon from "./react-icons.component";
+import InputBox from "./input-box.component";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 interface ModalProps extends React.InputHTMLAttributes<HTMLInputElement> {
   type: string;
@@ -28,6 +29,9 @@ const CreateOptionModal = forwardRef<HTMLInputElement, ModalProps>(
     },
     ref
   ) => {
+    const { fm } = useScopedIntl();
+    const createOptionFm = fm("song.create.option");
+
     const [inputVal, setInputVal] = useState("");
 
     const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +45,7 @@ const CreateOptionModal = forwardRef<HTMLInputElement, ModalProps>(
 
     return (
       <Modal
-        title={`Create new ${type} option`}
+        title={createOptionFm("modal.title", { type })}
         activeState={active}
         closeModalFn={closeModalFn}
         autoCloseModal={autoCloseModal}
@@ -59,7 +63,7 @@ const CreateOptionModal = forwardRef<HTMLInputElement, ModalProps>(
           <InputBox
             ref={ref}
             value={inputVal}
-            placeholder={`new ${type} option`}
+            placeholder={createOptionFm("modal.placeholder", { type })}
             onChange={(e) => handleInputOnChange(e)}
             className={`pr-[3rem]`}
             {...props}

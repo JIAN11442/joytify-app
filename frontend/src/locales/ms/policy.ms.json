@@ -5,9 +5,7 @@
   "deregistration.policy.effectOfDeletion.title": "Kesan Pemadaman",
   "deregistration.policy.effectOfDeletion.description.1": "Maklumat peribadi dan kelayakan (termasuk emel, nama pengguna dan peranti yang dipautkan) akan dipadam secara kekal.",
   "deregistration.policy.effectOfDeletion.description.2": "Rekod platform (termasuk lagu, senarai main, album, label dan sejarah main balik) akan dipadam sepenuhnya.",
-  "deregistration.policy.effectOfDeletion.description.3.1": "Kandungan yang dimuat naik akan dikendalikan mengikut dasar ",
-  "deregistration.policy.effectOfDeletion.description.3.2": "Pengendalian Kandungan Perkongsian",
-  "deregistration.policy.effectOfDeletion.description.3.3": " yang dinyatakan di bawah.",
+  "deregistration.policy.effectOfDeletion.description.3": "Kandungan yang dimuat naik akan dikendalikan mengikut dasar <a>Pengendalian Kandungan Perkongsian</a> yang dinyatakan di bawah.",
   "deregistration.policy.effectOfDeletion.description.4": "Selepas pemadaman, anda tidak lagi boleh log masuk atau mendapatkan semula sebarang data.",
 
   "deregistration.policy.treatmentOfSharedContent.title": "Pengendalian Kandungan Perkongsian",
@@ -27,9 +25,7 @@
 
   "deregistration.policy.confirmationAndAppeal.title": "Pengesahan dan Rayuan",
   "deregistration.policy.confirmationAndAppeal.description.1": "Setelah proses selesai, pengesahan penamatan akan dihantar ke emel yang telah didaftarkan.",
-  "deregistration.policy.confirmationAndAppeal.description.2.1": "Jika anda mempunyai bantahan terhadap proses pemadaman, anda boleh menghantar rayuan dalam tempoh 30 hari melalui emel ke ",
-  "deregistration.policy.confirmationAndAppeal.description.2.2": "joytify35@gmail.com",
-  "deregistration.policy.confirmationAndAppeal.description.2.3": ".",
+  "deregistration.policy.confirmationAndAppeal.description.2": "Jika anda mempunyai bantahan terhadap proses pemadaman, anda boleh menghantar rayuan dalam tempoh 30 hari melalui emel ke <a>{email}</a>.",
 
   "deregistration.policy.lastUpdatedDate": "Tarikh kemas kini terakhir: {date}"
 }

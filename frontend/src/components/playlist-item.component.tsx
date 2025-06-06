@@ -13,7 +13,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
   const { _id, title, coverImage, songs } = playlist;
 
   const { fm } = useScopedIntl();
-  const playlistItemContentFm = fm("playlist.item.content");
+  const playlistItemFm = fm("playlist.item");
   const { collapseSideBarState, activeFloatingSidebar, closeFloatingSidebar } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
 
@@ -75,7 +75,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
           `}
         >
           <p>{title}</p>
-          <div
+          <span
             className={`
               flex
               gap-1
@@ -83,10 +83,11 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
               text-neutral-500
             `}
           >
-            <p>{playlistItemContentFm("type")}</p>
-            <p>•</p>
-            <p>{playlistItemContentFm("songs", { count: songs.length })}</p>
-          </div>
+            {playlistItemFm("description", {
+              type: playlistItemFm("type"),
+              count: playlistItemFm("songs.count", { count: songs.length }),
+            })}
+          </span>
         </div>
       )}
     </NavLink>

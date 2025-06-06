@@ -1,4 +1,35 @@
 {
-  "playlist.item.content.type": "プレイリスト",
-  "playlist.item.content.songs": "{count} 曲"
+  "playlist.item.type": "プレイリスト",
+  "playlist.item.songs.count": "{count} 曲",
+  "playlist.item.description": "{type} · {count}",
+
+  "playlist.banner.section.type": "{type}{separator}{description}",
+  "playlist.content.songList.header.title": "タイトル",
+  "playlist.content.songList.header.artist": "アーティスト",
+  "playlist.content.songList.header.album": "アルバム",
+  "playlist.content.songList.header.date": "作成日",
+
+  "playlist.menu.action.editDetails": "詳細を編集",
+  "playlist.menu.action.deletePlaylist": "プレイリストを削除",
+  "playlist.menu.action.makePrivate": "非公開にする",
+  "playlist.menu.action.makePublic": "公開にする",
+  "playlist.menu.layout.title": "表示形式",
+  "playlist.menu.layout.grid": "グリッド",
+  "playlist.menu.layout.list": "リスト",
+  "playlist.menu.layout.compact": "コンパクト",
+
+  "playlist.edit.modal.title": "プレイリストを編集",
+  "playlist.edit.modal.input.title.placeholder": "名前",
+  "playlist.edit.modal.input.description.placeholder": "説明",
+  "playlist.edit.modal.input.button.submit": "変更を保存",
+
+  "playlist.delete.modal.warning.text": "プレイリスト <strong>{playlist}</strong> はライブラリから削除されます（この操作は取り消せません）。{additionalWarning}",
+  "playlist.delete.modal.warning.additional.text": "このプレイリスト内のすべての曲を別のプレイリストに移動するか、そのまま削除することができます。",
+  "playlist.delete.modal.select.input.placeholder": "移動先のプレイリストを選択",
+  "playlist.delete.modal.execute.button.delete": "削除",
+
+  "playlist.privacy.modal.warning.text": "プレイリスト <strong>{playlist}</strong> は非公開になります（他のユーザーから見えなくなり、あなたのプロフィールからも非表示になります）。もちろん、いつでも再び公開できます。",
+  "playlist.privacy.modal.execute.button.submit": "非公開にする",
+
+  "playlist.warning.content.reject.button.cancel": "キャンセル"
 }

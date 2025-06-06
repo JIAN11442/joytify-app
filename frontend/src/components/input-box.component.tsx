@@ -207,7 +207,7 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
                 flex
                 flex-col
                 gap-1
-                cursor-pointer
+                ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
             `}
             >
               <div
@@ -224,7 +224,7 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
                 <span
                   className={` 
                     truncate
-                    ${!inputVal && "text-grey-custom/30"}
+                    ${(!inputVal || disabled) && "text-grey-custom/30"}
                   `}
                 >
                   {inputVal || placeholder}
@@ -232,7 +232,14 @@ const InputBox = forwardRef<HTMLInputElement, InputProps>(
                 <Icon
                   name={LuUpload}
                   opts={{ size: 15 }}
-                  className={`text-blue-500/50 group-hover:text-blue-400 transition-all`}
+                  className={`
+                    ${
+                      disabled
+                        ? "text-grey-custom/30"
+                        : "text-blue-500/50 group-hover:text-blue-400"
+                    }
+                    transition-all
+                  `}
                 />
               </div>
               <input

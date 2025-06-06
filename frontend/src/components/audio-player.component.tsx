@@ -1,71 +1,29 @@
-import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-
-import AnimationWrapper from "./animation-wrapper.component";
+import PlayerVolume from "./player-volume.component";
 import SongTitleItem from "./song-title-item.component";
 import PlayerOperation from "./player-operation.component";
-import PlayerVolume from "./player-volume.component";
-
-import useSound from "../hooks/sound.hook";
-import { useGetSongByIdQuery } from "../hooks/song-query.hook";
-import { useRecordPlaybackLogMutation } from "../hooks/playback-mutate.hook";
-import { PlaybackStateOptions } from "@joytify/shared-types/constants";
-import useSoundState from "../states/sound.state";
+import AnimationWrapper from "./animation-wrapper.component";
+import { RefactorSongResponse } from "@joytify/shared-types/types";
+import useUserState from "../states/user.state";
 
 type AudioPlayerProps = {
-  songId: string;
+  song: RefactorSongResponse;
 };
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
+const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
   const navigate = useNavigate();
-  const songPlayedRef = useRef<string | null>(null);
+  const { authUser } = useUserState();
 
-  const { setSound, songToPlay } = useSoundState();
-  const { song, refetch: songRefetch } = useGetSongByIdQuery(songId);
-  const { mutate: recordPlaybackLog } = useRecordPlaybackLogMutation();
+  if (!song || !authUser) return null;
 
-  const sound = useSound(song?.songUrl ?? "");
-  const { playbackTime } = sound;
+  const { title, imageUrl, artist, ownership } = song;
+  const isUserOwned = song.creator === authUser._id && !ownership.isPlatformOwned;
 
   const handleNavigateToPlaylist = () => {
-    navigate(`/playlist/${songToPlay?.playlistFor}`);
+    if (!isUserOwned) return;
+
+    navigate(`/playlist/${song?.playlistFor}`);
   };
-
-  // Refetch song hook when songId changes
-  useEffect(() => {
-    if (songId && songPlayedRef.current && songPlayedRef.current !== songId) {
-      // while song is playing and switch to another song,
-      // record playback log before refetch new song data
-      if (sound.timestamp < sound.duration - 1 && playbackTime > 0) {
-        recordPlaybackLog({
-          songId: songPlayedRef.current,
-          duration: playbackTime,
-          state: PlaybackStateOptions.PLAYING,
-          timestamp: new Date(),
-        });
-      }
-
-      songRefetch();
-    }
-  }, [songId, songPlayedRef, songRefetch]);
-
-  // while sound and song are ready, play audio
-  useEffect(() => {
-    if (sound && song && songPlayedRef.current !== song._id) {
-      // play audio
-      sound.play();
-      // to avoid playing audio again
-      songPlayedRef.current = song._id;
-      // set sound to sound state
-      setSound(sound);
-    }
-  }, [song, sound, songPlayedRef]);
-
-  // If song is not found, return null
-  if (!song) return null;
-
-  // if song is found, return the song title item
-  const { title, imageUrl, artist } = song;
 
   return (
     <AnimationWrapper
@@ -105,15 +63,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
             wrapper: `
               text-sm
               text-grey-custom/50
-              cursor-pointer
+              ${isUserOwned && "cursor-pointer"}
             `,
           }}
         />
 
-        {/* slider && operation button */}
+        {/* player operation */}
         <PlayerOperation
           song={song}
-          sound={sound}
           className={`
             flex-1
             flex-shrink-0
@@ -123,12 +80,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ songId }) => {
         />
 
         {/* volume */}
-        <PlayerVolume
-          className={`
-            flex
-            justify-end
-          `}
-        />
+        <PlayerVolume className={`flex justify-end`} />
       </div>
     </AnimationWrapper>
   );

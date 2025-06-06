@@ -1,6 +1,6 @@
+import { IntlShape } from "react-intl";
 import { useEffect, useMemo, useState, forwardRef, useCallback } from "react";
 import SingleSelectInputBox from "./single-select-input-box.component";
-import { IntlShape } from "react-intl";
 
 interface CalendarInputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   title?: string;
@@ -87,9 +87,11 @@ const CalendarInputBox = forwardRef<HTMLInputElement, CalendarInputBoxProps>(
     // computed ISO date string
     const computedISODate = useMemo(() => {
       const { day, month, year } = date;
-      if (day && month && year) {
+
+      if (day || month || year) {
         return `${year}-${monthMap[month as keyof typeof monthMap]}-${day.padStart(2, "0")}`;
       }
+
       return "";
     }, [monthMap, date]);
 

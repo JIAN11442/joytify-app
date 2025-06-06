@@ -2,7 +2,7 @@ import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import App from "./App.tsx";
 import ModalProvider from "./providers/modal.provider.tsx";
@@ -12,6 +12,7 @@ import ShortcutKeysProvider from "./providers/shortcut-keys.provider.tsx";
 import UserPreferencesProvider from "./providers/user-preferences.provider.tsx";
 import SkeletonThemeProvider from "./providers/skeleton-theme.provider.tsx";
 import ThemeIntlProvider from "./providers/theme-intl.provider.tsx";
+import PlaybackControlProvider from "./providers/playback-control.provider.ts";
 import queryClient from "./config/query-client.config.ts";
 import "../index.css";
 
@@ -25,9 +26,10 @@ createRoot(document.getElementById("root")!).render(
               <ShortcutKeysProvider>
                 <ToasterProvider />
                 <ModalProvider />
-                <ReactQueryDevtools initialIsOpen={false} />
+                {/* <ReactQueryDevtools initialIsOpen={false} /> */}
                 <UserPreferencesProvider />
                 <SkeletonThemeProvider>
+                  <PlaybackControlProvider />
                   <App />
                 </SkeletonThemeProvider>
               </ShortcutKeysProvider>

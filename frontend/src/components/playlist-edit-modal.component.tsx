@@ -14,8 +14,12 @@ import { DefaultEditPlaylistForm, FormMethods } from "../types/form.type";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { getModifiedFormData } from "../utils/get-form-data.util";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 const PlaylistEditModal = () => {
+  const { fm } = useScopedIntl();
+  const playlistEditModalFm = fm("playlist.edit.modal");
+
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [playlistImage, setPlaylistImage] = useState<string | null>(null);
   const [closeModalPending, setCloseModalPending] = useState<boolean>(false);
@@ -29,7 +33,6 @@ const PlaylistEditModal = () => {
     coverImage,
   } = (playlist as RefactorPlaylistResponse) ?? {};
 
-  // handle close modal
   const handleCloseModal = () => {
     timeoutForDelay(async () => {
       // start pending
@@ -56,13 +59,11 @@ const PlaylistEditModal = () => {
     });
   };
 
-  // update playlist mutation
   const { mutate: updatePlaylistFn, isPending } = useUpdatePlaylistMutation(
     playlistId,
     handleCloseModal
   );
 
-  // initial form state
   const {
     register,
     handleSubmit,
@@ -71,7 +72,7 @@ const PlaylistEditModal = () => {
     reset,
     trigger,
     watch,
-    formState: { dirtyFields },
+    formState: { dirtyFields, isValid },
   } = useForm<DefaultEditPlaylistForm>({
     defaultValues: { title, description }, // it's necessary if you want to track form changes（dirtyFields）.
     mode: "onChange",
@@ -98,7 +99,7 @@ const PlaylistEditModal = () => {
 
   return (
     <Modal
-      title="Edit playlist"
+      title={playlistEditModalFm("title")}
       activeState={active}
       closeModalFn={handleCloseModal}
       loading={closeModalPending}
@@ -145,18 +146,24 @@ const PlaylistEditModal = () => {
           {/* Title */}
           <InputBox
             type="text"
-            placeholder="Title"
+            placeholder={playlistEditModalFm("input.title.placeholder")}
             defaultValue={title}
             formMethods={formMethods}
             disabled={isPending}
             autoFocus
-            {...register("title")}
+            {...register("title", {
+              validate: (value) => {
+                if ((title?.length ?? 0) > 0 && value.length === 0) {
+                  return false;
+                }
+              },
+            })}
           />
 
           {/* Description */}
           <textarea
             id="description"
-            placeholder="Description"
+            placeholder={playlistEditModalFm("input.description.placeholder")}
             defaultValue={description}
             disabled={isPending}
             className={`
@@ -164,12 +171,18 @@ const PlaylistEditModal = () => {
               h-full
               resize-none
             `}
-            {...register("description")}
+            {...register("description", {
+              validate: (val) => {
+                if ((description?.length ?? 0) > 0 && val.length === 0) {
+                  return false;
+                }
+              },
+            })}
           />
 
           {/* Submit button */}
           <button
-            disabled={!isModified || isPending}
+            disabled={!isModified || !isValid || isPending}
             className={`
               mt-2
               submit-btn
@@ -180,7 +193,11 @@ const PlaylistEditModal = () => {
               outline-none
             `}
           >
-            {isPending ? <Loader loader={{ size: 20 }} /> : "Save Changes"}
+            {isPending ? (
+              <Loader loader={{ size: 20 }} />
+            ) : (
+              playlistEditModalFm("input.button.submit")
+            )}
           </button>
         </div>
       </form>

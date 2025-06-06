@@ -4,45 +4,43 @@ import Icon from "./react-icons.component";
 import SoundWave from "./sound-wave.component";
 import SongTitleItem from "./song-title-item.component";
 import AnimationWrapper from "./animation-wrapper.component";
+import usePlaybackControl from "../hooks/playback-control.hook";
 
 import { ArrangementOptions } from "../constants/arrangement.constant";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
-import useSoundState from "../states/sound.state";
-import useSidebarState from "../states/sidebar.state";
+import usePlaybackControlState from "../states/playback-control.state";
 import usePlaylistState from "../states/playlist.state";
+import useSidebarState from "../states/sidebar.state";
+import useLocaleState from "../states/locale.state";
 import { getDuration, getTimeAgo } from "../utils/get-time.util";
 
 type SongListItemProps = {
   index: number;
   song: RefactorSongResponse;
   switchFunc?: boolean;
-  onPlay: (id: string) => void;
+  handlePlaySong: () => void;
 };
 
-const SongListItem: React.FC<SongListItemProps> = ({ index, song, switchFunc = true, onPlay }) => {
+const SongListItem: React.FC<SongListItemProps> = ({
+  index,
+  song,
+  switchFunc = true,
+  handlePlaySong,
+}) => {
   const { title, imageUrl, artist, album, duration, createdAt } = song;
 
+  const { themeLocale } = useLocaleState();
+  const { collapseSideBarState } = useSidebarState();
   const { songArrangementType, targetPlaylist } = usePlaylistState();
-  const { paletee } = targetPlaylist ?? {};
+  const { audioSong } = usePlaybackControl();
+  const { isPlaying } = usePlaybackControlState();
 
   const { COMPACT } = ArrangementOptions;
-
-  const { collapseSideBarState } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
-  const { activeSongId, isPlaying, sound } = useSoundState();
+  const { paletee } = targetPlaylist ?? {};
 
-  // handle play song
-  const handlePlaySong = () => {
-    if (!sound || song._id !== activeSongId) {
-      onPlay(song._id);
-    } else {
-      if (isPlaying) {
-        sound?.pause();
-      } else {
-        sound?.play();
-      }
-    }
-  };
+  const isPlayedSong = song._id === audioSong?._id;
+  const isPlayingSong = isPlaying && isPlayedSong;
 
   return (
     <AnimationWrapper
@@ -52,7 +50,7 @@ const SongListItem: React.FC<SongListItemProps> = ({ index, song, switchFunc = t
       style={
         {
           backgroundImage:
-            song._id === activeSongId && paletee
+            isPlayedSong && paletee
               ? `linear-gradient(
                   45deg, 
                   transparent 0%,
@@ -71,7 +69,7 @@ const SongListItem: React.FC<SongListItemProps> = ({ index, song, switchFunc = t
         gap-5
         w-full
         items-center
-        ${activeSongId === song._id && isPlaying ? "" : "hover:bg-neutral-700/40"}
+        ${isPlayingSong ? "" : "hover:bg-neutral-700/40"}
         text-sm
         font-light
         text-grey-custom/60
@@ -87,8 +85,13 @@ const SongListItem: React.FC<SongListItemProps> = ({ index, song, switchFunc = t
           min-w-[30px]
         `}
       >
-        {isPlaying && activeSongId === song._id ? (
-          <SoundWave color={paletee?.vibrant} barWidth={3} style={{ filter: "brightness(1.5)" }} />
+        {isPlayingSong ? (
+          <SoundWave
+            color={paletee?.vibrant}
+            barWidth={3}
+            style={{ filter: "brightness(1.5)" }}
+            isPlaying={isPlaying}
+          />
         ) : (
           <>
             <p className={` group-hover:hidden`}>{index + 1}</p>
@@ -115,7 +118,7 @@ const SongListItem: React.FC<SongListItemProps> = ({ index, song, switchFunc = t
           wrapper: `
             flex-1
             min-w-[150px]
-        `,
+          `,
         }}
       />
 
@@ -149,7 +152,7 @@ const SongListItem: React.FC<SongListItemProps> = ({ index, song, switchFunc = t
           ${isCollapsed ? "max-md:hidden" : "max-lg:hidden"}
         `}
       >
-        <p className={`line-clamp-1`}>{getTimeAgo(createdAt.toString())}</p>
+        <p className={`line-clamp-1`}>{getTimeAgo(createdAt.toString(), themeLocale)}</p>
       </div>
 
       {/* Duration */}

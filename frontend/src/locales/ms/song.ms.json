@@ -26,8 +26,14 @@
   "song.upload.modal.advanced.tag.placeholder": "Pilih tag",
   "song.upload.modal.advanced.releaseDate.title": "Tarikh Siaran",
   "song.upload.modal.advanced.button.submit": "Cipta Lagu",
-  "song.upload.modal.warning.content.1": "Jika terdapat lebih daripada satu {target}, sila pisahkan dengan koma.",
-  "song.upload.modal.warning.content.2": "Contoh: Ahmad, Siti",
+  "song.upload.modal.warning.content": "Jika terdapat lebih daripada satu {target}, sila pisahkan dengan koma. <strong>Contoh: Ahmad, Siti</strong>",
+
+  "song.create.option.modal.title": "Cipta pilihan {type} baharu",
+  "song.create.option.modal.placeholder": "pilihan {type} baharu",
+  "song.create.option.type.label": "Label",
+  "song.create.option.type.album": "album",
+  "song.create.option.type.playlist": "senarai main",
+
   "song.input.target.lyricists": "penulis lirik",
   "song.input.target.composers": "komposer"
 }

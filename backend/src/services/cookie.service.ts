@@ -3,9 +3,14 @@ import _ from "lodash";
 import { HttpCode } from "@joytify/shared-types/constants";
 import {
   UpdateUserPreferencesCookieRequest,
-  UserPreferencesCookieParams,
+  RefactorSongResponse,
 } from "@joytify/shared-types/types";
-import { signToken, UserPreferenceSignOptions, verifyToken } from "../utils/jwt.util";
+import {
+  signToken,
+  UserPreferenceSignOptions,
+  verifyToken,
+  UserPreferenceTokenPayload,
+} from "../utils/jwt.util";
 import appAssert from "../utils/app-assert.util";
 import UserModel from "../models/user.model";
 
@@ -39,7 +44,7 @@ export const getVerifiedUserPreferencesCookie = async (
     return { payload: null };
   }
 
-  const { payload } = await verifyToken(cookie, {
+  const { payload } = await verifyToken<UserPreferenceTokenPayload>(cookie, {
     secret: UserPreferenceSignOptions.secret,
   });
 
@@ -54,8 +59,8 @@ export const updateUserPreferencesCookie = async (params: UpdatePrefsCookieServi
 
   const { payload } = await getVerifiedUserPreferencesCookie({ cookie, strict: true });
 
-  const currentPayload = _.omit(payload, ["iat", "exp", "aud"]);
-  const mergedPayload = { ...currentPayload, ...updatePayload } as UserPreferencesCookieParams;
+  const currentPayload = _.omit(payload, ["iat", "exp", "aud"]) as UserPreferenceTokenPayload;
+  const mergedPayload = { ...currentPayload, ...updatePayload } as UserPreferenceTokenPayload;
 
   // sign new jwt token
   const newCookie = signToken(mergedPayload, UserPreferenceSignOptions);

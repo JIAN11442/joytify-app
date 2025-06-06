@@ -1,24 +1,10 @@
-import useOnPlay from "../hooks/play.hook";
 import { useGetSongsQuery } from "../hooks/song-query.hook";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
-import useSoundState from "../states/sound.state";
+import usePlaybackControl from "../hooks/playback-control.hook";
+import { Queue } from "@joytify/shared-types/types";
 
 const HomePage = () => {
   const { songs } = useGetSongsQuery();
-  const { onPlay } = useOnPlay(songs);
-  const { activeSongId, isPlaying, sound } = useSoundState();
-
-  const handlePlaySong = (song: RefactorSongResponse) => {
-    if (!sound || song._id !== activeSongId) {
-      onPlay(song._id);
-    } else {
-      if (isPlaying) {
-        sound?.pause();
-      } else {
-        sound?.play();
-      }
-    }
-  };
+  const { playSong } = usePlaybackControl();
 
   return (
     <div
@@ -31,18 +17,31 @@ const HomePage = () => {
       `}
     >
       {songs ? (
-        songs.map((song) => (
-          <button
-            key={song.title}
-            onClick={() => handlePlaySong(song)}
-            className={`
-              flex
-              hover:text-blue-400
-            `}
-          >
-            <p>{song.title}</p>
-          </button>
-        ))
+        songs.map((song, index) => {
+          const { _id: songId, title } = song;
+
+          const handlePlaySong = (index: number) => {
+            return playSong({
+              playlistSongs: songs,
+              queue: songs as unknown as Queue,
+              currentIndex: index,
+              currentPlaySongId: songId,
+            });
+          };
+
+          return (
+            <button
+              key={songId}
+              onClick={() => handlePlaySong(index)}
+              className={`
+                flex
+                hover:text-blue-400
+              `}
+            >
+              <p>{title}</p>
+            </button>
+          );
+        })
       ) : (
         <p>Loading...</p>
       )}

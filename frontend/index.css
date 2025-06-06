@@ -112,18 +112,19 @@ body,
   .submit-btn {
     @apply w-[100%]
     p-3
-    bg-green-custom
-    hover:opacity-80
     border
+    bg-green-custom
     border-green-custom/50
     disabled:opacity-80
     disabled:hover:opacity-80
     disabled:bg-neutral-700/50
     disabled:text-neutral-500
     disabled:border-grey-custom/10
+    hover:opacity-80
     rounded-sm
     outline-none
-    transition;
+    transition
+    shrink-0;
   }
 
   .profile-card-content-box {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import useSoundState from "../states/sound.state";
 
 interface SoundWaveProps {
+  isPlaying?: boolean;
   color?: string;
   barWidth?: number;
   barCount?: number;
@@ -12,6 +12,7 @@ interface SoundWaveProps {
 }
 
 const SoundWave: React.FC<SoundWaveProps> = ({
+  isPlaying = true,
   color = "#1DB954",
   barWidth = 2,
   barCount = 3,
@@ -20,15 +21,11 @@ const SoundWave: React.FC<SoundWaveProps> = ({
   animate_delay = 0.2,
   style,
 }) => {
-  const { isPlaying } = useSoundState();
   const [bars, setBars] = useState<number[]>([]);
 
   useEffect(() => {
     setBars(
-      Array.from(
-        { length: barCount },
-        () => Math.random() * (maxHeight - minHeight) + minHeight
-      )
+      Array.from({ length: barCount }, () => Math.random() * (maxHeight - minHeight) + minHeight)
     );
   }, [barCount, maxHeight, minHeight]);
 

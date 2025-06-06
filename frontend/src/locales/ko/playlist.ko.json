@@ -1,4 +1,35 @@
 {
-  "playlist.item.content.type": "플레이리스트",
-  "playlist.item.content.songs": "{count} 곡"
+  "playlist.item.type": "플레이리스트",
+  "playlist.item.songs.count": "{count} 곡",
+  "playlist.item.description": "{type} · {count}",
+
+  "playlist.banner.section.type": "{type}{separator}{description}",
+  "playlist.content.songList.header.title": "제목",
+  "playlist.content.songList.header.artist": "아티스트",
+  "playlist.content.songList.header.album": "앨범",
+  "playlist.content.songList.header.date": "추가 날짜",
+
+  "playlist.menu.action.editDetails": "세부 정보 편집",
+  "playlist.menu.action.deletePlaylist": "재생목록 삭제",
+  "playlist.menu.action.makePrivate": "비공개로 설정",
+  "playlist.menu.action.makePublic": "공개로 설정",
+  "playlist.menu.layout.title": "보기 방식",
+  "playlist.menu.layout.grid": "그리드",
+  "playlist.menu.layout.list": "리스트",
+  "playlist.menu.layout.compact": "컴팩트",
+
+  "playlist.edit.modal.title": "재생목록 편집",
+  "playlist.edit.modal.input.title.placeholder": "이름",
+  "playlist.edit.modal.input.description.placeholder": "설명",
+  "playlist.edit.modal.input.button.submit": "변경 사항 저장",
+
+  "playlist.delete.modal.warning.text": "<strong>{playlist}</strong> 재생목록이 음악 라이브러리에서 삭제됩니다 (이 작업은 되돌릴 수 없습니다). {additionalWarning}",
+  "playlist.delete.modal.warning.additional.text": "이 재생목록의 모든 곡을 다른 재생목록으로 이동하거나, 이동 없이 삭제할 수 있습니다.",
+  "playlist.delete.modal.select.input.placeholder": "이동할 재생목록 선택",
+  "playlist.delete.modal.execute.button.delete": "삭제",
+
+  "playlist.privacy.modal.warning.text": "플레이리스트 <strong>{playlist}</strong> 가 비공개로 전환됩니다(다른 사용자는 볼 수 없으며, 내 프로필에서도 숨겨집니다). 물론 언제든지 다시 공개할 수 있습니다.",
+  "playlist.privacy.modal.execute.button.submit": "비공개로 설정",
+
+  "playlist.warning.content.reject.button.cancel": "취소"
 }

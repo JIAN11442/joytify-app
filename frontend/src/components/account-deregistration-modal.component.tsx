@@ -4,11 +4,14 @@ import Modal from "../components/modal.component";
 import DeregisterDonationForm from "./deregister-donation-form.component";
 import DeregisterConfirmationForm from "./deregister-confirmation-form.component";
 import { useDeregisterMutation } from "../hooks/user-mutate.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
 import { AccountDeregistrationStatus } from "@joytify/shared-types/constants";
 import useSettingsState from "../states/settings.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const AccountDeregistrationModal = () => {
+  const { fm } = useScopedIntl();
+  const deregistrationModalFm = fm("settings.account.deregistration.modal");
   const { INITIAL_CONFIRMATION, DATA_DONATION } = AccountDeregistrationStatus;
 
   const { activeAccountDeregistrationModal, closeAccountDeregistrationModal } = useSettingsState();
@@ -25,18 +28,18 @@ const AccountDeregistrationModal = () => {
   const title = useMemo(() => {
     switch (status) {
       case INITIAL_CONFIRMATION:
-        return "Confirm Account Deletion";
+        return deregistrationModalFm("confirmation.title");
       case DATA_DONATION:
-        return "Data Retention Options (Optional)";
+        return deregistrationModalFm("donation.title");
     }
   }, [status]);
 
   const description = useMemo(() => {
     switch (status) {
       case INITIAL_CONFIRMATION:
-        return "Deleting your account is permanent and irreversible";
+        return deregistrationModalFm("confirmation.description");
       case DATA_DONATION:
-        return "Please review the data retention options and terms of agreement";
+        return deregistrationModalFm("donation.description");
     }
   }, [status]);
 
@@ -46,7 +49,7 @@ const AccountDeregistrationModal = () => {
       description={description}
       activeState={active}
       closeModalFn={status === INITIAL_CONFIRMATION && !isPending ? handleCloseModal : undefined}
-      autoCloseModal={status === INITIAL_CONFIRMATION}
+      autoCloseModal={status === INITIAL_CONFIRMATION && !isPending}
       switchPage={{ initialPage: INITIAL_CONFIRMATION, currentPage: status }}
       className={`sm:min-w-[550px]`}
       tw={status === DATA_DONATION ? { title: "text-start", description: "text-start" } : {}}

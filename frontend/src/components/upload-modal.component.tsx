@@ -1,3 +1,4 @@
+import { FormattedMessage } from "react-intl";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { RegisterOptions, SubmitHandler, useForm } from "react-hook-form";
 import { FaCircleInfo } from "react-icons/fa6";
@@ -14,6 +15,7 @@ import CalendarInputBox from "./calendar-input-box.component";
 import WarningMsgBox from "./warning-message-box.component";
 import SelectInputBox from "./single-select-input-box.component";
 
+import { useScopedIntl } from "../hooks/intl.hook";
 import { useGetLabelsQuery } from "../hooks/label-query.hook";
 import { useGetAlbumsQuery } from "../hooks/album-query.hook";
 import { useCreateSongMutation } from "../hooks/song-mutate.hook";
@@ -28,7 +30,6 @@ import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { getLabelOptions } from "../utils/get-label-options.util";
 import { validateDate } from "../utils/validate-date.util";
-import { useScopedIntl } from "../hooks/intl.hook";
 
 type WarningState = {
   active: boolean;
@@ -37,7 +38,8 @@ type WarningState = {
 
 const UploadModal = () => {
   const { fm, intl } = useScopedIntl();
-  const songUploadModalFm = fm("song.upload.modal");
+  const modalPrefix = "song.upload.modal";
+  const songUploadModalFm = fm(modalPrefix);
   const songInputTargetFm = fm("song.input.target");
   const dateFormatFm = fm("date.format");
 
@@ -154,14 +156,13 @@ const UploadModal = () => {
     if (!visibleWarning.active) return null;
 
     return (
-      <span>
-        {songUploadModalFm("warning.content.1", {
+      <FormattedMessage
+        id={`${modalPrefix}.warning.content`}
+        values={{
           target: songInputTargetFm(`${visibleWarning.target}`),
-        })}
-        <span className={`font-extrabold text-orange-400`}>
-          [{songUploadModalFm("warning.content.2")}]
-        </span>
-      </span>
+          strong: (chunks) => <strong className={`text-orange-400`}>{chunks}</strong>,
+        }}
+      />
     );
   };
 

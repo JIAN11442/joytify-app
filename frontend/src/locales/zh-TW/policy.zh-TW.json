@@ -5,9 +5,7 @@
   "deregistration.policy.effectOfDeletion.title": "刪除影響",
   "deregistration.policy.effectOfDeletion.description.1": "個人資料與帳號資訊（包含電子郵件、使用者名稱及已綁定的裝置）將被永久刪除。",
   "deregistration.policy.effectOfDeletion.description.2": "平台上的紀錄（例如歌曲、播放清單、專輯、標籤及播放紀錄）將全面移除。",
-  "deregistration.policy.effectOfDeletion.description.3.1": "您上傳的內容將依照下方的「",
-  "deregistration.policy.effectOfDeletion.description.3.2": "共享內容處理辦法",
-  "deregistration.policy.effectOfDeletion.description.3.3": "」進行處理。",
+  "deregistration.policy.effectOfDeletion.description.3": "您上傳的內容將依照下方的「 <a>共享內容處理辦法</a> 」進行處理。",
   "deregistration.policy.effectOfDeletion.description.4": "資料刪除後，您將無法再次登入帳號，也無法復原任何資料。",
 
   "deregistration.policy.treatmentOfSharedContent.title": "共享內容處理辦法",
@@ -27,9 +25,7 @@
 
   "deregistration.policy.confirmationAndAppeal.title": "確認與申訴",
   "deregistration.policy.confirmationAndAppeal.description.1": "流程完成後，您將收到一封帳號終止確認信件，寄至您的註冊電子郵件。",
-  "deregistration.policy.confirmationAndAppeal.description.2.1": "若您對帳號刪除流程有任何異議，請於 30 天內透過電子郵件向 ",
-  "deregistration.policy.confirmationAndAppeal.description.2.2": "joytify35@gmail.com",
-  "deregistration.policy.confirmationAndAppeal.description.2.3": " 提出申訴。",
+  "deregistration.policy.confirmationAndAppeal.description.2": "如您對刪除流程有異議，可在 30 天內透過電子郵件向 <a>{email}</a> 提出申訴。",
 
   "deregistration.policy.lastUpdatedDate": "最後更新日期：{date}"
 }

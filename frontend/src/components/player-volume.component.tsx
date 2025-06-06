@@ -7,10 +7,9 @@ import {
 } from "react-icons/pi";
 
 import Icon from "./react-icons.component";
-
-import { Volume } from "../types/volume.type";
-import useSoundState from "../states/sound.state";
-import usePlayerState from "../states/player.state";
+import usePlaybackControl from "../hooks/playback-control.hook";
+import { AudioVolumeType } from "@joytify/shared-types/types";
+import usePlaybackControlState from "../states/playback-control.state";
 import useProviderState from "../states/provider.state";
 
 type PlayerVolumeProps = {
@@ -18,51 +17,43 @@ type PlayerVolumeProps = {
 };
 
 const PlayerVolume: React.FC<PlayerVolumeProps> = ({ className }) => {
-  const { volume, setVolume } = usePlayerState();
-  const { sound } = useSoundState();
-  const { screenWidth } = useProviderState();
-  const isMaxMdScreen = !!(screenWidth <= 768);
-
-  const [previousVolume, setPreviousVolume] = useState(volume);
   const [isSliderVisible, setIsSliderVisible] = useState(false);
+  const [previousVolume, setPreviousVolume] = useState<AudioVolumeType>(0);
 
-  // handle input volume on change
-  const handleOnChangeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value as unknown as Volume;
+  const { screenWidth } = useProviderState();
+  const { audioVolume } = usePlaybackControlState();
+  const { adjustVolume } = usePlaybackControl();
 
-    sound?.volume(value);
-
-    setVolume(value);
-  };
-
-  // handle switch audio volume button
-  const handleSwitchVolumeBtn = () => {
-    let volumeVal = 0 as Volume;
-
-    if (volume) {
-      setPreviousVolume(volume);
-    } else {
-      volumeVal = previousVolume;
-    }
-
-    sound?.volume(volumeVal);
-
-    setVolume(volumeVal);
-  };
-
-  // handle active volume slider while max-md screen
-  const toggleSliderVisibility = () => {
+  const handleToggleVolumeBtn = () => {
+    // in max-md screen, control slider visibility
     if (isMaxMdScreen) {
       setIsSliderVisible(!isSliderVisible);
     }
+    // in min-md screen, toggle volume
+    else {
+      if (audioVolume) {
+        setPreviousVolume(audioVolume);
+        adjustVolume(0);
+      } else {
+        adjustVolume(previousVolume);
+      }
+    }
+  };
+
+  const handleOnChangeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const volumeVal = parseFloat(e.target.value) as AudioVolumeType;
+
+    adjustVolume(volumeVal);
   };
 
   const volumeIcon =
-    volume < 0.1
+    audioVolume < 0.1
       ? PiSpeakerSimpleXFill
-      : volume >= 0.5
+      : audioVolume >= 0.5
       ? PiSpeakerSimpleHighFill
       : PiSpeakerSimpleLowFill;
+
+  const isMaxMdScreen = !!(screenWidth <= 768);
 
   return (
     <div
@@ -80,13 +71,7 @@ const PlayerVolume: React.FC<PlayerVolumeProps> = ({ className }) => {
     >
       {/* volume icon */}
       <button
-        onClick={() => {
-          if (isMaxMdScreen) {
-            toggleSliderVisibility();
-          } else {
-            handleSwitchVolumeBtn();
-          }
-        }}
+        onClick={handleToggleVolumeBtn}
         className={`
           text-neutral-500
           hover:text-white
@@ -126,20 +111,20 @@ const PlayerVolume: React.FC<PlayerVolumeProps> = ({ className }) => {
           type="range"
           min={0}
           max={1}
-          value={volume}
+          value={audioVolume}
           step={0.1}
           onChange={(e) => handleOnChangeVolume(e)}
           onMouseUp={() => isMaxMdScreen && setIsSliderVisible(false)}
           className={`
             input-volume
             max-w-[100px]
-            ${volume === 0 && "volume-off"}
+            ${audioVolume === 0 && "volume-off"}
             ${isMaxMdScreen ? "bg-neutral-700" : ""}
           `}
         />
 
         <div
-          style={{ left: `calc(${volume * 100}px)` }}
+          style={{ left: `calc(${audioVolume * 100}px)` }}
           className={`
             absolute
             p-1

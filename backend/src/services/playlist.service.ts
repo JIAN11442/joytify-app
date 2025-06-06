@@ -171,5 +171,5 @@ export const deletePlaylistById = async (params: DeletePlaylistServiceRequest) =
     `Failed to delete target playlist ${currentPlaylistId}`
   );
 
-  return { playlist };
+  return playlist;
 };

@@ -1,11 +1,11 @@
 import { useCallback, useEffect } from "react";
 
 import useUserState from "../states/user.state";
-import useSoundState from "../states/sound.state";
 import useNavbarState from "../states/navbar.state";
 import useLibraryState from "../states/library.state";
 import useSidebarState from "../states/sidebar.state";
 import usePlaylistState from "../states/playlist.state";
+import usePlaybackControl from "../hooks/playback-control.hook";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import { isEditableElement } from "../lib/element.lib";
@@ -17,12 +17,13 @@ type ShortcutKeysProps = {
 
 const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
   const { authUser } = useUserState();
-  const { collapseSideBarState, setCollapseSideBarState } = useSidebarState();
-  const { isCollapsed } = collapseSideBarState;
-  const { isPlaying, sound, activeSongId } = useSoundState();
   const { activeNavSearchBar, setActiveNavSearchBar } = useNavbarState();
+  const { collapseSideBarState, setCollapseSideBarState } = useSidebarState();
   const { setActiveAddingOptions, setActiveLibrarySearchBar } = useLibraryState();
   const { setActivePlaylistEditOptionsMenu, setActivePlaylistListOptionsMenu } = usePlaylistState();
+  const { togglePlayback, audioSong } = usePlaybackControl();
+
+  const { isCollapsed } = collapseSideBarState;
 
   const { mutate: updateUserPreferencesFn } = useUpdateUserPreferencesMutation();
 
@@ -33,21 +34,9 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
         isManualToggle: true,
       });
 
-      updateUserPreferencesFn({
-        sidebarCollapsed: !isCollapsed,
-      });
+      updateUserPreferencesFn({ sidebarCollapsed: !isCollapsed });
     });
   }, [isCollapsed]);
-
-  const togglePlayPause = useCallback(() => {
-    if (sound) {
-      if (isPlaying) {
-        sound.pause();
-      } else {
-        sound.play();
-      }
-    }
-  }, [sound, isPlaying]);
 
   const handleOnKeyDown = useCallback(
     (e: Event) => {
@@ -55,54 +44,65 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
       const key = ekey.key;
       const isEditing = isEditableElement(ekey.target);
 
-      // if ctrl or command
+      // handle modifier key combinations
       if (ekey.metaKey || ekey.ctrlKey) {
-        // toggle sidebar collapse state
-        if (key === "/") {
-          toggleSidebar();
+        switch (key) {
+          case "/":
+            // toggle sidebar
+            toggleSidebar();
+            break;
         }
-      } else if (ekey.shiftKey) {
-        if (!isEditing) {
-          // navigate to home route
-          if (!activeNavSearchBar && key === "H") {
-            navigate("/");
-          }
-          // navigate to search route
-          else if (key === "F") {
+      } else if (ekey.shiftKey && !isEditing) {
+        switch (key) {
+          case "H":
+            // to home page
+            if (!activeNavSearchBar) {
+              navigate("/");
+            }
+            break;
+          case "F":
+            // to search page
             if (!activeNavSearchBar) {
               timeoutForDelay(() => {
                 setActiveNavSearchBar(!activeNavSearchBar);
                 navigate("/search");
               });
             }
-          } else if (key === "P" && authUser) {
-            navigate(`/profile/${authUser?._id}`);
-          } else if (key === "S" && authUser) {
-            navigate(`/settings/account`);
-          }
+            break;
+          case "P":
+            // to profile page
+            if (authUser) {
+              navigate(`/profile/${authUser?._id}`);
+            }
+            break;
+          case "S":
+            // to settings page
+            if (authUser) {
+              navigate(`/settings/account`);
+            }
+            break;
         }
-      } else if (activeSongId && key === " ") {
-        // if the current element is not editable,
-        if (!isEditing) {
-          // to avoid page scrolling
-          ekey.preventDefault();
-          // toggle song play or pause
-          togglePlayPause();
+      } else {
+        switch (key) {
+          case " ":
+            // toggle song play or pause
+            if (audioSong && !isEditing) {
+              ekey.preventDefault();
+              togglePlayback();
+            }
+            break;
+          case "Escape":
+            // reset all active states
+            setActiveNavSearchBar(false);
+            setActiveAddingOptions(false);
+            setActiveLibrarySearchBar(false);
+            setActivePlaylistEditOptionsMenu(false);
+            setActivePlaylistListOptionsMenu(false);
+            break;
         }
-      } else if (key === "Escape") {
-        // navbar
-        setActiveNavSearchBar(false);
-
-        // library
-        setActiveAddingOptions(false);
-        setActiveLibrarySearchBar(false);
-
-        // playlist
-        setActivePlaylistEditOptionsMenu(false);
-        setActivePlaylistListOptionsMenu(false);
       }
     },
-    [activeSongId, activeNavSearchBar, togglePlayPause, toggleSidebar]
+    [audioSong, activeNavSearchBar, toggleSidebar]
   );
 
   useEffect(() => {

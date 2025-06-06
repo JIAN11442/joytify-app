@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { BsList, BsListTask } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
@@ -10,16 +10,15 @@ import Icon from "./react-icons.component";
 import MenuItem from "./menu-item.component";
 import PlayButton from "./play-button.component";
 
-import useOnPlay from "../hooks/play.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
+import usePlaybackControl from "../hooks/playback-control.hook";
 import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { ArrangementOptions } from "../constants/arrangement.constant";
-import { SongLoopOptions } from "../constants/loop-mode.constant";
 import { PrivacyOptions } from "@joytify/shared-types/constants";
-import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
+import { Queue, RefactorPlaylistResponse } from "@joytify/shared-types/types";
 import { ArrangementType } from "../types/arragement.type";
+import usePlaybackControlState from "../states/playback-control.state";
 import usePlaylistState from "../states/playlist.state";
-import usePlayerState from "../states/player.state";
-import useSoundState from "../states/sound.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type PlaylistBodyHeaderProps = {
@@ -27,9 +26,10 @@ type PlaylistBodyHeaderProps = {
 };
 
 const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({ playlist }) => {
+  const { fm } = useScopedIntl();
+  const playlistMenuFm = fm("playlist.menu");
+
   const { _id: playlistId, songs, default: isDefault, privacy } = playlist;
-  const { PUBLIC, PRIVATE } = PrivacyOptions;
-  const isPublic = privacy === PUBLIC;
 
   const {
     activePlaylistEditOptionsMenu,
@@ -43,86 +43,75 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({ playlist }) => 
     setSongArrangementType,
   } = usePlaylistState();
 
-  const { setLoopType } = usePlayerState();
-  const { sound, isPlaying, activeSongId } = useSoundState();
-
-  const { onPlay } = useOnPlay(songs);
-
+  const { isPlaying } = usePlaybackControlState();
+  const { playSong, audioSong } = usePlaybackControl();
   const { mutate: updatePlaylistFn } = useUpdatePlaylistMutation(playlistId);
 
-  // handle active playlist edit options modal
   const handleActivePlaylistEditOptionsMenu = () => {
     timeoutForDelay(() => {
       setActivePlaylistEditOptionsMenu(!activePlaylistEditOptionsMenu);
     });
   };
 
-  // handle active playlist list options modal
   const handleActivePlaylistListOptionsMenu = () => {
     timeoutForDelay(() => {
       setActivePlaylistListOptionsMenu(!activePlaylistListOptionsMenu);
     });
   };
 
-  // handle active playlist edit modal
   const handleActivePlaylistEditModal = () => {
     timeoutForDelay(() => {
       setActivePlaylistEditModal({ active: true, playlist });
     });
   };
 
-  // handle active delete warning modal
   const handleActiveDeleteWarningModal = () => {
     timeoutForDelay(() => {
       setActivePlaylistDeleteModal({ active: true, playlist });
     });
   };
 
-  // handle active playlist privacy warning modal
   const handleActivePlaylistPrivacyModal = () => {
     timeoutForDelay(() => {
       setActivePlaylistPrivacyModal({ active: true, playlist });
     });
   };
 
-  // handle switch playlist privacy
   const handleSwitchPlaylistPrivacy = () => {
     timeoutForDelay(() => {
       updatePlaylistFn({ privacy: isPublic ? PRIVATE : PUBLIC });
     });
   };
 
-  // handle change song arrangement type
   const handleChangeSongArrangementType = (type: ArrangementType) => {
     timeoutForDelay(() => {
       setSongArrangementType(type);
     });
   };
 
-  // handle play button
-  const handleLoopPlaylist = () => {
-    if (!sound || !playedSongExistInPlaylist) {
-      onPlay(playlist.songs[0]._id);
-    } else {
-      if (isPlaying) {
-        sound.pause();
-      } else {
-        sound.play();
-      }
-    }
-    if (playlist.songs.length > 1) {
-      setLoopType(SongLoopOptions.PLAYLIST);
-    } else {
-      setLoopType(SongLoopOptions.OFF);
-    }
-  };
+  const handlePlayPlaylist = useCallback(() => {
+    const idx = songs.findIndex((s) => s._id === audioSong?._id);
+    const currentIndex = idx !== -1 ? idx : 0;
+
+    playSong({
+      playlistSongs: songs,
+      queue: songs as unknown as Queue,
+      currentIndex,
+      currentPlaySongId: songs[currentIndex]._id,
+    });
+  }, [audioSong, songs, playSong]);
+
+  const { PUBLIC, PRIVATE } = PrivacyOptions;
+  const { GRID, COMPACT } = ArrangementOptions;
+  const isPublic = privacy === PUBLIC;
 
   // check if played song exist in playlist
-  const playedSongExistInPlaylist = songs && songs.some((song) => song._id === activeSongId);
+  const playedSongExistInPlaylist =
+    songs && songs.findIndex((s) => s._id === audioSong?._id) !== -1;
 
   // get needed arrangement types
   const arrangementTypes = Object.values(ArrangementOptions).filter(
-    (type) => type !== ArrangementOptions.GRID
+    (type) => type !== GRID
   );
 
   // close playlist edit options menu in first render
@@ -150,7 +139,7 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({ playlist }) => 
         {/* play button */}
         {songs && songs.length > 0 && (
           <PlayButton
-            onClick={handleLoopPlaylist}
+            onClick={handlePlayPlaylist}
             isPlaying={playedSongExistInPlaylist ? isPlaying : false}
           />
         )}
@@ -185,21 +174,27 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({ playlist }) => 
               <MenuItem
                 onClick={handleActivePlaylistEditModal}
                 icon={{ name: AiFillEdit }}
-                label="Edit details"
+                label={playlistMenuFm("action.editDetails")}
               />
 
               {/* Delete playlist */}
               <MenuItem
                 onClick={handleActiveDeleteWarningModal}
                 icon={{ name: MdDeleteSweep }}
-                label="Delete playlist"
+                label={playlistMenuFm("action.deletePlaylist")}
               />
 
               {/* Remove from profile */}
               <MenuItem
-                onClick={isPublic ? handleActivePlaylistPrivacyModal : handleSwitchPlaylistPrivacy}
+                onClick={
+                  isPublic
+                    ? handleActivePlaylistPrivacyModal
+                    : handleSwitchPlaylistPrivacy
+                }
                 icon={{ name: isPublic ? MdLock : MdPublic }}
-                label={isPublic ? "Make private" : "Make public"}
+                label={playlistMenuFm(
+                  `action.${isPublic ? "makePrivate" : "makePublic"}`
+                )}
               />
             </Menu>
           </div>
@@ -247,7 +242,7 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({ playlist }) => 
               cursor-default
             `}
           >
-            View as
+            {playlistMenuFm("layout.title")}
           </p>
 
           {/* Arrange option button */}
@@ -257,7 +252,7 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({ playlist }) => 
                 key={opt}
                 onClick={() => handleChangeSongArrangementType(opt)}
                 className={`
-                    menu-btn
+                  menu-btn
                   ${songArrangementType === opt && `text-green-500 hover:text-green-500`}
                   `}
               >
@@ -269,8 +264,8 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({ playlist }) => 
                     justify-center
                   `}
                 >
-                  <Icon name={opt === ArrangementOptions.COMPACT ? BsList : BsListTask} />
-                  <p>{opt}</p>
+                  <Icon name={opt === COMPACT ? BsList : BsListTask} />
+                  <p>{playlistMenuFm(`layout.${opt}`)}</p>
                 </div>
 
                 {songArrangementType === opt && <Icon name={FaCheck} />}

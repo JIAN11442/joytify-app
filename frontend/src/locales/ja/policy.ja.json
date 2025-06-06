@@ -5,9 +5,7 @@
   "deregistration.policy.effectOfDeletion.title": "削除の影響",
   "deregistration.policy.effectOfDeletion.description.1": "個人情報および認証情報（メールアドレス、ユーザー名、連携デバイスを含む）は完全に消去されます。",
   "deregistration.policy.effectOfDeletion.description.2": "プラットフォーム上の記録（楽曲、プレイリスト、アルバム、タグ、再生履歴など）もすべて削除されます。",
-  "deregistration.policy.effectOfDeletion.description.3.1": "アップロードされたコンテンツは、以下の「",
-  "deregistration.policy.effectOfDeletion.description.3.2": "共有コンテンツの取り扱い方針",
-  "deregistration.policy.effectOfDeletion.description.3.3": "」に従って処理されます。",
+  "deregistration.policy.effectOfDeletion.description.3": "アップロードされたコンテンツは、以下の「 <a>共有コンテンツの取り扱い方針</a> 」に従って処理されます。",
   "deregistration.policy.effectOfDeletion.description.4": "削除後はログインやデータの復元ができなくなりますので、ご了承ください。",
 
   "deregistration.policy.treatmentOfSharedContent.title": "共有コンテンツの取り扱い",
@@ -27,9 +25,7 @@
 
   "deregistration.policy.confirmationAndAppeal.title": "確認と異議申し立て",
   "deregistration.policy.confirmationAndAppeal.description.1": "手続き完了後、ご登録のメールアドレス宛に終了確認メールが送信されます。",
-  "deregistration.policy.confirmationAndAppeal.description.2.1": "削除処理に異議がある場合は、30日以内にメール（",
-  "deregistration.policy.confirmationAndAppeal.description.2.2": "joytify35@gmail.com",
-  "deregistration.policy.confirmationAndAppeal.description.2.3": "）にてご連絡ください。",
+  "deregistration.policy.confirmationAndAppeal.description.2": "削除処理に異議がある場合は、30日以内にメール（<a>{email}</a>）にてご連絡ください。",
 
   "deregistration.policy.lastUpdatedDate": "最終更新日：{date}"
 }

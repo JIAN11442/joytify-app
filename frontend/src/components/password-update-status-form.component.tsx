@@ -28,13 +28,11 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
 }) => {
   const { fm } = useScopedIntl();
   const passwordUpdateStatusFm = fm("password.update.status");
-  const signOutAllDevicesFm = fm("sign.out.all.devices");
+
+  const { INITIAL } = PasswordUpdateStatus;
 
   const btnRef = useRef<HTMLButtonElement>(null);
   const [countdown, setCountdown] = useState(10);
-
-  const { INITIAL } = PasswordUpdateStatus;
-  const enableLogoutAllDevices = isSuccess && logoutAllDevices;
 
   const { mutate: signOutDevicesFn, isPending } = useSignOutDevicesMutation();
 
@@ -77,6 +75,8 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
       ? passwordUpdateStatusFm("success.button.logoutAllDevices.allow")
       : passwordUpdateStatusFm("success.button.logoutAllDevices.deny")
     : passwordUpdateStatusFm("failure.button");
+
+  const enableLogoutAllDevices = isSuccess && logoutAllDevices;
 
   // auto switch to main form
   useEffect(() => {
@@ -165,7 +165,7 @@ const PasswordUpdateStatusForm: React.FC<PasswordStatusProps> = ({
             {isPending ? (
               <Loader className={{ container: "h-full" }} />
             ) : (
-              signOutAllDevicesFm("button")
+              passwordUpdateStatusFm("signout.all.devices.button")
             )}
           </button>
         )}

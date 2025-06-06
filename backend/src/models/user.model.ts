@@ -13,8 +13,20 @@ import StatsModel from "./stats.model";
 
 import usePalette from "../hooks/paletee.hook";
 import { profile_collections, profile_names } from "../constants/profile-img.constant";
-import { HttpCode, PrivacyOptions, SupportedLocale } from "@joytify/shared-types/constants";
-import { HexPaletee, SupportedLocaleType } from "@joytify/shared-types/types";
+import {
+  HttpCode,
+  PrivacyOptions,
+  SupportedLocale,
+  AudioVolume,
+  LoopMode,
+} from "@joytify/shared-types/constants";
+import {
+  HexPaletee,
+  AudioVolumeType,
+  LoopModeType,
+  SupportedLocaleType,
+  PlaybackQueueWithIds,
+} from "@joytify/shared-types/types";
 import { compareHashValue, hashValue } from "../utils/bcrypt.util";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 import appAssert from "../utils/app-assert.util";
@@ -50,6 +62,13 @@ export interface UserDocument extends mongoose.Document {
       followingArtistUpdates: boolean;
       systemAnnouncements: boolean;
     };
+    player: {
+      shuffle: boolean;
+      loop: LoopModeType;
+      volume: AudioVolumeType;
+      playlistSongs: string[];
+      playbackQueue: PlaybackQueueWithIds;
+    };
   };
   comparePassword: (password: string) => Promise<boolean>;
   omitPassword(): Omit<this, "password">;
@@ -66,9 +85,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
     profileImage: {
       type: String,
       default: () =>
-        `${profileImgBaseUrl}/${
-          profile_collections[Math.floor(Math.random() * profile_collections.length)]
-        }/svg?seed=${profile_names[Math.floor(Math.random() * profile_names.length)]}`,
+        `${profileImgBaseUrl}/${profile_collections[Math.floor(Math.random() * profile_collections.length)]}/svg?seed=${profile_names[Math.floor(Math.random() * profile_names.length)]}`,
     },
     verified: { type: Boolean, default: false, required: true },
     authForThirdParty: { type: Boolean, default: false },
@@ -107,8 +124,18 @@ const userSchema = new mongoose.Schema<UserDocument>(
       totalFollowing: { type: Number, default: 0 },
     },
     personalInfo: {
-      gender: { type: mongoose.Schema.Types.ObjectId, ref: "Label", index: true, default: null },
-      country: { type: mongoose.Schema.Types.ObjectId, ref: "Label", index: true, default: null },
+      gender: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Label",
+        index: true,
+        default: null,
+      },
+      country: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Label",
+        index: true,
+        default: null,
+      },
       dateOfBirth: { type: Date, default: null },
     },
     userPreferences: {
@@ -122,6 +149,24 @@ const userSchema = new mongoose.Schema<UserDocument>(
         monthlyStatistics: { type: Boolean, default: true },
         followingArtistUpdates: { type: Boolean, default: true },
         systemAnnouncements: { type: Boolean, default: true },
+      },
+      player: {
+        volume: {
+          type: Number,
+          enum: Object.values(AudioVolume),
+          default: AudioVolume[5],
+        },
+        shuffle: { type: Boolean, default: false },
+        loop: { type: String, enum: Object.values(LoopMode), default: LoopMode.NONE },
+        playlistSongs: { type: [mongoose.Schema.Types.ObjectId], ref: "Song", index: true },
+        playbackQueue: {
+          queue: {
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: "Song",
+            index: true,
+          },
+          currentIndex: { type: Number, default: 0 },
+        },
       },
     },
   },

@@ -5,6 +5,7 @@ import AnimationWrapper from "./animation-wrapper.component";
 import AccountDeregistrationAgreement, {
   TermsChecked,
 } from "./account-deregistration-agreement.component";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 import { AccountDeregistrationStatus } from "@joytify/shared-types/constants";
 import { DeregisterUserAccountRequest } from "@joytify/shared-types/types";
@@ -18,8 +19,12 @@ type DeregisterConfirmationFormProps = {
 
 const DeregisterConfirmationForm: React.FC<DeregisterConfirmationFormProps> = ({
   deregisterFn,
-  isPending,
+  isPending = true,
 }) => {
+  const { fm } = useScopedIntl();
+  const deregistrationModalFm = fm("settings.account.deregistration.modal");
+  const deregistrationFormFm = fm("settings.account.deregistration.form");
+
   const { DATA_DONATION } = AccountDeregistrationStatus;
 
   const [showAgreement, setShowAgreement] = useState<boolean>(false);
@@ -68,8 +73,7 @@ const DeregisterConfirmationForm: React.FC<DeregisterConfirmationFormProps> = ({
     return isPending;
   }, [isPending]);
 
-  const warningMsg =
-    "This action will permanently delete your account and all associated data. All content, including personal information and transaction history, will be erased immediately.";
+  const warningMsg = deregistrationFormFm("warning");
 
   return (
     <div className={`flex flex-col gap-8`}>
@@ -93,13 +97,13 @@ const DeregisterConfirmationForm: React.FC<DeregisterConfirmationFormProps> = ({
         )}
 
         {/* content */}
-        <p className={`text-red-500 font-bold`}>
-          Are you sure you want to permanently delete your account?
-        </p>
+        <p className={`text-red-500 font-bold`}>{deregistrationModalFm("confirmation.content")}</p>
       </div>
 
       {/* terms of agreement */}
-      {showAgreement && <AccountDeregistrationAgreement onTermsChange={handleTermsChange} />}
+      {showAgreement && (
+        <AccountDeregistrationAgreement isPending={isPending} onTermsChange={handleTermsChange} />
+      )}
 
       {/* buttons */}
       <div
@@ -130,9 +134,9 @@ const DeregisterConfirmationForm: React.FC<DeregisterConfirmationFormProps> = ({
           {isPending ? (
             <Loader loader={{ size: 20 }} />
           ) : hasUserUploadedSongs ? (
-            "Next"
+            deregistrationModalFm("button.next")
           ) : (
-            "Permanently Delete My Account"
+            deregistrationModalFm("button.permanentlyDelete")
           )}
         </button>
 
@@ -148,7 +152,7 @@ const DeregisterConfirmationForm: React.FC<DeregisterConfirmationFormProps> = ({
             border-none
           `}
         >
-          Cancel
+          {deregistrationModalFm("button.cancel")}
         </button>
       </div>
     </div>

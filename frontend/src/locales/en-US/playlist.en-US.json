@@ -1,4 +1,35 @@
 {
-  "playlist.item.content.type": "Playlist",
-  "playlist.item.content.songs": "{count} songs"
+  "playlist.item.type": "Playlist",
+  "playlist.item.songs.count": "{count} songs",
+  "playlist.item.description": "{type} · {count}",
+
+  "playlist.banner.section.type": "{type}{separator}{description}",
+  "playlist.content.songList.header.title": "Title",
+  "playlist.content.songList.header.artist": "Artist",
+  "playlist.content.songList.header.album": "Album",
+  "playlist.content.songList.header.date": "Date added",
+
+  "playlist.menu.action.editDetails": "Edit details",
+  "playlist.menu.action.deletePlaylist": "Delete playlist",
+  "playlist.menu.action.makePrivate": "Make private",
+  "playlist.menu.action.makePublic": "Make public",
+  "playlist.menu.layout.title": "View as",
+  "playlist.menu.layout.grid": "grid",
+  "playlist.menu.layout.list": "list",
+  "playlist.menu.layout.compact": "compact",
+
+  "playlist.edit.modal.title": "Edit playlist",
+  "playlist.edit.modal.input.title.placeholder": "Title",
+  "playlist.edit.modal.input.description.placeholder": "Description",
+  "playlist.edit.modal.input.button.submit": "Save Changes",
+
+  "playlist.delete.modal.warning.text": "This will delete the playlist <strong>{playlist}</strong> from your library, and you won't be able to restore it again. {additionalWarning}",
+  "playlist.delete.modal.warning.additional.text": "Otherwise, you also can choose to transfer all the songs from this playlist to another one, or opt not to transfer them.",
+  "playlist.delete.modal.select.input.placeholder": "Select a playlist to transfer to",
+  "playlist.delete.modal.execute.button.delete": "Delete",
+
+  "playlist.privacy.modal.warning.text": "The playlist <strong>{playlist}</strong> will be set to private (it will be hidden from other users and removed from your profile). Of course, you can make it public again at any time.",
+  "playlist.privacy.modal.execute.button.submit": "Make private",
+
+  "playlist.warning.content.reject.button.cancel": "Cancel"
 }

@@ -12,6 +12,7 @@ import { uploadFileToAws } from "../fetchs/aws.fetch";
 import { FileExtension } from "@joytify/shared-types/constants";
 import { UploadFolderType } from "@joytify/shared-types/types";
 import { FormMethods } from "../types/form.type";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 interface ImageLabelProps<T extends FieldValues = any>
   extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -55,6 +56,7 @@ const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
     },
     ref
   ) => {
+    const { intl } = useScopedIntl();
     const { updateImgFn, isPending } = updateConfig ?? {};
 
     const [isUploading, setIsUploading] = useState(false);
@@ -196,7 +198,9 @@ const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
               ) : (
                 <>
                   <Icon name={MdEdit} opts={{ size: 30 }} className={tw?.icon} />
-                  {visibleHoverText && <p>Choose photo</p>}
+                  {visibleHoverText && (
+                    <p>{intl.formatMessage({ id: "image.label.hover.text" })}</p>
+                  )}
                 </>
               )}
             </div>

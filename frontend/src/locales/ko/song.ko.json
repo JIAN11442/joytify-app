@@ -26,8 +26,14 @@
   "song.upload.modal.advanced.tag.placeholder": "태그를 선택하세요",
   "song.upload.modal.advanced.releaseDate.title": "발매일",
   "song.upload.modal.advanced.button.submit": "곡 생성",
-  "song.upload.modal.warning.content.1": "여러 명의 {target}이 있을 경우 쉼표로 구분하세요.",
-  "song.upload.modal.warning.content.2": "예: 김민수, 이지은",
+  "song.upload.modal.warning.content": "여러 명의 {target}이 있을 경우 쉼표로 구분하세요.<strong>예: 김민수, 이지은</strong>",
+
+  "song.create.option.modal.title": "새 {type} 옵션 생성",
+  "song.create.option.modal.placeholder": "새로운 {type} 옵션",
+  "song.create.option.type.label": "라벨",
+  "song.create.option.type.album": "앨범",
+  "song.create.option.type.playlist": "재생목록",
+
   "song.input.target.lyricists": "작사가",
   "song.input.target.composers": "작곡가"
 }

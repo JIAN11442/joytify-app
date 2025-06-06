@@ -59,7 +59,7 @@ export const useGetPlaylistByIdQuery = (id: string, opts: object = {}) => {
         }
       }
     },
-    staleTime: Infinity,
+    staleTime: 0,
     enabled: !!id && !isQueryError,
     ...opts,
   });

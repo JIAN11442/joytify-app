@@ -140,10 +140,10 @@ export const loginUser = async (data: LoginServiceRequest) => {
   const refreshToken = signToken({ sessionId: session.id }, RefreshTokenSignOptions);
 
   // only get sidebarCollapsed and locale to sign jwt
-  const { sidebarCollapsed, locale } = user.toObject().userPreferences;
+  const { sidebarCollapsed, locale, player } = user.toObject().userPreferences;
 
   // sign user preferences
-  const ui_prefs = signToken({ sidebarCollapsed, locale }, UserPreferenceSignOptions);
+  const ui_prefs = signToken({ sidebarCollapsed, locale, player }, UserPreferenceSignOptions);
 
   // return tokens
   return { accessToken, refreshToken, ui_prefs };

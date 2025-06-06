@@ -8,7 +8,12 @@ import {
   USER_PREFERENCE_SECRET_KEY,
   VERIFICATION_SECRET_KEY,
 } from "../constants/env-validate.constant";
-import { SupportedLocaleType } from "@joytify/shared-types/types";
+import {
+  LoopModeType,
+  AudioVolumeType,
+  SupportedLocaleType,
+  PlaybackQueueWithIds,
+} from "@joytify/shared-types/types";
 
 // ===================== Defaults =====================
 
@@ -45,6 +50,12 @@ export type VerificationTokenPayload = {
 export type UserPreferenceTokenPayload = {
   sidebarCollapsed: boolean;
   locale: SupportedLocaleType;
+  player: {
+    shuffle: boolean;
+    loop: LoopModeType;
+    volume: AudioVolumeType;
+    playbackQueue: PlaybackQueueWithIds;
+  };
 };
 
 // ===================== Options =====================

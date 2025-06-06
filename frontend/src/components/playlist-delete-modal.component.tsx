@@ -1,9 +1,11 @@
+import { FormattedMessage } from "react-intl";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import Modal from "./modal.component";
 import PlaylistWarningContent from "./playlist-warning-content.component";
 import SingleSelectInputBox from "./single-select-input-box.component";
 
+import { useScopedIntl } from "../hooks/intl.hook";
 import { useDeletePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { defaultMovingPlaylistData } from "../constants/form.constant";
 import { DefaultMovingPlaylistForm } from "../types/form.type";
@@ -11,10 +13,13 @@ import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const PlaylistDeleteModal = () => {
+  const { fm } = useScopedIntl();
+  const prefix = "playlist.delete.modal";
+  const playlistDeleteModalFm = fm(prefix);
+
   const { activePlaylistDeleteModal, closePlaylistDeleteModal, userPlaylists } = usePlaylistState();
   const { active, playlist } = activePlaylistDeleteModal;
 
-  // handle close modal
   const handleCloseModal = () => {
     timeoutForDelay(() => {
       closePlaylistDeleteModal();
@@ -22,7 +27,6 @@ const PlaylistDeleteModal = () => {
     });
   };
 
-  // delete playlist mutation
   const { mutate: deletePlaylistFn, isPending } = useDeletePlaylistMutation(handleCloseModal);
 
   const {
@@ -46,28 +50,32 @@ const PlaylistDeleteModal = () => {
   };
 
   return (
-    <Modal activeState={active} closeModalFn={handleCloseModal}>
+    <Modal activeState={active} closeModalFn={handleCloseModal} loading={isPending}>
       <PlaylistWarningContent
         playlist={playlist}
-        executeBtnText="Delete"
+        executeBtnText={playlistDeleteModalFm("execute.button.delete")}
         closeModalFn={handleCloseModal}
         onSubmit={handleSubmit(onSubmit)}
         isValid={isValid}
         isPending={isPending}
       >
-        {/* Warning text */}
-        <p className={`text-red-500/80`}>
-          This will delete the playlist{" "}
-          <span className={`font-bold text-white`}>{playlist?.title}</span> from your library, and
-          you won't be able to restore it again.{" "}
-          {(playlist?.songs.length ?? 0) > 0 &&
-            `Otherwise, you also can choose to transfer all the songs from this playlist to another one, or opt not to transfer them.`}
+        {/* warning content */}
+        <p className={`text-red-500 leading-7`}>
+          <FormattedMessage
+            id={`${prefix}.warning.text`}
+            values={{
+              playlist: playlist?.title,
+              hasSongs: playlist?.songs.length,
+              additionalWarning: playlistDeleteModalFm("warning.additional.text"),
+              strong: (chunks) => <strong className={`text-white`}>{chunks}</strong>,
+            }}
+          />
         </p>
 
         {/* Playlist options */}
         {(playlist?.songs.length ?? 0) > 0 && (
           <SingleSelectInputBox
-            placeholder="Click to choose a playlist"
+            placeholder={playlistDeleteModalFm("select.input.placeholder")}
             options={
               userPlaylists
                 ?.filter((opt) => opt._id !== playlist?._id)
@@ -82,6 +90,7 @@ const PlaylistDeleteModal = () => {
               trigger,
             }}
             disabled={isPending}
+            tabIndex={-1}
             {...register("playlistFor", { required: false })}
           />
         )}

@@ -5,9 +5,7 @@
   "deregistration.policy.effectOfDeletion.title": "Effect of Deletion",
   "deregistration.policy.effectOfDeletion.description.1": "Personal information and credentials (including email, username, and linked devices) will be permanently erased.",
   "deregistration.policy.effectOfDeletion.description.2": "Platform records (including songs, playlists, albums, labels, and playback history) will be completely deleted.",
-  "deregistration.policy.effectOfDeletion.description.3.1": "Uploaded content will be handled according to the ",
-  "deregistration.policy.effectOfDeletion.description.3.2": "Treatment of Shared Content",
-  "deregistration.policy.effectOfDeletion.description.3.3": " policy described below.",
+  "deregistration.policy.effectOfDeletion.description.3": "Uploaded content will be handled according to the <a>Treatment of Shared Content</a> policy described below.",
   "deregistration.policy.effectOfDeletion.description.4": "After deletion, you will no longer be able to log in or recover any data.",
 
   "deregistration.policy.treatmentOfSharedContent.title": "Treatment of Shared Content",
@@ -27,9 +25,7 @@
 
   "deregistration.policy.confirmationAndAppeal.title": "Confirmation and Appeal",
   "deregistration.policy.confirmationAndAppeal.description.1": "After the process is complete, a termination confirmation will be sent to your registered email.",
-  "deregistration.policy.confirmationAndAppeal.description.2.1": "If you have any objections to the deletion process, you may file an appeal within 30 days via email at ",
-  "deregistration.policy.confirmationAndAppeal.description.2.2": "joytify35@gmail.com",
-  "deregistration.policy.confirmationAndAppeal.description.2.3": ".",
+  "deregistration.policy.confirmationAndAppeal.description.2": "If you have any objections to the deletion process, you may file an appeal within 30 days via email at <a>{email}</a>.",
 
   "deregistration.policy.lastUpdatedDate": "Last updated: {date}"
 }

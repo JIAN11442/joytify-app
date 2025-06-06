@@ -32,6 +32,7 @@ const LocaleCard: React.FC<LocaleCardProps> = ({
         relative
         flex
         w-full
+        min-w-[250px]
         p-4
         gap-4
         border

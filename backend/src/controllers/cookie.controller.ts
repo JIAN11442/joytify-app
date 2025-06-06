@@ -16,6 +16,7 @@ const { OK } = HttpCode;
 export const getUserPreferencesCookiePayloadHandler: RequestHandler = async (req, res, next) => {
   try {
     const { ui_prefs } = req.cookies;
+
     const { payload } = await getVerifiedUserPreferencesCookie({ cookie: ui_prefs, strict: false });
 
     res.status(OK).json(payload);
@@ -29,6 +30,7 @@ export const updateUserPreferencesCookiePayloadHandler: RequestHandler = async (
   try {
     const userId = objectIdZodSchema.parse(req.userId);
     const { ui_prefs } = req.cookies;
+
     const params: UpdateUserPreferencesCookieRequest = userPreferencesCookieSchema.parse(req.body);
 
     const { newCookie } = await updateUserPreferencesCookie({

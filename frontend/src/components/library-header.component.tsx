@@ -63,11 +63,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
           isManualToggle: true,
         });
 
-        if (authUser) {
-          updateUserPreferencesFn({
-            sidebarCollapsed: !isCollapsed,
-          });
-        }
+        updateUserPreferencesFn({ sidebarCollapsed: !isCollapsed });
       } else {
         setActiveFloatingSidebar(false);
       }

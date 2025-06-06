@@ -4,11 +4,12 @@ import AccountDeregistrationAgreement, {
   TermsChecked,
 } from "./account-deregistration-agreement.component";
 import TermsAgreementLabel from "./terms-agreement-label.component";
-import { dataContributionAgreement } from "../contents/data-contribution-agreement.content";
+import { getDataContributionAgreement } from "../contents/data-contribution-agreement.content";
 import { AccountDeregistrationStatus } from "@joytify/shared-types/constants";
 import { DeregisterUserAccountRequest } from "@joytify/shared-types/types";
 import useSettingsState from "../states/settings.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 type DeregisterDonationFormProps = {
   deregisterFn: (params: DeregisterUserAccountRequest) => void;
@@ -19,6 +20,8 @@ const DeregisterDonationForm: React.FC<DeregisterDonationFormProps> = ({
   deregisterFn,
   isPending,
 }) => {
+  const { fm } = useScopedIntl();
+  const derergistrationModalFm = fm("settings.account.deregistration.modal");
   const { INITIAL_CONFIRMATION } = AccountDeregistrationStatus;
 
   const [showAgreement, setShowAgreement] = useState(false);
@@ -60,10 +63,12 @@ const DeregisterDonationForm: React.FC<DeregisterDonationFormProps> = ({
     return isPending;
   }, [isPending]);
 
+  const dataContributionAgreement = getDataContributionAgreement(fm);
+
   return (
     <div>
       {/* options label */}
-      <TermsAgreementLabel onChange={handleDataUsageConsentChange}>
+      <TermsAgreementLabel disabled={isPending} onChange={handleDataUsageConsentChange}>
         <div className={`flex flex-col gap-3`}>
           {dataContributionAgreement.map((opt) => {
             const { label, description } = opt;
@@ -73,7 +78,13 @@ const DeregisterDonationForm: React.FC<DeregisterDonationFormProps> = ({
                   className={`
                     text-[14px]
                     font-medium 
-                    ${dataUsageConsent ? "text-white" : "text-neutral-400 group-hover:text-white"}
+                    ${
+                      isPending
+                        ? "no-hover text-white opacity-50"
+                        : dataUsageConsent
+                        ? "text-white"
+                        : "text-neutral-400 group-hover:text-white"
+                    }
                   `}
                 >
                   {label}
@@ -83,7 +94,9 @@ const DeregisterDonationForm: React.FC<DeregisterDonationFormProps> = ({
                     mt-1
                     text-sm 
                     ${
-                      dataUsageConsent
+                      isPending
+                        ? "no-hover text-neutral-600 opacity-50"
+                        : dataUsageConsent
                         ? "text-neutral-500"
                         : "text-neutral-600 group-hover:text-neutral-500"
                     }
@@ -101,7 +114,9 @@ const DeregisterDonationForm: React.FC<DeregisterDonationFormProps> = ({
       <hr className={`divider`} />
 
       {/* terms of agreement */}
-      {showAgreement && <AccountDeregistrationAgreement onTermsChange={handleTermsChange} />}
+      {showAgreement && (
+        <AccountDeregistrationAgreement isPending={isPending} onTermsChange={handleTermsChange} />
+      )}
 
       {/* buttons */}
       <div
@@ -130,7 +145,11 @@ const DeregisterDonationForm: React.FC<DeregisterDonationFormProps> = ({
             border-none
           `}
         >
-          {isPending ? <Loader loader={{ size: 20 }} /> : "Permanently Delete My Account"}
+          {isPending ? (
+            <Loader loader={{ size: 20 }} />
+          ) : (
+            derergistrationModalFm("button.permanentlyDelete")
+          )}
         </button>
 
         {/* cancel */}
@@ -145,7 +164,7 @@ const DeregisterDonationForm: React.FC<DeregisterDonationFormProps> = ({
             border-none
           `}
         >
-          Back to previous page
+          {derergistrationModalFm("button.backToPreviousPage")}
         </button>
       </div>
     </div>

@@ -10,10 +10,11 @@ import LocaleCard from "../components/locale-card.component";
 import SearchBarInput from "../components/searchbar-input.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import SettingSectionTitle from "../components/settings-section-title.component";
-import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
+import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { LocaleMap, localeMap } from "../contents/locale.content";
 import { SupportedLocaleType } from "@joytify/shared-types/types";
+import useSidebarState from "../states/sidebar.state";
 import useLocaleState from "../states/locale.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
@@ -21,6 +22,7 @@ const SettingsLanguagesPage = () => {
   const { fm } = useScopedIntl();
   const settingsLanguagesFm = fm("settings.languages");
 
+  const { collapseSideBarState } = useSidebarState();
   const { themeLocale, setThemeLocale } = useLocaleState();
   const [filterLocales, setFilterLocales] = useState<LocaleMap | null>(null);
   const [selectedLocale, setSelectedLocale] = useState<SupportedLocaleType | null>(null);
@@ -175,9 +177,12 @@ const SettingsLanguagesPage = () => {
           <div
             className={`
               grid
-              max-sm:grid-cols-1
-              sm:grid-cols-2
-              lg:grid-cols-3
+              grid-cols-1
+              ${
+                collapseSideBarState?.isCollapsed
+                  ? "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                  : "max-lg:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+              }
               gap-4
             `}
           >
@@ -242,7 +247,7 @@ const SettingsLanguagesPage = () => {
               hover:bg-neutral-800
             `}
           >
-            Cancel
+            {settingsLanguagesFm("button.cancel")}
           </button>
 
           {/* save changes */}
@@ -262,7 +267,7 @@ const SettingsLanguagesPage = () => {
               }
             `}
           >
-            {isPending ? <Loader loader={{ size: 20 }} /> : "Save Changes"}
+            {isPending ? <Loader loader={{ size: 20 }} /> : settingsLanguagesFm("button.save")}
           </button>
         </div>
       </AnimationWrapper>

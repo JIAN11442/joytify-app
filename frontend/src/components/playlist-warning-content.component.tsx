@@ -1,3 +1,4 @@
+import { useScopedIntl } from "../hooks/intl.hook";
 import Loader from "./loader.component";
 import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
 
@@ -22,6 +23,11 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
   isPending = false,
   children,
 }) => {
+  const { fm } = useScopedIntl();
+  const playlistBannerSectionFm = fm("playlist.banner.section");
+  const playlistItemFm = fm("playlist.item");
+  const playlistWarningContentFm = fm("playlist.warning.content");
+
   // if playlist is not loaded, show loader
   if (!playlist) {
     return <Loader />;
@@ -79,30 +85,24 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
             text-grey-custom/50
           `}
         >
-          {/* Playlist type */}
-          <p>
-            <span>Playlist</span>
-            {description && (
-              <>
-                <span> · </span>
-                <span>{songs?.length} songs</span>
-              </>
-            )}
+          {/* playlist type */}
+          <p className={`text-sm`}>
+            {playlistBannerSectionFm("type", {
+              type: playlistItemFm("type"),
+              separator: description ? " · " : "",
+              description: description
+                ? playlistItemFm("songs.count", { count: songs.length })
+                : "",
+            })}
           </p>
 
-          {/* Title */}
-          <p
-            className={`
-              text-2xl
-              font-bold
-              font-serif
-            `}
-          >
-            {title}
-          </p>
+          {/* title */}
+          <p className={`text-2xl font-bold font-serif`}>{title}</p>
 
-          {/* Description or Others */}
-          <p>{description ? description : `${songs?.length} songs`}</p>
+          {/* description or others */}
+          <p className={`text-[14px] text-grey-custom/50 line-clamp-1`}>
+            {description ? description : playlistItemFm("songs.count", { count: songs.length })}
+          </p>
         </div>
       </div>
 
@@ -132,7 +132,7 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
             border-none
           `}
         >
-          Cancel
+          {playlistWarningContentFm("reject.button.cancel")}
         </button>
 
         {/* execute */}

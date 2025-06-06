@@ -26,8 +26,14 @@
   "song.upload.modal.advanced.tag.placeholder": "請選擇歌曲標籤",
   "song.upload.modal.advanced.releaseDate.title": "發行日期",
   "song.upload.modal.advanced.button.submit": "創建歌曲",
-  "song.upload.modal.warning.content.1": "若有多位{target}，請用逗號分隔。",
-  "song.upload.modal.warning.content.2": "例如：張育健, 楊毓晴",
+  "song.upload.modal.warning.content": "若有多位{target}，請用逗號分隔。<strong>例如：張育健, 楊毓晴</strong>",
+
+  "song.create.option.modal.title": "建立新的{type}選項",
+  "song.create.option.modal.placeholder": "新的{type}選項",
+  "song.create.option.type.label": "標籤",
+  "song.create.option.type.album": "專輯",
+  "song.create.option.type.playlist": "播放清單",
+
   "song.input.target.lyricists": "作詞者",
   "song.input.target.composers": "作曲者"
 }

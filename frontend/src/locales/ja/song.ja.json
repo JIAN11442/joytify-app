@@ -13,9 +13,9 @@
   "song.upload.modal.advanced.imageFile.title": "カバー画像（*.png, *.jpg, *.jpeg）",
   "song.upload.modal.advanced.imageFile.placeholder": "カバー画像をアップロード",
   "song.upload.modal.advanced.lyricist.title": "作詞者",
-  "song.upload.modal.advanced.lyricist.placeholder": "作詞者を入力してください（複数の場合はカンマ区切り）",
+  "song.upload.modal.advanced.lyricist.placeholder": "作詞者を入力してください（カンマ区切り可）",
   "song.upload.modal.advanced.composer.title": "作曲者",
-  "song.upload.modal.advanced.composer.placeholder": "作曲者を入力してください（複数の場合はカンマ区切り）",
+  "song.upload.modal.advanced.composer.placeholder": "作曲者を入力してください（カンマ区切り可）",
   "song.upload.modal.advanced.album.title": "アルバム",
   "song.upload.modal.advanced.album.placeholder": "アルバムを選択してください",
   "song.upload.modal.advanced.language.title": "言語",
@@ -26,8 +26,14 @@
   "song.upload.modal.advanced.tag.placeholder": "タグを選択してください",
   "song.upload.modal.advanced.releaseDate.title": "リリース日",
   "song.upload.modal.advanced.button.submit": "楽曲を作成",
-  "song.upload.modal.warning.content.1": "複数の{target}がいる場合はカンマで区切ってください。",
-  "song.upload.modal.warning.content.2": "例：山田太郎, 佐藤花子",
+  "song.upload.modal.warning.content": "複数の{target}がいる場合はカンマで区切ってください。<strong>例：山田太郎, 佐藤花子</strong>",
+
+  "song.create.option.modal.title": "新しい{type}オプションを作成",
+  "song.create.option.modal.placeholder": "新しい{type}オプション",
+  "song.create.option.type.label": "ラベル",
+  "song.create.option.type.album": "アルバム",
+  "song.create.option.type.playlist": "プレイリスト",
+
   "song.input.target.lyricists": "作詞者",
   "song.input.target.composers": "作曲者"
 }

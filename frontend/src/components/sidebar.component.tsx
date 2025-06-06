@@ -6,10 +6,9 @@ import ContentBox from "./content-box.component";
 import AudioPlayer from "./audio-player.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import SidebarInnerContent from "./sidebar-inner-content.component";
-
-import useSoundState from "../states/sound.state";
-import useSidebarState from "../states/sidebar.state";
+import usePlaybackControlState from "../states/playback-control.state";
 import useProviderState from "../states/provider.state";
+import useSidebarState from "../states/sidebar.state";
 import { timeoutForEventListener } from "../lib/timeout.lib";
 
 const Sidebar = () => {
@@ -21,9 +20,9 @@ const Sidebar = () => {
     setCollapseSideBarState,
     setActiveFloatingSidebar,
   } = useSidebarState();
-  const { isCollapsed, isManualToggle } = collapseSideBarState;
   const { screenWidth } = useProviderState();
-  const { activeSongId } = useSoundState();
+  const { audioSong } = usePlaybackControlState();
+  const { isCollapsed, isManualToggle } = collapseSideBarState;
 
   // handle sidebar collapse mode for different screen sizes
   useEffect(() => {
@@ -85,7 +84,7 @@ const Sidebar = () => {
           flex
           h-full
           gap-x-2
-          ${activeSongId ? "pb-[80px]" : "h-full"}
+          ${audioSong ? "pb-[80px]" : "h-full"}
           overflow-hidden
         `}
       >
@@ -135,7 +134,7 @@ const Sidebar = () => {
         </ContentBox>
       </div>
 
-      {activeSongId && <AudioPlayer songId={activeSongId} />}
+      {audioSong && <AudioPlayer song={audioSong} />}
     </div>
   );
 };

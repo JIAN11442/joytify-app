@@ -1,26 +1,41 @@
+import { useCallback } from "react";
 import { IoTimeOutline } from "react-icons/io5";
 
 import Icon from "./react-icons.component";
 import SongListItem from "./song-list-item.component";
-
-import useOnPlay from "../hooks/play.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
+import usePlaybackControl from "../hooks/playback-control.hook";
 import { ArrangementOptions } from "../constants/arrangement.constant";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
-import useSidebarState from "../states/sidebar.state";
+import { Queue, RefactorSongResponse } from "@joytify/shared-types/types";
 import usePlaylistState from "../states/playlist.state";
+import useSidebarState from "../states/sidebar.state";
 
 type SongsListProps = {
   songs: RefactorSongResponse[];
 };
 
 const SongsList: React.FC<SongsListProps> = ({ songs }) => {
+  const { fm } = useScopedIntl();
+  const playlistSongListHeaderFm = fm("playlist.content.songList.header");
+
   const { collapseSideBarState } = useSidebarState();
+  const { songArrangementType } = usePlaylistState();
+  const { playSong } = usePlaybackControl();
+
+  const { COMPACT } = ArrangementOptions;
   const { isCollapsed } = collapseSideBarState;
 
-  const { songArrangementType } = usePlaylistState();
-  const { COMPACT } = ArrangementOptions;
-
-  const { onPlay } = useOnPlay(songs);
+  const handlePlaySong = useCallback(
+    (index: number) => {
+      return playSong({
+        playlistSongs: songs,
+        queue: songs as unknown as Queue,
+        currentIndex: index,
+        currentPlaySongId: songs[index]._id,
+      });
+    },
+    [playSong, songs]
+  );
 
   return (
     <div>
@@ -43,7 +58,7 @@ const SongsList: React.FC<SongsListProps> = ({ songs }) => {
         <div className={`w-5 min-w-[30px]`}>#</div>
 
         {/* title */}
-        <div className={`flex-1 min-w-[150px]`}>Title</div>
+        <div className={`flex-1 min-w-[150px]`}>{playlistSongListHeaderFm("title")}</div>
 
         {/* artist */}
         <div
@@ -53,7 +68,7 @@ const SongsList: React.FC<SongsListProps> = ({ songs }) => {
             ${songArrangementType === COMPACT ? "block" : "hidden"}
           `}
         >
-          Artist
+          {playlistSongListHeaderFm("artist")}
         </div>
 
         {/* album */}
@@ -64,10 +79,10 @@ const SongsList: React.FC<SongsListProps> = ({ songs }) => {
             ${songArrangementType === COMPACT && "max-sm:hidden"}
           `}
         >
-          Album
+          {playlistSongListHeaderFm("album")}
         </div>
 
-        {/* data added */}
+        {/* date added */}
         <div
           className={`
             w-40
@@ -75,7 +90,7 @@ const SongsList: React.FC<SongsListProps> = ({ songs }) => {
             ${isCollapsed ? "max-md:hidden" : "max-lg:hidden"}
           `}
         >
-          Date added
+          {playlistSongListHeaderFm("date")}
         </div>
 
         {/* duration */}
@@ -88,7 +103,12 @@ const SongsList: React.FC<SongsListProps> = ({ songs }) => {
       <div>
         {songs &&
           songs.map((song, index) => (
-            <SongListItem key={song._id} index={index} song={song} onPlay={onPlay} />
+            <SongListItem
+              key={song._id}
+              index={index}
+              song={song}
+              handlePlaySong={() => handlePlaySong(index)}
+            />
           ))}
       </div>
     </div>

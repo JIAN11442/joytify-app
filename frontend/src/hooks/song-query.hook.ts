@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllSongs, getSongById } from "../fetchs/song.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
 import useSongState from "../states/song.state";
-import useSoundState from "../states/sound.state";
 
 // get all songs query
 export const useGetSongsQuery = (opts: object = {}) => {
@@ -38,21 +37,19 @@ export const useGetSongsQuery = (opts: object = {}) => {
 // get song by id
 export const useGetSongByIdQuery = (id: string, opts: object = {}) => {
   const [isQueryError, setIsQueryError] = useState(false);
-  const { setSongToPlay } = useSoundState();
 
   const { data: song, ...rest } = useQuery({
-    queryKey: [QueryKey.GET_SONG_BY_ID],
+    queryKey: [QueryKey.GET_SONG_BY_ID, id],
     queryFn: async () => {
       try {
         const song = await getSongById(id);
 
-        setSongToPlay(song);
+        console.log(song);
 
         return song;
       } catch (error) {
         if (error) {
           setIsQueryError(true);
-          setSongToPlay(null);
         }
       }
     },

@@ -6,8 +6,12 @@ import { defaultCreateAlbumData } from "../constants/form.constant";
 import { DefaultCreateAlbumForm } from "../types/form.type";
 import useUploadModalState from "../states/upload-modal.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 const CreateAlbumModal = () => {
+  const { fm } = useScopedIntl();
+  const createOptionTypeFm = fm("song.create.option.type");
+
   const { activeCreateAlbumModal, closeCreateAlbumModal } = useUploadModalState();
   const { active, options } = activeCreateAlbumModal;
 
@@ -40,7 +44,7 @@ const CreateAlbumModal = () => {
 
   return (
     <CreateOptionModal
-      type="album"
+      type={createOptionTypeFm("album")}
       active={active}
       closeModalFn={handleCloseModal}
       autoCloseModal={false}

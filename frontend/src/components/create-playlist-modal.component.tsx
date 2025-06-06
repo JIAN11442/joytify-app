@@ -6,8 +6,12 @@ import { defaultCreatePlaylistData } from "../constants/form.constant";
 import { DefaultCreatePlaylistForm } from "../types/form.type";
 import useUploadModalState from "../states/upload-modal.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 const CreatePlaylistModal = () => {
+  const { fm } = useScopedIntl();
+  const createOptionTypeFm = fm("song.create.option.type");
+
   const { activeCreatePlaylistModal, closeCreatePlaylistModal } = useUploadModalState();
   const { active, options } = activeCreatePlaylistModal;
 
@@ -38,7 +42,7 @@ const CreatePlaylistModal = () => {
 
   return (
     <CreateOptionModal
-      type="playlist"
+      type={createOptionTypeFm("playlist")}
       active={active}
       closeModalFn={handleCloseModal}
       autoCloseModal={false}

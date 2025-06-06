@@ -273,7 +273,7 @@ export const updateUserPassword = async (params: UpdatePasswordServiceRequest) =
   const content = JoytifyPasswordChangedEmail({ username });
   const subject = "Your Joytify password has been changed";
 
-  await sendEmail({ to: user.email, subject, content });
+  // await sendEmail({ to: user.email, subject, content });
 
   return { updatedUser: user.omitPassword() };
 };
@@ -334,45 +334,59 @@ export const deregisterUserAccount = async (params: DeregisterAccountServiceRequ
 
   const { songs } = user;
 
-  if (shouldDeleteSongs && songs.length > 0) {
+  if (songs.length > 0) {
     try {
-      // delete all user songs
-      for (const songId of songs) {
-        const deletedSong = await SongModel.findByIdAndDelete(songId);
+      if (shouldDeleteSongs) {
+        // delete all user songs
+        for (const songId of songs) {
+          const deletedSong = await SongModel.findByIdAndDelete(songId);
+
+          appAssert(
+            deletedSong,
+            INTERNAL_SERVER_ERROR,
+            `Failed to delete song ${songId} in deregistration process`
+          );
+        }
+
+        // delete all user playback records
+        const deletedPlaybacks = await PlaybackModel.deleteMany({ user: userId });
 
         appAssert(
-          deletedSong,
+          deletedPlaybacks.acknowledged === true,
           INTERNAL_SERVER_ERROR,
-          `Failed to delete song ${songId} in deregistration process`
+          "Failed to delete user playback records in deregistration process"
+        );
+
+        // delete all user history records
+        const deletedHistories = await HistoryModel.deleteMany({ user: userId });
+
+        appAssert(
+          deletedHistories.acknowledged === true,
+          INTERNAL_SERVER_ERROR,
+          "Failed to delete user history records in deregistration process"
+        );
+
+        // delete all user stat records
+        const deletedStats = await StatsModel.deleteMany({ user: userId });
+
+        appAssert(
+          deletedStats.acknowledged === true,
+          INTERNAL_SERVER_ERROR,
+          "Failed to delete user stat records in deregistration process"
+        );
+      } else {
+        // change songs ownership to platform owned
+        const updatedSongs = await SongModel.updateMany(
+          { creator: userId },
+          { $set: { "ownership.isPlatformOwned": true } }
+        );
+
+        appAssert(
+          updatedSongs.acknowledged === true,
+          INTERNAL_SERVER_ERROR,
+          "Failed to update user songs ownership in deregistration process"
         );
       }
-
-      // delete all user playback records
-      const deletedPlaybacks = await PlaybackModel.deleteMany({ user: userId });
-
-      appAssert(
-        deletedPlaybacks.acknowledged === true,
-        INTERNAL_SERVER_ERROR,
-        "Failed to delete user playback records in deregistration process"
-      );
-
-      // delete all user history records
-      const deletedHistories = await HistoryModel.deleteMany({ user: userId });
-
-      appAssert(
-        deletedHistories.acknowledged === true,
-        INTERNAL_SERVER_ERROR,
-        "Failed to delete user history records in deregistration process"
-      );
-
-      // delete all user stat records
-      const deletedStats = await StatsModel.deleteMany({ user: userId });
-
-      appAssert(
-        deletedStats.acknowledged === true,
-        INTERNAL_SERVER_ERROR,
-        "Failed to delete user stat records in deregistration process"
-      );
     } catch (error) {
       console.log(error);
     }

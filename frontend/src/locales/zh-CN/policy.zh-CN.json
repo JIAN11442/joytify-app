@@ -5,9 +5,7 @@
   "deregistration.policy.effectOfDeletion.title": "删除影响",
   "deregistration.policy.effectOfDeletion.description.1": "个人信息及账户凭证（包括邮箱、用户名和绑定设备）将被永久清除。",
   "deregistration.policy.effectOfDeletion.description.2": "平台记录（包括歌曲、歌单、专辑、标签和播放历史）将被完全删除。",
-  "deregistration.policy.effectOfDeletion.description.3.1": "您上传的内容将根据以下的「",
-  "deregistration.policy.effectOfDeletion.description.3.2": "共享内容处理政策",
-  "deregistration.policy.effectOfDeletion.description.3.3": "」进行处理。",
+  "deregistration.policy.effectOfDeletion.description.3": "您上传的内容将根据以下的「 <a>共享内容处理政策</a> 」进行处理。",
   "deregistration.policy.effectOfDeletion.description.4": "数据删除后，您将无法再次登录或恢复任何信息。",
 
   "deregistration.policy.treatmentOfSharedContent.title": "共享内容处理政策",
@@ -27,9 +25,7 @@
 
   "deregistration.policy.confirmationAndAppeal.title": "确认与申诉",
   "deregistration.policy.confirmationAndAppeal.description.1": "流程完成后，终止确认将发送至您注册的电子邮箱。",
-  "deregistration.policy.confirmationAndAppeal.description.2.1": "如您对删除流程有异议，可在 30 天内通过邮箱向 ",
-  "deregistration.policy.confirmationAndAppeal.description.2.2": "joytify35@gmail.com",
-  "deregistration.policy.confirmationAndAppeal.description.2.3": " 提出申诉。",
+  "deregistration.policy.confirmationAndAppeal.description.2": "如您对删除流程有异议，可在 30 天内通过邮箱向 <a>{email}</a> 提出申诉。",
 
   "deregistration.policy.lastUpdatedDate": "最后更新日期：{date}"
 }

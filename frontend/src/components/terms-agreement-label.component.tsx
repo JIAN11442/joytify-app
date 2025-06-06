@@ -17,11 +17,10 @@ const TermsAgreementLabel = forwardRef<HTMLInputElement, TermsAgreementLabelProp
           `
             group
             flex 
-            items-start
             gap-3
             mb-4
             p-3
-            hover:bg-neutral-700/20
+            items-start
             rounded-md
             cursor-pointer
             transition-all

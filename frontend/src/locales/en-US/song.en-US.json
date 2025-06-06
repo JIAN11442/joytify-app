@@ -26,8 +26,14 @@
   "song.upload.modal.advanced.tag.placeholder": "Select song tag(s)",
   "song.upload.modal.advanced.releaseDate.title": "Release Date",
   "song.upload.modal.advanced.button.submit": "Create Song",
-  "song.upload.modal.warning.content.1": "If there are multiple {target}, please separate them with commas. ",
-  "song.upload.modal.warning.content.2": "e.g., John, Jason",
+  "song.upload.modal.warning.content": "If there are multiple {target}, please separate them with commas. <strong>e.g., John, Jason</strong>",
+
+  "song.create.option.modal.title": "Create new {type} option",
+  "song.create.option.modal.placeholder": "new {type} option",
+  "song.create.option.type.label": "label",
+  "song.create.option.type.album": "album",
+  "song.create.option.type.playlist": "playlist",
+
   "song.input.target.lyricists": "lyricists",
   "song.input.target.composers": "composers"
 }

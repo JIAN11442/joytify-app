@@ -1,9 +1,9 @@
 import { FormattedMessage } from "react-intl";
-import { AiFillSafetyCertificate } from "react-icons/ai";
-import { GrServices } from "react-icons/gr";
 import { IoTrash } from "react-icons/io5";
 import { TiWarning } from "react-icons/ti";
+import { GrServices } from "react-icons/gr";
 import { MdMarkEmailRead } from "react-icons/md";
+import { AiFillSafetyCertificate } from "react-icons/ai";
 import { IconName } from "../components/react-icons.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 
@@ -28,13 +28,16 @@ export const getAccountDeregistrationPolicyContents = (
       contents: [
         <FormattedMessage id={scopedId("effectOfDeletion.description.1")} />,
         <FormattedMessage id={scopedId("effectOfDeletion.description.2")} />,
-        <>
-          <FormattedMessage id={scopedId("effectOfDeletion.description.3.1")} />
-          <a href="#treatment-of-shared-content" className={`text-blue-600 underline`}>
-            <FormattedMessage id={scopedId("effectOfDeletion.description.3.2")} />
-          </a>
-          <FormattedMessage id={scopedId("effectOfDeletion.description.3.3")} />
-        </>,
+        <FormattedMessage
+          id={scopedId("effectOfDeletion.description.3")}
+          values={{
+            a: (chunks) => (
+              <a href="#treatment-of-shared-content" className={`text-blue-600 underline`}>
+                {chunks}
+              </a>
+            ),
+          }}
+        />,
         <FormattedMessage id={scopedId("effectOfDeletion.description.4")} />,
       ],
     },
@@ -74,17 +77,23 @@ export const getAccountDeregistrationPolicyContents = (
       title: deregistrationPolicyFm("confirmationAndAppeal.title"),
       contents: [
         <FormattedMessage id={scopedId("confirmationAndAppeal.description.1")} />,
-        <>
-          <FormattedMessage id={scopedId("confirmationAndAppeal.description.2.1")} />
-          <a
-            href={`https://mail.google.com/mail/?view=cm&to=${import.meta.env.VITE_SENDER_EMAIL}`}
-            target="_blank"
-            className={`text-blue-600 underline`}
-          >
-            <FormattedMessage id={scopedId("confirmationAndAppeal.description.2.2")} />
-          </a>
-          <FormattedMessage id={scopedId("confirmationAndAppeal.description.2.3")} />
-        </>,
+        <FormattedMessage
+          id={scopedId("confirmationAndAppeal.description.2")}
+          values={{
+            a: (chunks) => (
+              <a
+                href={`https://mail.google.com/mail/?view=cm&to=${
+                  import.meta.env.VITE_SENDER_EMAIL
+                }`}
+                target="_blank"
+                className={`text-blue-600 underline`}
+              >
+                {chunks}
+              </a>
+            ),
+            email: import.meta.env.VITE_SENDER_EMAIL,
+          }}
+        />,
       ],
     },
   ];

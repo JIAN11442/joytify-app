@@ -57,6 +57,7 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
       disabled,
       required,
       onChange,
+      tabIndex = 1,
       name,
       formMethods,
       createNewFn,
@@ -79,7 +80,10 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
     const [isError, setIsError] = useState<boolean>(false);
     const [filterOptions, setFilterOptions] = useState<typeof options>(options);
 
-    const showOptionsMenu = useMemo(() => activeMenu && !isError, [activeMenu, isError]);
+    const showOptionsMenu = useMemo(
+      () => activeMenu && filterOptions.length > 0,
+      [activeMenu, filterOptions]
+    );
 
     const getFilterOptions = useCallback(
       (value: string) => {
@@ -210,10 +214,21 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
     );
 
     const handleInputOnBlur = useCallback(() => {
-      if ((!inputVal || !hoverVal) && defaultValue) {
+      const inputVal = inputRef.current?.value;
+
+      if (!inputVal && !hoverVal && defaultValue) {
         setInputVal(defaultValue as string);
+      } else if (inputVal) {
+        const isMatch = options.find((opt) => {
+          return (
+            (typeof opt === "string" ? opt.toLowerCase() : opt.title.toLowerCase()) ===
+            inputVal.toLowerCase()
+          );
+        });
+
+        setIsError(!isMatch);
       }
-    }, [inputVal, hoverVal, defaultValue]);
+    }, [inputRef, options, hoverVal, defaultValue]);
 
     const handleOptionOnMouseEnter = useCallback(
       (opt: string) => {
@@ -230,8 +245,8 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
     const handleOptionOnClick = useCallback(
       (option: string) => {
         setInputVal(option);
-        setActiveMenu(false);
         setHoverVal(null);
+        setActiveMenu(false);
 
         handleSetFormValue(option);
       },
@@ -336,6 +351,7 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
           placeholder={placeholder}
           required={required}
           disabled={disabled}
+          tabIndex={tabIndex}
           onChange={handleInputOnChange}
           onKeyDown={handleInputOnKeyDown}
           onBlur={handleInputOnBlur}

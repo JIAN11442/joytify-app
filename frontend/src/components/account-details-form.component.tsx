@@ -193,7 +193,9 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({ profileUser }) 
         disabled={isPending}
         {...normalizeRegister("dateOfBirth", {
           validate: (val) => {
-            if (!val) return true;
+            if (!val) {
+              return !defaultDateOfBirth;
+            }
             return validateDate(val);
           },
         })}

@@ -8,11 +8,11 @@ import NavbarLink from "./navbar-link.component";
 import UserEntryPoint from "./user-entry-point.component";
 import NavbarSearchBar from "./navbar-searchbar.component";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
-import useNavbarState from "../states/navbar.state";
-import useSidebarState from "../states/sidebar.state";
 import useProviderState from "../states/provider.state";
-import { timeoutForDelay } from "../lib/timeout.lib";
+import useSidebarState from "../states/sidebar.state";
+import useNavbarState from "../states/navbar.state";
 import useUserState from "../states/user.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const Navbar = () => {
   const [searchBarVal, setSearchBarVal] = useState("");

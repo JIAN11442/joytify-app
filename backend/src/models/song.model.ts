@@ -37,6 +37,10 @@ export interface SongDocument extends mongoose.Document {
     totalPlaybackDuration: number;
     weightedAveragePlaybackDuration: number;
   };
+  ownership: {
+    isPlatformOwned: boolean; // 是否由平台擁有
+    transferredAt: Date; // 轉移給平台的時間
+  };
 }
 
 const songSchema = new mongoose.Schema<SongDocument>(
@@ -125,6 +129,10 @@ const songSchema = new mongoose.Schema<SongDocument>(
       totalPlaybackCount: { type: Number, default: 0 },
       totalPlaybackDuration: { type: Number, default: 0 },
       weightedAveragePlaybackDuration: { type: Number, default: 0 },
+    },
+    ownership: {
+      isPlatformOwned: { type: Boolean, default: false },
+      transferredAt: { type: Date },
     },
   },
   { timestamps: true }

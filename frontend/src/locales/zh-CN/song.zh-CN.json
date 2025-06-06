@@ -26,8 +26,14 @@
   "song.upload.modal.advanced.tag.placeholder": "请选择歌曲标签",
   "song.upload.modal.advanced.releaseDate.title": "发行日期",
   "song.upload.modal.advanced.button.submit": "创建歌曲",
-  "song.upload.modal.warning.content.1": "如有多位{target}，请用逗号分隔。",
-  "song.upload.modal.warning.content.2": "例如：张育健, 杨毓晴",
+  "song.upload.modal.warning.content": "如有多位{target}，请用逗号分隔。<strong>例如：张育健, 杨毓晴</strong>",
+
+  "song.create.option.modal.title": "创建新的{type}选项",
+  "song.create.option.modal.placeholder": "新的{type}选项",
+  "song.create.option.type.label": "标签",
+  "song.create.option.type.album": "专辑",
+  "song.create.option.type.playlist": "播放列表",
+
   "song.input.target.lyricists": "作词者",
   "song.input.target.composers": "作曲者"
 }

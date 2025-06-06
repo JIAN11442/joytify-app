@@ -1,9 +1,23 @@
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { twMerge } from "tailwind-merge";
+import Skeleton, { SkeletonProps } from "react-loading-skeleton";
 import useSidebarState from "../states/sidebar.state";
 
-type SquareDualLineSkeleton = {
+import "react-loading-skeleton/dist/skeleton.css";
+
+interface ImageSkeleton extends SkeletonProps {
+  className?: string;
+}
+
+interface TextSkeleton extends SkeletonProps {
+  count?: number;
+  className?: string;
+  tw?: {
+    width?: string | number;
+    height?: string | number;
+  };
+}
+
+interface SquareDualLineSkeleton extends SkeletonProps {
   count?: number;
   className?: string;
   tw?: {
@@ -11,12 +25,51 @@ type SquareDualLineSkeleton = {
     square?: string;
     dualLine?: string;
   };
+}
+
+// image skeleton (square)
+export const ImageSkeleton: React.FC<ImageSkeleton> = ({ className, ...props }) => {
+  return (
+    <Skeleton
+      className={twMerge(`w-[3rem] h-[3rem] rounded-md`, className)}
+      containerClassName="flex items-center"
+      {...props}
+    />
+  );
 };
 
+// text skeleton (line)
+export const TextSkeleton: React.FC<TextSkeleton> = ({ count = 1, className, tw, ...props }) => {
+  return (
+    <div
+      className={twMerge(
+        `
+        flex
+        flex-col
+        w-full
+        justify-center
+      `,
+        className
+      )}
+    >
+      {Array.from({ length: count }).map((_, index) => (
+        <Skeleton
+          key={`text-skeleton-${index}`}
+          width={tw?.width ?? "100%"}
+          height={tw?.height ?? 12}
+          {...props}
+        />
+      ))}
+    </div>
+  );
+};
+
+// square dual line skeleton
 export const SquareDualLineSkeleton: React.FC<SquareDualLineSkeleton> = ({
   count = 1,
   className,
   tw,
+  ...props
 }) => {
   return (
     <div className={twMerge(`flex flex-col w-full gap-2`, className)}>
@@ -34,22 +87,17 @@ export const SquareDualLineSkeleton: React.FC<SquareDualLineSkeleton> = ({
           )}
         >
           {/* image skeleton */}
-          <Skeleton
-            className={twMerge(`w-[3rem] h-[3rem] rounded-md`, tw?.square)}
-            containerClassName="flex items-center"
-          />
+          <ImageSkeleton className={tw?.square} {...props} />
 
           {/* content skeleton */}
-          <div className={twMerge(`flex flex-col w-full justify-center`, tw?.dualLine)}>
-            <Skeleton width={`100%`} height={12} />
-            <Skeleton width={`100%`} height={12} />
-          </div>
+          <TextSkeleton count={2} {...props} />
         </div>
       ))}
     </div>
   );
 };
 
+// library playlist skeleton
 export const LibraryPlaylistSkeleton = () => {
   const { collapseSideBarState, activeFloatingSidebar } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
