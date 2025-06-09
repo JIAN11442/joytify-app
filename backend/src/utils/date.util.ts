@@ -22,6 +22,14 @@ export const tenMinutesFromNow = () => {
   return new Date(Date.now() + 10 * 60 * 1000);
 };
 
+export const fiveMinutesFromNow = () => {
+  return new Date(Date.now() + 5 * 60 * 1000);
+};
+
+export const oneMinuteFromNow = () => {
+  return new Date(Date.now() + 1 * 60 * 1000);
+};
+
 export const thirtySecondsAgo = () => {
   return new Date(Date.now() - 30 * 1000);
 };

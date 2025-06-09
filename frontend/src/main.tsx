@@ -8,13 +8,14 @@ import App from "./App.tsx";
 import ModalProvider from "./providers/modal.provider.tsx";
 import ToasterProvider from "./providers/toaster.provider.tsx";
 import ScreenMonitorProvider from "./providers/screen.provider.tsx";
-import ShortcutKeysProvider from "./providers/shortcut-keys.provider.tsx";
-import UserPreferencesProvider from "./providers/user-preferences.provider.tsx";
-import SkeletonThemeProvider from "./providers/skeleton-theme.provider.tsx";
 import ThemeIntlProvider from "./providers/theme-intl.provider.tsx";
-import PlaybackControlProvider from "./providers/playback-control.provider.ts";
+import ShortcutKeysProvider from "./providers/shortcut-keys.provider.tsx";
+import SkeletonThemeProvider from "./providers/skeleton-theme.provider.tsx";
+import UserPreferencesProvider from "./providers/user-preferences.provider.tsx";
+import PlaybackControlProvider from "./providers/playback-control.provider.tsx";
 import queryClient from "./config/query-client.config.ts";
 import "../index.css";
+import SessionHeartBeatProvider from "./providers/session-heartbeat.provider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -22,18 +23,22 @@ createRoot(document.getElementById("root")!).render(
       <Suspense>
         <BrowserRouter>
           <ThemeIntlProvider>
-            <ScreenMonitorProvider>
-              <ShortcutKeysProvider>
-                <ToasterProvider />
-                <ModalProvider />
-                {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-                <UserPreferencesProvider />
-                <SkeletonThemeProvider>
-                  <PlaybackControlProvider />
-                  <App />
-                </SkeletonThemeProvider>
-              </ShortcutKeysProvider>
-            </ScreenMonitorProvider>
+            <UserPreferencesProvider>
+              <SessionHeartBeatProvider>
+                <ScreenMonitorProvider>
+                  <ShortcutKeysProvider>
+                    <SkeletonThemeProvider>
+                      <PlaybackControlProvider>
+                        <ToasterProvider />
+                        <ModalProvider />
+                        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+                        <App />
+                      </PlaybackControlProvider>
+                    </SkeletonThemeProvider>
+                  </ShortcutKeysProvider>
+                </ScreenMonitorProvider>
+              </SessionHeartBeatProvider>
+            </UserPreferencesProvider>
           </ThemeIntlProvider>
         </BrowserRouter>
       </Suspense>

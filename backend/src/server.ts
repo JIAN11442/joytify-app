@@ -1,6 +1,7 @@
 import "dotenv/config";
 import app from "./app";
 import connectMongoDB from "./config/connect-mongodb.config";
+import { sessionOnlineStatusCheckSchedule } from "./schedules/session-online.schedule";
 import { BACKEND_PORT } from "./constants/env-validate.constant";
 import consoleLogBox from "./utils/console-boxes.util";
 
@@ -17,6 +18,8 @@ const startServer = async () => {
     app.listen(BACKEND_PORT, () => {
       consoleLogBox(`🚀 Server ready at http://localhost:${BACKEND_PORT}`);
     });
+
+    sessionOnlineStatusCheckSchedule();
   } catch (error) {
     console.error("💀 Failed to start server:", error);
     process.exit(1);

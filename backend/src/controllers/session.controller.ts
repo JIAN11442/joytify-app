@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import SessionModel from "../models/session.model";
-import { HttpCode } from "@joytify/shared-types/constants";
 import { objectIdZodSchema } from "../schemas/util.zod";
+import { HttpCode } from "@joytify/shared-types/constants";
 import appAssert from "../utils/app-assert.util";
 
 const { OK, INTERNAL_SERVER_ERROR } = HttpCode;
@@ -20,6 +20,23 @@ export const deleteUserSessionsHandler: RequestHandler = async (req, res, next) 
     );
 
     return res.status(OK).json({ message: "Delete sessions successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// update session handler
+export const touchSessionHeartBeatHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const now = new Date();
+    const sessionId = objectIdZodSchema.parse(req.sessionId);
+
+    const updatedSession = await SessionModel.findByIdAndUpdate(sessionId, {
+      $set: { "status.lastActive": now, "status.online": true },
+      new: true,
+    });
+
+    return res.status(OK).json(updatedSession);
   } catch (error) {
     next(error);
   }

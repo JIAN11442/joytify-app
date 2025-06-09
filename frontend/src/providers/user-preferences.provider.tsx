@@ -11,7 +11,11 @@ import useUserState from "../states/user.state";
 import { Queue } from "@joytify/shared-types/types";
 import { getAudioInstance } from "../lib/audio.lib";
 
-const UserPreferencesProvider = () => {
+type UserPreferencesProps = {
+  children: React.ReactNode;
+};
+
+const UserPreferencesProvider: React.FC<UserPreferencesProps> = ({ children }) => {
   const initializePlayerRef = useRef<boolean>(false);
 
   const { authUser } = useUserState();
@@ -91,7 +95,7 @@ const UserPreferencesProvider = () => {
     initializePlayer();
   }, [player]);
 
-  return null;
+  return <>{children}</>;
 };
 
 export default UserPreferencesProvider;

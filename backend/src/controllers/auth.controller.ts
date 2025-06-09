@@ -24,19 +24,12 @@ import {
   setAuthCookies,
 } from "../utils/cookies.util";
 
-type RegisterParams = RegisterRequest & {
-  userAgent?: string;
-};
-
 const { OK, CREATED, UNAUTHORIZED } = HttpCode;
 
 // register handler
 export const registerHandler: RequestHandler = async (req, res, next) => {
   try {
-    const request: RegisterParams = registerZodSchema.parse({
-      ...req.body,
-      userAgent: req.headers["user-agent"],
-    });
+    const request: RegisterRequest = registerZodSchema.parse(req.body);
 
     const { user, accessToken, refreshToken, ui_prefs } = await createAccount(request);
 
@@ -49,10 +42,7 @@ export const registerHandler: RequestHandler = async (req, res, next) => {
 // login handler
 export const loginHandler: RequestHandler = async (req, res, next) => {
   try {
-    const request: LoginRequest = loginZodSchema.parse({
-      ...req.body,
-      userAgent: req.headers["user-agent"],
-    });
+    const request: LoginRequest = loginZodSchema.parse(req.body);
 
     const { accessToken, refreshToken, ui_prefs } = await loginUser(request);
 
@@ -108,10 +98,13 @@ export const refreshTokensHandler: RequestHandler = async (req, res, next) => {
 export const registerWithThirdPartyHandler: RequestHandler = async (req, res, next) => {
   try {
     // get firebase access token
-    const { token } = firebaseAccessTokenZodSchema.parse(req.body);
+    const { token, sessionInfo } = firebaseAccessTokenZodSchema.parse(req.body);
 
     // register user with third party
-    const { user, accessToken, refreshToken, ui_prefs } = await registerUserWithThirdParty(token);
+    const { user, accessToken, refreshToken, ui_prefs } = await registerUserWithThirdParty({
+      token,
+      sessionInfo,
+    });
 
     return setAuthCookies({ res, refreshToken, accessToken, ui_prefs }).status(CREATED).json(user);
   } catch (error) {
@@ -123,10 +116,13 @@ export const registerWithThirdPartyHandler: RequestHandler = async (req, res, ne
 export const loginWithThirdPartyHandler: RequestHandler = async (req, res, next) => {
   try {
     // get firebase access token
-    const { token } = firebaseAccessTokenZodSchema.parse(req.body);
+    const { token, sessionInfo } = firebaseAccessTokenZodSchema.parse(req.body);
 
     // verify that to get user info
-    const { accessToken, refreshToken, ui_prefs } = await loginUserWithThirdParty(token);
+    const { accessToken, refreshToken, ui_prefs } = await loginUserWithThirdParty({
+      token,
+      sessionInfo,
+    });
 
     return setAuthCookies({ res, refreshToken, accessToken, ui_prefs })
       .status(OK)

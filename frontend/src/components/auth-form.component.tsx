@@ -23,6 +23,8 @@ import useVerificationModalState from "../states/verification.state";
 import { isHighlight } from "../lib/icon-highlight.lib";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { emailRegex, passwordRegex } from "../utils/regex.util";
+import { getSessionInfo } from "../utils/get-devide-info.util";
+import { getCurrentIPGeoLocation } from "../fetchs/network.fetch";
 
 type AuthFormProps = {
   setModalCloseBtnDisabled?: (state: boolean) => void;
@@ -62,8 +64,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
   };
 
   const handleAuthWithThirdParty = async (provider: AuthProvider) => {
-    timeoutForDelay(() => {
-      thirdPartyAuthFn({ provider, authFor });
+    timeoutForDelay(async () => {
+      const sessionInfo = await getCurrentSessionInfo();
+      thirdPartyAuthFn({ provider, authFor, sessionInfo });
     });
   };
 
@@ -78,26 +81,35 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
     mode: "onChange",
   });
 
-  const disabledEdit = useMemo(() => {
-    return verificationProcessPending || localAuthPending || thirdPartyAuthPending;
-  }, [verificationProcessPending, localAuthPending, thirdPartyAuthPending]);
+  const getCurrentSessionInfo = useCallback(async () => {
+    const geoInfo = await getCurrentIPGeoLocation();
+    const sessionInfo = getSessionInfo(geoInfo);
+
+    return sessionInfo;
+  }, [getCurrentIPGeoLocation, getSessionInfo]);
 
   const isIconHighlight = useCallback(
     (target: keyof DefaultAuthForm) => isHighlight(watch, errors, target),
     [watch, errors]
   );
 
+  const disabledEdit = useMemo(() => {
+    return verificationProcessPending || localAuthPending || thirdPartyAuthPending;
+  }, [verificationProcessPending, localAuthPending, thirdPartyAuthPending]);
+
   // handle form submit
   const onSubmit: SubmitHandler<DefaultAuthForm> = async (value) => {
     const { email } = value;
+    const sessionInfo = await getCurrentSessionInfo();
+    const authData = { ...value, sessionInfo };
 
     if (authFor === SIGN_IN) {
-      localAuthFn(value);
+      localAuthFn(authData);
     } else {
       sendCodeFn({
         email,
         shouldResendCode: false,
-        registerFn: () => localAuthFn(value),
+        registerFn: () => localAuthFn(authData),
       });
     }
   };

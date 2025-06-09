@@ -15,6 +15,7 @@ import playbackRoute from "./routes/playback.route";
 import verificationRoute from "./routes/verification.route";
 import cookieRoute from "./routes/cookie.route";
 import sessionRoute from "./routes/session.route";
+import networkRoute from "./routes/network.route";
 
 import authenticate from "./middlewares/authenticate.middleware";
 import firebaseInitialize from "./middlewares/firebase.middleware";
@@ -50,6 +51,7 @@ app.use("/album", authenticate, albumRoute);
 app.use("/playback", authenticate, playbackRoute);
 app.use("/cookie", cookieRoute);
 app.use("/session", authenticate, sessionRoute);
+app.use("/network", networkRoute);
 
 // error handler
 app.use(errorHandler());

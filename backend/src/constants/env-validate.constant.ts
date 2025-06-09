@@ -26,6 +26,8 @@ const env = cleanEnv(process.env, {
   FIREBASE_PRIVATE_KEY: str(),
   FIREBASE_CLIENT_EMAIL: str(),
   FIREBASE_CLIENT_ID: str(),
+  IP2LOCATION_KEY: str(),
+  SESSION_THRESHOLD: num(),
 });
 
 export const {
@@ -54,4 +56,6 @@ export const {
   FIREBASE_PRIVATE_KEY,
   FIREBASE_CLIENT_EMAIL,
   FIREBASE_CLIENT_ID,
+  IP2LOCATION_KEY,
+  SESSION_THRESHOLD,
 } = env;

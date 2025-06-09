@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { emailZodSchema, stringZodSchema } from "./util.zod";
+import { emailZodSchema } from "./util.zod";
+import { sessionZodSchema } from "./session.zod";
 
 // Warning messages
 const warningMsg = {
@@ -31,7 +32,7 @@ export const passwordZodSchema = z
 export const loginZodSchema = z.object({
   email: emailZodSchema,
   password: passwordZodSchema.optional(),
-  userAgent: stringZodSchema.optional(),
+  sessionInfo: sessionZodSchema,
 });
 
 export const registerZodSchema = z
@@ -39,10 +40,11 @@ export const registerZodSchema = z
     email: emailZodSchema,
     password: passwordZodSchema,
     confirmPassword: passwordZodSchema,
-    userAgent: stringZodSchema,
+    sessionInfo: sessionZodSchema,
   })
   .refine((data) => data.password === data.confirmPassword, warningMsg.passwordIsNotMatch);
 
 export const firebaseAccessTokenZodSchema = z.object({
   token: z.string().min(1, warningMsg.firebaseAccessTokenCharater),
+  sessionInfo: sessionZodSchema,
 });

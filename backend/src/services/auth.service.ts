@@ -14,11 +14,12 @@ import {
   UserPreferenceSignOptions,
   verifyToken,
 } from "../utils/jwt.util";
+import { SessionInfo } from "@joytify/shared-types/types";
 
 type AuthServiceRequest = {
   email: string;
   password?: string;
-  userAgent?: string;
+  sessionInfo: SessionInfo;
   profileImage?: string;
   authForThirdParty?: boolean;
   firebaseUID?: string;
@@ -31,6 +32,11 @@ export interface LoginServiceRequest extends AuthServiceRequest {
 export interface CreateAccountServiceRequest extends AuthServiceRequest {
   confirmPassword?: string;
   verified?: boolean;
+}
+
+export interface AuthWithThirdPartyServiceRequest {
+  token: string;
+  sessionInfo: SessionInfo;
 }
 
 const { INTERNAL_SERVER_ERROR, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, CONFLICT } = HttpCode;
@@ -55,7 +61,7 @@ export const createAccount = async (data: CreateAccountServiceRequest) => {
   // create session
   const session = await SessionModel.create({
     user: user.id,
-    userAgent: data.userAgent,
+    ...data.sessionInfo,
     expiresAt: thirtyDaysFormNow(),
   });
 
@@ -122,7 +128,7 @@ export const loginUser = async (data: LoginServiceRequest) => {
   // create session
   const session = await SessionModel.create({
     user: user.id,
-    userAgent: data.userAgent,
+    ...data.sessionInfo,
     expiresAt: thirtyDaysFormNow(),
   });
 
@@ -245,7 +251,9 @@ export const verifyFirebaseAccessToken = async (token: string) => {
 };
 
 // login with third-party service
-export const loginUserWithThirdParty = async (token: string) => {
+export const loginUserWithThirdParty = async (data: AuthWithThirdPartyServiceRequest) => {
+  const { token, sessionInfo } = data;
+
   // verify firebase access token
   const { email, uid } = await verifyFirebaseAccessToken(token);
 
@@ -271,13 +279,16 @@ export const loginUserWithThirdParty = async (token: string) => {
     password: "",
     authForThirdParty: true,
     firebaseUID: uid,
+    sessionInfo,
   });
 
   return { accessToken, refreshToken, ui_prefs };
 };
 
 // register with third-party service
-export const registerUserWithThirdParty = async (token: string) => {
+export const registerUserWithThirdParty = async (data: AuthWithThirdPartyServiceRequest) => {
+  const { token, sessionInfo } = data;
+
   // verify firebase access token
   const { email, generatePicture, uid } = await verifyFirebaseAccessToken(token);
 
@@ -288,6 +299,7 @@ export const registerUserWithThirdParty = async (token: string) => {
     profileImage: generatePicture,
     authForThirdParty: true,
     firebaseUID: uid,
+    sessionInfo,
   });
 
   return { user, accessToken, refreshToken, ui_prefs };

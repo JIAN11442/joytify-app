@@ -8,7 +8,11 @@ import usePlaybackControlState from "../states/playback-control.state";
 import useCookieState from "../states/cookie.state";
 import { getAudioInstance } from "../lib/audio.lib";
 
-const PlaybackControlProvider = () => {
+type PlaybackControlProps = {
+  children: React.ReactNode;
+};
+
+const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) => {
   const audioSrcRef = useRef<string>("");
   const audioCurrentTimeRef = useRef<number>(0);
   const playbackTimeRef = useRef<number>(0);
@@ -160,7 +164,7 @@ const PlaybackControlProvider = () => {
     updateUserPreferencesFn({ player: refactorPlayer });
   }, [initializedFormCookie, refactorCookiePlayer, player]);
 
-  return null;
+  return <>{children}</>;
 };
 
 export default PlaybackControlProvider;

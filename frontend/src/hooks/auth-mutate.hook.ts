@@ -12,6 +12,8 @@ import queryClient from "../config/query-client.config";
 import { navigate } from "../lib/navigate.lib";
 import toast from "../lib/toast.lib";
 
+type AuthRequest = LoginRequest | RegisterRequest;
+
 const { SIGN_IN } = AuthForOptions;
 
 const useAuthCommon = () => {
@@ -45,11 +47,11 @@ const useAuthCommon = () => {
 export const useLocalAuthMutation = (opts: object = {}) => {
   const { authFor, redirectPath, closeAuthModal, fetchAuthUserInfo } = useAuthCommon();
 
-  const mutationKey = authFor === SIGN_IN ? MutationKey.SIGNIN : MutationKey.SIGNUP;
+  const authMutationKey = authFor === SIGN_IN ? MutationKey.SIGNIN : MutationKey.SIGNUP;
 
   const mutation = useMutation({
-    mutationKey: [mutationKey],
-    mutationFn: (data: LoginRequest | RegisterRequest) => {
+    mutationKey: [authMutationKey],
+    mutationFn: async (data: AuthRequest) => {
       if (authFor === SIGN_IN) {
         return signin(data as LoginRequest);
       } else {
