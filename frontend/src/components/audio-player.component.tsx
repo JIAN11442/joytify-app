@@ -5,6 +5,7 @@ import PlayerOperation from "./player-operation.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
 import useUserState from "../states/user.state";
+import PlayerSlider from "./player-slider.component";
 
 type AudioPlayerProps = {
   song: RefactorSongResponse;
@@ -43,6 +44,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
         shadow-neutral-700/50
       `}
     >
+      {/* slider(max-sm screen) */}
+      <PlayerSlider song={song} hiddenTime={true} className={`sm:hidden absolute top-0 left-0`} />
+
       <div
         className={`
           flex  
@@ -65,6 +69,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
               text-grey-custom/50
               ${isUserOwned && "cursor-pointer"}
             `,
+            content: `max-sm:hidden`,
           }}
         />
 
@@ -74,7 +79,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
           className={`
             flex-1
             flex-shrink-0
-            min-w-[350px]
+            min-w-[200px]
             max-w-[50%]
           `}
         />

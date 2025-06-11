@@ -8,7 +8,7 @@ type SongTitleItemProps = {
   artist: string;
   switchFunc?: boolean;
   onClick?: () => void;
-  className?: { wrapper?: string; image?: string };
+  className?: { wrapper?: string; image?: string; content?: string };
 };
 
 const SongTitleItem: React.FC<SongTitleItemProps> = ({
@@ -46,7 +46,7 @@ const SongTitleItem: React.FC<SongTitleItemProps> = ({
         `)}
       />
 
-      <div>
+      <div className={className?.content}>
         <p className={`text-white line-clamp-1`}>{title}</p>
         <p
           className={`

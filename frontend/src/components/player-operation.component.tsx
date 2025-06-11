@@ -48,7 +48,7 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, className }) =>
   return (
     <div className={twMerge(`flex flex-col`, className)}>
       {/* slider */}
-      <PlayerSlider song={song} />
+      <PlayerSlider song={song} className={`max-sm:hidden`} />
 
       {/* operation */}
       <div
