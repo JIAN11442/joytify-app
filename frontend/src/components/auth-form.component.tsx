@@ -14,6 +14,7 @@ import InputBox from "./input-box.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useSendCodeMutation } from "../hooks/verification-mutate.hook";
 import { useLocalAuthMutation, useThirdPartyAuthMutation } from "../hooks/auth-mutate.hook";
+import { getCurrentIPGeoLocation } from "../fetchs/network.fetch";
 import { defaultLoginData, defaultRegisterData } from "../constants/form.constant";
 import { FirebaseProvider } from "../constants/firebase-provider.constant";
 import { AuthForOptions } from "@joytify/shared-types/constants";
@@ -24,7 +25,6 @@ import { isHighlight } from "../lib/icon-highlight.lib";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { emailRegex, passwordRegex } from "../utils/regex.util";
 import { getSessionInfo } from "../utils/get-devide-info.util";
-import { getCurrentIPGeoLocation } from "../fetchs/network.fetch";
 
 type AuthFormProps = {
   setModalCloseBtnDisabled?: (state: boolean) => void;

@@ -3,6 +3,7 @@ import Skeleton, { SkeletonProps } from "react-loading-skeleton";
 import useSidebarState from "../states/sidebar.state";
 
 import "react-loading-skeleton/dist/skeleton.css";
+import useProviderState from "../states/provider.state";
 
 interface ImageSkeleton extends SkeletonProps {
   className?: string;
@@ -114,5 +115,67 @@ export const LibraryPlaylistSkeleton = () => {
         dualLine: `${isCollapsed ? "hidden" : "block"}`,
       }}
     />
+  );
+};
+
+// devices overview skeleton
+export const DevicesOverviewSkeleton: React.FC<SquareDualLineSkeleton> = ({
+  count = 1,
+  className,
+  tw,
+  ...props
+}) => {
+  const { screenWidth } = useProviderState();
+  const { collapseSideBarState } = useSidebarState();
+
+  const { isCollapsed } = collapseSideBarState;
+  const isSmallScreen = screenWidth < 640;
+
+  return (
+    <div
+      className={twMerge(
+        `
+          grid
+          ${
+            isCollapsed
+              ? `
+                  max-sm:grid-cols-1
+                  sm:grid-cols-3
+                `
+              : `
+                  md:grid-cols-3
+                `
+          }
+          gap-5
+        `,
+        className
+      )}
+    >
+      {Array.from({ length: count }).map((_, index) => (
+        <div
+          key={`devices-overview-skeleton-${index}`}
+          className={twMerge(
+            `
+            flex
+            py-5
+            sm:py-8
+            px-5
+            gap-5
+            bg-neutral-200/5
+            items-center
+            justify-between
+            rounded-md
+          `,
+            tw?.container
+          )}
+        >
+          {/* content skeleton */}
+          <TextSkeleton count={isSmallScreen ? 2 : 3} {...props} />
+
+          {/* image skeleton */}
+          <ImageSkeleton className={tw?.square} {...props} />
+        </div>
+      ))}
+    </div>
   );
 };

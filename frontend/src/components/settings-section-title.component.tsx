@@ -6,6 +6,7 @@ type SettingSectionTitleProps = {
   icon: { name: IconType; opts?: IconBaseProps };
   title: string;
   description?: string;
+  className?: string;
   tw?: {
     icon?: string;
     title?: string;
@@ -17,18 +18,22 @@ const SettingSectionTitle: React.FC<SettingSectionTitleProps> = ({
   icon,
   title,
   description,
+  className,
   tw,
 }) => {
   const iconSize = icon?.opts?.size ?? 30;
 
   return (
     <div
-      className={`
+      className={twMerge(
+        `
         flex 
         items-center 
         gap-5
         mb-3
-      `}
+      `,
+        className
+      )}
     >
       {/* icon */}
       <div

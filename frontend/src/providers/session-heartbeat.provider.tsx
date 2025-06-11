@@ -15,6 +15,9 @@ const SessionHeartBeatProvider: React.FC<SessionHeartBeatProps> = ({ children })
   useEffect(() => {
     if (!authUser) return;
 
+    // Immediately trigger the heartbeat
+    touchSessionHeartBeat();
+
     const interval = setInterval(() => {
       touchSessionHeartBeat();
     }, HEARTBEAT_INTERVAL);

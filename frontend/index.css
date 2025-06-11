@@ -241,7 +241,11 @@ body,
   }
 
   th {
-    @apply font-light text-[14px] text-grey-custom/50;
+    @apply p-4 font-light text-[14px] text-grey-custom/50 whitespace-nowrap;
+  }
+
+  td {
+    @apply p-4 max-w-[150px] break-words;
   }
 
   /* Input slider*/

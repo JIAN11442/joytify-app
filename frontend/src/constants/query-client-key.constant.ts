@@ -28,6 +28,7 @@ export enum MutationKey {
   CHANGE_USER_PASSWORD = "change-user-password",
   UPDATE_USER_PREFERENCES = "update-user-preferences",
   SIGN_OUT_DEVICES = "sign-out-devices",
+  SIGN_OUT_TARGET_DEVICE = "sign-out-target-device",
   TOUCH_SESSION_HEARTBEAT = "touch-session-heartbeat",
 }
 
@@ -46,4 +47,5 @@ export enum QueryKey {
   VERIFY_RESET_PASSWORD_LINK = "verify-reset-password-link",
   GET_USER_PREFERENCES = "get-user-preferences",
   GET_IP_GEOLOCATION = "get-ip-geolocation",
+  GET_USER_SESSIONS = "get-user-sessions",
 }

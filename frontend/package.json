@@ -32,7 +32,6 @@
     "react-router-dom": "^6.26.1",
     "react-spinners": "^0.14.1",
     "tailwind-merge": "^2.5.2",
-    "visitorapi": "^2.0.0",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
