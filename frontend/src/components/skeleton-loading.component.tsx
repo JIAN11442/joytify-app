@@ -1,9 +1,8 @@
 import { twMerge } from "tailwind-merge";
 import Skeleton, { SkeletonProps } from "react-loading-skeleton";
 import useSidebarState from "../states/sidebar.state";
-
-import "react-loading-skeleton/dist/skeleton.css";
 import useProviderState from "../states/provider.state";
+import "react-loading-skeleton/dist/skeleton.css";
 
 interface ImageSkeleton extends SkeletonProps {
   className?: string;
@@ -16,6 +15,11 @@ interface TextSkeleton extends SkeletonProps {
     width?: string | number;
     height?: string | number;
   };
+}
+
+interface DeviceListSkeleton {
+  thCount?: number;
+  tdCount?: number;
 }
 
 interface SquareDualLineSkeleton extends SkeletonProps {
@@ -177,5 +181,42 @@ export const DevicesOverviewSkeleton: React.FC<SquareDualLineSkeleton> = ({
         </div>
       ))}
     </div>
+  );
+};
+
+// devices list skeleton
+export const DevicesListSkeleton: React.FC<DeviceListSkeleton> = ({ thCount = 1, tdCount = 1 }) => {
+  return (
+    <table className={`min-w-full bg-neutral-200/5 rounded-md`}>
+      <thead className={`border-b border-grey-custom/5`}>
+        <tr>
+          {Array.from({ length: thCount }).map((_, index) => (
+            <th key={index}>
+              <TextSkeleton />
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {Array.from({ length: tdCount }).map((_, index) => (
+          <tr
+            key={index}
+            className={`
+              border-b
+              border-grey-custom/5
+          `}
+          >
+            <td key={index}>
+              <SquareDualLineSkeleton count={1} />
+            </td>
+            {Array.from({ length: thCount - 1 }).map((_, index) => (
+              <td key={`divice-list-td-${index}`}>
+                <TextSkeleton />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };

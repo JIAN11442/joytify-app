@@ -3,6 +3,7 @@ import { LiaDesktopSolid } from "react-icons/lia";
 import { BsLaptop, BsPhone, BsTablet } from "react-icons/bs";
 
 import Icon from "./react-icons.component";
+import { DevicesListSkeleton } from "./skeleton-loading.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useSignOutTargetDeviceMutation } from "../hooks/session-mutate.hook";
 import { SessionResponse } from "@joytify/shared-types/types";
@@ -28,7 +29,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ sessions }) => {
   const deviceListFm = fm("settings.connectedDevices.list");
   const deviceTypeFm = fm("settings.connectedDevices.device.type");
 
-  if (!sessions) return null;
+  if (!sessions) return <DevicesListSkeleton thCount={7} tdCount={3} />;
 
   return (
     <div
@@ -75,6 +76,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ sessions }) => {
                   border-b
                   border-grey-custom/5
                   text-neutral-200
+                  font-light
                 `}
               >
                 {/* name & type */}
@@ -91,6 +93,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ sessions }) => {
                     </div>
                   </div>
                 </td>
+
                 {/* online status */}
                 <td>
                   <div
@@ -125,20 +128,26 @@ const DeviceList: React.FC<DeviceListProps> = ({ sessions }) => {
                     </p>
                   </div>
                 </td>
+
                 {/* last active */}
                 <td>{getTimeAgo(status.lastActive, themeLocale)}</td>
+
                 {/* browser */}
                 <td>{browser.name}</td>
+
                 {/* os */}
                 <td>{device.os}</td>
+
                 {/* ip address */}
                 <td>{location.ipAddress}</td>
+
                 {/* location */}
                 <td>
                   {location.city}
                   <br />
                   <span className="text-xs text-gray-400">{location.country}</span>
                 </td>
+
                 {/* action */}
                 <td>
                   <button

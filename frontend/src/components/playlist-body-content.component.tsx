@@ -1,4 +1,4 @@
-import SongsList from "./songs-list.component";
+import SongList from "./song-list.component";
 import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
 
 type PlaylistBodyContentProps = {
@@ -15,7 +15,7 @@ const PlaylistBodyContent: React.FC<PlaylistBodyContentProps> = ({ playlist }) =
         overflow-x-hidden
       `}
     >
-      <SongsList songs={songs} />
+      <SongList songs={songs} />
     </div>
   );
 };
