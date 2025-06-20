@@ -44,21 +44,20 @@ const SidebarItem = forwardRef<HTMLDivElement, SidebarItemProps>(
           flex
           gap-x-4
           items-center
-          cursor-pointer
-          rounded-md
-          ${
-            active
-              ? `
-                bg-gradient-to-r
-                from-neutral-900 from-[0%]
-                via-green-400/50 via-[50%]
-                to-neutral-900 to-[100%]
-              `
-              : collapse && !activeFloatingSidebar
-              ? "text-neutral-300"
-              : "text-neutral-300 hover:text-white"
-          }
+          text-neutral-400
           hover:text-white
+          ${
+            active &&
+            `
+              bg-gradient-to-r
+              from-neutral-900 from-[0%]
+              via-teal-400/50 via-[50%]
+              to-neutral-900 to-[100%]
+              text-white
+            `
+          }
+          rounded-md
+          cursor-pointer
           gradient-animation
           transition-all
         `,
@@ -66,7 +65,7 @@ const SidebarItem = forwardRef<HTMLDivElement, SidebarItemProps>(
         )}
       >
         {/* Icon */}
-        <Icon name={name} opts={{ size: 24, ...opts }} className={`mb-1`} />
+        <Icon name={name} opts={{ size: 24, ...opts }} />
 
         {/* Label */}
         {(label?.length && !collapse) || activeFloatingSidebar ? (

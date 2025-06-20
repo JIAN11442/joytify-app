@@ -1,0 +1,27 @@
+{
+  "manage.sidebar.categories.library": "ライブラリ",
+  "manage.sidebar.categories.library.songs": "曲",
+  "manage.sidebar.categories.library.playlists": "プレイリスト",
+  "manage.sidebar.categories.library.following": "フォロー中",
+  "manage.sidebar.categories.other": "その他",
+  "manage.sidebar.categories.other.notifications": "通知",
+
+  "manage.songs.title": "楽曲管理",
+  "manage.songs.description": "あなたの楽曲とその詳細を管理します",
+  "manage.songs.searchbar.placeholder": "楽曲を検索",
+  "manage.songs.overview.totalSongs": "総楽曲数",
+  "manage.songs.overview.totalPlaybackCount": "総再生回数",
+  "manage.songs.overview.totalWeightedPlaybackDuration": "平均再生時間(加重)",
+  "manage.songs.overview.averageRating": "平均評価",
+
+  "manage.songs.list.details.title": "タイトル",
+  "manage.songs.list.details.artist": "アーティスト",
+  "manage.songs.list.details.composer": "作曲者",
+  "manage.songs.list.details.lyricist": "作詞者",
+  "manage.songs.list.details.album": "アルバム",
+  "manage.songs.list.details.duration": "再生時間",
+  "manage.songs.list.details.language": "言語",
+  "manage.songs.list.details.releaseDate": "リリース日",
+  "manage.songs.list.details.playbackDuration.total": "再生時間(合計)",
+  "manage.songs.list.details.playbackDuration.weighted": "再生時間(加重)"
+}

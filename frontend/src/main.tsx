@@ -13,9 +13,9 @@ import ShortcutKeysProvider from "./providers/shortcut-keys.provider.tsx";
 import SkeletonThemeProvider from "./providers/skeleton-theme.provider.tsx";
 import UserPreferencesProvider from "./providers/user-preferences.provider.tsx";
 import PlaybackControlProvider from "./providers/playback-control.provider.tsx";
+import SessionHeartBeatProvider from "./providers/session-heartbeat.provider.tsx";
 import queryClient from "./config/query-client.config.ts";
 import "../index.css";
-import SessionHeartBeatProvider from "./providers/session-heartbeat.provider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

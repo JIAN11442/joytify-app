@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import PlayerVolume from "./player-volume.component";
+import PlayerSlider from "./player-slider.component";
 import SongTitleItem from "./song-title-item.component";
 import PlayerOperation from "./player-operation.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
 import useUserState from "../states/user.state";
-import PlayerSlider from "./player-slider.component";
 
 type AudioPlayerProps = {
   song: RefactorSongResponse;
@@ -64,7 +64,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
           switchFunc={false}
           onClick={handleNavigateToPlaylist}
           className={{
-            wrapper: `
+            item: `
               text-sm
               text-grey-custom/50
               ${isUserOwned && "cursor-pointer"}

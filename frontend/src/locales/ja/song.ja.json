@@ -35,5 +35,31 @@
   "song.create.option.type.playlist": "プレイリスト",
 
   "song.input.target.lyricists": "作詞者",
-  "song.input.target.composers": "作曲者"
+  "song.input.target.composers": "作曲者",
+
+  "song.details.modal.title": "曲の詳細",
+  "song.details.modal.comment.title": "他のユーザーの評価",
+
+  "song.rate.modal.title": "この曲を評価する",
+  "song.rate.modal.description": "この曲、どう思った？",
+  "song.rate.modal.rating.1": "あまり好きじゃない",
+  "song.rate.modal.rating.2": "まあまあかな",
+  "song.rate.modal.rating.3": "けっこういいね",
+  "song.rate.modal.rating.4": "すごく好き！",
+  "song.rate.modal.rating.5": "めっちゃ最高！！",
+  "song.rate.modal.addToFavorite": "お気に入りに追加",
+  "song.rate.modal.commentLabel": "感想を書いてね（任意）",
+  "song.rate.modal.commentPlaceholder": "例：心に響いたところ、好きな部分など…",
+  "song.rate.modal.cancel": "キャンセル",
+  "song.rate.modal.submit": "送信",
+
+  "song.delete.modal.confirmation.title": "この楽曲を削除",
+  "song.delete.modal.confirmation.warning": "この楽曲を削除すると、プラットフォームに提供しない限り、すべての情報が完全に削除されます。",
+  "song.delete.modal.confirmation.content": "本当にこの楽曲を削除しますか？",
+  "song.delete.modal.confirmation.cancel": "キャンセル",
+  "song.delete.modal.confirmation.next": "次へ",
+  "song.delete.modal.donation.title": "楽曲データ保存オプション（任意）",
+  "song.delete.modal.donation.description": "データ保存オプションと同意条件をご確認ください",
+  "song.delete.modal.donation.delete": "この楽曲を完全に削除する",
+  "song.delete.modal.donation.back": "前のページに戻る"
 }

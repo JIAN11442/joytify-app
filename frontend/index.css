@@ -166,10 +166,6 @@ body,
     transition;
   }
 
-  .no-hover {
-    @apply pointer-events-none;
-  }
-
   .auth-btn {
     @apply w-fit
     px-5
@@ -224,6 +220,24 @@ body,
     @apply text-grey-custom/50 hover:text-white transition;
   }
 
+  .song-rate-btn {
+    @apply p-3
+    w-1/2
+    text-sm
+    bg-neutral-500/50
+    border-neutral-500/50
+    disabled:opacity-80
+    disabled:hover:opacity-80
+    disabled:bg-neutral-700/50
+    disabled:text-neutral-500
+    disabled:border-grey-custom/10
+    rounded-2xl;
+  }
+
+  .no-hover {
+    @apply pointer-events-none;
+  }
+
   .divider {
     @apply flex
     my-5
@@ -235,17 +249,65 @@ body,
     @apply flex
     flex-col
     min-w-[400px]
+    h-full
     my-8
     px-8
     gap-4;
   }
 
+  .tag-label {
+    @apply py-2
+    px-3
+    bg-gradient-to-r
+    from-purple-400
+    to-indigo-400
+    text-xs
+    text-white
+    font-semibold
+    rounded-full;
+  }
+
+  .image-bottom-mask {
+    @apply pointer-events-none
+    absolute
+    left-0
+    right-0
+    -bottom-5
+    h-16
+    bg-gradient-to-t
+    from-black/80
+    via-black/50
+    to-transparent
+    rounded-b-md;
+  }
+
+  .song-card-details {
+    @apply text-neutral-300 truncate;
+  }
+
+  .song-details-btn {
+    @apply hover:px-2
+    hover:bg-purple-500/30
+    hover:shadow-purple-300/20
+    hover:shadow-[0_0_10px_0_rgba(0,0,0,0.1)];
+  }
+
+  .navigation-arrow-btn {
+    @apply p-3
+    mx-2
+    bg-neutral-400/50
+    hover:bg-purple-400/50
+    hover:scale-105
+    rounded-full
+    transition-all;
+  }
+
   th {
-    @apply p-4 font-light text-[14px] text-grey-custom/50 whitespace-nowrap;
+    @apply py-3 px-10 font-light text-[14px] text-grey-custom/50 whitespace-nowrap;
   }
 
   td {
-    @apply p-4 max-w-[150px] break-words;
+    @apply py-3 px-10 max-w-[150px] overflow-hidden;
   }
 
   /* Input slider*/

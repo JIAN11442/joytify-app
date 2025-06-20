@@ -4,12 +4,16 @@ import LabelModel from "./label.model";
 import MusicianModel from "./musician.model";
 import PlaylistModel from "./playlist.model";
 import AlbumModel from "./album.model";
+import usePalette from "../hooks/paletee.hook";
+import { SongAssociationAction } from "@joytify/shared-types/constants";
+import { HexPaletee, SongAssociationActionType } from "@joytify/shared-types/types";
 import { bulkUpdateReferenceArrayFields } from "../utils/mongoose.util";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
 type SongRating = {
   id: mongoose.Types.ObjectId;
   rating: number;
+  comment: string;
 };
 
 export interface SongDocument extends mongoose.Document {
@@ -28,7 +32,8 @@ export interface SongDocument extends mongoose.Document {
   album: mongoose.Types.ObjectId; // 專輯名稱
   lyrics: string[]; // 歌詞 *
   releaseDate: Date; // 發行日期
-  followers: mongoose.Types.ObjectId[];
+  paletee: HexPaletee; // 主題色
+  favorites: mongoose.Types.ObjectId[]; // 收藏者
   ratings: SongRating[];
   activities: {
     totalRatingCount: number;
@@ -98,7 +103,15 @@ const songSchema = new mongoose.Schema<SongDocument>(
     },
     lyrics: { type: [String] },
     releaseDate: { type: Date },
-    followers: {
+    paletee: {
+      vibrant: { type: String },
+      darkVibrant: { type: String },
+      lightVibrant: { type: String },
+      muted: { type: String },
+      darkMuted: { type: String },
+      lightMuted: { type: String },
+    },
+    favorites: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "User",
       index: true,
@@ -119,6 +132,7 @@ const songSchema = new mongoose.Schema<SongDocument>(
             default: 0,
             required: true,
           },
+          comment: { type: String, default: "" },
         },
         { _id: false, timestamps: true }
       ),
@@ -138,7 +152,100 @@ const songSchema = new mongoose.Schema<SongDocument>(
   { timestamps: true }
 );
 
-// after created song, ...
+const { DELETE_PERMANENTLY, DELETE_WITH_DONATE } = SongAssociationAction;
+
+const removeSongAssociations = async (song: SongDocument, action: SongAssociationActionType) => {
+  const { _id: songId, creator, playlistFor, songUrl, imageUrl, album } = song;
+
+  // reduce count in user's totalSongs and remove id from songs
+  if (creator) {
+    await UserModel.findByIdAndUpdate(creator, {
+      $pull: { songs: songId, albums: album },
+      $inc: {
+        "accountInfo.totalSongs": -1,
+        ...(!!album && { "accountInfo.totalAlbums": -1 }),
+      },
+    });
+  }
+
+  // remove song ID to target playlist's songs array
+  if (playlistFor) {
+    await PlaylistModel.updateMany({ _id: { $in: playlistFor } }, { $pull: { songs: songId } });
+  }
+
+  // remove song ID from all user's user preferences
+  await UserModel.updateMany(
+    {
+      $or: [
+        { "userPreferences.player.playlistSongs": songId },
+        { "userPreferences.player.playbackQueue.queue": songId },
+      ],
+    },
+    {
+      $pull: {
+        "userPreferences.player.playlistSongs": songId,
+        "userPreferences.player.playbackQueue.queue": songId,
+        "userPreferences.player.playbackQueue.currentIndex": 0,
+      },
+    }
+  );
+
+  if (action === DELETE_PERMANENTLY) {
+    // decrease song duration to album's totalDuration
+    if (album) {
+      await AlbumModel.findByIdAndUpdate(album, {
+        $pull: { songs: songId },
+        $inc: { totalDuration: song.duration * -1 },
+      });
+    }
+
+    // delete song url from AWS
+    if (songUrl) {
+      await deleteAwsFileUrlOnModel(songUrl);
+    }
+
+    // delete image url from AWS
+    if (imageUrl) {
+      await deleteAwsFileUrlOnModel(imageUrl);
+    }
+
+    // remove song ID from each relate label's "songs" property
+    await LabelModel.updateMany({ songs: songId }, { $pull: { songs: songId } });
+
+    // remove song ID from each relate musician's "songs" property
+    await MusicianModel.updateMany({ songs: songId }, { $pull: { songs: songId } });
+  }
+};
+
+// before created song,...
+songSchema.pre("save", async function (next) {
+  // update paletee
+  if (this.imageUrl) {
+    const paletee = await usePalette(this.imageUrl);
+    this.paletee = paletee;
+  }
+
+  next();
+});
+
+// before delete song,...
+songSchema.pre("findOneAndDelete", async function (next) {
+  try {
+    const findQuery = this.getQuery();
+    const songId = findQuery._id;
+    const song = await SongModel.findById(songId);
+
+    if (song) {
+      await removeSongAssociations(song, DELETE_PERMANENTLY);
+    }
+
+    next();
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// after created song,...
 songSchema.post("save", async function (doc) {
   const { id, playlistFor, creator, album } = doc;
   const song = await SongModel.findById(id);
@@ -158,9 +265,16 @@ songSchema.post("save", async function (doc) {
 
       // adding song ID to target playlist's songs array
       if (playlistFor) {
-        await PlaylistModel.findByIdAndUpdate(playlistFor, {
-          $addToSet: { songs: id },
-        });
+        const playlist = await PlaylistModel.findByIdAndUpdate(
+          playlistFor,
+          { $addToSet: { songs: id } },
+          { new: true }
+        );
+
+        // if playlistFor is default playlist, add user ID to song's favorites
+        if (playlist?.default) {
+          await SongModel.updateOne({ _id: id }, { $addToSet: { favorites: creator } });
+        }
       }
 
       // increate song duration to album's totalDuration
@@ -184,62 +298,49 @@ songSchema.post("save", async function (doc) {
   }
 });
 
-// before delete song, ...
-songSchema.pre("findOneAndDelete", async function (next) {
-  try {
-    const findQuery = this.getQuery();
-    const songId = findQuery._id;
-    const song = await SongModel.findById(songId);
+// after update song,...
+songSchema.post("findOneAndUpdate", async function (doc) {
+  if (!doc) return;
+
+  // 1. get update content
+  const update = this.getUpdate();
+
+  // 2. check if ratings is updated
+  const ratingsUpdated =
+    update.ratings ||
+    (update.$push && update.$push.ratings) ||
+    (update.$pull && update.$pull.ratings) ||
+    (update.$set && Object.keys(update.$set).some((key) => key.startsWith("ratings")));
+
+  const ownershipUpdated =
+    update.$set && Object.keys(update.$set).some((key) => key.startsWith("ownership"));
+
+  // 3. if ratings is updated, update activities
+  if (ratingsUpdated) {
+    const song = await mongoose.model("Song").findById(doc._id).lean();
+
+    if (song && Array.isArray(song.ratings)) {
+      const totalRatingCount = song.ratings.length;
+      const averageRating =
+        totalRatingCount > 0
+          ? song.ratings.reduce((sum: number, r: { rating: number }) => sum + (r.rating || 0), 0) /
+            totalRatingCount
+          : 0;
+
+      await mongoose.model("Song").findByIdAndUpdate(doc._id, {
+        "activities.totalRatingCount": totalRatingCount,
+        "activities.averageRating": averageRating,
+      });
+    }
+  }
+
+  // 4. if ownership is updated, remove song associations
+  if (ownershipUpdated) {
+    const song = await mongoose.model("Song").findById(doc._id).lean();
 
     if (song) {
-      const { creator, playlistFor, songUrl, imageUrl, album } = song;
-
-      // reduce count in user's totalSongs and remove id from songs
-      if (creator) {
-        await UserModel.findByIdAndUpdate(creator, {
-          $pull: { songs: songId, albums: album },
-          $inc: {
-            "accountInfo.totalSongs": -1,
-            ...(!!album && { "accountInfo.totalAlbums": -1 }),
-          },
-        });
-      }
-
-      // remove song ID to target playlist's songs array
-      if (playlistFor) {
-        await PlaylistModel.findByIdAndUpdate(playlistFor, {
-          $pull: { songs: songId },
-        });
-      }
-
-      // decrease song duration to album's totalDuration
-      if (album) {
-        await AlbumModel.findByIdAndUpdate(album, {
-          $pull: { songs: songId },
-          $inc: { totalDuration: song.duration * -1 },
-        });
-      }
-
-      // delete song url from AWS
-      if (songUrl) {
-        await deleteAwsFileUrlOnModel(songUrl);
-      }
-
-      // delete image url from AWS
-      if (imageUrl) {
-        await deleteAwsFileUrlOnModel(imageUrl);
-      }
-
-      // remove song ID from each relate label's "songs" property
-      await LabelModel.updateMany({ songs: songId }, { $pull: { songs: songId } });
-
-      // remove song ID from each relate musician's "songs" property
-      await MusicianModel.updateMany({ songs: songId }, { $pull: { songs: songId } });
+      await removeSongAssociations(song, DELETE_WITH_DONATE);
     }
-
-    next();
-  } catch (error) {
-    console.log(error);
   }
 });
 

@@ -35,5 +35,31 @@
   "song.create.option.type.playlist": "播放清單",
 
   "song.input.target.lyricists": "作詞者",
-  "song.input.target.composers": "作曲者"
+  "song.input.target.composers": "作曲者",
+
+  "song.details.modal.title": "歌曲詳情",
+  "song.details.modal.comment.title": "其他用戶評價",
+
+  "song.rate.modal.title": "幫這首歌評分",
+  "song.rate.modal.description": "你覺得這首歌怎麼樣？",
+  "song.rate.modal.rating.1": "不太喜歡",
+  "song.rate.modal.rating.2": "還可以",
+  "song.rate.modal.rating.3": "不錯耶",
+  "song.rate.modal.rating.4": "超喜歡！",
+  "song.rate.modal.rating.5": "爆愛！！",
+  "song.rate.modal.addToFavorite": "加入收藏",
+  "song.rate.modal.commentLabel": "想說點什麼？（選填）",
+  "song.rate.modal.commentPlaceholder": "例如：這首歌讓你想到什麼、哪裡打動你……",
+  "song.rate.modal.cancel": "取消",
+  "song.rate.modal.submit": "送出",
+
+  "song.delete.modal.confirmation.title": "刪除這首歌",
+  "song.delete.modal.confirmation.warning": "若你刪除此歌曲，所有相關資訊都會被永久刪除，除非你願意將這首歌貢獻給平台。",
+  "song.delete.modal.confirmation.content": "你確定要刪除這首歌嗎？",
+  "song.delete.modal.confirmation.cancel": "取消",
+  "song.delete.modal.confirmation.next": "下一步",
+  "song.delete.modal.donation.title": "歌曲資料保留選項（可選）",
+  "song.delete.modal.donation.description": "請確認資料保留選項及同意條款",
+  "song.delete.modal.donation.delete": "永久刪除這首歌",
+  "song.delete.modal.donation.back": "回到上一頁"
 }

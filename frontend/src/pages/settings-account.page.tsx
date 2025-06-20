@@ -1,9 +1,9 @@
 import { RiUserSettingsLine } from "react-icons/ri";
 import Loader from "../components/loader.component";
+import AnimationWrapper from "../components/animation-wrapper.component";
+import PageSectionTitle from "../components/page-section-title.component";
 import AccountProfileCard from "../components/account-profile-card.component";
 import AccountDetailsForm from "../components/account-details-form.component";
-import SettingSectionTitle from "../components/settings-section-title.component";
-import AnimationWrapper from "../components/animation-wrapper.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import useSettingsState from "../states/settings.state";
 import useSidebarState from "../states/sidebar.state";
@@ -48,7 +48,7 @@ const SettingsAccountPage = () => {
     >
       {/* title */}
       <AnimationWrapper initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <SettingSectionTitle
+        <PageSectionTitle
           icon={{ name: RiUserSettingsLine }}
           title={settingsAccountFm("title")}
           description={settingsAccountFm("description")}

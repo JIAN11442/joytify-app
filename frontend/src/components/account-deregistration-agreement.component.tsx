@@ -2,8 +2,8 @@ import { twMerge } from "tailwind-merge";
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 
+import CheckboxLabel from "./checkbox-label.component";
 import AnimationWrapper from "./animation-wrapper.component";
-import TermsAgreementLabel from "./terms-agreement-label.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
@@ -54,7 +54,10 @@ const AccountDeregistrationAgreement = ({
   };
 
   const termsAgreementLabelTw = {
-    label: twMerge(`mb-0 ${isPending ? "no-hover opacity-80" : "hover:bg-red-400/10"}`, tw?.label),
+    label: twMerge(
+      `p-3 gap-3 mb-0 ${isPending ? "no-hover opacity-80" : "hover:bg-red-400/10"}`,
+      tw?.label
+    ),
     input: twMerge(`accent-red-500`, tw?.input),
   };
 
@@ -85,9 +88,9 @@ const AccountDeregistrationAgreement = ({
       <p
         className={twMerge(
           `
-          text-[14px]
-          text-red-500
-          font-bold
+            text-[14px]
+            text-red-500
+            font-bold
           `,
           tw?.title
         )}
@@ -96,7 +99,7 @@ const AccountDeregistrationAgreement = ({
       </p>
 
       {/* terms of agreement 1 */}
-      <TermsAgreementLabel
+      <CheckboxLabel
         checked={termsChecked.understandTerms}
         disabled={isPending}
         onChange={() => handleCheckboxChange("understandTerms")}
@@ -112,10 +115,10 @@ const AccountDeregistrationAgreement = ({
             }}
           />
         </span>
-      </TermsAgreementLabel>
+      </CheckboxLabel>
 
       {/* terms of agreement 2 */}
-      <TermsAgreementLabel
+      <CheckboxLabel
         checked={termsChecked.agreeToTerms}
         disabled={isPending}
         onChange={() => handleCheckboxChange("agreeToTerms")}
@@ -146,7 +149,7 @@ const AccountDeregistrationAgreement = ({
             }}
           />
         </span>
-      </TermsAgreementLabel>
+      </CheckboxLabel>
     </AnimationWrapper>
   );
 };

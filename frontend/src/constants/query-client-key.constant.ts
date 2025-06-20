@@ -30,6 +30,9 @@ export enum MutationKey {
   SIGN_OUT_DEVICES = "sign-out-devices",
   SIGN_OUT_TARGET_DEVICE = "sign-out-target-device",
   TOUCH_SESSION_HEARTBEAT = "touch-session-heartbeat",
+  RATE_SONG = "rate-song",
+  DELETE_TARGET_SONG = "delete-target-song",
+  ASSIGN_SONG_TO_PLAYLISTS = "assign-song-to-playlists",
 }
 
 export enum QueryKey {
@@ -48,4 +51,6 @@ export enum QueryKey {
   GET_USER_PREFERENCES = "get-user-preferences",
   GET_IP_GEOLOCATION = "get-ip-geolocation",
   GET_USER_SESSIONS = "get-user-sessions",
+  GET_USER_SONGS_STATS = "get-user-songs-stats",
+  GET_USER_SONGS = "get-user-songs",
 }

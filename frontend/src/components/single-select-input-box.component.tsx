@@ -386,7 +386,7 @@ const SelectInputBox = forwardRef<HTMLInputElement, SelectInputBoxProps>(
 
         <AnimationWrapper
           ref={menuRef}
-          visible={showOptionsMenu}
+          visible={activeMenu}
           initial={{ opacity: 0, scaleY: "0%", transformOrigin: "top" }}
           animate={{ opacity: 1, scaleY: "100%", transformOrigin: "top" }}
           transition={{ duration: 0.2 }}

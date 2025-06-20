@@ -5,18 +5,29 @@ import {
   getAllSongsHandler,
   getSongByIdHandler,
   getSongPlaybackStatsHandler,
+  getUserSongsHandler,
+  getUserSongsStatsHandler,
+  updateSongPaleteeHandler,
   updateSongPlaybackStatsHandler,
+  updateSongPlaylistsAssignmentHandler,
+  updateSongRatingHandler,
 } from "../controllers/song.controller";
 import authenticate from "../middlewares/authenticate.middleware";
 
 const songRoute = Router();
 
 // prefix: /song
-songRoute.get("/", getAllSongsHandler);
+songRoute.get("/all", getAllSongsHandler);
+songRoute.get("/user", authenticate, getUserSongsHandler);
+songRoute.get("/stats", authenticate, getUserSongsStatsHandler);
 songRoute.get("/:id", authenticate, getSongByIdHandler);
-songRoute.get("/stats/:id", authenticate, getSongPlaybackStatsHandler); //(*)
-songRoute.post("/create", authenticate, createSongHandler);
+songRoute.post("/", authenticate, createSongHandler);
+songRoute.patch("/:id/rating", authenticate, updateSongRatingHandler);
+songRoute.patch("/:id/playlist-assignment", authenticate, updateSongPlaylistsAssignmentHandler);
+songRoute.delete("/:id", authenticate, deleteSongByIdHandler);
+
+songRoute.get("/stats/playback/:id", authenticate, getSongPlaybackStatsHandler); //(*)
 songRoute.patch("/update/activities/:id", authenticate, updateSongPlaybackStatsHandler); //(*)
-songRoute.delete("/delete/:id", deleteSongByIdHandler); //(*)
+songRoute.patch("/paletee", updateSongPaleteeHandler); // (*)
 
 export default songRoute;

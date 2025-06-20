@@ -37,7 +37,9 @@ const DeviceList: React.FC<DeviceListProps> = ({ sessions }) => {
         w-full
         max-h-[500px]
         p-3 
-        bg-neutral-200/5 
+        border-[0.1px]
+        border-neutral-400/10
+        bg-neutral-400/10
         overflow-x-auto
         rounded-md 
       `}

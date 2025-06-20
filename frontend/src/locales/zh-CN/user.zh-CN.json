@@ -1,5 +1,6 @@
 {
   "user.entry.menu.profile": "个人中心",
+  "user.entry.menu.manage": "管理",
   "user.entry.menu.setting": "设置",
   "user.entry.menu.logout": "退出登录",
   "user.entry.menu.deregister": "注销账号",

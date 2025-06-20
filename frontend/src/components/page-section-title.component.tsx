@@ -2,7 +2,7 @@ import { IconBaseProps, IconType } from "react-icons";
 import Icon from "./react-icons.component";
 import { twMerge } from "tailwind-merge";
 
-type SettingSectionTitleProps = {
+type PageSectionTitleProps = {
   icon: { name: IconType; opts?: IconBaseProps };
   title: string;
   description?: string;
@@ -14,7 +14,7 @@ type SettingSectionTitleProps = {
   };
 };
 
-const SettingSectionTitle: React.FC<SettingSectionTitleProps> = ({
+const PageSectionTitle: React.FC<PageSectionTitleProps> = ({
   icon,
   title,
   description,
@@ -83,4 +83,4 @@ const SettingSectionTitle: React.FC<SettingSectionTitleProps> = ({
   );
 };
 
-export default SettingSectionTitle;
+export default PageSectionTitle;

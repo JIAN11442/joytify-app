@@ -7,6 +7,8 @@ import useSettingsState from "../states/settings.state";
 import useAuthModalState from "../states/auth-modal.state";
 import useUploadModalState from "../states/upload-modal.state";
 import useVerificationModalState from "../states/verification.state";
+import useManagesState from "../states/manages.state";
+import useSongState from "../states/song.state";
 
 // import all components
 const components = import.meta.glob("../components/*.component.tsx");
@@ -34,6 +36,10 @@ const Modal = {
   profileEditModal: lazy(() => path("profile-edit-modal")),
   changePasswordModal: lazy(() => path("change-password-modal")),
   accountDeregistrationModal: lazy(() => path("account-deregistration-modal")),
+  manageSongDetailCardModal: lazy(() => path("song-detail-card-modal")),
+  songRateModal: lazy(() => path("song-rate-modal")),
+  songDeleteModal: lazy(() => path("song-delete-modal")),
+  songAssignmentModal: lazy(() => path("song-playlist-assignment-modal")),
 };
 
 const ModalProvider = () => {
@@ -46,9 +52,12 @@ const ModalProvider = () => {
   } = useUploadModalState();
   const { activePlaylistEditModal, activePlaylistDeleteModal, activePlaylistPrivacyModal } =
     usePlaylistState();
-  const { activeVerificationCodeModal } = useVerificationModalState();
   const { activeProfileEditModal } = useUserState();
+  const { activeVerificationCodeModal } = useVerificationModalState();
   const { activeChangePasswordModal, activeAccountDeregistrationModal } = useSettingsState();
+  const { activeSongRateModal, activeSongDetailCardModal, activeSongAssignmentModal } =
+    useSongState();
+  const { activeSongDeleteModal } = useManagesState();
 
   return (
     <Suspense fallback={null}>
@@ -64,6 +73,10 @@ const ModalProvider = () => {
       {activeProfileEditModal.active && <Modal.profileEditModal />}
       {activeChangePasswordModal && <Modal.changePasswordModal />}
       {activeAccountDeregistrationModal.active && <Modal.accountDeregistrationModal />}
+      {activeSongDetailCardModal.active && <Modal.manageSongDetailCardModal />}
+      {activeSongRateModal.active && <Modal.songRateModal />}
+      {activeSongDeleteModal.active && <Modal.songDeleteModal />}
+      {activeSongAssignmentModal.active && <Modal.songAssignmentModal />}
     </Suspense>
   );
 };

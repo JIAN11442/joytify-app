@@ -35,5 +35,31 @@
   "song.create.option.type.playlist": "senarai main",
 
   "song.input.target.lyricists": "penulis lirik",
-  "song.input.target.composers": "komposer"
+  "song.input.target.composers": "komposer",
+
+  "song.details.modal.title": "Butiran Lagu",
+  "song.details.modal.comment.title": "Penilaian & Komen",
+
+  "song.rate.modal.title": "Beri Penilaian Lagu Ini",
+  "song.rate.modal.description": "Apa pendapat anda tentang lagu ini?",
+  "song.rate.modal.rating.1": "Kurang suka",
+  "song.rate.modal.rating.2": "Boleh tahan",
+  "song.rate.modal.rating.3": "Okey juga",
+  "song.rate.modal.rating.4": "Sangat best!",
+  "song.rate.modal.rating.5": "Memang padu!!",
+  "song.rate.modal.addToFavorite": "Tambah ke Kegemaran",
+  "song.rate.modal.commentLabel": "Kongsikan pendapat anda (pilihan)",
+  "song.rate.modal.commentPlaceholder": "cth: apa yang anda rasa tentang lagu ini...",
+  "song.rate.modal.cancel": "Batal",
+  "song.rate.modal.submit": "Hantar",
+
+  "song.delete.modal.confirmation.title": "Padam lagu ini",
+  "song.delete.modal.confirmation.warning": "Jika anda memadam lagu ini, semua maklumat akan dipadam secara kekal kecuali jika anda ingin menyumbangkannya kepada platform.",
+  "song.delete.modal.confirmation.content": "Adakah anda pasti mahu memadam lagu ini?",
+  "song.delete.modal.confirmation.cancel": "Batal",
+  "song.delete.modal.confirmation.next": "Seterusnya",
+  "song.delete.modal.donation.title": "Pilihan Pengekalan Data Lagu (Pilihan)",
+  "song.delete.modal.donation.description": "Sila semak pilihan pengekalan data dan terma persetujuan",
+  "song.delete.modal.donation.delete": "Padam lagu ini secara kekal",
+  "song.delete.modal.donation.back": "Kembali ke halaman sebelum"
 }

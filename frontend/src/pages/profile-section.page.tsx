@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
+import Loader from "../components/loader.component";
+import ItemCard from "../components/item-card.component";
+import AnimationWrapper from "../components/animation-wrapper.component";
 import { useGetProfileCollectionInfoQuery } from "../hooks/user-query.hook";
 import { ProfileCollectionsType } from "@joytify/shared-types/types";
-import Loader from "../components/loader.component";
-import AnimationWrapper from "../components/animation-wrapper.component";
-import ItemCard from "../components/item-card.component";
 import useSidebarState from "../states/sidebar.state";
 
 const ProfileSectionPage = () => {

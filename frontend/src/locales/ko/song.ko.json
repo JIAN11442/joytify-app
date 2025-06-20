@@ -35,5 +35,31 @@
   "song.create.option.type.playlist": "재생목록",
 
   "song.input.target.lyricists": "작사가",
-  "song.input.target.composers": "작곡가"
+  "song.input.target.composers": "작곡가",
+
+  "song.details.modal.title": "곡 상세",
+  "song.details.modal.comment.title": "다른 사용자의 평가",
+
+  "song.rate.modal.title": "이 노래 평가하기",
+  "song.rate.modal.description": "이 노래 어땠나요?",
+  "song.rate.modal.rating.1": "별로였어요",
+  "song.rate.modal.rating.2": "그냥 그랬어요",
+  "song.rate.modal.rating.3": "괜찮았어요",
+  "song.rate.modal.rating.4": "좋았어요!",
+  "song.rate.modal.rating.5": "완전 최고예요!!",
+  "song.rate.modal.addToFavorite": "즐겨찾기에 추가",
+  "song.rate.modal.commentLabel": "느낌을 남겨보세요 (선택)",
+  "song.rate.modal.commentPlaceholder": "예: 이 노래를 듣고 느낀 점 등...",
+  "song.rate.modal.cancel": "취소",
+  "song.rate.modal.submit": "등록",
+
+  "song.delete.modal.confirmation.title": "이 노래 삭제",
+  "song.delete.modal.confirmation.warning": "이 노래를 삭제하면, 플랫폼에 기여하지 않는 이상 모든 정보가 영구적으로 삭제됩니다.",
+  "song.delete.modal.confirmation.content": "정말 이 노래를 삭제하시겠습니까?",
+  "song.delete.modal.confirmation.cancel": "취소",
+  "song.delete.modal.confirmation.next": "다음",
+  "song.delete.modal.donation.title": "노래 데이터 보존 옵션 (선택사항)",
+  "song.delete.modal.donation.description": "데이터 보존 옵션 및 동의 약관을 확인해주세요",
+  "song.delete.modal.donation.delete": "이 노래를 영구적으로 삭제",
+  "song.delete.modal.donation.back": "이전 페이지로 돌아가기"
 }

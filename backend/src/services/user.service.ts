@@ -131,7 +131,7 @@ export const getProfileUserInfo = async (userId: string, page: number) => {
       default: false,
       privacy: PUBLIC,
     }),
-    SongModel.countDocuments({ creator: userId }),
+    SongModel.countDocuments({ creator: userId, "ownership.isPlatformOwned": false }),
     AlbumModel.countDocuments({ users: userId }),
     MusicianModel.countDocuments({ followers: userId }),
   ]).then(([playlists, songs, albums, following]) => ({
@@ -181,7 +181,7 @@ export const getProfileCollectionsInfo = async (
     case SONGS:
       docs = await getPaginatedDocs({
         model: SongModel,
-        filter: { creator: userId },
+        filter: { creator: userId, "ownership.isPlatformOwned": false },
         ...opts,
       })
         .populate({ path: "artist", select: "name", transform: (doc: Musician) => doc.name })

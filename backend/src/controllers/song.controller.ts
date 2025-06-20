@@ -3,16 +3,27 @@ import { RequestHandler } from "express";
 import {
   createNewSong,
   deleteSongById,
+  getAllSongs,
   getSongById,
-  getSongs,
+  getUserSongs,
+  rateTargetSong,
   refreshSongPlaybackStats,
+  statsUserSongs,
+  assignSongToPlaylists,
 } from "../services/song.service";
 import { getTotalPlaybackDurationAndCount } from "../services/playback.service";
 
-import { songZodSchema } from "../schemas/song.zod";
+import {
+  deleteSongZodSchema,
+  songRateZodSchema,
+  songZodSchema,
+  updateSongPlaylistsZodSchema,
+} from "../schemas/song.zod";
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
 import { CreateSongRequest } from "@joytify/shared-types/types";
+import SongModel from "../models/song.model";
+import usePalette from "../hooks/paletee.hook";
 
 const { CREATED, OK } = HttpCode;
 
@@ -33,7 +44,7 @@ export const createSongHandler: RequestHandler = async (req, res, next) => {
 // get all songs handler
 export const getAllSongsHandler: RequestHandler = async (req, res, next) => {
   try {
-    const { songs } = await getSongs();
+    const { songs } = await getAllSongs();
 
     return res.status(OK).json(songs);
   } catch (error) {
@@ -54,28 +65,70 @@ export const getSongByIdHandler: RequestHandler = async (req, res, next) => {
   }
 };
 
-// delete song by id handler(*)
-export const deleteSongByIdHandler: RequestHandler = async (req, res, next) => {
+// get user's songs handler
+export const getUserSongsHandler: RequestHandler = async (req, res, next) => {
   try {
-    // const userId = objectIdZodSchema.parse(req.userId);
-    const songId = objectIdZodSchema.parse(req.params.id);
+    const userId = objectIdZodSchema.parse(req.userId);
+    const { songs } = await getUserSongs(userId);
 
-    await deleteSongById({ songId });
-
-    return res.status(OK).json({ message: "Delete target song successfully" });
+    return res.status(OK).json(songs);
   } catch (error) {
     next(error);
   }
 };
 
-// update song's playback stats handler(*)
-export const updateSongPlaybackStatsHandler: RequestHandler = async (req, res, next) => {
+// get user's songs stats handler
+export const getUserSongsStatsHandler: RequestHandler = async (req, res, next) => {
   try {
+    const userId = objectIdZodSchema.parse(req.userId);
+    const songStats = await statsUserSongs(userId);
+
+    return res.status(OK).json(songStats);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// update target song's rating state handler
+export const updateSongRatingHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = objectIdZodSchema.parse(req.userId);
     const songId = objectIdZodSchema.parse(req.params.id);
+    const request = songRateZodSchema.parse(req.body);
 
-    const { updatedSong } = await refreshSongPlaybackStats(songId);
+    const { updatedSong } = await rateTargetSong({ userId, songId, ...request });
 
-    return res.status(OK).json({ updatedSong });
+    return res.status(OK).json(updatedSong);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// update song's playlists handler
+export const updateSongPlaylistsAssignmentHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = objectIdZodSchema.parse(req.userId);
+    const songId = objectIdZodSchema.parse(req.params.id);
+    const params = updateSongPlaylistsZodSchema.parse(req.body);
+
+    const { updatedSong } = await assignSongToPlaylists({ userId, songId, ...params });
+
+    return res.status(OK).json(updatedSong);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// delete song by id handler(*)
+export const deleteSongByIdHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = objectIdZodSchema.parse(req.userId);
+    const songId = objectIdZodSchema.parse(req.params.id);
+    const { shouldDeleteSongs } = deleteSongZodSchema.parse(req.body);
+
+    const deletedSong = await deleteSongById({ userId, songId, shouldDeleteSongs });
+
+    return res.status(OK).json(deletedSong);
   } catch (error) {
     next(error);
   }
@@ -96,6 +149,37 @@ export const getSongPlaybackStatsHandler: RequestHandler = async (req, res, next
       averageDuration,
       weightedAvgDuration,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// update song's playback stats handler(*)
+export const updateSongPlaybackStatsHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const songId = objectIdZodSchema.parse(req.params.id);
+
+    const { updatedSong } = await refreshSongPlaybackStats(songId);
+
+    return res.status(OK).json({ updatedSong });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// update song's paletee handler(*)
+export const updateSongPaleteeHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const songs = await SongModel.find({
+      imageUrl: { $exists: true },
+    });
+
+    for (const song of songs) {
+      const paletee = await usePalette(song.imageUrl);
+      await SongModel.findByIdAndUpdate(song._id, { paletee });
+    }
+
+    return res.status(OK).json({ message: "Update song paletee successfully" });
   } catch (error) {
     next(error);
   }

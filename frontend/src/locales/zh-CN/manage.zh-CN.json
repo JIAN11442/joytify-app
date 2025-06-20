@@ -1,0 +1,30 @@
+{
+  "manage.sidebar.categories.library": "音乐库",
+  "manage.sidebar.categories.library.songs": "歌曲",
+  "manage.sidebar.categories.library.playlists": "播放列表",
+  "manage.sidebar.categories.library.following": "关注中",
+  "manage.sidebar.categories.other": "其他",
+  "manage.sidebar.categories.other.notifications": "通知",
+
+  "manage.songs.title": "歌曲管理",
+  "manage.songs.description": "管理你的歌曲及其详细信息",
+  "manage.songs.searchbar.placeholder": "搜索你的歌曲",
+  "manage.songs.overview.totalSongs": "歌曲总数",
+  "manage.songs.overview.totalPlaybackCount": "总播放次数",
+  "manage.songs.overview.totalWeightedPlaybackDuration": "平均播放时长(加权)",
+  "manage.songs.overview.averageRating": "平均评分",
+
+  "manage.songs.list.noSongs": "暂无歌曲",
+  "manage.songs.list.noFound": "未找到相关歌曲",
+
+  "manage.songs.list.details.title": "标题",
+  "manage.songs.list.details.artist": "演唱者",
+  "manage.songs.list.details.composer": "作曲",
+  "manage.songs.list.details.lyricist": "作词",
+  "manage.songs.list.details.album": "专辑",
+  "manage.songs.list.details.duration": "时长",
+  "manage.songs.list.details.language": "语言",
+  "manage.songs.list.details.releaseDate": "发行日期",
+  "manage.songs.list.details.playbackDuration.total": "播放时长(总计)",
+  "manage.songs.list.details.playbackDuration.weighted": "播放时长(加权)"
+}

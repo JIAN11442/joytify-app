@@ -95,16 +95,19 @@ playlistSchema.post("save", async function (doc) {
 
 // before update playlist, ...
 playlistSchema.pre("findOneAndUpdate", async function (next) {
-  // get update data, it can find out which properties have new values
   let updateDoc = this.getUpdate() as UpdateQuery<PlaylistDocument>;
-  // get query data from "findOneAndUpdate" operation
   const findQuery = this.getQuery();
+
+  // Use findOne instead of findById when query is not a single ObjectId
+  const originalDoc =
+    findQuery._id && typeof findQuery._id === "string"
+      ? await PlaylistModel.findById(findQuery._id)
+      : await PlaylistModel.findOne(findQuery);
 
   // if the "coverImage" property has a value, it means it will be updated
   // we need to find the original document, delete the existing coverImage before updating it
   // update paletee at the same time
   if (updateDoc.coverImage) {
-    const originalDoc = await PlaylistModel.findById(findQuery);
     const paletee = await usePalette(updateDoc.coverImage);
 
     updateDoc.paletee = paletee;

@@ -1,7 +1,7 @@
 import { PiDevices } from "react-icons/pi";
 import DeviceList from "../components/device-list.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
-import SettingSectionTitle from "../components/settings-section-title.component";
+import PageSectionTitle from "../components/page-section-title.component";
 import DeviceStatusOverview from "../components/device-status-overview.component";
 import { useGetUserSessionsQuery } from "../hooks/session-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
@@ -16,7 +16,7 @@ const SettingsConnectedDevicesPage = () => {
     <div className={`settings-page-container`}>
       {/* title */}
       <AnimationWrapper initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <SettingSectionTitle
+        <PageSectionTitle
           icon={{ name: PiDevices }}
           title={settingsConnectedDevicesFm("title")}
           description={settingsConnectedDevicesFm("description")}

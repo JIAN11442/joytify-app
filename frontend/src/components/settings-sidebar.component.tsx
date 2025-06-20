@@ -1,96 +1,24 @@
 import ContentBox from "./content-box.component";
-import SidebarItem from "./sidebar-item.component";
+import SidebarCategoryList from "./sidebar-category-list.component";
 import { SquareDualLineSkeleton } from "./skeleton-loading.component";
-import { useScopedIntl } from "../hooks/intl.hook";
-
-import useUserState from "../states/user.state";
-import useSidebarState from "../states/sidebar.state";
-import { timeoutForDelay } from "../lib/timeout.lib";
 import { getSettingsSidebarCategories } from "../contents/settings-sidebar-categories.content";
+import { useScopedIntl } from "../hooks/intl.hook";
+import useSidebarState from "../states/sidebar.state";
+import useUserState from "../states/user.state";
 
 const SettingsSidebar = () => {
   const { fm } = useScopedIntl();
   const { profileUser } = useUserState();
-  const { collapseSideBarState, activeFloatingSidebar, closeFloatingSidebar } = useSidebarState();
+  const { collapseSideBarState } = useSidebarState();
 
   const { isCollapsed } = collapseSideBarState;
   const { username, profileImage, email } = profileUser ?? {};
 
   const settingsSidebarCategories = getSettingsSidebarCategories(fm);
 
-  const handleCloseFloatingMenu = () => {
-    timeoutForDelay(() => {
-      if (activeFloatingSidebar) {
-        closeFloatingSidebar();
-      }
-    });
-  };
-
   return (
     <>
-      <ContentBox
-        className={`
-          flex
-          flex-col
-          h-full
-          pt-8
-          pb-0
-          ${isCollapsed ? "px-1" : "px-5"}
-          ${isCollapsed ? "justify-start items-center" : "justify-between"}
-          overflow-y-auto
-      `}
-      >
-        <div className={`flex flex-col gap-6`}>
-          {settingsSidebarCategories.map(({ category, items }, index) => (
-            <div
-              key={category}
-              className={`
-                flex
-                flex-col
-                gap-3
-              `}
-            >
-              {/* category title */}
-              {!isCollapsed ? (
-                <p
-                  className={`
-                    text-sm
-                    text-neutral-600
-                    font-bold
-                  `}
-                >
-                  {category.toUpperCase()}
-                </p>
-              ) : (
-                index > 0 && <hr className={`border-neutral-800/50`} />
-              )}
-
-              {/* category items */}
-              <div className={`flex flex-col gap-1`}>
-                {items.map(({ href, icon: Icon, label }) => (
-                  <SidebarItem
-                    key={label}
-                    href={href}
-                    icon={{
-                      name: Icon.name,
-                      opts: { size: Icon.getSize ? Icon.getSize(isCollapsed) : 22 },
-                    }}
-                    label={label}
-                    collapse={isCollapsed}
-                    onClick={handleCloseFloatingMenu}
-                    className={`
-                      ${isCollapsed ? "w-fit" : "hover:bg-neutral-800/50"}
-                      px-5
-                      py-3.5
-                    `}
-                    tw={{ label: `text-[14px]` }}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </ContentBox>
+      <SidebarCategoryList categories={settingsSidebarCategories} />
 
       {!isCollapsed && (
         <ContentBox

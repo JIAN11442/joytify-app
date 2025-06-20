@@ -4,8 +4,8 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import Icon from "../components/react-icons.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
+import PageSectionTitle from "../components/page-section-title.component";
 import ToggleSwitchButton from "../components/toggle-switch-button.component";
-import SettingSectionTitle from "../components/settings-section-title.component";
 import { SquareDualLineSkeleton } from "../components/skeleton-loading.component";
 
 import { useScopedIntl } from "../hooks/intl.hook";
@@ -23,7 +23,6 @@ const SettingsNotificationsPage = () => {
   const { mutate: updateUserFn } = useUpdateUserMutation({
     refetchRelatedQueries: false,
     onSuccessFn: (data) => {
-      // update profile user's userPreferences object
       const updatedProfileUser = {
         ...profileUser,
         userPreferences: data.userPreferences,
@@ -62,7 +61,7 @@ const SettingsNotificationsPage = () => {
     <div className={`settings-page-container`}>
       {/* title */}
       <AnimationWrapper initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <SettingSectionTitle
+        <PageSectionTitle
           icon={{ name: IoNotificationsOutline }}
           title={settingsNotificationsFm("title")}
           description={settingsNotificationsFm("description")}

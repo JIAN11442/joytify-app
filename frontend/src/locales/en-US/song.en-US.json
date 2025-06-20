@@ -35,5 +35,38 @@
   "song.create.option.type.playlist": "playlist",
 
   "song.input.target.lyricists": "lyricists",
-  "song.input.target.composers": "composers"
+  "song.input.target.composers": "composers",
+
+  "song.details.modal.title": "Song Details",
+  "song.details.modal.comment.title": "Ratings & Comments",
+
+  "song.rate.modal.title": "Rate this song",
+  "song.rate.modal.description": "Give this song a rating",
+  "song.rate.modal.rating.1": "Didn't like it",
+  "song.rate.modal.rating.2": "It's okay",
+  "song.rate.modal.rating.3": "Not bad",
+  "song.rate.modal.rating.4": "Great!",
+  "song.rate.modal.rating.5": "Awesome!!",
+  "song.rate.modal.addToFavorite": "Add to Favorites",
+  "song.rate.modal.commentLabel": "Share your thoughts (optional)",
+  "song.rate.modal.commentPlaceholder": "e.g., your feelings about this song...",
+  "song.rate.modal.cancel": "Cancel",
+  "song.rate.modal.submit": "Submit",
+
+  "song.delete.modal.confirmation.title": "Delete this song",
+  "song.delete.modal.confirmation.warning": "If you delete this song, all information about it will be permanently deleted, except if you are willing to contribute this song to the platform.",
+  "song.delete.modal.confirmation.content": "Are you sure you want to delete this song?",
+  "song.delete.modal.confirmation.cancel": "Cancel",
+  "song.delete.modal.confirmation.next": "Next",
+  "song.delete.modal.donation.title": "Song Data Retention Options (Optional)",
+  "song.delete.modal.donation.description": "Please review the data retention options and terms of agreement",
+  "song.delete.modal.donation.delete": "Permanently delete this song",
+  "song.delete.modal.donation.back": "Back to previous page",
+
+  "song.playlist.assignment.modal.title": "Add to Playlists",
+  "song.playlist.assignment.modal.description": "Select the playlists where you want this song to appear",
+  "song.playlist.assignment.modal.searchbar.placeholder": "Search for playlists",
+  "song.playlist.assignment.modal.added.title": "Added Playlists",
+  "song.playlist.assignment.modal.unadded.title": "Unadded Playlists",
+  "song.playlist.assignment.modal.searchbar.nofound": "No such playlist found"
 }

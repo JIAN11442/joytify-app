@@ -81,6 +81,12 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
               navigate(`/settings/account`);
             }
             break;
+          case "M":
+            // to manage page
+            if (authUser) {
+              navigate(`/manage/songs`);
+            }
+            break;
         }
       } else {
         switch (key) {

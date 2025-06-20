@@ -1,0 +1,30 @@
+{
+  "manage.sidebar.categories.library": "Library",
+  "manage.sidebar.categories.library.songs": "Songs",
+  "manage.sidebar.categories.library.playlists": "Playlists",
+  "manage.sidebar.categories.library.following": "Following",
+  "manage.sidebar.categories.other": "Other",
+  "manage.sidebar.categories.other.notifications": "Notifications",
+
+  "manage.songs.title": "Songs Management",
+  "manage.songs.description": "Manage your songs and their details",
+  "manage.songs.searchbar.placeholder": "Search your songs",
+  "manage.songs.overview.totalSongs": "Total Songs",
+  "manage.songs.overview.totalPlaybackCount": "Total Playback Count",
+  "manage.songs.overview.totalWeightedPlaybackDuration": "Total Weighted Playback Duration",
+  "manage.songs.overview.averageRating": "Average Rating",
+
+  "manage.songs.list.noSongs": "No Songs yet",
+  "manage.songs.list.noFound": "No songs found",
+
+  "manage.songs.list.details.title": "title",
+  "manage.songs.list.details.artist": "artist",
+  "manage.songs.list.details.composer": "composer",
+  "manage.songs.list.details.lyricist": "lyricist",
+  "manage.songs.list.details.album": "album",
+  "manage.songs.list.details.duration": "duration",
+  "manage.songs.list.details.language": "language",
+  "manage.songs.list.details.releaseDate": "release date",
+  "manage.songs.list.details.playbackDuration.total": "playback duration (total)",
+  "manage.songs.list.details.playbackDuration.weighted": "playback duration (weighted)"
+}

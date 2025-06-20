@@ -1,17 +1,15 @@
 import { BiUser } from "react-icons/bi";
+import { IoIosPower } from "react-icons/io";
+import { LuLayoutList } from "react-icons/lu";
 import { IoSettingsOutline } from "react-icons/io5";
-import { IoIosPower, IoMdLogOut } from "react-icons/io";
 
-import AvatarMenu from "./avatar-menu.component";
 import MenuItem from "./menu-item.component";
-
+import AvatarMenu from "./avatar-menu.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useLogoutMutation } from "../hooks/auth-mutate.hook";
-import { useGetProfileUserInfoQuery } from "../hooks/user-query.hook";
 import { AuthForOptions } from "@joytify/shared-types/constants";
-import { AuthUserResponse, RefactorProfileUserResponse } from "@joytify/shared-types/types";
+import { AuthUserResponse } from "@joytify/shared-types/types";
 import useAuthModalState from "../states/auth-modal.state";
-import useSettingsState from "../states/settings.state";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
@@ -21,10 +19,8 @@ const UserEntryPoint = () => {
 
   const { openAuthModal } = useAuthModalState();
   const { authUser, activeUserMenu, setActiveUserMenu } = useUserState();
-  const { openAccountDerergistrationModal } = useSettingsState();
 
   const { mutate: logoutFn } = useLogoutMutation();
-  const { profileUser } = useGetProfileUserInfoQuery();
 
   const handleActiveAuthModal = (authFor: AuthForOptions) => {
     timeoutForDelay(() => {
@@ -35,12 +31,6 @@ const UserEntryPoint = () => {
   const handleLogoutUser = () => {
     timeoutForDelay(() => {
       logoutFn();
-    });
-  };
-
-  const handleDeregisterUser = () => {
-    timeoutForDelay(() => {
-      openAccountDerergistrationModal(profileUser as RefactorProfileUserResponse);
     });
   };
 
@@ -61,6 +51,11 @@ const UserEntryPoint = () => {
             label={userEntryFm("menu.profile")}
           />
           <MenuItem
+            to={"/manage/songs"}
+            icon={{ name: LuLayoutList }}
+            label={userEntryFm("menu.manage")}
+          />
+          <MenuItem
             to={"/settings/account"}
             icon={{ name: IoSettingsOutline }}
             label={userEntryFm("menu.setting")}
@@ -69,11 +64,6 @@ const UserEntryPoint = () => {
             onClick={handleLogoutUser}
             icon={{ name: IoIosPower }}
             label={userEntryFm("menu.logout")}
-          />
-          <MenuItem
-            onClick={handleDeregisterUser}
-            icon={{ name: IoMdLogOut }}
-            label={userEntryFm("menu.deregister")}
           />
         </AvatarMenu>
       ) : (

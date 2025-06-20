@@ -143,7 +143,7 @@ export const deletePlaylistById = async (params: DeletePlaylistServiceRequest) =
       // add target playlist ID to songs's playlistFor property
       SongModel.updateMany(
         { _id: { $in: playlist.songs } },
-        { $addToSet: { playlistFor: targetPlaylistId } },
+        { $addToSet: { playlistFor: targetPlaylistId }, $pull: { playlistFor: currentPlaylistId } },
         { new: true }
       ),
     ]);

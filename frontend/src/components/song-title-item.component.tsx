@@ -8,7 +8,15 @@ type SongTitleItemProps = {
   artist: string;
   switchFunc?: boolean;
   onClick?: () => void;
-  className?: { wrapper?: string; image?: string; content?: string };
+  style?: React.CSSProperties;
+  className?: {
+    item?: string;
+    image?: string;
+    content?: string;
+    title?: string;
+    artist?: string;
+  };
+  children?: React.ReactNode;
 };
 
 const SongTitleItem: React.FC<SongTitleItemProps> = ({
@@ -17,7 +25,9 @@ const SongTitleItem: React.FC<SongTitleItemProps> = ({
   artist,
   switchFunc = true,
   onClick,
+  style,
   className,
+  children,
 }) => {
   const { songArrangementType } = usePlaylistState();
   const compact = ArrangementOptions.COMPACT;
@@ -25,38 +35,54 @@ const SongTitleItem: React.FC<SongTitleItemProps> = ({
   return (
     <div
       onClick={onClick}
+      style={style}
       className={twMerge(
         `
-          flex
-          flex-shrink-0
-          gap-3
-          items-center
-        `,
-        className?.wrapper
+        flex
+        gap-3
+        items-center
+      `,
+        className?.item
       )}
     >
       <img
         src={imageUrl}
-        className={twMerge(`
-          w-[3.3rem]
-          h-[3.3rem]
-          object-cover
-          rounded-md
-          ${switchFunc && songArrangementType === compact ? "hidden" : "block"}  
-        `)}
+        className={twMerge(
+          `
+            w-[3.3rem]
+            h-[3.3rem]
+            object-cover
+            rounded-md
+            ${switchFunc && songArrangementType === compact ? "hidden" : "block"}  
+          `,
+          className?.image
+        )}
       />
 
       <div className={className?.content}>
-        <p className={`text-white line-clamp-1`}>{title}</p>
         <p
-          className={`
-            text-[12px]
-            ${switchFunc && songArrangementType === compact ? "hidden" : "block"}
-          `}
+          className={twMerge(`
+            text-white 
+            line-clamp-1
+            ${className?.title}
+          `)}
+        >
+          {title}
+        </p>
+        <p
+          className={twMerge(
+            `
+              text-[12px]
+              ${switchFunc && songArrangementType === compact ? "hidden" : "block"}
+            `,
+            className?.artist
+          )}
         >
           {artist}
         </p>
       </div>
+
+      {children}
     </div>
   );
 };

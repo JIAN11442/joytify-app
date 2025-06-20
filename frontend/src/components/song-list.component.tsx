@@ -52,22 +52,38 @@ const SongList: React.FC<SongListProps> = ({ songs, switchFunc = true }) => {
   return (
     <div className={`overflow-x-auto`}>
       <table className={`min-w-full text-sm text-left`}>
+        {/* header */}
         <thead>
           <tr className={`border-b border-grey-custom/5`}>
-            <th>#</th>
+            {/* index */}
+            <th className={`px-0 pl-5 w-5 max-w-[30px]`}>#</th>
+
+            {/* title */}
             <th>{playlistSongListFm("header.title")}</th>
+
+            {/* artist */}
             <th className={`${showArtist ? "block" : "hidden"}`}>
               {playlistSongListFm("header.artist")}
             </th>
-            <th>{playlistSongListFm("header.album")}</th>
+
+            {/* album */}
+            <th className={`${isCollapsed ? "max-sm:hidden" : "max-md:hidden"}`}>
+              {playlistSongListFm("header.album")}
+            </th>
+
+            {/* date */}
             <th className={`${isCollapsed ? "max-md:hidden" : "max-lg:hidden"}`}>
               {playlistSongListFm("header.date")}
             </th>
+
+            {/* duration */}
             <th>
               <Icon name={IoTimeOutline} opts={{ size: 20 }} />
             </th>
           </tr>
         </thead>
+
+        {/* body */}
         <tbody>
           {songs.map((song, index) => {
             const { title, artist, imageUrl, album, createdAt, duration } = song;
@@ -104,7 +120,7 @@ const SongList: React.FC<SongListProps> = ({ songs, switchFunc = true }) => {
                 `}
               >
                 {/* index */}
-                <td className={`p-2 pl-5 w-5 min-w-[30px]`}>
+                <td className={`px-0 pl-5 w-5 max-w-[30px]`}>
                   {isPlayingSong ? (
                     <SoundWave
                       color={paletee?.vibrant}
@@ -114,7 +130,7 @@ const SongList: React.FC<SongListProps> = ({ songs, switchFunc = true }) => {
                     />
                   ) : (
                     <div>
-                      <p className={` group-hover:hidden`}>{index + 1}</p>
+                      <p className={`group-hover:hidden`}>{index + 1}</p>
                       <Icon
                         name={FaPlay}
                         className={`
@@ -126,14 +142,15 @@ const SongList: React.FC<SongListProps> = ({ songs, switchFunc = true }) => {
                     </div>
                   )}
                 </td>
+
                 {/* title */}
-                <td className={`p-2`}>
+                <td>
                   <SongTitleItem
                     title={title}
                     imageUrl={imageUrl}
                     artist={artist}
                     switchFunc={switchFunc}
-                    className={{ wrapper: `flex-1 min-w-[150px]` }}
+                    className={{ item: `flex-1 min-w-[150px]` }}
                   />
                 </td>
 
@@ -141,12 +158,12 @@ const SongList: React.FC<SongListProps> = ({ songs, switchFunc = true }) => {
                 {showArtist && <td>{artist}</td>}
 
                 {/* album */}
-                <td>
+                <td className={`${isCollapsed ? "max-sm:hidden" : "max-md:hidden"}`}>
                   <p className={`line-clamp-1`}>{album && album.length ? album : "--"}</p>
                 </td>
 
                 {/* date */}
-                <td>
+                <td className={`${isCollapsed ? "max-md:hidden" : "max-lg:hidden"}`}>
                   <p className={`line-clamp-1`}>{getTimeAgo(createdAt.toString(), themeLocale)}</p>
                 </td>
 

@@ -1,15 +1,14 @@
 import { useMemo, useState } from "react";
+
 import Loader from "./loader.component";
-import AccountDeregistrationAgreement, {
-  TermsChecked,
-} from "./account-deregistration-agreement.component";
-import TermsAgreementLabel from "./terms-agreement-label.component";
-import { getDataContributionAgreement } from "../contents/data-contribution-agreement.content";
+import DonationTermsAgreement from "./donation-terms-agreement.component";
+import { TermsChecked } from "./account-deregistration-agreement.component";
+import AccountDeregistrationAgreement from "./account-deregistration-agreement.component";
+import { useScopedIntl } from "../hooks/intl.hook";
 import { AccountDeregistrationStatus } from "@joytify/shared-types/constants";
 import { DeregisterUserAccountRequest } from "@joytify/shared-types/types";
 import useSettingsState from "../states/settings.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { useScopedIntl } from "../hooks/intl.hook";
 
 type DeregisterDonationFormProps = {
   deregisterFn: (params: DeregisterUserAccountRequest) => void;
@@ -63,52 +62,15 @@ const DeregisterDonationForm: React.FC<DeregisterDonationFormProps> = ({
     return isPending;
   }, [isPending]);
 
-  const dataContributionAgreement = getDataContributionAgreement(fm);
-
   return (
     <div>
-      {/* options label */}
-      <TermsAgreementLabel disabled={isPending} onChange={handleDataUsageConsentChange}>
-        <div className={`flex flex-col gap-3`}>
-          {dataContributionAgreement.map((opt) => {
-            const { label, description } = opt;
-            return (
-              <div key={`data-donate-option-${label}`}>
-                <p
-                  className={`
-                    text-[14px]
-                    font-medium 
-                    ${
-                      isPending
-                        ? "no-hover text-white opacity-50"
-                        : dataUsageConsent
-                        ? "text-white"
-                        : "text-neutral-400 group-hover:text-white"
-                    }
-                  `}
-                >
-                  {label}
-                </p>
-                <p
-                  className={`
-                    mt-1
-                    text-sm 
-                    ${
-                      isPending
-                        ? "no-hover text-neutral-600 opacity-50"
-                        : dataUsageConsent
-                        ? "text-neutral-500"
-                        : "text-neutral-600 group-hover:text-neutral-500"
-                    }
-                  `}
-                >
-                  {description}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </TermsAgreementLabel>
+      {/* donation terms agreement */}
+      <DonationTermsAgreement
+        fm={fm}
+        isPending={isPending}
+        dataUsageConsent={dataUsageConsent}
+        onChange={handleDataUsageConsentChange}
+      />
 
       {/* divider */}
       <hr className={`divider`} />

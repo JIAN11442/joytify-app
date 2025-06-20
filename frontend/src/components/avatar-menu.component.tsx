@@ -1,7 +1,5 @@
 import { useRef } from "react";
-
 import Menu from "./menu.component";
-
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { AuthUserResponse } from "@joytify/shared-types/types";
 

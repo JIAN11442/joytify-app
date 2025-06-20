@@ -18,4 +18,19 @@ export const songZodSchema = z.object({
   releaseDate: z.string().optional(),
 });
 
+export const songRateZodSchema = z.object({
+  rating: z.number(),
+  isLiked: z.boolean(),
+  comment: stringZodSchema,
+});
+
+export const deleteSongZodSchema = z.object({
+  shouldDeleteSongs: z.boolean(),
+});
+
+export const updateSongPlaylistsZodSchema = z.object({
+  playlistsToAdd: z.array(objectIdZodSchema),
+  playlistsToRemove: z.array(objectIdZodSchema),
+});
+
 export type SongZodSchemaType = z.infer<typeof songZodSchema>;

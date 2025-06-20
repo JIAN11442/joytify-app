@@ -23,16 +23,7 @@ const DeviceStatusOverview: React.FC<DeviceStatusOverviewProps> = ({ deviceStats
     <div
       className={`
         grid
-        ${
-          isCollapsed
-            ? `
-                max-sm:grid-cols-1
-                sm:grid-cols-3
-              `
-            : `
-                md:grid-cols-3
-              `
-        }
+        ${isCollapsed ? `max-sm:grid-cols-1 sm:grid-cols-3` : `md:grid-cols-3`}
         gap-5
     `}
     >
@@ -70,6 +61,10 @@ const DeviceStatusOverview: React.FC<DeviceStatusOverviewProps> = ({ deviceStats
         return (
           <div
             key={id}
+            style={{
+              background: `radial-gradient(circle, ${color}20 0%, ${color}40 40%, ${color}60 70%, ${color}90 100%)`,
+              border: `0.1px solid ${color}20`,
+            }}
             className={`
               flex
               p-5
@@ -87,7 +82,7 @@ const DeviceStatusOverview: React.FC<DeviceStatusOverviewProps> = ({ deviceStats
                 w-full
                 gap-3
                 text-sm
-                text-neutral-500
+                text-neutral-400
                 justify-between
               `}
             >

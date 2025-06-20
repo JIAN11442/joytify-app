@@ -1,9 +1,9 @@
-import { useGetSongsQuery } from "../hooks/song-query.hook";
+import { useGetAllSongsQuery } from "../hooks/song-query.hook";
 import usePlaybackControl from "../hooks/playback-control.hook";
 import { Queue } from "@joytify/shared-types/types";
 
 const HomePage = () => {
-  const { songs } = useGetSongsQuery();
+  const { songs } = useGetAllSongsQuery();
   const { playSong } = usePlaybackControl();
 
   return (

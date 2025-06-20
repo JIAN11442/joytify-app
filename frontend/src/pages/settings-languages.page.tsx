@@ -9,7 +9,7 @@ import Icon from "../components/react-icons.component";
 import LocaleCard from "../components/locale-card.component";
 import SearchBarInput from "../components/searchbar-input.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
-import SettingSectionTitle from "../components/settings-section-title.component";
+import PageSectionTitle from "../components/page-section-title.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { LocaleMap, localeMap } from "../contents/locale.content";
@@ -19,15 +19,16 @@ import useLocaleState from "../states/locale.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const SettingsLanguagesPage = () => {
-  const { fm } = useScopedIntl();
-  const settingsLanguagesFm = fm("settings.languages");
-
-  const { collapseSideBarState } = useSidebarState();
-  const { themeLocale, setThemeLocale } = useLocaleState();
   const [filterLocales, setFilterLocales] = useState<LocaleMap | null>(null);
   const [selectedLocale, setSelectedLocale] = useState<SupportedLocaleType | null>(null);
 
+  const { fm } = useScopedIntl();
+  const { collapseSideBarState } = useSidebarState();
+  const { themeLocale, setThemeLocale } = useLocaleState();
+
   const { mutate: updateUserPreferencesFn, isPending } = useUpdateUserPreferencesMutation();
+
+  const settingsLanguagesFm = fm("settings.languages");
 
   const [currentLocaleInfo, selectableLocales] = useMemo(() => {
     const currentLocaleInfo = localeMap[themeLocale];
@@ -68,20 +69,20 @@ const SettingsLanguagesPage = () => {
     [selectableLocales]
   );
 
-  const handleCancelSelected = () => {
+  const handleCancelSelected = useCallback(() => {
     timeoutForDelay(() => {
       setSelectedLocale(themeLocale);
     });
-  };
+  }, [themeLocale]);
 
-  const handleSwitchLocale = () => {
+  const handleSwitchLocale = useCallback(() => {
     timeoutForDelay(() => {
       if (selectedLocale) {
         setThemeLocale(selectedLocale);
         updateUserPreferencesFn({ locale: selectedLocale });
       }
     });
-  };
+  }, [selectedLocale]);
 
   // initialize filter locales
   useEffect(() => {
@@ -106,7 +107,7 @@ const SettingsLanguagesPage = () => {
         className={`flex flex-col`}
       >
         {/* title */}
-        <SettingSectionTitle
+        <PageSectionTitle
           icon={{ name: HiOutlineTranslate }}
           title={settingsLanguagesFm("title")}
           description={settingsLanguagesFm("description")}

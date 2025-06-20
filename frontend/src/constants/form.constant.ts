@@ -80,3 +80,9 @@ export const defaultNotificationPreferencesData = {
   followingArtistUpdates: undefined as boolean | undefined,
   systemAnnouncements: undefined as boolean | undefined,
 };
+
+export const defaultSongRateData = {
+  rating: undefined as number | undefined,
+  favorite: undefined as boolean | undefined,
+  comment: undefined as string | undefined,
+};

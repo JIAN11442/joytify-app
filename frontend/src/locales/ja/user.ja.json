@@ -1,5 +1,6 @@
 {
   "user.entry.menu.profile": "マイページ",
+  "user.entry.menu.manage": "管理",
   "user.entry.menu.setting": "設定",
   "user.entry.menu.logout": "ログアウト",
   "user.entry.menu.deregister": "アカウント削除",

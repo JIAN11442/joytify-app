@@ -35,5 +35,31 @@
   "song.create.option.type.playlist": "播放列表",
 
   "song.input.target.lyricists": "作词者",
-  "song.input.target.composers": "作曲者"
+  "song.input.target.composers": "作曲者",
+
+  "song.details.modal.title": "歌曲详情",
+  "song.details.modal.comment.title": "其他用户评价",
+
+  "song.rate.modal.title": "给这首歌评分",
+  "song.rate.modal.description": "你觉得这首歌怎么样？",
+  "song.rate.modal.rating.1": "不太喜欢",
+  "song.rate.modal.rating.2": "还行吧",
+  "song.rate.modal.rating.3": "挺不错",
+  "song.rate.modal.rating.4": "很喜欢！",
+  "song.rate.modal.rating.5": "超爱！！",
+  "song.rate.modal.addToFavorite": "加入收藏",
+  "song.rate.modal.commentLabel": "想说点什么？（可选）",
+  "song.rate.modal.commentPlaceholder": "比如：听完的感受、喜欢的地方……",
+  "song.rate.modal.cancel": "取消",
+  "song.rate.modal.submit": "提交",
+
+  "song.delete.modal.confirmation.title": "删除这首歌",
+  "song.delete.modal.confirmation.warning": "如果你删除这首歌，所有相关信息都将被永久删除，除非你愿意将这首歌贡献给平台。",
+  "song.delete.modal.confirmation.content": "你确定要删除这首歌吗？",
+  "song.delete.modal.confirmation.cancel": "取消",
+  "song.delete.modal.confirmation.next": "下一步",
+  "song.delete.modal.donation.title": "歌曲数据保留选项（可选）",
+  "song.delete.modal.donation.description": "请查看数据保留选项及同意条款",
+  "song.delete.modal.donation.delete": "永久删除这首歌",
+  "song.delete.modal.donation.back": "返回上一页"
 }

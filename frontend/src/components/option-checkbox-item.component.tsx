@@ -1,10 +1,10 @@
-import { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 import { IoIosClose } from "react-icons/io";
 import Icon from "./react-icons.component";
+import CheckboxLabel from "./checkbox-label.component";
 import { Label } from "@joytify/shared-types/types";
 
-interface CheckBoxItemProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface CheckBoxItemProps {
   opt: Label;
   deleteFunc: () => void;
   tw?: {
@@ -15,60 +15,46 @@ interface CheckBoxItemProps extends React.InputHTMLAttributes<HTMLInputElement> 
   };
 }
 
-const OptionCheckboxItem = forwardRef<HTMLInputElement, CheckBoxItemProps>(
-  ({ opt, deleteFunc, tw, className, ...props }, ref) => {
-    return (
-      <label
+const OptionCheckboxItem: React.FC<CheckBoxItemProps> = ({ opt, deleteFunc, tw, ...props }) => {
+  return (
+    <CheckboxLabel
+      tw={{ label: `px-2 py-[1.5px] gap-2 items-center`, input: `w-3.2 h-3.2` }}
+      {...props}
+    >
+      {/* title */}
+      <p
         className={twMerge(
           `
-            group
-            flex
-            gap-2
-            px-2
-            py-[1.5px]
-            items-center
-          `,
-          className
+          text-sm
+          capitalize
+          text-neutral-400
+          group-hover:text-white
+        `,
+          tw?.title
         )}
       >
-        {/* input */}
-        <input ref={ref} type="checkbox" name={opt.label} {...props} />
+        {opt.label}
+      </p>
 
-        {/* title */}
-        <p
+      {/* delete button */}
+      <button type="button" onClick={deleteFunc} className={tw?.deleteBtn}>
+        <Icon
+          name={IoIosClose}
+          opts={{ size: 18 }}
           className={twMerge(
             `
-              text-sm
-              capitalize
-              text-neutral-400
-              group-hover:text-white
-            `,
-            tw?.title
+            text-red-500
+            hover:bg-red-500
+            hover:text-white
+            rounded-full
+            transition
+          `,
+            tw?.icon
           )}
-        >
-          {opt.label}
-        </p>
-
-        {/* delete button */}
-        <button type="button" onClick={deleteFunc} className={tw?.deleteBtn}>
-          <Icon
-            name={IoIosClose}
-            opts={{ size: 18 }}
-            className={twMerge(
-              `
-                text-red-500
-                hover:bg-red-500
-                hover:text-white
-                rounded-full
-                transition
-              `,
-              tw?.icon
-            )}
-          />
-        </button>
-      </label>
-    );
-  }
-);
+        />
+      </button>
+    </CheckboxLabel>
+  );
+};
 
 export default OptionCheckboxItem;
