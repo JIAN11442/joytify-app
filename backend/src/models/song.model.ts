@@ -170,7 +170,13 @@ const removeSongAssociations = async (song: SongDocument, action: SongAssociatio
 
   // remove song ID to target playlist's songs array
   if (playlistFor) {
-    await PlaylistModel.updateMany({ _id: { $in: playlistFor } }, { $pull: { songs: songId } });
+    await PlaylistModel.updateMany(
+      { _id: { $in: playlistFor } },
+      {
+        $pull: { songs: songId },
+        $inc: { "stats.totalSongCount": -1, "stats.totalSongDuration": song.duration * -1 },
+      }
+    );
   }
 
   // remove song ID from all user's user preferences
@@ -267,7 +273,10 @@ songSchema.post("save", async function (doc) {
       if (playlistFor) {
         const playlist = await PlaylistModel.findByIdAndUpdate(
           playlistFor,
-          { $addToSet: { songs: id } },
+          {
+            $addToSet: { songs: id },
+            $inc: { "stats.totalSongCount": 1, "stats.totalSongDuration": song.duration },
+          },
           { new: true }
         );
 

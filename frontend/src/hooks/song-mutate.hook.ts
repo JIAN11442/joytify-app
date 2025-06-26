@@ -28,8 +28,8 @@ export const useCreateSongMutation = (closeModalFn: () => void, opts: object = {
             queryKey === QueryKey.GET_USER_PLAYLISTS ||
             queryKey === QueryKey.GET_TARGET_PLAYLIST ||
             queryKey === QueryKey.GET_PROFILE_USER_INFO ||
-            queryKey === QueryKey.GET_USER_SONGS_STATS ||
-            queryKey === QueryKey.GET_USER_SONGS
+            queryKey === QueryKey.GET_USER_SONGS ||
+            queryKey === QueryKey.GET_USER_SONGS_STATS
           );
         },
       });

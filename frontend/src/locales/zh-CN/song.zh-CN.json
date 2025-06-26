@@ -61,5 +61,14 @@
   "song.delete.modal.donation.title": "歌曲数据保留选项（可选）",
   "song.delete.modal.donation.description": "请查看数据保留选项及同意条款",
   "song.delete.modal.donation.delete": "永久删除这首歌",
-  "song.delete.modal.donation.back": "返回上一页"
+  "song.delete.modal.donation.back": "返回上一页",
+
+  "song.playlist.assignment.modal.title": "添加到播放列表",
+  "song.playlist.assignment.modal.description": "选择你希望此歌曲出现的播放列表",
+  "song.playlist.assignment.modal.searchbar.placeholder": "搜索播放列表",
+  "song.playlist.assignment.modal.added.title": "已添加的播放列表",
+  "song.playlist.assignment.modal.unadded.title": "未添加的播放列表",
+  "song.playlist.assignment.modal.nofound": "未找到该播放列表",
+  "song.playlist.assignment.modal.button.cancel": "取消",
+  "song.playlist.assignment.modal.button.submit": "提交"
 }

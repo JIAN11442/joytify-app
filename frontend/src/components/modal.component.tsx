@@ -66,7 +66,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       };
 
       return timeoutForEventListener(document, "click", handleModalOnBlur);
-    }, [autoCloseModal, modalRef]);
+    }, [autoCloseModal, closeModalFn, modalRef]);
 
     const modalContent = (
       <>

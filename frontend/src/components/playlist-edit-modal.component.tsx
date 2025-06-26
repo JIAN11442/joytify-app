@@ -1,20 +1,19 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import Modal from "./modal.component";
 import Loader from "./loader.component";
 import InputBox from "./input-box.component";
 import ImageLabel from "./image-label.component";
+import { useScopedIntl } from "../hooks/intl.hook";
+import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 
 import { deleteFileFromAws } from "../fetchs/aws.fetch";
-import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
-import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
 import { DefaultEditPlaylistForm, FormMethods } from "../types/form.type";
 import usePlaylistState from "../states/playlist.state";
-import { timeoutForDelay } from "../lib/timeout.lib";
 import { getModifiedFormData } from "../utils/get-form-data.util";
-import { useScopedIntl } from "../hooks/intl.hook";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const PlaylistEditModal = () => {
   const { fm } = useScopedIntl();
@@ -26,14 +25,23 @@ const PlaylistEditModal = () => {
 
   const { activePlaylistEditModal, closePlaylistEditModal } = usePlaylistState();
   const { active, playlist } = activePlaylistEditModal;
-  const {
-    _id: playlistId,
-    title,
-    description,
-    coverImage,
-  } = (playlist as RefactorPlaylistResponse) ?? {};
+  const { _id: playlistId, title, description, coverImage } = playlist ?? {};
 
-  const handleCloseModal = () => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    reset,
+    trigger,
+    watch,
+    formState: { dirtyFields, isValid },
+  } = useForm<DefaultEditPlaylistForm>({
+    defaultValues: { title, description }, // it's necessary if you want to track form changes（dirtyFields）.
+    mode: "onChange",
+  });
+
+  const handleCloseModal = useCallback(() => {
     timeoutForDelay(async () => {
       // start pending
       setCloseModalPending(true);
@@ -57,26 +65,12 @@ const PlaylistEditModal = () => {
       // reset form
       reset();
     });
-  };
+  }, [isSubmitted, watch, coverImage, closePlaylistEditModal, reset]);
 
   const { mutate: updatePlaylistFn, isPending } = useUpdatePlaylistMutation(
-    playlistId,
+    playlistId ?? "",
     handleCloseModal
   );
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    setError,
-    reset,
-    trigger,
-    watch,
-    formState: { dirtyFields, isValid },
-  } = useForm<DefaultEditPlaylistForm>({
-    defaultValues: { title, description }, // it's necessary if you want to track form changes（dirtyFields）.
-    mode: "onChange",
-  });
 
   // check form if is modified
   const isModified = Object.keys(dirtyFields).length > 0;

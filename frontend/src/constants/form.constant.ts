@@ -86,3 +86,11 @@ export const defaultSongRateData = {
   favorite: undefined as boolean | undefined,
   comment: undefined as string | undefined,
 };
+
+export const defaultPlaylistAdvancedCreatData = {
+  coverImage:
+    "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
+  title: "",
+  description: "",
+  addedSongs: [] as string[],
+};

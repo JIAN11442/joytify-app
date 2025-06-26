@@ -5,16 +5,22 @@ import {
   getPlaylistsHandler,
   getTargetPlaylistHandler,
   updatePlaylistHandler,
+  updatePlaylistStatsHandler,
+  removePlaylistStatsHandler,
 } from "../controllers/playlist.controller";
+import authenticate from "../middlewares/authenticate.middleware";
 
 const playlistRoute = Router();
 
 // prefix: /playlist
-playlistRoute.get("/", getPlaylistsHandler);
-playlistRoute.get("/:id", getTargetPlaylistHandler);
+playlistRoute.get("/", authenticate, getPlaylistsHandler);
+playlistRoute.get("/:id", authenticate, getTargetPlaylistHandler);
+playlistRoute.post("/create", authenticate, createPlaylistHandler);
+playlistRoute.patch("/update/:id", authenticate, updatePlaylistHandler);
+playlistRoute.delete("/delete/:id", authenticate, deletePlaylistHandler);
 
-playlistRoute.post("/create", createPlaylistHandler);
-playlistRoute.patch("/update/:id", updatePlaylistHandler);
-playlistRoute.delete("/delete/:id", deletePlaylistHandler);
+// temporary routes (*)
+playlistRoute.patch("/update-stats", updatePlaylistStatsHandler);
+playlistRoute.delete("/remove-stats", removePlaylistStatsHandler);
 
 export default playlistRoute;

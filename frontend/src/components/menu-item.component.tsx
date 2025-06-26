@@ -8,18 +8,19 @@ interface MenuItemBaseProps {
   icon?: { name: IconName; opts?: IconBaseProps };
   label?: string;
   className?: string;
+  tw?: { label?: string };
 }
 
 type MenuItemProps =
   | (MenuItemBaseProps & LinkProps & { to: string; onClick?: never })
   | (MenuItemBaseProps & ButtonHTMLAttributes<HTMLButtonElement> & { to?: never });
 
-const MenuItem: React.FC<MenuItemProps> = ({ icon, label, to, className, ...props }) => {
+const MenuItem: React.FC<MenuItemProps> = ({ icon, label, to, className, tw, ...props }) => {
   const twMergeClass = twMerge(`menu-btn py-2`, className);
   const menuContent = (
     <>
       {icon && <Icon name={icon.name} opts={{ size: 16, ...icon.opts }} className={`shrink-0`} />}
-      {label && <p>{label}</p>}
+      {label && <p className={`${tw?.label}`}>{label}</p>}
     </>
   );
 

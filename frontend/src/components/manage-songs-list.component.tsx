@@ -2,10 +2,10 @@ import { twMerge } from "tailwind-merge";
 
 import ManageSongCard from "./manage-song-card.component";
 import AnimationWrapper from "./animation-wrapper.component";
-import { SongCardListSkeleton } from "./skeleton-loading.component";
+import { CardListSkeleton } from "./skeleton-loading.component";
+import { useScopedIntl } from "../hooks/intl.hook";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
-import { useScopedIntl } from "../hooks/intl.hook";
 
 type ManageSongsListProps = {
   songs: RefactorSongResponse[] | undefined;
@@ -31,7 +31,7 @@ const ManageSongsList: React.FC<ManageSongsListProps> = ({
   const manageSongsListFm = fm("manage.songs.list");
 
   if (isPending) {
-    return <SongCardListSkeleton count={2} className={`mt-5`} />;
+    return <CardListSkeleton count={2} className={`mt-5`} />;
   }
 
   if (!showSongs) {
@@ -48,6 +48,8 @@ const ManageSongsList: React.FC<ManageSongsListProps> = ({
     <div
       className={twMerge(
         `
+          mt-5
+          mb-8
           grid
           ${
             isCollapsed

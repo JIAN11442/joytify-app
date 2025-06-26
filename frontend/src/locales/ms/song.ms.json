@@ -61,5 +61,14 @@
   "song.delete.modal.donation.title": "Pilihan Pengekalan Data Lagu (Pilihan)",
   "song.delete.modal.donation.description": "Sila semak pilihan pengekalan data dan terma persetujuan",
   "song.delete.modal.donation.delete": "Padam lagu ini secara kekal",
-  "song.delete.modal.donation.back": "Kembali ke halaman sebelum"
+  "song.delete.modal.donation.back": "Kembali ke halaman sebelum",
+
+  "song.playlist.assignment.modal.title": "Tambah ke Senarai Main",
+  "song.playlist.assignment.modal.description": "Pilih senarai main yang anda mahu lagu ini muncul",
+  "song.playlist.assignment.modal.searchbar.placeholder": "Cari senarai main",
+  "song.playlist.assignment.modal.added.title": "Senarai Main Ditambah",
+  "song.playlist.assignment.modal.unadded.title": "Senarai Main Belum Ditambah",
+  "song.playlist.assignment.modal.nofound": "Senarai main tidak dijumpai",
+  "song.playlist.assignment.modal.button.cancel": "Batal",
+  "song.playlist.assignment.modal.button.submit": "Hantar"
 }

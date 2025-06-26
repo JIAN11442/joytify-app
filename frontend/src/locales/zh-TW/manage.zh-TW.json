@@ -26,5 +26,24 @@
   "manage.songs.list.details.language": "語言",
   "manage.songs.list.details.releaseDate": "發行日期",
   "manage.songs.list.details.playbackDuration.total": "播放時長(總計)",
-  "manage.songs.list.details.playbackDuration.weighted": "播放時長(加權)"
+  "manage.songs.list.details.playbackDuration.weighted": "播放時長(加權)",
+
+  "manage.playlists.title": "播放清單管理",
+  "manage.playlists.description": "管理你的播放清單",
+  "manage.playlists.searchbar.placeholder": "搜尋你的播放清單",
+  "manage.playlists.controlPanel.filter.title": "篩選：",
+  "manage.playlists.controlPanel.filter.all": "全部",
+  "manage.playlists.controlPanel.filter.recent": "最近活動",
+  "manage.playlists.controlPanel.filter.liked": "已按讚",
+  "manage.playlists.controlPanel.sortBy.title": "排序依據：",
+  "manage.playlists.controlPanel.sortBy.dateCreated": "建立時間",
+  "manage.playlists.controlPanel.sortBy.lastModified": "最後修改",
+  "manage.playlists.controlPanel.sortBy.size": "歌曲數量",
+  "manage.playlists.controlPanel.sortBy.duration": "總時長",
+  "manage.playlists.controlPanel.direction.ascending": "由小到大",
+  "manage.playlists.controlPanel.direction.descending": "由大到小",
+  "manage.playlists.controlPanel.arrangement.grid": "網格",
+  "manage.playlists.controlPanel.arrangement.list": "列表",
+  "manage.playlist.card.createPlaylist.title": "建立播放清單",
+  "manage.playlist.card.createPlaylist.description": "開始打造你的音樂收藏"
 }

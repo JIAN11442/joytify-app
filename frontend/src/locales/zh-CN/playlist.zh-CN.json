@@ -23,6 +23,20 @@
   "playlist.edit.modal.input.description.placeholder": "说明",
   "playlist.edit.modal.input.button.submit": "保存更改",
 
+  "playlist.advanced.edit.modal.searchbar.placeholder": "搜索歌曲",
+  "playlist.advanced.edit.modal.no.songs.foundFor": "未找到包含<strong>「 {searchQuery} 」</strong>的歌曲",
+  "playlist.advanced.edit.modal.all.songs.removed": "此播放列表中的所有歌曲已被标记为移除。更改将在保存后生效。",
+  "playlist.advanced.edit.modal.button.submit": "保存更改",
+  "playlist.advanced.edit.modal.button.cancel": "取消",
+
+  "playlist.advanced.create.modal.title": "创建播放列表",
+  "playlist.advanced.create.modal.input.title.placeholder": "标题",
+  "playlist.advanced.create.modal.input.description.placeholder": "描述",
+  "playlist.advanced.create.modal.searchbar.placeholder": "搜索歌曲",
+  "playlist.advanced.create.modal.no.songs.foundFor": "未找到包含<strong>「 {searchQuery} 」</strong>的歌曲",
+  "playlist.advanced.create.modal.input.button.submit": "创建播放列表",
+  "playlist.advanced.create.modal.input.button.cancel": "取消",
+
   "playlist.delete.modal.warning.text": "将从你的音乐库中删除播放列表 <strong>{playlist}</strong>（此操作执行后将无法再恢复数据）。{additionalWarning}",
   "playlist.delete.modal.warning.additional.text": "另外，你可以选择將該播放列表中的所有歌曲转移到其他播放列表，或直接删除而不转移。",
   "playlist.delete.modal.select.input.placeholder": "选择要转移的播放列表",

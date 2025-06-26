@@ -17,6 +17,7 @@ import SettingsNotificationsPage from "./pages/settings-notifications.page";
 import { setNavigate } from "./lib/navigate.lib";
 import SettingsConnectedDevicesPage from "./pages/settings-connected-devices.page";
 import ManageSongsPage from "./pages/manage-songs.page";
+import ManagePlaylistsPage from "./pages/manage-playlists.page";
 
 function App() {
   // original navigate function can't be using outside of the component
@@ -43,7 +44,7 @@ function App() {
           </Route>
           <Route path="/manage">
             <Route path="songs" element={<ManageSongsPage />} />
-            <Route path="playlists" element={<p>playlists management</p>} />
+            <Route path="playlists" element={<ManagePlaylistsPage />} />
             <Route path="following" element={<p>following artists management</p>} />
             <Route path="notifications" element={<p>notifications management</p>} />
           </Route>

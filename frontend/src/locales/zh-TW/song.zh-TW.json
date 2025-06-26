@@ -61,5 +61,14 @@
   "song.delete.modal.donation.title": "歌曲資料保留選項（可選）",
   "song.delete.modal.donation.description": "請確認資料保留選項及同意條款",
   "song.delete.modal.donation.delete": "永久刪除這首歌",
-  "song.delete.modal.donation.back": "回到上一頁"
+  "song.delete.modal.donation.back": "回到上一頁",
+
+  "song.playlist.assignment.modal.title": "加入播放清單",
+  "song.playlist.assignment.modal.description": "選擇你希望此歌曲出現在的播放清單",
+  "song.playlist.assignment.modal.searchbar.placeholder": "搜尋播放清單",
+  "song.playlist.assignment.modal.added.title": "已加入的播放清單",
+  "song.playlist.assignment.modal.unadded.title": "未加入的播放清單",
+  "song.playlist.assignment.modal.nofound": "找不到此播放清單",
+  "song.playlist.assignment.modal.button.cancel": "取消",
+  "song.playlist.assignment.modal.button.submit": "提交"
 }

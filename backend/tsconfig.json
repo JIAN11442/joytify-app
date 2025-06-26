@@ -4,7 +4,7 @@
     "jsx": "react",
     "rootDir": "./src",
     "outDir": "./dist",
-    "typeRoots": ["./node_modules/@types", "./@types"],
+    // "typeRoots": ["./node_modules/@types", "./@types"],
 
     "module": "NodeNext",
     // setting moduleResolution to NodeNext automatically resolves the module's exports,

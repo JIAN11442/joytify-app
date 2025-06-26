@@ -3,20 +3,22 @@ import { BiSearch } from "react-icons/bi";
 import { CiMusicNote1 } from "react-icons/ci";
 
 import SearchBarInput from "../components/searchbar-input.component";
+import ManageSongsList from "../components/manage-songs-list.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import PageSectionTitle from "../components/page-section-title.component";
 import ManageSongsOverview from "../components/manage-songs-overview.component";
-import ManageSongsList from "../components/manage-songs-list.component";
 import { useGetUserSongsQuery, useGetUserSongStatsQuery } from "../hooks/song-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const ManageSongsPage = () => {
   const { fm } = useScopedIntl();
-  const { songs, isPending: userSongsPending } = useGetUserSongsQuery();
-  const { songStats, isPending: songStatsPending } = useGetUserSongStatsQuery();
+  const manageSongsFm = fm("manage.songs");
 
   const [searchQuery, setSearchQuery] = useState("");
+
+  const { songs, isPending: userSongsPending } = useGetUserSongsQuery();
+  const { songStats, isPending: songStatsPending } = useGetUserSongStatsQuery();
 
   const handleOnChangeSearchBar = (e: React.ChangeEvent<HTMLInputElement>) => {
     timeoutForDelay(() => {
@@ -38,8 +40,6 @@ const ManageSongsPage = () => {
     return filteredSongs;
   }, [songs, searchQuery]);
 
-  const manageSongsFm = fm("manage.songs");
-
   return (
     <div className={`settings-page-container`}>
       {/* title & searchbar */}
@@ -57,7 +57,6 @@ const ManageSongsPage = () => {
           placeholder={manageSongsFm("searchbar.placeholder")}
           icon={{ name: BiSearch, opts: { size: 22 } }}
           onChange={handleOnChangeSearchBar}
-          visible={true}
           autoComplete="off"
           className={`py-4 my-4`}
         />
@@ -69,17 +68,8 @@ const ManageSongsPage = () => {
       </AnimationWrapper>
 
       {/* songs card */}
-      <AnimationWrapper
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className={`h-full`}
-      >
-        <ManageSongsList
-          songs={songs}
-          filteredSongs={filteredSongs}
-          isPending={userSongsPending}
-          className={`mt-5`}
-        />
+      <AnimationWrapper initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+        <ManageSongsList songs={songs} filteredSongs={filteredSongs} isPending={userSongsPending} />
       </AnimationWrapper>
     </div>
   );

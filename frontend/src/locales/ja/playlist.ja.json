@@ -23,6 +23,20 @@
   "playlist.edit.modal.input.description.placeholder": "説明",
   "playlist.edit.modal.input.button.submit": "変更を保存",
 
+  "playlist.advanced.edit.modal.searchbar.placeholder": "曲を検索",
+  "playlist.advanced.edit.modal.no.songs.foundFor": "<strong>「{searchQuery}」</strong> に一致する楽曲が見つかりませんでした",
+  "playlist.advanced.edit.modal.all.songs.removed": "このプレイリスト内のすべての曲が削除対象に設定されました。変更は保存後に反映されます。",
+  "playlist.advanced.edit.modal.button.submit": "変更を保存",
+  "playlist.advanced.edit.modal.button.cancel": "キャンセル",
+
+  "playlist.advanced.create.modal.title": "プレイリストを作成",
+  "playlist.advanced.create.modal.input.title.placeholder": "タイトル",
+  "playlist.advanced.create.modal.input.description.placeholder": "説明",
+  "playlist.advanced.create.modal.searchbar.placeholder": "曲を検索",
+  "playlist.advanced.create.modal.no.songs.foundFor": "<strong>「{searchQuery}」</strong> に一致する楽曲が見つかりませんでした",
+  "playlist.advanced.create.modal.input.button.submit": "プレイリストを作成",
+  "playlist.advanced.create.modal.input.button.cancel": "キャンセル",
+
   "playlist.delete.modal.warning.text": "プレイリスト <strong>{playlist}</strong> はライブラリから削除されます（この操作は取り消せません）。{additionalWarning}",
   "playlist.delete.modal.warning.additional.text": "このプレイリスト内のすべての曲を別のプレイリストに移動するか、そのまま削除することができます。",
   "playlist.delete.modal.select.input.placeholder": "移動先のプレイリストを選択",

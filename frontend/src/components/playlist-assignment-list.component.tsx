@@ -3,8 +3,10 @@ import { IconBaseProps, IconType } from "react-icons";
 import Icon from "./react-icons.component";
 import CheckboxLabel from "./checkbox-label.component";
 import { PlaylistResponse, PlaylistsResponse } from "@joytify/shared-types/types";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 
 interface PlaylistAssignmentListProps extends InputHTMLAttributes<HTMLInputElement> {
+  fm: ScopedFormatMessage;
   title: string;
   playlists: PlaylistsResponse;
   icon: { name: IconType; opts?: IconBaseProps };
@@ -12,12 +14,15 @@ interface PlaylistAssignmentListProps extends InputHTMLAttributes<HTMLInputEleme
 }
 
 const PlaylistAssignmentList: React.FC<PlaylistAssignmentListProps> = ({
+  fm,
   title,
   playlists,
   icon,
   selectFn,
   ...props
 }) => {
+  const playlistItemFm = fm("playlist.item");
+
   return (
     <div
       className={`
@@ -70,7 +75,9 @@ const PlaylistAssignmentList: React.FC<PlaylistAssignmentListProps> = ({
               <img src={coverImage} className={`w-16 h-16 object-cover rounded-md`} />
               <p className={`flex flex-col gap-1 text-sm`}>
                 <span className={`text-neutral-300 font-semibold`}>{title}</span>
-                <span className={`text-neutral-500`}>{playlist.songs.length} songs</span>
+                <span className={`text-neutral-500`}>
+                  {playlistItemFm("songs.count", { count: playlist.songs.length })}
+                </span>
               </p>
             </div>
           </CheckboxLabel>

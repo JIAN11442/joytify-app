@@ -26,7 +26,7 @@ const SearchBarInput = forwardRef<HTMLInputElement, SearchBarProps>(
       iconHighlight,
       autoCloseFn,
       className,
-      visible = false,
+      visible = true,
       initial,
       animate,
       transition,

@@ -110,9 +110,10 @@ const SongPlaylistAssignmentModal = () => {
   if (!song) return null;
 
   const { title, artist, imageUrl, paletee } = song;
-  const songAssignmentModalFm = fm("song.playlist.assignment.modal");
   const showPlaylistList = addedPlaylists.length > 0 || notAddedPlaylists.length > 0;
   const isDirty = addedPlaylists.length > 0 && !isEqual(addedPlaylists, initialAddedPlaylists);
+
+  const songAssignmentModalFm = fm("song.playlist.assignment.modal");
 
   return (
     <Modal
@@ -177,6 +178,7 @@ const SongPlaylistAssignmentModal = () => {
             {/* added playlists */}
             {addedPlaylists.length > 0 && (
               <PlaylistAssignmentList
+                fm={fm}
                 title={songAssignmentModalFm("added.title")}
                 playlists={addedPlaylists}
                 icon={{ name: FaCheck }}
@@ -190,6 +192,7 @@ const SongPlaylistAssignmentModal = () => {
             {/* unadded playlists */}
             {notAddedPlaylists.length > 0 && (
               <PlaylistAssignmentList
+                fm={fm}
                 title={songAssignmentModalFm("unadded.title")}
                 playlists={notAddedPlaylists}
                 icon={{ name: MdAdd, opts: { size: 25 } }}
@@ -216,7 +219,7 @@ const SongPlaylistAssignmentModal = () => {
               rounded-md
             `}
           >
-            Cancel
+            {songAssignmentModalFm("button.cancel")}
           </button>
 
           {/* save */}
@@ -225,7 +228,7 @@ const SongPlaylistAssignmentModal = () => {
             disabled={!isDirty}
             className={`submit-btn rounded-md ${!isDirty ? "opacity-50 cursor-not-allowed" : ""}`}
           >
-            Save
+            {songAssignmentModalFm("button.submit")}
           </button>
         </div>
       </div>

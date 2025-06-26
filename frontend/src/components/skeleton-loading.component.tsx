@@ -32,12 +32,12 @@ interface SquareDualLineSkeleton extends SkeletonProps {
   };
 }
 
-type SongCardSkeleton = {
+type CardSkeleton = {
   className?: string;
   tw?: { image?: string };
 };
 
-type SongCardListSkeleton = Omit<SongCardSkeleton, "tw"> & {
+type CardListSkeleton = Omit<CardSkeleton, "tw"> & {
   count?: number;
   tw?: {
     container?: string;
@@ -301,8 +301,8 @@ export const PlaylistCheckboxListSkeleton = ({ count = 1 }: { count: number }) =
   );
 };
 
-// song card skeleton
-export const SongCardSkeleton: React.FC<SongCardSkeleton> = ({ className, tw }) => {
+// card skeleton
+export const CardSkeleton: React.FC<CardSkeleton> = ({ className, tw }) => {
   return (
     <div
       className={twMerge(
@@ -335,12 +335,8 @@ export const SongCardSkeleton: React.FC<SongCardSkeleton> = ({ className, tw }) 
   );
 };
 
-// song card list skeleton
-export const SongCardListSkeleton: React.FC<SongCardListSkeleton> = ({
-  count = 1,
-  className,
-  tw,
-}) => {
+// card list skeleton
+export const CardListSkeleton: React.FC<CardListSkeleton> = ({ count = 1, className, tw }) => {
   const { isCollapsed } = useSkeletonCommon();
 
   return (
@@ -361,14 +357,54 @@ export const SongCardListSkeleton: React.FC<SongCardListSkeleton> = ({
       {Array.from({ length: count }).map((_, index) => {
         const { container, ...rest } = tw ?? {};
 
-        return (
-          <SongCardSkeleton
-            key={`song-card-list-skeleton-${index}`}
-            className={container}
-            tw={rest}
-          />
-        );
+        return <CardSkeleton key={`card-list-skeleton-${index}`} className={container} tw={rest} />;
       })}
+    </div>
+  );
+};
+
+// playlist edit modal skeleton
+export const PlaylistEditModalSkeleton = () => {
+  return (
+    <div
+      className={`
+        flex
+        max-sm:flex-col
+        gap-5
+        w-full
+        h-fit
+      `}
+    >
+      <Skeleton className={`w-[15rem] h-[15rem]`} />
+
+      <div className={`flex flex-col gap-3 w-full h-[15rem]`}>
+        <Skeleton className={`h-full`} containerClassName="w-full h-16" />
+        <Skeleton className={`h-full`} containerClassName="w-full h-full" />
+      </div>
+    </div>
+  );
+};
+
+// playlist list arrangement skeleton
+export const PlaylistListCardSkeleton = () => {
+  return (
+    <div
+      className={`
+        flex
+        p-4
+        gap-16
+        bg-neutral-500/10
+        items-center
+        justify-between
+        rounded-md
+      `}
+    >
+      <SquareDualLineSkeleton tw={{ square: "w-20 h-20" }} />
+
+      <div className={`flex gap-5 justify-end`}>
+        <Skeleton className={`w-5 h-5 rounded-full`} />
+        <Skeleton className={`w-5 h-5 rounded-full`} />
+      </div>
     </div>
   );
 };

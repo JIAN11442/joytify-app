@@ -13,7 +13,11 @@ export const useRecordPlaybackLogMutation = (opts: object = {}) => {
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey[0];
-          return queryKey === QueryKey.GET_USER_SONGS_STATS;
+          return (
+            queryKey === QueryKey.GET_ALL_SONGS ||
+            queryKey === QueryKey.GET_USER_SONGS_STATS ||
+            queryKey === QueryKey.GET_USER_SONGS
+          );
         },
       });
     },

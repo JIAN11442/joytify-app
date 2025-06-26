@@ -68,5 +68,7 @@
   "song.playlist.assignment.modal.searchbar.placeholder": "Search for playlists",
   "song.playlist.assignment.modal.added.title": "Added Playlists",
   "song.playlist.assignment.modal.unadded.title": "Unadded Playlists",
-  "song.playlist.assignment.modal.searchbar.nofound": "No such playlist found"
+  "song.playlist.assignment.modal.nofound": "No playlist found",
+  "song.playlist.assignment.modal.button.cancel": "Cancel",
+  "song.playlist.assignment.modal.button.submit": "Submit"
 }

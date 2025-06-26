@@ -49,6 +49,7 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
         switch (key) {
           case "/":
             // toggle sidebar
+            ekey.preventDefault();
             toggleSidebar();
             break;
         }
@@ -57,12 +58,14 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
           case "H":
             // to home page
             if (!activeNavSearchBar) {
+              ekey.preventDefault();
               navigate("/");
             }
             break;
           case "F":
             // to search page
             if (!activeNavSearchBar) {
+              ekey.preventDefault();
               timeoutForDelay(() => {
                 setActiveNavSearchBar(!activeNavSearchBar);
                 navigate("/search");
@@ -72,18 +75,28 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
           case "P":
             // to profile page
             if (authUser) {
+              ekey.preventDefault();
               navigate(`/profile/${authUser?._id}`);
             }
             break;
           case "S":
-            // to settings page
+            // to account settings page
             if (authUser) {
+              ekey.preventDefault();
               navigate(`/settings/account`);
+            }
+            break;
+          case "L":
+            // to language settings page
+            if (authUser) {
+              ekey.preventDefault();
+              navigate(`/settings/languages`);
             }
             break;
           case "M":
             // to manage page
             if (authUser) {
+              ekey.preventDefault();
               navigate(`/manage/songs`);
             }
             break;

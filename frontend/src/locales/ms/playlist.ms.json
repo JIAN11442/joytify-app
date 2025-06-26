@@ -23,6 +23,20 @@
   "playlist.edit.modal.input.description.placeholder": "Deskripsi",
   "playlist.edit.modal.input.button.submit": "Simpan perubahan",
 
+  "playlist.advanced.edit.modal.searchbar.placeholder": "Cari lagu",
+  "playlist.advanced.edit.modal.no.songs.foundFor": "Tiada lagu dijumpai untuk <strong>\"{searchQuery}\"</strong>",
+  "playlist.advanced.edit.modal.all.songs.removed": "Semua lagu dalam senarai main ini telah ditandakan untuk dipadam. Penghapusan sebenar akan berlaku selepas anda menyimpan perubahan.",
+  "playlist.advanced.edit.modal.button.submit": "Simpan perubahan",
+  "playlist.advanced.edit.modal.button.cancel": "Batal",
+
+  "playlist.advanced.create.modal.title": "Cipta Senarai Main",
+  "playlist.advanced.create.modal.input.title.placeholder": "Tajuk",
+  "playlist.advanced.create.modal.input.description.placeholder": "Penerangan",
+  "playlist.advanced.create.modal.searchbar.placeholder": "Cari lagu",
+  "playlist.advanced.create.modal.no.songs.foundFor": "Tiada lagu dijumpai untuk <strong>\"{searchQuery}\"</strong>",
+  "playlist.advanced.create.modal.input.button.submit": "Cipta senarai main",
+  "playlist.advanced.create.modal.input.button.cancel": "Batal",
+
   "playlist.delete.modal.warning.text": "Senarai main <strong>{playlist}</strong> akan dipadam daripada pustaka muzik anda (tindakan ini tidak boleh dibatalkan). {additionalWarning}",
   "playlist.delete.modal.warning.additional.text": "Anda boleh memilih untuk memindahkan semua lagu daripada senarai main ini ke senarai main lain, atau padamkan terus tanpa memindahkan.",
   "playlist.delete.modal.select.input.placeholder": "Pilih senarai main untuk dipindahkan",

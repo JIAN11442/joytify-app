@@ -13,10 +13,8 @@
   "manage.songs.overview.totalPlaybackCount": "Total Playback Count",
   "manage.songs.overview.totalWeightedPlaybackDuration": "Total Weighted Playback Duration",
   "manage.songs.overview.averageRating": "Average Rating",
-
-  "manage.songs.list.noSongs": "No Songs yet",
+  "manage.songs.list.noSongs": "No songs yet",
   "manage.songs.list.noFound": "No songs found",
-
   "manage.songs.list.details.title": "title",
   "manage.songs.list.details.artist": "artist",
   "manage.songs.list.details.composer": "composer",
@@ -26,5 +24,24 @@
   "manage.songs.list.details.language": "language",
   "manage.songs.list.details.releaseDate": "release date",
   "manage.songs.list.details.playbackDuration.total": "playback duration (total)",
-  "manage.songs.list.details.playbackDuration.weighted": "playback duration (weighted)"
+  "manage.songs.list.details.playbackDuration.weighted": "playback duration (weighted)",
+
+  "manage.playlists.title": "Playlists Management",
+  "manage.playlists.description": "Manage your playlists",
+  "manage.playlists.searchbar.placeholder": "Search your playlists",
+  "manage.playlists.controlPanel.filter.title": "Filter:",
+  "manage.playlists.controlPanel.filter.all": "All",
+  "manage.playlists.controlPanel.filter.recent": "Recent",
+  "manage.playlists.controlPanel.filter.liked": "Liked",
+  "manage.playlists.controlPanel.sortBy.title": "Sort By:",
+  "manage.playlists.controlPanel.sortBy.dateCreated": "Date Created",
+  "manage.playlists.controlPanel.sortBy.lastModified": "Last Modified",
+  "manage.playlists.controlPanel.sortBy.size": "Size",
+  "manage.playlists.controlPanel.sortBy.duration": "Duration",
+  "manage.playlists.controlPanel.direction.ascending": "Ascending",
+  "manage.playlists.controlPanel.direction.descending": "Descending",
+  "manage.playlists.controlPanel.arrangement.grid": "Grid",
+  "manage.playlists.controlPanel.arrangement.list": "List",
+  "manage.playlist.card.createPlaylist.title": "Create playlist",
+  "manage.playlist.card.createPlaylist.description": "Start building your perfect music collection"
 }

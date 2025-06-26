@@ -36,10 +36,12 @@ const Modal = {
   profileEditModal: lazy(() => path("profile-edit-modal")),
   changePasswordModal: lazy(() => path("change-password-modal")),
   accountDeregistrationModal: lazy(() => path("account-deregistration-modal")),
-  manageSongDetailCardModal: lazy(() => path("song-detail-card-modal")),
+  songDetailCardModal: lazy(() => path("song-detail-card-modal")),
   songRateModal: lazy(() => path("song-rate-modal")),
   songDeleteModal: lazy(() => path("song-delete-modal")),
   songAssignmentModal: lazy(() => path("song-playlist-assignment-modal")),
+  playlistAdvancedEditModal: lazy(() => path("playlist-advanced-edit-modal")),
+  playlistAdvancedCreateModal: lazy(() => path("playlist-advanced-create-modal")),
 };
 
 const ModalProvider = () => {
@@ -50,8 +52,13 @@ const ModalProvider = () => {
     activeCreateAlbumModal,
     activeCreatePlaylistModal,
   } = useUploadModalState();
-  const { activePlaylistEditModal, activePlaylistDeleteModal, activePlaylistPrivacyModal } =
-    usePlaylistState();
+  const {
+    activePlaylistEditModal,
+    activePlaylistAdvancedEditModal,
+    activePlaylistAdvancedCreateModal,
+    activePlaylistDeleteModal,
+    activePlaylistPrivacyModal,
+  } = usePlaylistState();
   const { activeProfileEditModal } = useUserState();
   const { activeVerificationCodeModal } = useVerificationModalState();
   const { activeChangePasswordModal, activeAccountDeregistrationModal } = useSettingsState();
@@ -73,10 +80,12 @@ const ModalProvider = () => {
       {activeProfileEditModal.active && <Modal.profileEditModal />}
       {activeChangePasswordModal && <Modal.changePasswordModal />}
       {activeAccountDeregistrationModal.active && <Modal.accountDeregistrationModal />}
-      {activeSongDetailCardModal.active && <Modal.manageSongDetailCardModal />}
+      {activeSongDetailCardModal.active && <Modal.songDetailCardModal />}
       {activeSongRateModal.active && <Modal.songRateModal />}
       {activeSongDeleteModal.active && <Modal.songDeleteModal />}
       {activeSongAssignmentModal.active && <Modal.songAssignmentModal />}
+      {activePlaylistAdvancedEditModal.active && <Modal.playlistAdvancedEditModal />}
+      {activePlaylistAdvancedCreateModal && <Modal.playlistAdvancedCreateModal />}
     </Suspense>
   );
 };

@@ -61,5 +61,14 @@
   "song.delete.modal.donation.title": "楽曲データ保存オプション（任意）",
   "song.delete.modal.donation.description": "データ保存オプションと同意条件をご確認ください",
   "song.delete.modal.donation.delete": "この楽曲を完全に削除する",
-  "song.delete.modal.donation.back": "前のページに戻る"
+  "song.delete.modal.donation.back": "前のページに戻る",
+
+  "song.playlist.assignment.modal.title": "プレイリストに追加",
+  "song.playlist.assignment.modal.description": "この曲を表示させたいプレイリストを選択してください",
+  "song.playlist.assignment.modal.searchbar.placeholder": "プレイリストを検索",
+  "song.playlist.assignment.modal.added.title": "追加済みプレイリスト",
+  "song.playlist.assignment.modal.unadded.title": "未追加プレイリスト",
+  "song.playlist.assignment.modal.nofound": "該当するプレイリストが見つかりません",
+  "song.playlist.assignment.modal.button.cancel": "キャンセル",
+  "song.playlist.assignment.modal.button.submit": "送信"
 }

@@ -61,5 +61,14 @@
   "song.delete.modal.donation.title": "노래 데이터 보존 옵션 (선택사항)",
   "song.delete.modal.donation.description": "데이터 보존 옵션 및 동의 약관을 확인해주세요",
   "song.delete.modal.donation.delete": "이 노래를 영구적으로 삭제",
-  "song.delete.modal.donation.back": "이전 페이지로 돌아가기"
+  "song.delete.modal.donation.back": "이전 페이지로 돌아가기",
+
+  "song.playlist.assignment.modal.title": "재생목록에 추가",
+  "song.playlist.assignment.modal.description": "이 노래를 표시할 재생목록을 선택하세요",
+  "song.playlist.assignment.modal.searchbar.placeholder": "재생목록 검색",
+  "song.playlist.assignment.modal.added.title": "추가된 재생목록",
+  "song.playlist.assignment.modal.unadded.title": "미추가 재생목록",
+  "song.playlist.assignment.modal.nofound": "해당 재생목록을 찾을 수 없습니다",
+  "song.playlist.assignment.modal.button.cancel": "취소",
+  "song.playlist.assignment.modal.button.submit": "제출"
 }

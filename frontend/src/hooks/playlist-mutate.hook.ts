@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { createPlaylist, deletePlaylist, updatePlaylist } from "../fetchs/playlist.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
-import { UpdatePlaylistRequest } from "@joytify/shared-types/types";
+import { CreatePlaylistRequest, UpdatePlaylistRequest } from "@joytify/shared-types/types";
 import queryClient from "../config/query-client.config";
 import { navigate } from "../lib/navigate.lib";
 import toast from "../lib/toast.lib";
@@ -24,7 +24,8 @@ export const useCreatePlaylistMutation = (closeModalFn?: () => void, opts: objec
           return (
             queryKey === QueryKey.GET_USER_PLAYLISTS ||
             queryKey === QueryKey.GET_PROFILE_USER_INFO ||
-            queryKey === QueryKey.GET_PROFILE_COLLECTION_INFO
+            queryKey === QueryKey.GET_PROFILE_COLLECTION_INFO ||
+            queryKey === QueryKey.GET_USER_PLAYLISTS
           );
         },
       });
@@ -49,7 +50,7 @@ export const useCreatePlaylistMutation = (closeModalFn?: () => void, opts: objec
   // the mutate function requires an argument due to its type definition.
   // to allow calling createPlaylistFn without explicitly passing undefined,
   // we wrap mutate in a function that accepts an optional title parameter.
-  const refactoredMutate = (title?: string) => mutate(title);
+  const refactoredMutate = (params: CreatePlaylistRequest) => mutate(params);
 
   return { mutate: refactoredMutate, ...rest };
 };
@@ -72,7 +73,8 @@ export const useUpdatePlaylistMutation = (
             queryKey === QueryKey.GET_USER_PLAYLISTS ||
             queryKey === QueryKey.GET_TARGET_PLAYLIST ||
             queryKey === QueryKey.GET_PROFILE_USER_INFO ||
-            queryKey === QueryKey.GET_PROFILE_COLLECTION_INFO
+            queryKey === QueryKey.GET_PROFILE_COLLECTION_INFO ||
+            queryKey === QueryKey.GET_USER_PLAYLISTS
           );
         },
       });

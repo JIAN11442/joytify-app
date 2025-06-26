@@ -6,8 +6,8 @@ import Modal from "./modal.component";
 import Icon from "./react-icons.component";
 import StarRating from "./star-rating.component";
 import AnimationWrapper from "./animation-wrapper.component";
-import ManageSongCardImage from "./manage-songs-card-image.component";
-import ManageSongsCardDetail from "./manage-songs-card-detail.component";
+import ManageSongCardImage from "./manage-song-card-image.component";
+import ManageSongCardDetail from "./manage-song-card-detail.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import useSongState from "../states/song.state";
@@ -143,7 +143,7 @@ const SongCardDetailModal = () => {
           </div>
 
           {/* details */}
-          <ManageSongsCardDetail song={song} />
+          <ManageSongCardDetail song={song} />
         </div>
 
         <hr className={`divider my-0`} />

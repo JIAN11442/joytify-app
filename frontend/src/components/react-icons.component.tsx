@@ -24,6 +24,7 @@ import * as Go from "react-icons/go";
 import * as Gr from "react-icons/gr";
 import * as Lia from "react-icons/lia";
 import * as Ci from "react-icons/ci";
+import * as Fc from "react-icons/fc";
 
 const IconModules = {
   Ri,
@@ -51,6 +52,7 @@ const IconModules = {
   Gr,
   Lia,
   Ci,
+  Fc,
 };
 
 export type IconName = keyof typeof IconModules | IconType;

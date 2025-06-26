@@ -16,6 +16,10 @@ export interface PlaylistDocument extends mongoose.Document {
   default: boolean;
   paletee: HexPaletee;
   songs: mongoose.Types.ObjectId[];
+  stats: {
+    totalSongCount: number;
+    totalSongDuration: number;
+  };
 }
 
 const playlistSchema = new mongoose.Schema<PlaylistDocument>(
@@ -44,6 +48,10 @@ const playlistSchema = new mongoose.Schema<PlaylistDocument>(
       lightMuted: { type: String },
     },
     songs: { type: [mongoose.Schema.Types.ObjectId], ref: "Song", index: true },
+    stats: {
+      totalSongCount: { type: Number, default: 0 },
+      totalSongDuration: { type: Number, default: 0 },
+    },
   },
   { timestamps: true }
 );
@@ -95,8 +103,8 @@ playlistSchema.post("save", async function (doc) {
 
 // before update playlist, ...
 playlistSchema.pre("findOneAndUpdate", async function (next) {
-  let updateDoc = this.getUpdate() as UpdateQuery<PlaylistDocument>;
   const findQuery = this.getQuery();
+  let updateDoc = this.getUpdate() as UpdateQuery<PlaylistDocument>;
 
   // Use findOne instead of findById when query is not a single ObjectId
   const originalDoc =
@@ -107,8 +115,8 @@ playlistSchema.pre("findOneAndUpdate", async function (next) {
   // if the "coverImage" property has a value, it means it will be updated
   // we need to find the original document, delete the existing coverImage before updating it
   // update paletee at the same time
-  if (updateDoc.coverImage) {
-    const paletee = await usePalette(updateDoc.coverImage);
+  if (updateDoc.$set?.coverImage) {
+    const paletee = await usePalette(updateDoc.$set.coverImage);
 
     updateDoc.paletee = paletee;
 

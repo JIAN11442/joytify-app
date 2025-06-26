@@ -1,5 +1,6 @@
 import mongoose, { FilterQuery } from "mongoose";
 import SongModel, { SongDocument } from "../models/song.model";
+import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
 
 import { getTotalPlaybackDurationAndCount } from "./playback.service";
 import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
@@ -18,7 +19,6 @@ import {
 import appAssert from "../utils/app-assert.util";
 import { joinLabels } from "../utils/join-labels.util";
 import { parseToFloat } from "../utils/parse-float.util";
-import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
 
 type CreateSongServiceRequest = { userId: string; songInfo: CreateSongRequest };
 
@@ -302,7 +302,13 @@ export const assignSongToPlaylists = async (params: UpdateSongPlaylistsServiceRe
         ? [
             PlaylistModel.updateMany(
               { _id: { $in: playlistsToAdd }, user: userId },
-              { $addToSet: { songs: songId } },
+              {
+                $addToSet: { songs: songId },
+                $inc: {
+                  "stats.totalSongCount": 1,
+                  "stats.totalSongDuration": updatedSong.duration,
+                },
+              },
               { session }
             ),
           ]
@@ -313,7 +319,13 @@ export const assignSongToPlaylists = async (params: UpdateSongPlaylistsServiceRe
         ? [
             PlaylistModel.updateMany(
               { _id: { $in: playlistsToRemove }, user: userId },
-              { $pull: { songs: songId } },
+              {
+                $pull: { songs: songId },
+                $inc: {
+                  "stats.totalSongCount": -1,
+                  "stats.totalSongDuration": updatedSong.duration * -1,
+                },
+              },
               { session }
             ),
           ]

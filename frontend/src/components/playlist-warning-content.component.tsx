@@ -71,6 +71,7 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
             h-[8rem]
             rounded-md
             object-cover
+            shrink-0
             overflow-hidden
           `}
         />

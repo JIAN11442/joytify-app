@@ -14,6 +14,9 @@
   "manage.songs.overview.totalWeightedPlaybackDuration": "平均再生時間(加重)",
   "manage.songs.overview.averageRating": "平均評価",
 
+  "manage.songs.list.noSongs": "楽曲がありません",
+  "manage.songs.list.noFound": "楽曲が見つかりません",
+
   "manage.songs.list.details.title": "タイトル",
   "manage.songs.list.details.artist": "アーティスト",
   "manage.songs.list.details.composer": "作曲者",
@@ -23,5 +26,24 @@
   "manage.songs.list.details.language": "言語",
   "manage.songs.list.details.releaseDate": "リリース日",
   "manage.songs.list.details.playbackDuration.total": "再生時間(合計)",
-  "manage.songs.list.details.playbackDuration.weighted": "再生時間(加重)"
+  "manage.songs.list.details.playbackDuration.weighted": "再生時間(加重)",
+
+  "manage.playlists.title": "プレイリスト管理",
+  "manage.playlists.description": "あなたのプレイリストを管理",
+  "manage.playlists.searchbar.placeholder": "プレイリストを検索",
+  "manage.playlists.controlPanel.filter.title": "フィルター：",
+  "manage.playlists.controlPanel.filter.all": "すべて",
+  "manage.playlists.controlPanel.filter.recent": "最近活動",
+  "manage.playlists.controlPanel.filter.liked": "いいね済み",
+  "manage.playlists.controlPanel.sortBy.title": "並び替え：",
+  "manage.playlists.controlPanel.sortBy.dateCreated": "作成日",
+  "manage.playlists.controlPanel.sortBy.lastModified": "最終更新日",
+  "manage.playlists.controlPanel.sortBy.size": "曲数",
+  "manage.playlists.controlPanel.sortBy.duration": "合計時間",
+  "manage.playlists.controlPanel.direction.ascending": "昇順",
+  "manage.playlists.controlPanel.direction.descending": "降順",
+  "manage.playlists.controlPanel.arrangement.grid": "グリッド",
+  "manage.playlists.controlPanel.arrangement.list": "リスト",
+  "manage.playlist.card.createPlaylist.title": "プレイリストを作成",
+  "manage.playlist.card.createPlaylist.description": "あなたの音楽コレクションを作り始めよう"
 }

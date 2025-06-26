@@ -4,6 +4,7 @@ import {
   RefactorPlaylistResponse,
   UpdatePlaylistRequest,
   DeletePlaylistRequest,
+  CreatePlaylistRequest,
 } from "@joytify/shared-types/types";
 
 // get all user playlists
@@ -15,8 +16,8 @@ export const getPlaylistById = async (id: string): Promise<RefactorPlaylistRespo
   API.get(`/playlist/${id}`);
 
 // create playlist
-export const createPlaylist = async (title?: string): Promise<PlaylistResponse> =>
-  API.post("/playlist/create", { title });
+export const createPlaylist = async (params: CreatePlaylistRequest): Promise<PlaylistResponse> =>
+  API.post("/playlist/create", { ...params });
 
 // update playlist cover image
 export const updatePlaylist = async (params: UpdatePlaylistRequest): Promise<PlaylistResponse> => {

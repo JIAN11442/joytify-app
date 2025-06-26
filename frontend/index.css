@@ -264,6 +264,21 @@ body,
     text-xs
     text-white
     font-semibold
+    rounded-full
+    shadow-sm
+    shadow-neutral-500;
+  }
+
+  .tag-label-secondary {
+    @apply flex
+    py-2
+    px-3
+    gap-1
+    bg-neutral-500/50
+    text-sm
+    font-ubuntu
+    items-center
+    justify-center
     rounded-full;
   }
 
@@ -279,6 +294,24 @@ body,
     via-black/50
     to-transparent
     rounded-b-md;
+  }
+
+  .card-wrapper {
+    @apply flex
+    flex-col
+    p-3
+    gap-3
+    w-full
+    bg-gradient-to-t
+    from-neutral-700/10
+    to-neutral-700
+    border-[0.1px]
+    border-neutral-700
+    shadow-[0_0_10px_rgba(0,0,0,0.1)]
+    hover:shadow-sky-300/50
+    rounded-md
+    duration-200
+    transition-all;
   }
 
   .song-card-details {
@@ -299,6 +332,53 @@ body,
     hover:bg-purple-400/50
     hover:scale-105
     rounded-full
+    transition-all;
+  }
+
+  .control-panel-btn {
+    @apply flex
+    gap-2
+    px-4
+    py-2.5
+    text-sm
+    text-neutral-300
+    items-center
+    justify-center
+    rounded-lg
+    duration-300
+    transition-all;
+  }
+
+  .control-panel-items-wrapper {
+    @apply flex
+    p-1
+    gap-2
+    items-center
+    bg-neutral-800
+    border-[0.1px]
+    border-neutral-700
+    rounded-lg;
+  }
+
+  .control-panel-selected {
+    @apply bg-gradient-to-r
+    from-indigo-400
+    to-purple-400
+    text-white
+    shadow-[0_0_5px_0_rgba(0,0,0,0.1)]
+    shadow-purple-500;
+  }
+
+  .add-playlist-card-image {
+    @apply flex
+    h-[250px]
+    items-center
+    justify-center
+    bg-neutral-900
+    group-hover:bg-neutral-900/80
+    group-hover:scale-[1.02]
+    rounded-md
+    duration-200
     transition-all;
   }
 

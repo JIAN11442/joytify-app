@@ -1,6 +1,7 @@
-import { FilterQuery } from "mongoose";
+import { FilterQuery, UpdateQuery } from "mongoose";
+import mongoose from "mongoose";
 
-import SongModel from "../models/song.model";
+import SongModel, { SongDocument } from "../models/song.model";
 import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
 import { HttpCode } from "@joytify/shared-types/constants";
 import {
@@ -98,26 +99,84 @@ export const getUserPlaylistById = async (playlistId: string, userId: string) =>
 
 // create new playlist service
 export const createNewPlaylist = async (params: CreatePlaylistServiceRequest) => {
-  const { userId, title } = params;
+  const { userId, addedSongs, ...rest } = params;
 
-  const playlist = await PlaylistModel.create({ user: userId, title });
+  const hasSongsToAdd = addedSongs && addedSongs.length > 0;
+
+  const createData: Partial<PlaylistDocument> = {
+    user: new mongoose.Types.ObjectId(userId),
+    ...rest,
+  };
+
+  if (hasSongsToAdd) {
+    const songs = await SongModel.find({ _id: { $in: addedSongs } });
+
+    createData.songs = songs.map((song: SongDocument) => song._id);
+    createData.stats = {
+      totalSongCount: songs.length,
+      totalSongDuration: songs.reduce((acc: number, song: SongDocument) => acc + song.duration, 0),
+    };
+  }
+
+  const playlist = await PlaylistModel.create(createData);
 
   appAssert(playlist, INTERNAL_SERVER_ERROR, "Failed to create playlist");
+
+  if (hasSongsToAdd) {
+    const updatedSongs = await SongModel.updateMany(
+      { _id: { $in: addedSongs } },
+      { $addToSet: { playlistFor: playlist._id } }
+    );
+
+    appAssert(updatedSongs, INTERNAL_SERVER_ERROR, "Failed to add songs to playlist");
+  }
 
   return { playlist };
 };
 
 // update playlist cover image service
 export const updatePlaylistById = async (params: UpdatePlaylistServiceRequest) => {
-  const { playlistId, userId, ...rest } = params;
+  const { playlistId, userId, removedSongs, ...rest } = params;
 
+  const hasSongsToRemove = removedSongs && removedSongs.length > 0;
+  const updateQuery: UpdateQuery<PlaylistDocument> = { $set: { ...rest } };
+
+  if (hasSongsToRemove) {
+    const songs = await SongModel.find({ _id: { $in: removedSongs } });
+
+    appAssert(songs, NOT_FOUND, "Songs not found");
+
+    updateQuery.$pull = { songs: { $in: removedSongs } };
+    updateQuery.$inc = {
+      "stats.totalSongCount": songs.length * -1,
+      "stats.totalSongDuration":
+        songs.reduce((acc: number, song: SongDocument) => acc + song.duration, 0) * -1,
+    };
+  }
+
+  // update playlist
   const updatedPlaylist = await PlaylistModel.findOneAndUpdate(
     { _id: playlistId, user: userId },
-    { ...rest },
+    updateQuery,
     { new: true }
   );
 
   appAssert(updatedPlaylist, INTERNAL_SERVER_ERROR, "Failed to update playlist");
+
+  // update song if playlist is default and have songs to remove
+  if (hasSongsToRemove) {
+    const updatedSongs = await SongModel.updateMany(
+      { _id: { $in: removedSongs } },
+      {
+        $pull: {
+          playlistFor: playlistId,
+          ...(updatedPlaylist.default ? { favorites: userId } : {}),
+        },
+      }
+    );
+
+    appAssert(updatedSongs, INTERNAL_SERVER_ERROR, "Failed to update songs");
+  }
 
   return { playlist: updatedPlaylist };
 };
@@ -137,7 +196,13 @@ export const deletePlaylistById = async (params: DeletePlaylistServiceRequest) =
       // add all songs ID from delete playlist to target playlist
       PlaylistModel.findByIdAndUpdate(
         targetPlaylistId,
-        { $addToSet: { songs: { $each: playlist.songs } } },
+        {
+          $addToSet: { songs: { $each: playlist.songs } },
+          $inc: {
+            "stats.totalSongCount": playlist.stats.totalSongCount,
+            "stats.totalSongDuration": playlist.stats.totalSongDuration,
+          },
+        },
         { new: true }
       ),
       // add target playlist ID to songs's playlistFor property

@@ -1,0 +1,92 @@
+import ManagePlaylistCardImage from "./manage-playlist-card-image.component";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
+import { PlaylistResponse } from "@joytify/shared-types/types";
+import { formatPlaybackDuration } from "../utils/unit-format.util";
+import ManagePlaylistCardActions from "./manage-playlist-card-actions.component";
+import { useState } from "react";
+
+type ManagePlaylistListProps = {
+  fm: ScopedFormatMessage;
+  playlist: PlaylistResponse;
+};
+
+const ManagePlaylistListCard: React.FC<ManagePlaylistListProps> = ({ fm, playlist }) => {
+  const playlistItemFm = fm("playlist.item");
+
+  const { title, description, coverImage, stats } = playlist;
+  const { totalSongCount, totalSongDuration } = stats;
+
+  const [isGroupHovered, setIsGroupHovered] = useState<boolean>(false);
+
+  return (
+    <div
+      onMouseEnter={() => setIsGroupHovered(true)}
+      onMouseLeave={() => setIsGroupHovered(false)}
+      onTouchStart={() => setIsGroupHovered(true)}
+      onTouchEnd={() => setIsGroupHovered(false)}
+      className={`
+        card-wrapper
+        flex-row
+        p-4
+        gap-5
+        from-neutral-500/10
+        hover:scale-[1.01]
+        ease-in-out
+        duration-200
+        transition
+      `}
+    >
+      <ManagePlaylistCardImage coverImage={coverImage} tw={{ img: `w-20 h-20`, mask: "hidden" }} />
+
+      <div
+        className={`
+          flex
+          gap-10
+          w-full
+          items-center
+          justify-between
+        `}
+      >
+        <div
+          className={`
+            flex
+            flex-col
+            gap-2
+            items-start
+            justify-center
+            font-ubuntu
+          `}
+        >
+          {/* title */}
+          <p className={`text-lg font-semibold`}>{title}</p>
+
+          {/* description */}
+          <p className={`text-sm text-neutral-500`}>{description}</p>
+
+          {/* information */}
+          <p
+            className={`
+            flex
+            gap-2
+            text-sm
+            text-neutral-600
+          `}
+          >
+            <span>{playlistItemFm("songs.count", { count: totalSongCount })}</span>
+            <span>·</span>
+            <span>{formatPlaybackDuration(totalSongDuration, true, "text")}</span>
+          </p>
+        </div>
+
+        <ManagePlaylistCardActions
+          isGroupHovered={isGroupHovered}
+          playlist={playlist}
+          icon={{ opts: { size: 22 } }}
+          className={`gap-5`}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default ManagePlaylistListCard;

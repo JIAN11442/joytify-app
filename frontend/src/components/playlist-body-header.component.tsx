@@ -110,9 +110,7 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({ playlist }) => 
     songs && songs.findIndex((s) => s._id === audioSong?._id) !== -1;
 
   // get needed arrangement types
-  const arrangementTypes = Object.values(ArrangementOptions).filter(
-    (type) => type !== GRID
-  );
+  const arrangementTypes = Object.values(ArrangementOptions).filter((type) => type !== GRID);
 
   // close playlist edit options menu in first render
   useEffect(() => {
@@ -186,15 +184,9 @@ const PlaylistBodyHeader: React.FC<PlaylistBodyHeaderProps> = ({ playlist }) => 
 
               {/* Remove from profile */}
               <MenuItem
-                onClick={
-                  isPublic
-                    ? handleActivePlaylistPrivacyModal
-                    : handleSwitchPlaylistPrivacy
-                }
+                onClick={isPublic ? handleActivePlaylistPrivacyModal : handleSwitchPlaylistPrivacy}
                 icon={{ name: isPublic ? MdLock : MdPublic }}
-                label={playlistMenuFm(
-                  `action.${isPublic ? "makePrivate" : "makePublic"}`
-                )}
+                label={playlistMenuFm(`action.${isPublic ? "makePrivate" : "makePublic"}`)}
               />
             </Menu>
           </div>

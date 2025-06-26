@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Icon from "./react-icons.component";
-import ManageSongCardImage from "./manage-songs-card-image.component";
+import ManageSongCardImage from "./manage-song-card-image.component";
 import { getManageSongCardActionsContent } from "../contents/manage-song-card-actions.content";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
 import usePlaybackControlState from "../states/playback-control.state";
@@ -46,16 +46,7 @@ const ManageSongCard: React.FC<ManageSongCardProps> = ({ songs, currentIndex }) 
       onClick={handleActiveSongDetailCardModal}
       className={`
         group
-        flex
-        flex-col
-        p-3
-        gap-3
-        w-full
-        bg-gradient-to-t
-        from-neutral-700/10
-        to-neutral-700
-        border-neutral-700
-        shadow-[0_0_10px_rgba(0,0,0,0.1)]
+        card-wrapper
         ${
           playingSongCard
             ? `
@@ -69,9 +60,7 @@ const ManageSongCard: React.FC<ManageSongCardProps> = ({ songs, currentIndex }) 
               hover:shadow-sky-300/50
               `
         }
-        rounded-md
-        duration-200
-        transition-all
+        cursor-pointer
       `}
     >
       {/* image */}

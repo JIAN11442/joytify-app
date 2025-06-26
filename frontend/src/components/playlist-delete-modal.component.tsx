@@ -8,6 +8,7 @@ import SingleSelectInputBox from "./single-select-input-box.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useDeletePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { defaultMovingPlaylistData } from "../constants/form.constant";
+import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
 import { DefaultMovingPlaylistForm } from "../types/form.type";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
@@ -52,7 +53,7 @@ const PlaylistDeleteModal = () => {
   return (
     <Modal activeState={active} closeModalFn={handleCloseModal} loading={isPending}>
       <PlaylistWarningContent
-        playlist={playlist}
+        playlist={playlist as RefactorPlaylistResponse}
         executeBtnText={playlistDeleteModalFm("execute.button.delete")}
         closeModalFn={handleCloseModal}
         onSubmit={handleSubmit(onSubmit)}
@@ -60,13 +61,16 @@ const PlaylistDeleteModal = () => {
         isPending={isPending}
       >
         {/* warning content */}
-        <p className={`text-red-500 leading-7`}>
+        <p className={`text-[14px] text-red-500 leading-6`}>
           <FormattedMessage
             id={`${prefix}.warning.text`}
             values={{
               playlist: playlist?.title,
               hasSongs: playlist?.songs.length,
-              additionalWarning: playlistDeleteModalFm("warning.additional.text"),
+              additionalWarning:
+                playlist && playlist?.songs.length > 0
+                  ? playlistDeleteModalFm("warning.additional.text")
+                  : "",
               strong: (chunks) => <strong className={`text-white`}>{chunks}</strong>,
             }}
           />

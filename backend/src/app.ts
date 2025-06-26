@@ -44,7 +44,7 @@ app.use("/auth", authRoute);
 app.use("/user", userRoute);
 app.use("/aws", awsRoute);
 app.use("/song", songRoute);
-app.use("/playlist", authenticate, playlistRoute);
+app.use("/playlist", playlistRoute);
 app.use("/label", authenticate, labelRoute);
 app.use("/musician", authenticate, musicianRoute);
 app.use("/album", authenticate, albumRoute);
