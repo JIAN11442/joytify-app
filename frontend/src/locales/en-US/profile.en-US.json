@@ -1,0 +1,16 @@
+{
+  "profile.hero.section.type": "Profile",
+  "profile.hero.section.description": "{totalPlaylists} playlists · {totalSongs} songs",
+
+  "profile.action.panel.editDetails": "Edit details",
+
+  "profile.collections.section.following": "Following",
+  "profile.collections.section.playlists": "Playlists",
+  "profile.collections.section.songs": "Songs",
+  "profile.collections.section.albums": "Albums",
+  "profile.collections.section.more": "More...",
+
+  "profile.section.page.loadMore": "Load more",
+  "profile.section.page.loadLess": "Load less",
+  "profile.section.page.noData": "No data"
+}

@@ -1,7 +1,5 @@
 import { twMerge } from "tailwind-merge";
-
 import ImageLabel from "./image-label.component";
-
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
@@ -10,17 +8,17 @@ import usePlaylistState from "../states/playlist.state";
 import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
-type PlaylistHeaderProps = {
+type PlaylistHeroSectionProps = {
   playlist: RefactorPlaylistResponse;
   className?: string;
 };
 
-const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ playlist, className }) => {
+const PlaylistHeroSection: React.FC<PlaylistHeroSectionProps> = ({ playlist, className }) => {
   const { _id: playlistId, title, songs, description, coverImage, default: isDefault } = playlist;
 
   const { fm } = useScopedIntl();
   const playlistItemFm = fm("playlist.item");
-  const playlistBannerSectionFm = fm("playlist.banner.section");
+  const playlistHeroSectionFm = fm("playlist.hero.section");
 
   const { setActivePlaylistEditModal } = usePlaylistState();
   const { collapseSideBarState } = useSidebarState();
@@ -50,7 +48,7 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ playlist, className }) 
         className
       )}
     >
-      {/* Playlist cover image */}
+      {/* cover image */}
       <ImageLabel
         src={coverImage}
         subfolder={UploadFolder.PLAYLISTS_IMAGE}
@@ -74,7 +72,7 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ playlist, className }) 
       >
         {/* type */}
         <p>
-          {playlistBannerSectionFm("type", {
+          {playlistHeroSectionFm("type", {
             type: playlistItemFm("type"),
             separator: description ? " · " : "",
             description: description ? playlistItemFm("songs.count", { count: songs.length }) : "",
@@ -109,4 +107,4 @@ const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({ playlist, className }) 
   );
 };
 
-export default PlaylistHeader;
+export default PlaylistHeroSection;

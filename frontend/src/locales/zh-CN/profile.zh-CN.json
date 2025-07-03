@@ -1,0 +1,16 @@
+{
+  "profile.hero.section.type": "个人资料",
+  "profile.hero.section.description": "{totalPlaylists} 个播放列表 · {totalSongs} 首歌曲",
+
+  "profile.action.panel.editDetails": "编辑资料",
+
+  "profile.collections.section.following": "关注中",
+  "profile.collections.section.playlists": "播放列表",
+  "profile.collections.section.songs": "歌曲",
+  "profile.collections.section.albums": "专辑",
+  "profile.collections.section.more": "更多…",
+
+  "profile.section.page.loadMore": "加载更多",
+  "profile.section.page.loadLess": "收起内容",
+  "profile.section.page.noData": "暂无数据"
+}

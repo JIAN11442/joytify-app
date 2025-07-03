@@ -1,11 +1,13 @@
+import { useScopedIntl } from "../hooks/intl.hook";
 import Loader from "../components/loader.component";
-import ProfileBody from "../components/profile-body.component";
-import ProfileHeader from "../components/profile-header.component";
-
+import ProfileHeroSection from "../components/profile-hero-section.component";
+import ProfileActionPanel from "../components/profile-action-panel.component";
+import ProfileCollectionsSection from "../components/profile-collections-section.component";
 import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
 import useUserState from "../states/user.state";
 
 const ProfilePage = () => {
+  const { fm } = useScopedIntl();
   const { profileUser } = useUserState();
 
   if (!profileUser) {
@@ -26,13 +28,29 @@ const ProfilePage = () => {
         )`,
       }}
       className={`
-        h-full
+        min-h-screen
         pt-10
         rounded-b-none
       `}
     >
-      <ProfileHeader profileUser={profileUser} />
-      <ProfileBody profileUser={profileUser} />
+      <ProfileHeroSection fm={fm} profileUser={profileUser} />
+
+      <div
+        className={`
+          flex
+          flex-col
+          mt-10
+          w-full
+          h-full
+          p-6
+          bg-gradient-to-b
+          from-neutral-900/20
+          to-neutral-900
+        `}
+      >
+        <ProfileActionPanel fm={fm} profileUser={profileUser} />
+        <ProfileCollectionsSection fm={fm} profileUser={profileUser} />
+      </div>
     </div>
   );
 };

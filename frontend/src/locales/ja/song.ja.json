@@ -37,8 +37,27 @@
   "song.input.target.lyricists": "作詞者",
   "song.input.target.composers": "作曲者",
 
+  "song.details.title": "タイトル",
+  "song.details.artist": "アーティスト",
+  "song.details.composer": "作曲者",
+  "song.details.lyricist": "作詞者",
+  "song.details.album": "アルバム",
+  "song.details.duration": "長さ",
+  "song.details.language": "言語",
+  "song.details.releaseDate": "リリース日",
+  "song.details.rating.count.total": "総評価回数",
+  "song.details.rating.count.average": "平均評価",
+  "song.details.total.playback.count": "再生回数",
+  "song.details.total.playback.duration": "総再生時間",
+  "song.details.weighted.average.playback.duration": "加重平均再生時間",
+  "song.details.label.basicInfo": "基本情報",
+  "song.details.label.statsInfo": "統計情報",
   "song.details.modal.title": "曲の詳細",
-  "song.details.modal.comment.title": "他のユーザーの評価",
+
+  "song.edit.modal.title": "曲の情報を編集",
+  "song.edit.modal.input.title.label": "曲名",
+  "song.edit.modal.input.title.placeholder": "曲名を入力してください",
+  "song.edit.modal.input.button.submit": "変更を保存",
 
   "song.rate.modal.title": "この曲を評価する",
   "song.rate.modal.description": "この曲、どう思った？",
@@ -70,5 +89,20 @@
   "song.playlist.assignment.modal.unadded.title": "未追加プレイリスト",
   "song.playlist.assignment.modal.nofound": "該当するプレイリストが見つかりません",
   "song.playlist.assignment.modal.button.cancel": "キャンセル",
-  "song.playlist.assignment.modal.button.submit": "送信"
+  "song.playlist.assignment.modal.button.submit": "送信",
+
+  "song.list.header.title": "タイトル",
+  "song.list.header.artist": "アーティスト",
+  "song.list.header.album": "アルバム",
+  "song.list.header.date": "作成日",
+
+  "song.list.arrangement.menu.layout.title": "表示方式",
+  "song.list.arrangement.menu.layout.grid": "グリッド",
+  "song.list.arrangement.menu.layout.list": "リスト",
+  "song.list.arrangement.menu.layout.compact": "コンパクト",
+
+  "song.hero.section.type": "楽曲",
+  "song.action.panel.menu.editDetails": "楽曲情報を編集",
+  "song.action.panel.menu.assignmentPlaylist": "プレイリストに追加",
+  "song.comment.list.title": "他のユーザーの評価 ({count})"
 }

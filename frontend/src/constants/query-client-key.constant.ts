@@ -33,24 +33,35 @@ export enum MutationKey {
   RATE_SONG = "rate-song",
   DELETE_TARGET_SONG = "delete-target-song",
   ASSIGN_SONG_TO_PLAYLISTS = "assign-song-to-playlists",
+  UPDATE_TARGET_SONG_INFO = "update-target-song-info",
+  FOLLOW_TARGET_MUSICIAN = "follow-target-musician",
+  UNFOLLOW_TARGET_MUSICIAN = "unfollow-target-musician",
 }
 
 export enum QueryKey {
   GET_AUTH_USER_INFO = "get-auth-user-info",
-  GET_USER_PLAYLISTS = "get-user-playlists",
+  GET_PROFILE_USER_INFO = "get-profile-user-info",
   GET_PROFILE_COLLECTION_INFO = "get-profile-collection-info",
+  GET_USER_PREFERENCES = "get-user-preferences",
+  GET_USER_SESSIONS = "get-user-sessions",
+
+  VERIFY_RESET_PASSWORD_LINK = "verify-reset-password-link",
+
+  GET_USER_PLAYLISTS = "get-user-playlists",
   GET_TARGET_PLAYLIST = "get-target-playlist",
   GET_PLAYLIST_PRIVACY_COUNTS = "get-playlist-privacy-counts",
-  GET_SONG_BY_ID = "get-song-by-id",
-  GET_UPLOAD_SONG_LABELS = "get-upload-song-labels",
-  GET_GENRE_LABELS = "get-genre-labels",
-  GET_USER_ALBUMS = "get-user-albums",
+
   GET_ALL_SONGS = "get-all-songs",
-  GET_PROFILE_USER_INFO = "get-profile-user-info",
-  VERIFY_RESET_PASSWORD_LINK = "verify-reset-password-link",
-  GET_USER_PREFERENCES = "get-user-preferences",
-  GET_IP_GEOLOCATION = "get-ip-geolocation",
-  GET_USER_SESSIONS = "get-user-sessions",
-  GET_USER_SONGS_STATS = "get-user-songs-stats",
   GET_USER_SONGS = "get-user-songs",
+  GET_TARGET_SONG = "get-target-song",
+  GET_UPLOAD_SONG_LABELS = "get-upload-song-labels",
+  GET_USER_SONGS_STATS = "get-user-songs-stats",
+
+  GET_USER_ALBUMS = "get-user-albums",
+  GET_TARGET_ALBUM = "get-target-album",
+  GET_GENRE_LABELS = "get-genre-labels",
+
+  GET_IP_GEOLOCATION = "get-ip-geolocation",
+  GET_TARGET_MUSICIAN = "get-target-musician",
+  GET_FOLLOWING_MUSICIANS = "get-following-musicians",
 }

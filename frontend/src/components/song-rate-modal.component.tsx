@@ -23,11 +23,11 @@ const SongRateModal = () => {
   const { authUser } = useUserState();
   const { activeSongRateModal, setActiveSongRateModal } = useSongState();
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     timeoutForDelay(() => {
       setActiveSongRateModal({ active: false, song: null });
     });
-  };
+  }, [setActiveSongRateModal]);
 
   const handleRatingSong = (rating: number) => {
     timeoutForDelay(() => {
@@ -89,10 +89,10 @@ const SongRateModal = () => {
           imageUrl={imageUrl}
           style={{
             backgroundImage: `linear-gradient(
-                to bottom,
-                ${paletee?.muted} 50%,
-                ${paletee?.vibrant} 100%
-              )`,
+              to bottom,
+              ${paletee?.muted} 50%,
+              ${paletee?.vibrant} 100%
+            )`,
           }}
           className={{
             item: "flex p-3 w-full rounded-md",

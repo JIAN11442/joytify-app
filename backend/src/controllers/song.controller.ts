@@ -10,14 +10,16 @@ import {
   refreshSongPlaybackStats,
   statsUserSongs,
   assignSongToPlaylists,
+  updateSongInfoById,
 } from "../services/song.service";
 import { getTotalPlaybackDurationAndCount } from "../services/playback.service";
 
 import {
   deleteSongZodSchema,
-  songRateZodSchema,
   songZodSchema,
+  updateSongInfoZodSchema,
   updateSongPlaylistsZodSchema,
+  updateSongRateZodSchema,
 } from "../schemas/song.zod";
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
@@ -89,12 +91,27 @@ export const getUserSongsStatsHandler: RequestHandler = async (req, res, next) =
   }
 };
 
+// update target song's info handler
+export const updateSongInfoHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = objectIdZodSchema.parse(req.userId);
+    const songId = objectIdZodSchema.parse(req.params.id);
+    const request = updateSongInfoZodSchema.parse(req.body);
+
+    const { updatedSong } = await updateSongInfoById({ userId, songId, ...request });
+
+    return res.status(OK).json(updatedSong);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // update target song's rating state handler
 export const updateSongRatingHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
     const songId = objectIdZodSchema.parse(req.params.id);
-    const request = songRateZodSchema.parse(req.body);
+    const request = updateSongRateZodSchema.parse(req.body);
 
     const { updatedSong } = await rateTargetSong({ userId, songId, ...request });
 

@@ -15,6 +15,7 @@ import {
   UpdateSongRateStateRequest,
   PopulatedSongRate,
   UpdateSongPlaylistsRequest,
+  UpdateSongInfoRequest,
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 import { joinLabels } from "../utils/join-labels.util";
@@ -23,6 +24,10 @@ import { parseToFloat } from "../utils/parse-float.util";
 type CreateSongServiceRequest = { userId: string; songInfo: CreateSongRequest };
 
 interface DeleteSongServiceRequest extends DeleteSongRequest {
+  userId: string;
+}
+
+interface UpdateSongInfoServiceRequest extends UpdateSongInfoRequest {
   userId: string;
 }
 
@@ -103,6 +108,7 @@ export const getSongById = async (id: string) => {
     .populate({ path: "composers", select: "name", transform: (doc: Musician) => doc.name })
     .populate({ path: "languages", select: "label", transform: (doc: Label) => doc.label })
     .populate({ path: "album", select: "title", transform: (doc: Album) => doc.title })
+    .populate({ path: "ratings.id", select: "username profileImage" })
     .lean<SongResponse>();
 
   appAssert(song, INTERNAL_SERVER_ERROR, "Song not found");
@@ -114,6 +120,13 @@ export const getSongById = async (id: string) => {
     composers: joinLabels(song.composers),
     languages: joinLabels(song.languages),
     album: song.album || "",
+    ratings: song.ratings.map((rating: PopulatedSongRate) => ({
+      id: rating.id._id,
+      username: rating.id.username,
+      profileImage: rating.id.profileImage,
+      rating: rating.rating,
+      comment: rating.comment,
+    })),
   };
 
   return { song: refactorSong };
@@ -212,6 +225,21 @@ export const statsUserSongs = async (userId: string) => {
   ]);
 
   return stats[0];
+};
+
+// update target song info
+export const updateSongInfoById = async (params: UpdateSongInfoServiceRequest) => {
+  const { userId, songId, ...rest } = params;
+
+  const updatedSong = await SongModel.findOneAndUpdate(
+    { _id: songId, creator: userId },
+    { $set: rest },
+    { new: true }
+  );
+
+  appAssert(updatedSong, INTERNAL_SERVER_ERROR, "Failed to update song's info");
+
+  return { updatedSong };
 };
 
 // update target song's rating

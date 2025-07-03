@@ -94,3 +94,8 @@ export const defaultPlaylistAdvancedCreatData = {
   description: "",
   addedSongs: [] as string[],
 };
+
+export const defaultSongEditData = {
+  title: "",
+  imageUrl: "",
+};

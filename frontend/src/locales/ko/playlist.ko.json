@@ -3,20 +3,12 @@
   "playlist.item.songs.count": "{count} 곡",
   "playlist.item.description": "{type} · {count}",
 
-  "playlist.banner.section.type": "{type}{separator}{description}",
-  "playlist.content.songList.header.title": "제목",
-  "playlist.content.songList.header.artist": "아티스트",
-  "playlist.content.songList.header.album": "앨범",
-  "playlist.content.songList.header.date": "추가 날짜",
+  "playlist.hero.section.type": "{type}{separator}{description}",
 
   "playlist.menu.action.editDetails": "세부 정보 편집",
   "playlist.menu.action.deletePlaylist": "재생목록 삭제",
   "playlist.menu.action.makePrivate": "비공개로 설정",
   "playlist.menu.action.makePublic": "공개로 설정",
-  "playlist.menu.layout.title": "보기 방식",
-  "playlist.menu.layout.grid": "그리드",
-  "playlist.menu.layout.list": "리스트",
-  "playlist.menu.layout.compact": "컴팩트",
 
   "playlist.edit.modal.title": "재생목록 편집",
   "playlist.edit.modal.input.title.placeholder": "이름",

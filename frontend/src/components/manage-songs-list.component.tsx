@@ -1,26 +1,30 @@
 import { twMerge } from "tailwind-merge";
+import { FormattedMessage } from "react-intl";
 
 import ManageSongCard from "./manage-song-card.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { CardListSkeleton } from "./skeleton-loading.component";
-import { useScopedIntl } from "../hooks/intl.hook";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
 
 type ManageSongsListProps = {
+  fm: ScopedFormatMessage;
   songs: RefactorSongResponse[] | undefined;
   filteredSongs: RefactorSongResponse[] | undefined;
+  searchQuery: string;
   isPending: boolean;
   className?: string;
 };
 
 const ManageSongsList: React.FC<ManageSongsListProps> = ({
+  fm,
   songs,
   filteredSongs,
+  searchQuery,
   isPending,
   className,
 }) => {
-  const { fm } = useScopedIntl();
   const { collapseSideBarState } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
 
@@ -28,7 +32,8 @@ const ManageSongsList: React.FC<ManageSongsListProps> = ({
   const hasFilteredSongs = filteredSongs && filteredSongs.length > 0;
   const showSongs = hasSongs && hasFilteredSongs;
 
-  const manageSongsListFm = fm("manage.songs.list");
+  const manageSongsListPrefix = "manage.songs.list";
+  const manageSongsListFm = fm(manageSongsListPrefix);
 
   if (isPending) {
     return <CardListSkeleton count={2} className={`mt-5`} />;
@@ -36,9 +41,19 @@ const ManageSongsList: React.FC<ManageSongsListProps> = ({
 
   if (!showSongs) {
     return (
-      <div className={`flex h-[80%] items-center justify-center`}>
+      <div className={`flex h-full mt-20 justify-center`}>
         <p className={`text-center text-neutral-500`}>
-          {hasSongs ? manageSongsListFm("noFound") : manageSongsListFm("noSongs")}
+          {hasSongs ? (
+            <FormattedMessage
+              id={`${manageSongsListPrefix}.noFound`}
+              values={{
+                searchQuery: searchQuery,
+                strong: (chunks) => <strong className={`text-neutral-300`}>{chunks}</strong>,
+              }}
+            />
+          ) : (
+            manageSongsListFm("noSongs")
+          )}
         </p>
       </div>
     );

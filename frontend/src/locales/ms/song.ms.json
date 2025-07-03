@@ -37,8 +37,27 @@
   "song.input.target.lyricists": "penulis lirik",
   "song.input.target.composers": "komposer",
 
+  "song.details.title": "tajuk",
+  "song.details.artist": "artis",
+  "song.details.composer": "komposer",
+  "song.details.lyricist": "penulis lirik",
+  "song.details.album": "album",
+  "song.details.duration": "tempoh",
+  "song.details.language": "bahasa",
+  "song.details.releaseDate": "tarikh keluaran",
+  "song.details.rating.count.total": "jumlah penilaian",
+  "song.details.rating.count.average": "penilaian purata",
+  "song.details.total.playback.count": "jumlah main balik",
+  "song.details.total.playback.duration": "jumlah tempoh main balik",
+  "song.details.weighted.average.playback.duration": "Purata tempoh main balik berwajaran",
+  "song.details.label.basicInfo": "Butiran asas",
+  "song.details.label.statsInfo": "Butiran statistik",
   "song.details.modal.title": "Butiran Lagu",
-  "song.details.modal.comment.title": "Penilaian & Komen",
+
+  "song.edit.modal.title": "Sunting butiran lagu",
+  "song.edit.modal.input.title.label": "Tajuk lagu",
+  "song.edit.modal.input.title.placeholder": "Masukkan tajuk lagu",
+  "song.edit.modal.input.button.submit": "Simpan perubahan",
 
   "song.rate.modal.title": "Beri Penilaian Lagu Ini",
   "song.rate.modal.description": "Apa pendapat anda tentang lagu ini?",
@@ -70,5 +89,20 @@
   "song.playlist.assignment.modal.unadded.title": "Senarai Main Belum Ditambah",
   "song.playlist.assignment.modal.nofound": "Senarai main tidak dijumpai",
   "song.playlist.assignment.modal.button.cancel": "Batal",
-  "song.playlist.assignment.modal.button.submit": "Hantar"
+  "song.playlist.assignment.modal.button.submit": "Hantar",
+
+  "song.list.header.title": "Tajuk",
+  "song.list.header.artist": "Artis",
+  "song.list.header.album": "Album",
+  "song.list.header.date": "Tarikh ditambah",
+
+  "song.list.arrangement.menu.layout.title": "Papar sebagai",
+  "song.list.arrangement.menu.layout.grid": "grid",
+  "song.list.arrangement.menu.layout.list": "senarai",
+  "song.list.arrangement.menu.layout.compact": "padat",
+
+  "song.hero.section.type": "lagu",
+  "song.action.panel.menu.editDetails": "Sunting butiran lagu",
+  "song.action.panel.menu.assignmentPlaylist": "Tambah ke senarai main",
+  "song.comment.list.title": "Penilaian & Komen ({count})"
 }

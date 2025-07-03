@@ -48,11 +48,11 @@ const SongPlaylistAssignmentModal = () => {
     );
   }, [filteredPlaylists, selectedPlaylists]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     timeoutForDelay(() => {
       setActiveSongAssignmentModal({ active: false, song: null });
     });
-  };
+  }, [setActiveSongAssignmentModal]);
 
   const handleOnChangeSearchBar = (e: React.ChangeEvent<HTMLInputElement>) => {
     timeoutForDelay(() => {

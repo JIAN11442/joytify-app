@@ -10,6 +10,9 @@ import songJSON from "./song.ko.json";
 import manageJSON from "./manage.ko.json";
 import settingsJSON from "./settings.ko.json";
 import dashboardJSON from "./dashboard.ko.json";
+import musicianJSON from "./musician.ko.json";
+import albumJSON from "./album.ko.json";
+import profileJSON from "./profile.ko.json";
 
 const modules = [
   authJSON,
@@ -24,6 +27,9 @@ const modules = [
   manageJSON,
   settingsJSON,
   dashboardJSON,
+  musicianJSON,
+  albumJSON,
+  profileJSON,
 ];
 
 export default Object.assign({}, ...modules);

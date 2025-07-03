@@ -3,20 +3,12 @@
   "playlist.item.songs.count": "{count} lagu",
   "playlist.item.description": "{type} · {count}",
 
-  "playlist.banner.section.type": "{type}{separator}{description}",
-  "playlist.content.songList.header.title": "Judul",
-  "playlist.content.songList.header.artist": "Artis",
-  "playlist.content.songList.header.album": "Album",
-  "playlist.content.songList.header.date": "Tarikh ditambah",
+  "playlist.hero.section.type": "{type}{separator}{description}",
 
   "playlist.menu.action.editDetails": "Edit butiran",
   "playlist.menu.action.deletePlaylist": "Padam senarai main",
   "playlist.menu.action.makePrivate": "Jadikan peribadi",
   "playlist.menu.action.makePublic": "Jadikan umum",
-  "playlist.menu.layout.title": "Papar sebagai",
-  "playlist.menu.layout.grid": "grid",
-  "playlist.menu.layout.list": "senarai",
-  "playlist.menu.layout.compact": "padat",
 
   "playlist.edit.modal.title": "Edit senarai main",
   "playlist.edit.modal.input.title.placeholder": "Nama",

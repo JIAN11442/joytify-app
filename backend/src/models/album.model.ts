@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
+import { HexPaletee } from "@joytify/shared-types/types";
 import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
 
 export interface AlbumDocument extends mongoose.Document {
   title: string;
   description: string;
   coverImage: string;
+  paletee: HexPaletee;
   artist: mongoose.Types.ObjectId;
   songs: mongoose.Types.ObjectId[];
   users: mongoose.Types.ObjectId[];
@@ -19,6 +21,14 @@ const albumSchema = new mongoose.Schema<AlbumDocument>(
       type: String,
       default:
         "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-album-image.png",
+    },
+    paletee: {
+      vibrant: { type: String },
+      darkVibrant: { type: String },
+      lightVibrant: { type: String },
+      muted: { type: String },
+      darkMuted: { type: String },
+      lightMuted: { type: String },
     },
     artist: {
       type: mongoose.Schema.Types.ObjectId,

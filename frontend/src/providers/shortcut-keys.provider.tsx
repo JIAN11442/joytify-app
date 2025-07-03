@@ -20,7 +20,7 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
   const { activeNavSearchBar, setActiveNavSearchBar } = useNavbarState();
   const { collapseSideBarState, setCollapseSideBarState } = useSidebarState();
   const { setActiveAddingOptions, setActiveLibrarySearchBar } = useLibraryState();
-  const { setActivePlaylistEditOptionsMenu, setActivePlaylistListOptionsMenu } = usePlaylistState();
+  const { setActivePlaylistEditOptionsMenu } = usePlaylistState();
   const { togglePlayback, audioSong } = usePlaybackControl();
 
   const { isCollapsed } = collapseSideBarState;
@@ -116,7 +116,6 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
             setActiveAddingOptions(false);
             setActiveLibrarySearchBar(false);
             setActivePlaylistEditOptionsMenu(false);
-            setActivePlaylistListOptionsMenu(false);
             break;
         }
       }

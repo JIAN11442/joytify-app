@@ -58,7 +58,7 @@ const ManageSongsPage = () => {
           icon={{ name: BiSearch, opts: { size: 22 } }}
           onChange={handleOnChangeSearchBar}
           autoComplete="off"
-          className={`py-4 my-4`}
+          className={`py-5 my-4`}
         />
       </AnimationWrapper>
 
@@ -68,8 +68,18 @@ const ManageSongsPage = () => {
       </AnimationWrapper>
 
       {/* songs card */}
-      <AnimationWrapper initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <ManageSongsList songs={songs} filteredSongs={filteredSongs} isPending={userSongsPending} />
+      <AnimationWrapper
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={`h-full`}
+      >
+        <ManageSongsList
+          fm={fm}
+          songs={songs}
+          filteredSongs={filteredSongs}
+          searchQuery={searchQuery}
+          isPending={userSongsPending}
+        />
       </AnimationWrapper>
     </div>
   );

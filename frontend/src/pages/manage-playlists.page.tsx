@@ -67,9 +67,9 @@ const ManagePlaylistsPage = () => {
           id="manage-playlists-searchbar"
           placeholder={managePlaylistsFm("searchbar.placeholder")}
           icon={{ name: BiSearch, opts: { size: 22 } }}
-          autoComplete="off"
-          className={`py-4 my-4`}
           onChange={handleSearchChange}
+          autoComplete="off"
+          className={`py-5 my-4`}
         />
       </AnimationWrapper>
 

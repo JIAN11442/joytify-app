@@ -1,6 +1,10 @@
 {
   "image.label.hover.text": "Pilih gambar",
 
+  "musician.role.artist": "Artis",
+  "musician.role.composer": "Komposer",
+  "musician.role.lyricist": "Penulis Lirik",
+
   "gender.male": "Lelaki",
   "gender.female": "Perempuan",
   "gender.nonBinary": "Bukan binari",

@@ -1,6 +1,10 @@
 {
   "image.label.hover.text": "写真を選択",
 
+  "musician.role.artist": "アーティスト",
+  "musician.role.composer": "作曲者",
+  "musician.role.lyricist": "作詞者",
+
   "gender.male": "男性",
   "gender.female": "女性",
   "gender.nonBinary": "ノンバイナリー",

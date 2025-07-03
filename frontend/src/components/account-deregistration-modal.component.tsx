@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import Modal from "../components/modal.component";
 import DeregisterDonationForm from "./deregister-donation-form.component";
@@ -17,11 +17,11 @@ const AccountDeregistrationModal = () => {
   const { activeAccountDeregistrationModal, closeAccountDeregistrationModal } = useSettingsState();
   const { active, status } = activeAccountDeregistrationModal;
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     timeoutForDelay(() => {
       closeAccountDeregistrationModal();
     });
-  };
+  }, [closeAccountDeregistrationModal]);
 
   const { mutate: deregisterAccountFn, isPending } = useDeregisterMutation(handleCloseModal);
 

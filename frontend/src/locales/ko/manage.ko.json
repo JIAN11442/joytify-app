@@ -17,17 +17,6 @@
   "manage.songs.list.noSongs": "아직 노래가 없습니다",
   "manage.songs.list.noFound": "노래를 찾을 수 없습니다",
 
-  "manage.songs.list.details.title": "제목",
-  "manage.songs.list.details.artist": "아티스트",
-  "manage.songs.list.details.composer": "작곡가",
-  "manage.songs.list.details.lyricist": "작사가",
-  "manage.songs.list.details.album": "앨범",
-  "manage.songs.list.details.duration": "재생 시간",
-  "manage.songs.list.details.language": "언어",
-  "manage.songs.list.details.releaseDate": "발매일",
-  "manage.songs.list.details.playbackDuration.total": "총 재생 시간",
-  "manage.songs.list.details.playbackDuration.weighted": "가중 재생 시간",
-
   "manage.playlists.title": "플레이리스트 관리",
   "manage.playlists.description": "내 플레이리스트를 관리하세요",
   "manage.playlists.searchbar.placeholder": "플레이리스트 검색",
@@ -45,5 +34,15 @@
   "manage.playlists.controlPanel.arrangement.grid": "그리드",
   "manage.playlists.controlPanel.arrangement.list": "리스트",
   "manage.playlist.card.createPlaylist.title": "플레이리스트 만들기",
-  "manage.playlist.card.createPlaylist.description": "당신만의 음악 컬렉션을 만들어보세요"
+  "manage.playlist.card.createPlaylist.description": "당신만의 음악 컬렉션을 만들어보세요",
+
+  "manage.following.title": "팔로우 아티스트 관리",
+  "manage.following.description": "팔로우한 아티스트를 관리하세요",
+  "manage.following.searchbar.placeholder": "팔로우한 아티스트 검색",
+  "manage.following.list.noFound": "<strong>\"{searchQuery}\"</strong> 에 해당하는 아티스트가 없습니다",
+  "manage.following.list.noFollowing": "아직 팔로우한 아티스트가 없습니다",
+  "manage.following.unfollow.modal.title": "아티스트 팔로우 취소",
+  "manage.following.unfollow.modal.content": "정말 이 아티스트의 팔로우를 취소하시겠습니까? 더 이상 해당 아티스트의 소식을 받을 수 없습니다.",
+  "manage.following.unfollow.modal.button.submit": "네, 팔로우 취소",
+  "manage.following.unfollow.modal.button.cancel": "취소"
 }

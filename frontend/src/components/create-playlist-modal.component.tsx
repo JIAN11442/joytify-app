@@ -37,7 +37,7 @@ const CreatePlaylistModal = () => {
   const onSubmit: SubmitHandler<DefaultCreatePlaylistForm> = async (value) => {
     const { playlist } = value;
 
-    createPlaylistFn(playlist);
+    createPlaylistFn({ title: playlist });
   };
 
   return (

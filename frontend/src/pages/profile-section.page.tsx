@@ -3,11 +3,16 @@ import Loader from "../components/loader.component";
 import ItemCard from "../components/item-card.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import { useGetProfileCollectionInfoQuery } from "../hooks/user-query.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
 import { ProfileCollectionsType } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
 
 const ProfileSectionPage = () => {
+  const { fm } = useScopedIntl();
   const { section } = useParams();
+
+  const profileCollectionsSectionFm = fm("profile.collections.section");
+  const profileSectionPageFm = fm("profile.section.page");
   const collection = section as ProfileCollectionsType;
 
   const { collapseSideBarState } = useSidebarState();
@@ -28,9 +33,7 @@ const ProfileSectionPage = () => {
     `}
     >
       {/* Title */}
-      <h1 className={`text-3xl font-bold`}>
-        {collection.charAt(0).toUpperCase() + collection.slice(1)}
-      </h1>
+      <h1 className={`text-3xl font-bold`}>{profileCollectionsSectionFm(collection)}</h1>
 
       {/* Content */}
       {isLoading ? (
@@ -66,20 +69,21 @@ const ProfileSectionPage = () => {
               gap-5
             `}
           >
-            {docs.map((doc) => {
+            {docs.map((doc, index) => {
               const { _id, title, imageUrl } = doc;
               const description = Array.isArray(doc.description)
                 ? doc.description[0]
                 : doc.description;
+
+              const toProfile =
+                collection === "following"
+                  ? `/artist/${_id}`
+                  : `/${collection.endsWith("s") ? collection.slice(0, -1) : collection}/${_id}`;
+
               return (
-                <AnimationWrapper
-                  key={_id}
-                  transition={{
-                    duration: 0.5,
-                    delay: 0.2,
-                  }}
-                >
+                <AnimationWrapper key={_id} transition={{ duration: 0.5, delay: 0.1 * index }}>
                   <ItemCard
+                    to={toProfile}
                     title={title}
                     imageUrl={imageUrl}
                     description={description}
@@ -130,7 +134,7 @@ const ProfileSectionPage = () => {
                 `}
                 onClick={() => setPage(page + 1)}
               >
-                Load more
+                {profileSectionPageFm("loadMore")}
               </button>
             )}
 
@@ -147,7 +151,7 @@ const ProfileSectionPage = () => {
                 `}
                 onClick={() => setPage(1)}
               >
-                Load less
+                {profileSectionPageFm("loadLess")}
               </button>
             )}
           </div>
@@ -159,7 +163,7 @@ const ProfileSectionPage = () => {
             text-neutral-100/30
           `}
         >
-          No data
+          {profileSectionPageFm("noData")}
         </p>
       )}
     </div>

@@ -7,17 +7,21 @@ import HomePage from "./pages/home.page";
 import SearchPage from "./pages/search.page";
 import ProfilePage from "./pages/profile.page";
 import PlaylistPage from "./pages/playlist.page";
+import ManageSongsPage from "./pages/manage-songs.page";
 import ResetPasswordPage from "./pages/reset-password.page";
 import ProfileSectionPage from "./pages/profile-section.page";
+import ManagePlaylistsPage from "./pages/manage-playlists.page";
 import SettingsAccountPage from "./pages/settings-account.page";
 import SettingsLanguagesPage from "./pages/settings-languages.page";
 import AuthGuardContainerPage from "./pages/auth-guard-container.page";
+import SettingsConnectedDevicesPage from "./pages/settings-connected-devices.page";
 import AccountDeregistrationPolicyPage from "./pages/account-deregistration-policy.page";
 import SettingsNotificationsPage from "./pages/settings-notifications.page";
+import ManageFollowingPage from "./pages/manage-following.page";
+import MusicianPage from "./pages/musician.page";
+import AlbumPage from "./pages/album.page";
+import SongPage from "./pages/song.page";
 import { setNavigate } from "./lib/navigate.lib";
-import SettingsConnectedDevicesPage from "./pages/settings-connected-devices.page";
-import ManageSongsPage from "./pages/manage-songs.page";
-import ManagePlaylistsPage from "./pages/manage-playlists.page";
 
 function App() {
   // original navigate function can't be using outside of the component
@@ -34,18 +38,24 @@ function App() {
         {/* Private pages(need login) */}
         <Route element={<AuthGuardContainerPage />}>
           <Route path="/playlist/:id" element={<PlaylistPage />} />
+          <Route path="/musician/:id" element={<MusicianPage />} />
+          <Route path="/album/:id" element={<AlbumPage />} />
+          <Route path="/song/:id" element={<SongPage />} />
+
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/profile/:id/:section" element={<ProfileSectionPage />} />
+
           <Route path="/settings">
             <Route path="account" element={<SettingsAccountPage />} />
             <Route path="notifications" element={<SettingsNotificationsPage />} />
             <Route path="languages" element={<SettingsLanguagesPage />} />
             <Route path="connected-devices" element={<SettingsConnectedDevicesPage />} />
           </Route>
+
           <Route path="/manage">
             <Route path="songs" element={<ManageSongsPage />} />
             <Route path="playlists" element={<ManagePlaylistsPage />} />
-            <Route path="following" element={<p>following artists management</p>} />
+            <Route path="following" element={<ManageFollowingPage />} />
             <Route path="notifications" element={<p>notifications management</p>} />
           </Route>
         </Route>

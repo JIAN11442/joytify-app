@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { FormattedMessage } from "react-intl";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -21,15 +22,6 @@ const PlaylistDeleteModal = () => {
   const { activePlaylistDeleteModal, closePlaylistDeleteModal, userPlaylists } = usePlaylistState();
   const { active, playlist } = activePlaylistDeleteModal;
 
-  const handleCloseModal = () => {
-    timeoutForDelay(() => {
-      closePlaylistDeleteModal();
-      reset();
-    });
-  };
-
-  const { mutate: deletePlaylistFn, isPending } = useDeletePlaylistMutation(handleCloseModal);
-
   const {
     register,
     handleSubmit,
@@ -42,6 +34,15 @@ const PlaylistDeleteModal = () => {
     defaultValues: { ...defaultMovingPlaylistData },
     mode: "onChange",
   });
+
+  const handleCloseModal = useCallback(() => {
+    timeoutForDelay(() => {
+      closePlaylistDeleteModal();
+      reset();
+    });
+  }, [closePlaylistDeleteModal, reset]);
+
+  const { mutate: deletePlaylistFn, isPending } = useDeletePlaylistMutation(handleCloseModal);
 
   const onSubmit: SubmitHandler<DefaultMovingPlaylistForm> = async (value) => {
     deletePlaylistFn({

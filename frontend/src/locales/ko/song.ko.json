@@ -37,8 +37,27 @@
   "song.input.target.lyricists": "작사가",
   "song.input.target.composers": "작곡가",
 
+  "song.details.title": "제목",
+  "song.details.artist": "아티스트",
+  "song.details.composer": "작곡가",
+  "song.details.lyricist": "작사가",
+  "song.details.album": "앨범",
+  "song.details.duration": "재생 시간",
+  "song.details.language": "언어",
+  "song.details.releaseDate": "발매일",
+  "song.details.rating.count.total": "총 평가 횟수",
+  "song.details.rating.count.average": "평균 평가",
+  "song.details.total.playback.count": "총 재생 횟수",
+  "song.details.total.playback.duration": "총 재생 시간",
+  "song.details.weighted.average.playback.duration": "가중 평균 재생 시간",
+  "song.details.label.basicInfo": "기본 정보",
+  "song.details.label.statsInfo": "통계 정보",
   "song.details.modal.title": "곡 상세",
-  "song.details.modal.comment.title": "다른 사용자의 평가",
+
+  "song.edit.modal.title": "곡 정보 수정",
+  "song.edit.modal.input.title.label": "곡 제목",
+  "song.edit.modal.input.title.placeholder": "곡 제목을 입력하세요",
+  "song.edit.modal.input.button.submit": "수정 저장",
 
   "song.rate.modal.title": "이 노래 평가하기",
   "song.rate.modal.description": "이 노래 어땠나요?",
@@ -70,5 +89,20 @@
   "song.playlist.assignment.modal.unadded.title": "미추가 재생목록",
   "song.playlist.assignment.modal.nofound": "해당 재생목록을 찾을 수 없습니다",
   "song.playlist.assignment.modal.button.cancel": "취소",
-  "song.playlist.assignment.modal.button.submit": "제출"
+  "song.playlist.assignment.modal.button.submit": "제출",
+
+  "song.list.header.title": "제목",
+  "song.list.header.artist": "아티스트",
+  "song.list.header.album": "앨범",
+  "song.list.header.date": "추가 날짜",
+
+  "song.list.arrangement.menu.layout.title": "보기 방식",
+  "song.list.arrangement.menu.layout.grid": "그리드",
+  "song.list.arrangement.menu.layout.list": "리스트",
+  "song.list.arrangement.menu.layout.compact": "컴팩트",
+
+  "song.hero.section.type": "곡",
+  "song.action.panel.menu.editDetails": "곡 정보 수정",
+  "song.action.panel.menu.assignmentPlaylist": "재생목록에 추가",
+  "song.comment.list.title": "다른 사용자의 평가 ({count})"
 }

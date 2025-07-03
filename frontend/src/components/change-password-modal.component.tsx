@@ -1,9 +1,8 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import Modal from "./modal.component";
 import UpdatePasswordForm from "./update-password-form.component";
 import PasswordUpdateStatusForm from "./password-update-status-form.component";
-
 import { useChangePasswordMutation } from "../hooks/user-mutate.hook";
 import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
 import useSettingsState from "../states/settings.state";
@@ -25,12 +24,12 @@ const ChangePasswordModal = () => {
 
   const { mutate: changePasswordFn, isPending } = useChangePasswordMutation();
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     timeoutForDelay(() => {
       setActiveChangePasswordModal(false);
       setPasswordChangeStatus(INITIAL);
     });
-  };
+  }, [setActiveChangePasswordModal, setPasswordChangeStatus, INITIAL]);
 
   const title = useMemo(() => {
     switch (passwordChangeStatus) {

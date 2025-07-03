@@ -1,12 +1,12 @@
 import { RefactorSongResponse } from "@joytify/shared-types/types";
-import { getManageSongCardDetailsContent } from "../contents/manage-songs-list.content";
+import { getManageSongCardDetailsContent } from "../contents/manage-song-card-details.content";
 import { useScopedIntl } from "../hooks/intl.hook";
 
-type ManageSongCardDetailProps = {
+type ManageSongCardDetailsProps = {
   song: RefactorSongResponse;
 };
 
-const ManageSongCardDetail: React.FC<ManageSongCardDetailProps> = ({ song }) => {
+const ManageSongCardDetails: React.FC<ManageSongCardDetailsProps> = ({ song }) => {
   const { intl, fm } = useScopedIntl();
   const songCardDetailsFields = getManageSongCardDetailsContent(fm, intl, song);
 
@@ -44,4 +44,4 @@ const ManageSongCardDetail: React.FC<ManageSongCardDetailProps> = ({ song }) => 
   );
 };
 
-export default ManageSongCardDetail;
+export default ManageSongCardDetails;

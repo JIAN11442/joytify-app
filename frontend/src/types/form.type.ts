@@ -15,6 +15,7 @@ import {
   defaultNotificationPreferencesData,
   defaultSongRateData,
   defaultPlaylistAdvancedCreatData,
+  defaultSongEditData,
 } from "../constants/form.constant";
 
 export type DefaultAuthForm = typeof defaultLoginData & {
@@ -35,6 +36,7 @@ export type DefaultAccountDetailsForm = typeof defaultAccountDetailsData;
 export type DefaultNotificationPreferencesForm = typeof defaultNotificationPreferencesData;
 export type DefaultSongRateForm = typeof defaultSongRateData;
 export type DefaultPlaylistAdvancedCreateForm = typeof defaultPlaylistAdvancedCreatData;
+export type DefaultSongEditForm = typeof defaultSongEditData;
 
 export type FormMethods<T extends FieldValues> = {
   setFormValue: UseFormSetValue<T>;

@@ -11,6 +11,7 @@ import {
   UpdateSongRateStateRequest,
   DeleteSongRequest,
   UpdateSongPlaylistsRequest,
+  UpdateSongInfoRequest,
 } from "@joytify/shared-types/types";
 import { DefaultSongForm } from "../types/form.type";
 import getAudioDuration from "../utils/get-audio-duration.util";
@@ -109,18 +110,18 @@ export const getUserSongs = (): Promise<RefactorSongResponse[]> => API.get("/son
 // get user's songs stats
 export const getUserSongsStats = (): Promise<SongStatsResponse> => API.get("/song/stats");
 
+// update song's info
+export const updateSongInfo = (params: UpdateSongInfoRequest): Promise<RefactorSongResponse> => {
+  const { songId, ...rest } = params;
+
+  return API.patch(`/song/${songId}/info`, rest);
+};
+
 // update song's rating state
 export const rateSong = (params: UpdateSongRateStateRequest): Promise<RefactorSongResponse> => {
   const { songId, ...rest } = params;
 
   return API.patch(`/song/${songId}/rating`, rest);
-};
-
-// delete song by id
-export const deleteTargetSong = (params: DeleteSongRequest): Promise<RefactorSongResponse> => {
-  const { songId, shouldDeleteSongs } = params;
-
-  return API.delete(`/song/${songId}`, { data: { shouldDeleteSongs } });
 };
 
 // update song's playlists assignment
@@ -130,4 +131,11 @@ export const updateSongPlaylistsAssignment = (
   const { songId, ...rest } = params;
 
   return API.patch(`/song/${songId}/playlist-assignment`, rest);
+};
+
+// delete song by id
+export const deleteTargetSong = (params: DeleteSongRequest): Promise<RefactorSongResponse> => {
+  const { songId, shouldDeleteSongs } = params;
+
+  return API.delete(`/song/${songId}`, { data: { shouldDeleteSongs } });
 };

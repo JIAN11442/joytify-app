@@ -14,17 +14,7 @@
   "manage.songs.overview.totalWeightedPlaybackDuration": "Total Weighted Playback Duration",
   "manage.songs.overview.averageRating": "Average Rating",
   "manage.songs.list.noSongs": "No songs yet",
-  "manage.songs.list.noFound": "No songs found",
-  "manage.songs.list.details.title": "title",
-  "manage.songs.list.details.artist": "artist",
-  "manage.songs.list.details.composer": "composer",
-  "manage.songs.list.details.lyricist": "lyricist",
-  "manage.songs.list.details.album": "album",
-  "manage.songs.list.details.duration": "duration",
-  "manage.songs.list.details.language": "language",
-  "manage.songs.list.details.releaseDate": "release date",
-  "manage.songs.list.details.playbackDuration.total": "playback duration (total)",
-  "manage.songs.list.details.playbackDuration.weighted": "playback duration (weighted)",
+  "manage.songs.list.noFound": "No songs found for <strong>\"{searchQuery}\"</strong>",
 
   "manage.playlists.title": "Playlists Management",
   "manage.playlists.description": "Manage your playlists",
@@ -43,5 +33,15 @@
   "manage.playlists.controlPanel.arrangement.grid": "Grid",
   "manage.playlists.controlPanel.arrangement.list": "List",
   "manage.playlist.card.createPlaylist.title": "Create playlist",
-  "manage.playlist.card.createPlaylist.description": "Start building your perfect music collection"
+  "manage.playlist.card.createPlaylist.description": "Start building your perfect music collection",
+
+  "manage.following.title": "Following Artists Management",
+  "manage.following.description": "Manage your following artists",
+  "manage.following.searchbar.placeholder": "Search your following artists",
+  "manage.following.list.noFound": "No artists found for <strong>\"{searchQuery}\"</strong>",
+  "manage.following.list.noFollowing": "No artists following yet",
+  "manage.following.unfollow.modal.title": "Unfollow this artist",
+  "manage.following.unfollow.modal.content": "Are you sure you want to unfollow this artist? You will no longer receive updates from this artist.",
+  "manage.following.unfollow.modal.button.submit": "Sure, unfollow",
+  "manage.following.unfollow.modal.button.cancel": "Cancel"
 }

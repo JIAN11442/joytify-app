@@ -3,20 +3,12 @@
   "playlist.item.songs.count": "{count} 曲",
   "playlist.item.description": "{type} · {count}",
 
-  "playlist.banner.section.type": "{type}{separator}{description}",
-  "playlist.content.songList.header.title": "タイトル",
-  "playlist.content.songList.header.artist": "アーティスト",
-  "playlist.content.songList.header.album": "アルバム",
-  "playlist.content.songList.header.date": "作成日",
+  "playlist.hero.section.type": "{type}{separator}{description}",
 
   "playlist.menu.action.editDetails": "詳細を編集",
   "playlist.menu.action.deletePlaylist": "プレイリストを削除",
   "playlist.menu.action.makePrivate": "非公開にする",
   "playlist.menu.action.makePublic": "公開にする",
-  "playlist.menu.layout.title": "表示形式",
-  "playlist.menu.layout.grid": "グリッド",
-  "playlist.menu.layout.list": "リスト",
-  "playlist.menu.layout.compact": "コンパクト",
 
   "playlist.edit.modal.title": "プレイリストを編集",
   "playlist.edit.modal.input.title.placeholder": "名前",

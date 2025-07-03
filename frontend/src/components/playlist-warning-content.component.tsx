@@ -24,7 +24,7 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
   children,
 }) => {
   const { fm } = useScopedIntl();
-  const playlistBannerSectionFm = fm("playlist.banner.section");
+  const playlistHeroSectionFm = fm("playlist.hero.section");
   const playlistItemFm = fm("playlist.item");
   const playlistWarningContentFm = fm("playlist.warning.content");
 
@@ -88,7 +88,7 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
         >
           {/* playlist type */}
           <p className={`text-sm`}>
-            {playlistBannerSectionFm("type", {
+            {playlistHeroSectionFm("type", {
               type: playlistItemFm("type"),
               separator: description ? " · " : "",
               description: description

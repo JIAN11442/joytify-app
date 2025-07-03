@@ -18,7 +18,12 @@ export const songZodSchema = z.object({
   releaseDate: z.string().optional(),
 });
 
-export const songRateZodSchema = z.object({
+export const updateSongInfoZodSchema = z.object({
+  title: stringZodSchema.optional(),
+  imageUrl: fileUrlZodSchema.optional(),
+});
+
+export const updateSongRateZodSchema = z.object({
   rating: z.number(),
   isLiked: z.boolean(),
   comment: stringZodSchema,

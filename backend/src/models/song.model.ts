@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { UpdateQuery } from "mongoose";
 import UserModel from "./user.model";
 import LabelModel from "./label.model";
 import MusicianModel from "./musician.model";
@@ -219,7 +219,7 @@ const removeSongAssociations = async (song: SongDocument, action: SongAssociatio
     await LabelModel.updateMany({ songs: songId }, { $pull: { songs: songId } });
 
     // remove song ID from each relate musician's "songs" property
-    await MusicianModel.updateMany({ songs: songId }, { $pull: { songs: songId } });
+    await MusicianModel.updateMany({ songs: songId }, { $pull: { songs: songId, albums: album } });
   }
 };
 
@@ -229,6 +229,28 @@ songSchema.pre("save", async function (next) {
   if (this.imageUrl) {
     const paletee = await usePalette(this.imageUrl);
     this.paletee = paletee;
+  }
+
+  next();
+});
+
+// before update song,...
+songSchema.pre("findOneAndUpdate", async function (next) {
+  const findQuery = this.getQuery();
+  let updateDoc = this.getUpdate() as UpdateQuery<SongDocument>;
+
+  const originalDoc =
+    findQuery._id && typeof findQuery._id === "string"
+      ? await SongModel.findById(findQuery._id)
+      : await SongModel.findOne(findQuery);
+
+  if (updateDoc.$set?.imageUrl) {
+    const paletee = await usePalette(updateDoc.$set.imageUrl);
+    updateDoc.paletee = paletee;
+
+    if (originalDoc) {
+      await deleteAwsFileUrlOnModel(originalDoc.imageUrl);
+    }
   }
 
   next();
@@ -253,7 +275,7 @@ songSchema.pre("findOneAndDelete", async function (next) {
 
 // after created song,...
 songSchema.post("save", async function (doc) {
-  const { id, playlistFor, creator, album } = doc;
+  const { id, artist, playlistFor, creator, album } = doc;
   const song = await SongModel.findById(id);
 
   try {
@@ -261,9 +283,10 @@ songSchema.post("save", async function (doc) {
       // increase count in user's accountInfo and push id to songs
       if (creator) {
         await UserModel.findByIdAndUpdate(creator, {
-          $addToSet: { songs: id, albums: album },
+          $addToSet: { songs: id, albums: album, following: artist },
           $inc: {
             "accountInfo.totalSongs": 1,
+            "accountInfo.totalFollowing": 1,
             ...(!!album && { "accountInfo.totalAlbums": 1 }),
           },
         });
@@ -301,6 +324,10 @@ songSchema.post("save", async function (doc) {
       // push created song ID to each relate musician's "songs" property(according to model name)
       // like lyricist, composer fields is reference to same model name, Musician
       await bulkUpdateReferenceArrayFields(song, id, MusicianModel, "songs", "$addToSet");
+
+      // push created song ID to each relate musician's "albums" property(according to model name)
+      // like artist, lyricist, composer fields is reference to same model name, Musician
+      await bulkUpdateReferenceArrayFields(song, album, MusicianModel, "albums", "$addToSet");
     }
   } catch (error) {
     console.log(error);

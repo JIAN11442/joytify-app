@@ -1,0 +1,16 @@
+{
+  "profile.hero.section.type": "Profil",
+  "profile.hero.section.description": "{totalPlaylists} senarai main · {totalSongs} lagu",
+
+  "profile.action.panel.editDetails": "Edit butiran",
+
+  "profile.collections.section.following": "Mengikuti",
+  "profile.collections.section.playlists": "Senarai Main",
+  "profile.collections.section.songs": "Lagu",
+  "profile.collections.section.albums": "Album",
+  "profile.collections.section.more": "Lagi…",
+
+  "profile.section.page.loadMore": "Lihat lagi",
+  "profile.section.page.loadLess": "Tutup sebahagian",
+  "profile.section.page.noData": "Tiada data"
+}

@@ -37,8 +37,27 @@
   "song.input.target.lyricists": "lyricists",
   "song.input.target.composers": "composers",
 
+  "song.details.title": "title",
+  "song.details.artist": "artist",
+  "song.details.composer": "composer",
+  "song.details.lyricist": "lyricist",
+  "song.details.album": "album",
+  "song.details.duration": "duration",
+  "song.details.language": "language",
+  "song.details.releaseDate": "release date",
+  "song.details.rating.count.total": "total rating count",
+  "song.details.rating.count.average": "average rating",
+  "song.details.total.playback.count": "total playback count",
+  "song.details.total.playback.duration": "total playback duration",
+  "song.details.weighted.average.playback.duration": "weighted average playback duration",
+  "song.details.label.basicInfo": "Basic Info",
+  "song.details.label.statsInfo": "Stats Info",
   "song.details.modal.title": "Song Details",
-  "song.details.modal.comment.title": "Ratings & Comments",
+
+  "song.edit.modal.title": "Edit Song Info",
+  "song.edit.modal.input.title.label": "Song title",
+  "song.edit.modal.input.title.placeholder": "Enter song title",
+  "song.edit.modal.input.button.submit": "Save changes",
 
   "song.rate.modal.title": "Rate this song",
   "song.rate.modal.description": "Give this song a rating",
@@ -70,5 +89,20 @@
   "song.playlist.assignment.modal.unadded.title": "Unadded Playlists",
   "song.playlist.assignment.modal.nofound": "No playlist found",
   "song.playlist.assignment.modal.button.cancel": "Cancel",
-  "song.playlist.assignment.modal.button.submit": "Submit"
+  "song.playlist.assignment.modal.button.submit": "Submit",
+
+  "song.list.header.title": "Title",
+  "song.list.header.artist": "Artist",
+  "song.list.header.album": "Album",
+  "song.list.header.date": "Date added",
+
+  "song.list.arrangement.menu.layout.title": "View as",
+  "song.list.arrangement.menu.layout.grid": "grid",
+  "song.list.arrangement.menu.layout.list": "list",
+  "song.list.arrangement.menu.layout.compact": "compact",
+
+  "song.hero.section.type": "Song",
+  "song.action.panel.menu.editDetails": "Edit song details",
+  "song.action.panel.menu.assignmentPlaylist": "Add to playlists",
+  "song.comment.list.title": "Ratings & Comments ({count})"
 }

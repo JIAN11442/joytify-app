@@ -1,16 +1,17 @@
 import mongoose from "mongoose";
+import { HexPaletee } from "@joytify/shared-types/types";
 import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
+import usePalette from "../hooks/paletee.hook";
 
 export interface MusicianDocument extends mongoose.Document {
   name: string;
   roles: string[];
   bio: string;
   coverImage: string;
+  paletee: HexPaletee;
   songs: mongoose.Types.ObjectId[];
+  albums: mongoose.Types.ObjectId[];
   followers: mongoose.Types.ObjectId[];
-  activities: {
-    totalFollowerCount: number;
-  };
 }
 
 const musicianSchema = new mongoose.Schema<MusicianDocument>(
@@ -23,9 +24,22 @@ const musicianSchema = new mongoose.Schema<MusicianDocument>(
       default:
         "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-album-image.png",
     },
+    paletee: {
+      vibrant: { type: String },
+      darkVibrant: { type: String },
+      lightVibrant: { type: String },
+      muted: { type: String },
+      darkMuted: { type: String },
+      lightMuted: { type: String },
+    },
     songs: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Song",
+      index: true,
+    },
+    albums: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Album",
       index: true,
     },
     followers: {
@@ -33,12 +47,20 @@ const musicianSchema = new mongoose.Schema<MusicianDocument>(
       ref: "User",
       index: true,
     },
-    activities: {
-      totalFollowerCount: { type: Number, default: 0 },
-    },
   },
   { timestamps: true }
 );
+
+// before create musician, ...
+musicianSchema.pre("save", async function (next) {
+  if (this.isNew) {
+    if (this.coverImage) {
+      this.paletee = await usePalette(this.coverImage);
+    }
+  }
+
+  next();
+});
 
 // // after update many musicians,...
 musicianSchema.post("updateMany", async function (doc) {
@@ -49,7 +71,7 @@ musicianSchema.post("updateMany", async function (doc) {
   // delete musicians with no songs and followers
   await deleteDocWhileFieldsArrayEmpty({
     model: MusicianModel,
-    arrayFields: ["songs", "followers"],
+    arrayFields: ["songs", "albums", "followers"],
   });
 });
 

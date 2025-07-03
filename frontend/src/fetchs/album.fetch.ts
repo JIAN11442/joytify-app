@@ -1,8 +1,16 @@
 import API from "../config/api-client.config";
-import { CreateAlbumRequest, AlbumResponse } from "@joytify/shared-types/types";
+import {
+  CreateAlbumRequest,
+  AlbumResponse,
+  RefactorAlbumResponse,
+} from "@joytify/shared-types/types";
 
 // get user albums
 export const getUserAlbums = async (): Promise<AlbumResponse[]> => API.get("/album");
+
+// get target album
+export const getAlbumById = async (id: string): Promise<RefactorAlbumResponse> =>
+  API.get(`/album/${id}`);
 
 // create album
 export const createAlbum = async (params: CreateAlbumRequest): Promise<AlbumResponse> =>

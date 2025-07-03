@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { ArrangementOptions } from "../constants/arrangement.constant";
-import usePlaylistState from "../states/playlist.state";
+import useSongState from "../states/song.state";
 
 type SongTitleItemProps = {
   title: string;
@@ -29,7 +29,7 @@ const SongTitleItem: React.FC<SongTitleItemProps> = ({
   className,
   children,
 }) => {
-  const { songArrangementType } = usePlaylistState();
+  const { songListArrangementType } = useSongState();
   const compact = ArrangementOptions.COMPACT;
 
   return (
@@ -53,7 +53,7 @@ const SongTitleItem: React.FC<SongTitleItemProps> = ({
             h-[3.3rem]
             object-cover
             rounded-md
-            ${switchFunc && songArrangementType === compact ? "hidden" : "block"}  
+            ${switchFunc && songListArrangementType === compact ? "hidden" : "block"}  
           `,
           className?.image
         )}
@@ -73,7 +73,7 @@ const SongTitleItem: React.FC<SongTitleItemProps> = ({
           className={twMerge(
             `
               text-[12px]
-              ${switchFunc && songArrangementType === compact ? "hidden" : "block"}
+              ${switchFunc && songListArrangementType === compact ? "hidden" : "block"}
             `,
             className?.artist
           )}

@@ -1,6 +1,10 @@
 {
   "image.label.hover.text": "Choose photo",
 
+  "musician.role.artist": "Artist",
+  "musician.role.composer": "Composer",
+  "musician.role.lyricist": "Lyricist",
+
   "gender.male": "Male",
   "gender.female": "Female",
   "gender.nonBinary": "Non-binary",

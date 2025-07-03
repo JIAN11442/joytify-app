@@ -1,16 +1,21 @@
+import { pick } from "lodash";
 import { useParams } from "react-router-dom";
-
 import ItemCard from "./item-card.component";
 import ItemCardList from "./item-card-list.component";
 import { ProfileCollections } from "@joytify/shared-types/constants";
 import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
-import { pick } from "lodash";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 
-type ProfileBodyContentProps = {
+type ProfileCollectionsSectionProps = {
+  fm: ScopedFormatMessage;
   profileUser: RefactorProfileUserResponse;
 };
 
-const ProfileBodyContent: React.FC<ProfileBodyContentProps> = ({ profileUser }) => {
+const ProfileCollectionsSection: React.FC<ProfileCollectionsSectionProps> = ({
+  fm,
+  profileUser,
+}) => {
+  const profileCollectionsSectionFm = fm("profile.collections.section");
   const profileSection = pick(profileUser, ["following", "playlists", "songs", "albums"]);
 
   const { id } = useParams();
@@ -20,13 +25,13 @@ const ProfileBodyContent: React.FC<ProfileBodyContentProps> = ({ profileUser }) 
   const getProfileSection = (key: string) => {
     switch (key) {
       case "playlists":
-        return PLAYLISTS;
+        return { toProfile: "playlist", toSection: PLAYLISTS };
       case "songs":
-        return SONGS;
+        return { toProfile: "song", toSection: SONGS };
       case "albums":
-        return ALBUMS;
+        return { toProfile: "album", toSection: ALBUMS };
       case "following":
-        return FOLLOWING;
+        return { toProfile: "musician", toSection: FOLLOWING };
     }
   };
 
@@ -44,13 +49,14 @@ const ProfileBodyContent: React.FC<ProfileBodyContentProps> = ({ profileUser }) 
           <ItemCardList
             key={key}
             title={{
-              content: key,
+              content: profileCollectionsSectionFm(key),
               progress: true,
             }}
             pagination={{
-              to: `/profile/${id}/${getProfileSection(key)}`,
+              to: `/profile/${id}/${getProfileSection(key)?.toSection}`,
               count: docs.length,
               total: totalDocs,
+              label: profileCollectionsSectionFm("more"),
             }}
             className={`mt-10`}
             tw={{ title: "capitalize", list: `gap-2 p-1` }}
@@ -60,9 +66,10 @@ const ProfileBodyContent: React.FC<ProfileBodyContentProps> = ({ profileUser }) 
               const description = Array.isArray(doc.description)
                 ? doc.description[0]
                 : doc.description;
+
               return (
                 <ItemCard
-                  to={`/playlist/${_id}`}
+                  to={`/${getProfileSection(key)?.toProfile}/${_id}`}
                   key={_id}
                   title={title}
                   imageUrl={imageUrl}
@@ -81,7 +88,8 @@ const ProfileBodyContent: React.FC<ProfileBodyContentProps> = ({ profileUser }) 
                     `,
                     title: `
                       font-medium 
-                      text-[15px]
+                      text-[14px]
+                      text-neutral-400
                       ${key === "following" && "text-center"}
                     `,
                     description: `${key === "following" && "text-center"}`,
@@ -96,4 +104,4 @@ const ProfileBodyContent: React.FC<ProfileBodyContentProps> = ({ profileUser }) 
   );
 };
 
-export default ProfileBodyContent;
+export default ProfileCollectionsSection;

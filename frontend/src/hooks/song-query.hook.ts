@@ -47,7 +47,7 @@ export const useGetSongByIdQuery = (id: string, opts: object = {}) => {
   const [isQueryError, setIsQueryError] = useState(false);
 
   const { data: song, ...rest } = useQuery({
-    queryKey: [QueryKey.GET_SONG_BY_ID, id],
+    queryKey: [QueryKey.GET_TARGET_SONG, id],
     queryFn: async () => {
       try {
         const song = await getSongById(id);

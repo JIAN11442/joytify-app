@@ -1,6 +1,10 @@
 {
   "image.label.hover.text": "選擇相片",
 
+  "musician.role.artist": "歌手",
+  "musician.role.composer": "作曲家",
+  "musician.role.lyricist": "作詞家",
+
   "gender.male": "男性",
   "gender.female": "女性",
   "gender.nonBinary": "非二元性別",

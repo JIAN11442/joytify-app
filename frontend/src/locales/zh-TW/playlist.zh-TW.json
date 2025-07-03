@@ -3,20 +3,12 @@
   "playlist.item.songs.count": "{count} 首歌曲",
   "playlist.item.description": "{type} · {count}",
 
-  "playlist.banner.section.type": "{type}{separator}{description}",
-  "playlist.content.songList.header.title": "標題",
-  "playlist.content.songList.header.artist": "藝人",
-  "playlist.content.songList.header.album": "專輯",
-  "playlist.content.songList.header.date": "建立日期",
+  "playlist.hero.section.type": "{type}{separator}{description}",
 
   "playlist.menu.action.editDetails": "編輯資訊",
   "playlist.menu.action.deletePlaylist": "刪除播放清單",
   "playlist.menu.action.makePrivate": "設為私人",
   "playlist.menu.action.makePublic": "設為公開",
-  "playlist.menu.layout.title": "檢視方式",
-  "playlist.menu.layout.grid": "網格",
-  "playlist.menu.layout.list": "清單",
-  "playlist.menu.layout.compact": "簡潔",
 
   "playlist.edit.modal.title": "編輯播放清單",
   "playlist.edit.modal.input.title.placeholder": "名稱",

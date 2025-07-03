@@ -3,20 +3,12 @@
   "playlist.item.songs.count": "{count} songs",
   "playlist.item.description": "{type} · {count}",
 
-  "playlist.banner.section.type": "{type}{separator}{description}",
-  "playlist.content.songList.header.title": "Title",
-  "playlist.content.songList.header.artist": "Artist",
-  "playlist.content.songList.header.album": "Album",
-  "playlist.content.songList.header.date": "Date added",
+  "playlist.hero.section.type": "{type}{separator}{description}",
 
   "playlist.menu.action.editDetails": "Edit details",
   "playlist.menu.action.deletePlaylist": "Delete playlist",
   "playlist.menu.action.makePrivate": "Make private",
   "playlist.menu.action.makePublic": "Make public",
-  "playlist.menu.layout.title": "View as",
-  "playlist.menu.layout.grid": "grid",
-  "playlist.menu.layout.list": "list",
-  "playlist.menu.layout.compact": "compact",
 
   "playlist.edit.modal.title": "Edit playlist",
   "playlist.edit.modal.input.title.placeholder": "Title",

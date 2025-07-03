@@ -7,25 +7,26 @@ import SongTitleItem from "./song-title-item.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import usePlaybackControl from "../hooks/playback-control.hook";
 import { ArrangementOptions } from "../constants/arrangement.constant";
-import { Queue, RefactorSongResponse } from "@joytify/shared-types/types";
+import { HexPaletee, Queue, RefactorSongResponse } from "@joytify/shared-types/types";
 import usePlaybackControlState from "../states/playback-control.state";
-import usePlaylistState from "../states/playlist.state";
 import useSidebarState from "../states/sidebar.state";
 import useLocaleState from "../states/locale.state";
+import useSongState from "../states/song.state";
 import { getDuration, getTimeAgo } from "../utils/get-time.util";
 
 type SongListProps = {
   songs: RefactorSongResponse[];
+  paletee: HexPaletee;
   switchFunc?: boolean;
 };
 
-const SongList: React.FC<SongListProps> = ({ songs, switchFunc = true }) => {
+const SongList: React.FC<SongListProps> = ({ songs, paletee, switchFunc = true }) => {
   const { fm } = useScopedIntl();
-  const playlistSongListFm = fm("playlist.content.songList");
+  const songListHeaderFm = fm("song.list.header");
 
   const { themeLocale } = useLocaleState();
   const { collapseSideBarState } = useSidebarState();
-  const { songArrangementType, targetPlaylist } = usePlaylistState();
+  const { songListArrangementType } = useSongState();
   const { isPlaying } = usePlaybackControlState();
   const { audioSong, playSong } = usePlaybackControl();
 
@@ -38,16 +39,15 @@ const SongList: React.FC<SongListProps> = ({ songs, switchFunc = true }) => {
         currentPlaySongId: songs[index]._id,
       });
     },
-    [playlistSongListFm, songs]
+    [songs]
   );
 
-  if (!collapseSideBarState || !targetPlaylist) return null;
+  if (!collapseSideBarState) return null;
 
   const { COMPACT } = ArrangementOptions;
-  const { paletee } = targetPlaylist;
   const { isCollapsed } = collapseSideBarState;
 
-  const showArtist = switchFunc && songArrangementType === COMPACT;
+  const showArtist = switchFunc && songListArrangementType === COMPACT;
 
   return (
     <div className={`overflow-x-auto`}>
@@ -59,21 +59,19 @@ const SongList: React.FC<SongListProps> = ({ songs, switchFunc = true }) => {
             <th className={`px-0 pl-5 w-5 max-w-[30px]`}>#</th>
 
             {/* title */}
-            <th>{playlistSongListFm("header.title")}</th>
+            <th>{songListHeaderFm("title")}</th>
 
             {/* artist */}
-            <th className={`${showArtist ? "block" : "hidden"}`}>
-              {playlistSongListFm("header.artist")}
-            </th>
+            <th className={`${showArtist ? "block" : "hidden"}`}>{songListHeaderFm("artist")}</th>
 
             {/* album */}
             <th className={`${isCollapsed ? "max-sm:hidden" : "max-md:hidden"}`}>
-              {playlistSongListFm("header.album")}
+              {songListHeaderFm("album")}
             </th>
 
             {/* date */}
             <th className={`${isCollapsed ? "max-md:hidden" : "max-lg:hidden"}`}>
-              {playlistSongListFm("header.date")}
+              {songListHeaderFm("date")}
             </th>
 
             {/* duration */}

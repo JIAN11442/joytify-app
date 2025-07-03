@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getUserAlbums } from "../fetchs/album.fetch";
+import { getAlbumById, getUserAlbums } from "../fetchs/album.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
 import useUserState from "../states/user.state";
 
@@ -29,4 +29,29 @@ export const useGetAlbumsQuery = (opts: object = {}) => {
   });
 
   return { albums, ...rest };
+};
+
+// get target album hook
+export const useGetAlbumByIdQuery = (id: string, opts: object = {}) => {
+  const [isQueryError, setIsQueryError] = useState(false);
+
+  const { data: album, ...rest } = useQuery({
+    queryKey: [QueryKey.GET_TARGET_ALBUM, id],
+    queryFn: async () => {
+      try {
+        const albums = await getAlbumById(id);
+
+        return albums;
+      } catch (error) {
+        if (error) {
+          setIsQueryError(true);
+        }
+      }
+    },
+    staleTime: Infinity,
+    enabled: !isQueryError,
+    ...opts,
+  });
+
+  return { album, ...rest };
 };

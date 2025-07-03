@@ -1,7 +1,16 @@
 import AlbumModel from "../models/album.model";
 import { HttpCode } from "@joytify/shared-types/constants";
-import { CreateAlbumRequest } from "@joytify/shared-types/types";
+import {
+  Album,
+  CreateAlbumRequest,
+  Label,
+  Musician,
+  PopulatedAlbumResponse,
+  RefactorAlbumResponse,
+  SongResponse,
+} from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
+import { joinLabels } from "../utils/join-labels.util";
 
 interface CreateAlbumServiceRequest extends CreateAlbumRequest {
   userId: string;
@@ -12,13 +21,44 @@ type DeleteAlbumServiceRequest = {
   albumId: string;
 };
 
-const { INTERNAL_SERVER_ERROR } = HttpCode;
+const { INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;
 
 // get user albums service
 export const getUserAlbums = async (userId: string) => {
   const albums = await AlbumModel.find({ users: userId });
 
   return { albums };
+};
+
+// get album by id service
+export const getAlbumById = async (id: string) => {
+  const album = await AlbumModel.findById(id)
+    .populate({
+      path: "songs",
+      populate: [
+        { path: "artist", select: "name", transform: (doc: Musician) => doc.name },
+        { path: "composers", select: "name", transform: (doc: Musician) => doc.name },
+        { path: "lyricists", select: "name", transform: (doc: Musician) => doc.name },
+        { path: "languages", select: "label", transform: (doc: Label) => doc.label },
+        { path: "album", select: "title", transform: (doc: Album) => doc.title },
+      ],
+    })
+    .lean<PopulatedAlbumResponse>();
+
+  appAssert(album, NOT_FOUND, "Failed to get album by id");
+
+  const refactorAlbum: RefactorAlbumResponse = {
+    ...album,
+    songs: album.songs.map((song: SongResponse) => ({
+      ...song,
+      lyricists: joinLabels(song.lyricists),
+      composers: joinLabels(song.composers),
+      languages: joinLabels(song.languages),
+      album: song.album || "",
+    })),
+  };
+
+  return { album: refactorAlbum };
 };
 
 // create album service

@@ -1,6 +1,10 @@
 {
   "image.label.hover.text": "사진 선택",
 
+  "musician.role.artist": "아티스트",
+  "musician.role.composer": "작곡가",
+  "musician.role.lyricist": "작사가",
+
   "gender.male": "남성",
   "gender.female": "여성",
   "gender.nonBinary": "논바이너리",

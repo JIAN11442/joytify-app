@@ -56,6 +56,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
           w-[3.3rem]
           h-[3.3rem]
           object-cover
+          shrink-0
           rounded-md
         `}
       />
@@ -66,15 +67,15 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
           className={`
             flex
             flex-col
+            w-full
             gap-1
             items-start
             justify-center
-            text-right
             text-[14px]
             text-neutral-300
           `}
         >
-          <p>{title}</p>
+          <p className={`line-clamp-1`}>{title}</p>
           <span
             className={`
               flex

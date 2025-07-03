@@ -37,8 +37,27 @@
   "song.input.target.lyricists": "作詞者",
   "song.input.target.composers": "作曲者",
 
+  "song.details.title": "標題",
+  "song.details.artist": "演唱者",
+  "song.details.composer": "作曲",
+  "song.details.lyricist": "作詞",
+  "song.details.album": "專輯",
+  "song.details.duration": "時長",
+  "song.details.language": "語言",
+  "song.details.releaseDate": "發行日期",
+  "song.details.rating.count.total": "總評分次數",
+  "song.details.rating.count.average": "平均評分",
+  "song.details.total.playback.count": "總播放次數",
+  "song.details.total.playback.duration": "總播放時長",
+  "song.details.weighted.average.playback.duration": "加權平均播放時長",
+  "song.details.label.basicInfo": "基本信息",
+  "song.details.label.statsInfo": "統計信息",
   "song.details.modal.title": "歌曲詳情",
-  "song.details.modal.comment.title": "其他用戶評價",
+
+  "song.edit.modal.title": "編輯歌曲信息",
+  "song.edit.modal.input.title.label": "歌曲名稱",
+  "song.edit.modal.input.title.placeholder": "請輸入歌曲名稱",
+  "song.edit.modal.input.button.submit": "保存更改",
 
   "song.rate.modal.title": "幫這首歌評分",
   "song.rate.modal.description": "你覺得這首歌怎麼樣？",
@@ -70,5 +89,20 @@
   "song.playlist.assignment.modal.unadded.title": "未加入的播放清單",
   "song.playlist.assignment.modal.nofound": "找不到此播放清單",
   "song.playlist.assignment.modal.button.cancel": "取消",
-  "song.playlist.assignment.modal.button.submit": "提交"
+  "song.playlist.assignment.modal.button.submit": "提交",
+
+  "song.list.header.title": "標題",
+  "song.list.header.artist": "藝人",
+  "song.list.header.album": "專輯",
+  "song.list.header.date": "建立日期",
+
+  "song.list.arrangement.menu.layout.title": "檢視方式",
+  "song.list.arrangement.menu.layout.grid": "網格",
+  "song.list.arrangement.menu.layout.list": "列表",
+  "song.list.arrangement.menu.layout.compact": "簡潔",
+
+  "song.hero.section.type": "歌曲",
+  "song.action.panel.menu.editDetails": "編輯歌曲信息",
+  "song.action.panel.menu.assignmentPlaylist": "加入播放清單",
+  "song.comment.list.title": "其他用戶評價 ({count})"
 }

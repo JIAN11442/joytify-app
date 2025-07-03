@@ -4,12 +4,16 @@ import {
   createSongData,
   deleteTargetSong,
   rateSong,
+  updateSongInfo,
   updateSongPlaylistsAssignment,
 } from "../fetchs/song.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import queryClient from "../config/query-client.config";
 import { navigate } from "../lib/navigate.lib";
 import toast from "../lib/toast.lib";
+import { UpdateSongInfoRequest } from "@joytify/shared-types/types";
+
+type UpdateSongInfoParams = Omit<UpdateSongInfoRequest, "songId">;
 
 // create song mutation
 export const useCreateSongMutation = (closeModalFn: () => void, opts: object = {}) => {
@@ -50,12 +54,52 @@ export const useCreateSongMutation = (closeModalFn: () => void, opts: object = {
   return mutation;
 };
 
+// update song info mutation
+export const useUpdateSongInfoMutation = (
+  songId: string,
+  closeModalFn?: () => void,
+  opts: object = {}
+) => {
+  const mutation = useMutation({
+    mutationKey: [MutationKey.UPDATE_TARGET_SONG_INFO],
+    mutationFn: (params: UpdateSongInfoParams) => updateSongInfo({ songId, ...params }),
+    onSuccess: (data) => {
+      // refetch related queries
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const queryKey = query.queryKey[0];
+          return (
+            queryKey === QueryKey.GET_ALL_SONGS ||
+            queryKey === QueryKey.GET_USER_SONGS ||
+            queryKey === QueryKey.GET_USER_SONGS_STATS ||
+            queryKey === QueryKey.GET_TARGET_SONG ||
+            queryKey === QueryKey.GET_PROFILE_USER_INFO ||
+            queryKey === QueryKey.GET_PROFILE_COLLECTION_INFO
+          );
+        },
+      });
+
+      closeModalFn?.();
+
+      toast.success(`“${data.title}” has been updated successfully`);
+    },
+    onError: (error) => {
+      console.log(error.message);
+      toast.error(error.message);
+    },
+    ...opts,
+  });
+
+  return mutation;
+};
+
 // rate song mutation
 export const useRateSongMutation = (closeModalFn: () => void, opts: object = {}) => {
   const mutation = useMutation({
     mutationKey: [MutationKey.RATE_SONG],
     mutationFn: rateSong,
     onSuccess: (data) => {
+      // refetch related queries
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey[0];

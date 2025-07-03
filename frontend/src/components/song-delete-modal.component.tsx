@@ -1,10 +1,11 @@
+import { useCallback } from "react";
 import Modal from "./modal.component";
 import SongDeleteDonationForm from "./song-delete-donation-form.component";
 import SongDeleteConfirmationForm from "./song-delete-confirmation-form.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { SongDeleteStatus } from "@joytify/shared-types/constants";
-import { timeoutForDelay } from "../lib/timeout.lib";
 import useManagesState from "../states/manages.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const SongDeleteModal = () => {
   const { fm } = useScopedIntl();
@@ -15,11 +16,11 @@ const SongDeleteModal = () => {
 
   const { INITIAL_CONFIRMATION, DATA_DONATION } = SongDeleteStatus;
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     timeoutForDelay(() => {
       setActiveSongDeleteModal({ ...activeSongDeleteModal, active: false, song: null });
     });
-  };
+  }, [activeSongDeleteModal, setActiveSongDeleteModal]);
 
   const handleSwitchToNextPage = () => {
     timeoutForDelay(() => {

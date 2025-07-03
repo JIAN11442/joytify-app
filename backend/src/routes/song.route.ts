@@ -7,6 +7,7 @@ import {
   getSongPlaybackStatsHandler,
   getUserSongsHandler,
   getUserSongsStatsHandler,
+  updateSongInfoHandler,
   updateSongPaleteeHandler,
   updateSongPlaybackStatsHandler,
   updateSongPlaylistsAssignmentHandler,
@@ -22,6 +23,7 @@ songRoute.get("/user", authenticate, getUserSongsHandler);
 songRoute.get("/stats", authenticate, getUserSongsStatsHandler);
 songRoute.get("/:id", authenticate, getSongByIdHandler);
 songRoute.post("/", authenticate, createSongHandler);
+songRoute.patch("/:id/info", authenticate, updateSongInfoHandler);
 songRoute.patch("/:id/rating", authenticate, updateSongRatingHandler);
 songRoute.patch("/:id/playlist-assignment", authenticate, updateSongPlaylistsAssignmentHandler);
 songRoute.delete("/:id", authenticate, deleteSongByIdHandler);

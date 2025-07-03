@@ -132,7 +132,7 @@ export const getProfileUserInfo = async (userId: string, page: number) => {
       privacy: PUBLIC,
     }),
     SongModel.countDocuments({ creator: userId, "ownership.isPlatformOwned": false }),
-    AlbumModel.countDocuments({ users: userId }),
+    AlbumModel.countDocuments({ _id: { $in: user.albums } }),
     MusicianModel.countDocuments({ followers: userId }),
   ]).then(([playlists, songs, albums, following]) => ({
     playlists,
@@ -195,7 +195,7 @@ export const getProfileCollectionsInfo = async (
 
       docs = await getPaginatedDocs({
         model: AlbumModel,
-        filter: { _id: { $in: user?.albums } },
+        filter: { _id: { $in: user.albums } },
         ...opts,
       })
         .select("title coverImage")

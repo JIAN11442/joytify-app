@@ -17,17 +17,6 @@
   "manage.songs.list.noSongs": "暂无歌曲",
   "manage.songs.list.noFound": "未找到相关歌曲",
 
-  "manage.songs.list.details.title": "标题",
-  "manage.songs.list.details.artist": "演唱者",
-  "manage.songs.list.details.composer": "作曲",
-  "manage.songs.list.details.lyricist": "作词",
-  "manage.songs.list.details.album": "专辑",
-  "manage.songs.list.details.duration": "时长",
-  "manage.songs.list.details.language": "语言",
-  "manage.songs.list.details.releaseDate": "发行日期",
-  "manage.songs.list.details.playbackDuration.total": "播放时长(总计)",
-  "manage.songs.list.details.playbackDuration.weighted": "播放时长(加权)",
-
   "manage.playlists.title": "歌单管理",
   "manage.playlists.description": "管理你的歌单",
   "manage.playlists.searchbar.placeholder": "搜索你的歌单",
@@ -45,5 +34,15 @@
   "manage.playlists.controlPanel.arrangement.grid": "网格",
   "manage.playlists.controlPanel.arrangement.list": "列表",
   "manage.playlist.card.createPlaylist.title": "创建歌单",
-  "manage.playlist.card.createPlaylist.description": "开始打造你的专属音乐收藏"
+  "manage.playlist.card.createPlaylist.description": "开始打造你的专属音乐收藏",
+
+  "manage.following.title": "关注艺人管理",
+  "manage.following.description": "管理你关注的艺人",
+  "manage.following.searchbar.placeholder": "搜索你关注的艺人",
+  "manage.following.list.noFound": "未找到与 <strong>\"{searchQuery}\"</strong> 匹配的艺人",
+  "manage.following.list.noFollowing": "你还没有关注任何艺人",
+  "manage.following.unfollow.modal.title": "取消关注该艺人",
+  "manage.following.unfollow.modal.content": "确定要取消关注该艺人吗？你将不再收到该艺人的更新。",
+  "manage.following.unfollow.modal.button.submit": "确认取消关注",
+  "manage.following.unfollow.modal.button.cancel": "取消"
 }

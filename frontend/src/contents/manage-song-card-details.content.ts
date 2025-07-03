@@ -1,7 +1,7 @@
+import { IntlShape } from "react-intl";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
-import { IntlShape } from "react-intl";
 import { getDuration } from "../utils/get-time.util";
 
 type SongCardDetailsField = {
@@ -15,47 +15,47 @@ export const getManageSongCardDetailsContent = (
   intl: IntlShape,
   song: RefactorSongResponse
 ): SongCardDetailsField[] => {
-  const manageSongsListDetailsFm = fm("manage.songs.list.details");
+  const songDetailsFm = fm("song.details");
 
   const fields = [
     {
       id: "song-details-title",
-      title: manageSongsListDetailsFm("title"),
+      title: songDetailsFm("title"),
       value: song.title || "N/A",
     },
     {
       id: "song-details-artist",
-      title: manageSongsListDetailsFm("artist"),
+      title: songDetailsFm("artist"),
       value: song.artist || "N/A",
     },
     {
       id: "song-details-composer",
-      title: manageSongsListDetailsFm("composer"),
+      title: songDetailsFm("composer"),
       value: song.composers || "N/A",
     },
     {
       id: "song-details-lyricist",
-      title: manageSongsListDetailsFm("lyricist"),
+      title: songDetailsFm("lyricist"),
       value: song.lyricists || "N/A",
     },
     {
       id: "song-details-album",
-      title: manageSongsListDetailsFm("album"),
+      title: songDetailsFm("album"),
       value: song.album || "N/A",
     },
     {
       id: "song-details-duration",
-      title: manageSongsListDetailsFm("duration"),
+      title: songDetailsFm("duration"),
       value: getDuration(song.duration) || "N/A",
     },
     {
       id: "song-details-language",
-      title: manageSongsListDetailsFm("language"),
+      title: songDetailsFm("language"),
       value: song.languages || "N/A",
     },
     {
       id: "song-details-release-date",
-      title: manageSongsListDetailsFm("releaseDate"),
+      title: songDetailsFm("releaseDate"),
       value:
         intl.formatDate(song.releaseDate, {
           year: "numeric",
@@ -64,13 +64,13 @@ export const getManageSongCardDetailsContent = (
         }) || "N/A",
     },
     {
-      id: "song-details-playback-duration-total",
-      title: manageSongsListDetailsFm("playbackDuration.total"),
+      id: "song-details-total-playback-duration",
+      title: songDetailsFm("total.playback.duration"),
       value: formatPlaybackDuration(song.activities.totalPlaybackDuration) || "N/A",
     },
     {
-      id: "song-details-playback-duration-weighted",
-      title: manageSongsListDetailsFm("playbackDuration.weighted"),
+      id: "song-details-weighted-average-playback-duration",
+      title: songDetailsFm("weighted.average.playback.duration"),
       value: formatPlaybackDuration(song.activities.weightedAveragePlaybackDuration) || "N/A",
     },
   ];

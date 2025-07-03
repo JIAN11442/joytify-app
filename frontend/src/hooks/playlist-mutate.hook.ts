@@ -57,13 +57,13 @@ export const useCreatePlaylistMutation = (closeModalFn?: () => void, opts: objec
 
 // update playlist mutation
 export const useUpdatePlaylistMutation = (
-  id: string,
+  playlistId: string,
   closeModalFn?: () => void,
   opts: object = {}
 ) => {
   const mutation = useMutation({
     mutationKey: [MutationKey.UPDATE_PLAYLIST],
-    mutationFn: (params: UpdatePlaylistParams) => updatePlaylist({ playlistId: id, ...params }),
+    mutationFn: (params: UpdatePlaylistParams) => updatePlaylist({ playlistId, ...params }),
     onSuccess: () => {
       // refetch related queries
       queryClient.invalidateQueries({

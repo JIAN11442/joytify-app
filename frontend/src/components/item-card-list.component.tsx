@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 type ItemCardListProps = {
   children: React.ReactNode;
   title?: { content: string; progress: boolean };
-  pagination: { to: string; count: number; total: number };
+  pagination: { to: string; count: number; total: number; label: string };
   className?: string;
   tw?: {
     title?: string;
@@ -20,7 +20,7 @@ const ItemCardList: React.FC<ItemCardListProps> = ({
   tw,
 }) => {
   const { content, progress } = title ?? {};
-  const { to, count, total } = pagination;
+  const { to, count, total, label } = pagination;
 
   const isPaginationEnabled = count < total;
 
@@ -80,7 +80,7 @@ const ItemCardList: React.FC<ItemCardListProps> = ({
               transition
             `}
           >
-            <span>More...</span>
+            <span>{label}</span>
           </Link>
         )}
       </div>

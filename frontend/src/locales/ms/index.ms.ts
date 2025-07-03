@@ -10,6 +10,9 @@ import songJSON from "./song.ms.json";
 import manageJSON from "./manage.ms.json";
 import settingsJSON from "./settings.ms.json";
 import dashboardJSON from "./dashboard.ms.json";
+import musicianJSON from "./musician.ms.json";
+import albumJSON from "./album.ms.json";
+import profileJSON from "./profile.ms.json";
 
 const modules = [
   authJSON,
@@ -24,6 +27,9 @@ const modules = [
   manageJSON,
   settingsJSON,
   dashboardJSON,
+  musicianJSON,
+  albumJSON,
+  profileJSON,
 ];
 
 export default Object.assign({}, ...modules);

@@ -10,8 +10,8 @@ import LocaleCard from "../components/locale-card.component";
 import SearchBarInput from "../components/searchbar-input.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import PageSectionTitle from "../components/page-section-title.component";
-import { useScopedIntl } from "../hooks/intl.hook";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
 import { LocaleMap, localeMap } from "../contents/locale.content";
 import { SupportedLocaleType } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
@@ -159,7 +159,7 @@ const SettingsLanguagesPage = () => {
           onChange={handleFilterLocales}
           visible={true}
           autoComplete="off"
-          className={`py-4 my-4`}
+          className={`py-5 my-4`}
         />
       </AnimationWrapper>
 

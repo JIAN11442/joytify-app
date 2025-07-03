@@ -1,0 +1,16 @@
+{
+  "profile.hero.section.type": "プロフィール",
+  "profile.hero.section.description": "{totalPlaylists} 件のプレイリスト · {totalSongs} 曲",
+
+  "profile.action.panel.editDetails": "詳細を編集",
+
+  "profile.collections.section.following": "フォロー中",
+  "profile.collections.section.playlists": "プレイリスト",
+  "profile.collections.section.songs": "楽曲",
+  "profile.collections.section.albums": "アルバム",
+  "profile.collections.section.more": "もっと見る…",
+
+  "profile.section.page.loadMore": "もっと見る",
+  "profile.section.page.loadLess": "表示を減らす",
+  "profile.section.page.noData": "データがありません"
+}

@@ -1,20 +1,20 @@
 import { useParams } from "react-router-dom";
 
 import Loader from "../components/loader.component";
-import PlaylistBody from "../components/playlist-body.component";
-import PlaylistHeader from "../components/playlist-header.component";
+import SongList from "../components/song-list.component";
+import PlaylistHeroSection from "../components/playlist-hero-section.component";
+import PlaylistActionPanel from "../components/playlist-action-panel.component";
 import { useGetPlaylistByIdQuery } from "../hooks/playlist-query.hook";
 
 const PlaylistPage = () => {
   const { id } = useParams();
   const { playlist } = useGetPlaylistByIdQuery(String(id));
 
-  // If any of these data are not available, show loader
   if (!playlist) {
     return <Loader className={{ container: "h-full" }} />;
   }
 
-  const { paletee } = playlist;
+  const { paletee, songs } = playlist;
 
   return (
     <div
@@ -33,11 +33,31 @@ const PlaylistPage = () => {
         overflow-x-hidden
       `}
     >
-      {/* Playlist header */}
-      <PlaylistHeader playlist={playlist} />
+      {/* hero section */}
+      <PlaylistHeroSection playlist={playlist} />
 
-      {/* Playlist content */}
-      <PlaylistBody playlist={playlist} />
+      {/* content section */}
+      <div
+        className={`
+          flex
+          flex-col
+          mt-10
+          p-6
+          gap-5
+          w-full
+          h-full
+          bg-gradient-to-b
+          from-neutral-900/20
+          to-neutral-900  
+          overflow-y-auto
+        `}
+      >
+        {/* action panel */}
+        <PlaylistActionPanel playlist={playlist} />
+
+        {/* song list */}
+        <SongList songs={songs} paletee={paletee} />
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import Modal from "./modal.component";
@@ -27,8 +27,22 @@ const ProfileEditModal = () => {
     (profileUser as RefactorProfileUserResponse) ?? {};
   const generateUsername = username.split("?nanoid=")[0];
 
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    trigger,
+    watch,
+    reset,
+    formState: { dirtyFields },
+  } = useForm<DefaultEditProfileForm>({
+    defaultValues: { username: generateUsername },
+    mode: "onChange",
+  });
+
   // handle close modal
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     timeoutForDelay(async () => {
       // start pending
       setCloseModalPending(true);
@@ -52,25 +66,10 @@ const ProfileEditModal = () => {
       // reset form
       reset();
     });
-  };
+  }, [isSubmitted, userProfileImage, setCloseModalPending, watch, closeProfileEditModal, reset]);
 
   const { mutate: updateUserFn, isPending } = useUpdateUserMutation({
     closeModalFn: handleCloseModal,
-  });
-
-  // form state
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    setError,
-    trigger,
-    watch,
-    reset,
-    formState: { dirtyFields },
-  } = useForm<DefaultEditProfileForm>({
-    defaultValues: { username: generateUsername },
-    mode: "onChange",
   });
 
   // check form if is modified

@@ -23,8 +23,8 @@ import { timeoutForDelay } from "../lib/timeout.lib";
 
 const PlaylistAdvancedCreateModal = () => {
   const { fm } = useScopedIntl();
-  const advancedCreatePrefit = "playlist.advanced.create.modal";
-  const playlistAdvancedCreateModalFm = fm(advancedCreatePrefit);
+  const advancedCreatePrefix = "playlist.advanced.create.modal";
+  const playlistAdvancedCreateModalFm = fm(advancedCreatePrefix);
 
   const [playlistImage, setPlaylistImage] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -262,7 +262,7 @@ const PlaylistAdvancedCreateModal = () => {
                   `}
                 >
                   <FormattedMessage
-                    id={`${advancedCreatePrefit}.no.songs.foundFor`}
+                    id={`${advancedCreatePrefix}.no.songs.foundFor`}
                     values={{
                       searchQuery: searchQuery,
                       strong: (chunks) => <strong className={`text-neutral-300`}>{chunks}</strong>,

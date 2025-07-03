@@ -17,17 +17,6 @@
   "manage.songs.list.noSongs": "Belum ada lagu",
   "manage.songs.list.noFound": "Tiada lagu dijumpai",
 
-  "manage.songs.list.details.title": "tajuk",
-  "manage.songs.list.details.artist": "artis",
-  "manage.songs.list.details.composer": "komposer",
-  "manage.songs.list.details.lyricist": "penulis lirik",
-  "manage.songs.list.details.album": "album",
-  "manage.songs.list.details.duration": "durasi",
-  "manage.songs.list.details.language": "bahasa",
-  "manage.songs.list.details.releaseDate": "tarikh keluaran",
-  "manage.songs.list.details.playbackDuration.total": "durasi main balik (jumlah)",
-  "manage.songs.list.details.playbackDuration.weighted": "durasi main balik (berwajaran)",
-
   "manage.playlists.title": "Pengurusan Senarai Main",
   "manage.playlists.description": "Urus senarai main anda",
   "manage.playlists.searchbar.placeholder": "Cari senarai main anda",
@@ -45,5 +34,15 @@
   "manage.playlists.controlPanel.arrangement.grid": "Grid",
   "manage.playlists.controlPanel.arrangement.list": "Senarai",
   "manage.playlist.card.createPlaylist.title": "Cipta Senarai Main",
-  "manage.playlist.card.createPlaylist.description": "Mulakan koleksi muzik anda sekarang"
+  "manage.playlist.card.createPlaylist.description": "Mulakan koleksi muzik anda sekarang",
+
+  "manage.following.title": "Pengurusan Artis Diikuti",
+  "manage.following.description": "Urus artis yang anda ikuti",
+  "manage.following.searchbar.placeholder": "Cari artis yang diikuti",
+  "manage.following.list.noFound": "Tiada artis ditemui untuk <strong>\"{searchQuery}\"</strong>",
+  "manage.following.list.noFollowing": "Anda belum mengikuti mana-mana artis",
+  "manage.following.unfollow.modal.title": "Berhenti mengikuti artis ini",
+  "manage.following.unfollow.modal.content": "Adakah anda pasti mahu berhenti mengikuti artis ini? Anda tidak akan menerima kemas kini daripadanya lagi.",
+  "manage.following.unfollow.modal.button.submit": "Ya, berhenti ikuti",
+  "manage.following.unfollow.modal.button.cancel": "Batal"
 }

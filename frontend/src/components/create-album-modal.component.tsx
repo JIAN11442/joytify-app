@@ -1,12 +1,12 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { useCreateAlbumMutation } from "../hooks/album-mutate.hook";
 import CreateOptionModal from "./create-option-modal.component";
+import { useCreateAlbumMutation } from "../hooks/album-mutate.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
 import { defaultCreateAlbumData } from "../constants/form.constant";
 import { DefaultCreateAlbumForm } from "../types/form.type";
 import useUploadModalState from "../states/upload-modal.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { useScopedIntl } from "../hooks/intl.hook";
 
 const CreateAlbumModal = () => {
   const { fm } = useScopedIntl();

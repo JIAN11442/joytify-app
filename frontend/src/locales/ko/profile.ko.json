@@ -1,0 +1,16 @@
+{
+  "profile.hero.section.type": "프로필",
+  "profile.hero.section.description": "{totalPlaylists}개의 재생목록 · {totalSongs}곡",
+
+  "profile.action.panel.editDetails": "정보 수정",
+
+  "profile.collections.section.following": "팔로잉",
+  "profile.collections.section.playlists": "재생목록",
+  "profile.collections.section.songs": "곡",
+  "profile.collections.section.albums": "앨범",
+  "profile.collections.section.more": "더 보기…",
+
+  "profile.section.page.loadMore": "더 보기",
+  "profile.section.page.loadLess": "내용 접기",
+  "profile.section.page.noData": "데이터가 없습니다"
+}

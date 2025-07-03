@@ -141,7 +141,7 @@ const DeviceList: React.FC<DeviceListProps> = ({ sessions }) => {
                 <td>{device.os}</td>
 
                 {/* ip address */}
-                <td>{location.ipAddress}</td>
+                <td className={`break-words min-w-[200px]`}>{location.ipAddress}</td>
 
                 {/* location */}
                 <td>

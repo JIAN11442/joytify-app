@@ -36,12 +36,14 @@ const Modal = {
   profileEditModal: lazy(() => path("profile-edit-modal")),
   changePasswordModal: lazy(() => path("change-password-modal")),
   accountDeregistrationModal: lazy(() => path("account-deregistration-modal")),
+  songEditModal: lazy(() => path("song-edit-modal")),
   songDetailCardModal: lazy(() => path("song-detail-card-modal")),
   songRateModal: lazy(() => path("song-rate-modal")),
   songDeleteModal: lazy(() => path("song-delete-modal")),
   songAssignmentModal: lazy(() => path("song-playlist-assignment-modal")),
   playlistAdvancedEditModal: lazy(() => path("playlist-advanced-edit-modal")),
   playlistAdvancedCreateModal: lazy(() => path("playlist-advanced-create-modal")),
+  musicianUnfollowModal: lazy(() => path("musician-unfollow-modal")),
 };
 
 const ModalProvider = () => {
@@ -62,9 +64,13 @@ const ModalProvider = () => {
   const { activeProfileEditModal } = useUserState();
   const { activeVerificationCodeModal } = useVerificationModalState();
   const { activeChangePasswordModal, activeAccountDeregistrationModal } = useSettingsState();
-  const { activeSongRateModal, activeSongDetailCardModal, activeSongAssignmentModal } =
-    useSongState();
-  const { activeSongDeleteModal } = useManagesState();
+  const {
+    activeSongEditModal,
+    activeSongRateModal,
+    activeSongDetailCardModal,
+    activeSongAssignmentModal,
+  } = useSongState();
+  const { activeSongDeleteModal, activeMusicianUnFollowModal } = useManagesState();
 
   return (
     <Suspense fallback={null}>
@@ -80,12 +86,14 @@ const ModalProvider = () => {
       {activeProfileEditModal.active && <Modal.profileEditModal />}
       {activeChangePasswordModal && <Modal.changePasswordModal />}
       {activeAccountDeregistrationModal.active && <Modal.accountDeregistrationModal />}
+      {activeSongEditModal.active && <Modal.songEditModal />}
       {activeSongDetailCardModal.active && <Modal.songDetailCardModal />}
       {activeSongRateModal.active && <Modal.songRateModal />}
       {activeSongDeleteModal.active && <Modal.songDeleteModal />}
       {activeSongAssignmentModal.active && <Modal.songAssignmentModal />}
       {activePlaylistAdvancedEditModal.active && <Modal.playlistAdvancedEditModal />}
       {activePlaylistAdvancedCreateModal && <Modal.playlistAdvancedCreateModal />}
+      {activeMusicianUnFollowModal.active && <Modal.musicianUnfollowModal />}
     </Suspense>
   );
 };
