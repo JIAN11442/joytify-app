@@ -1,9 +1,4 @@
-const getTimePeriod = ({
-  now = new Date(),
-  number,
-  period,
-  direction = "backward",
-}) => {
+const getTimePeriod = ({ now = new Date(), number, period, direction = "backward" }) => {
   let startOfPeriod = new Date(now);
   let endOfPeriod = new Date(now);
 
@@ -49,11 +44,7 @@ const getTimePeriod = ({
   return { startOfPeriod, endOfPeriod };
 };
 
-const calculatePlaybackStatistics = async ({
-  collection,
-  userId,
-  sorting = "desc",
-}) => {
+const calculatePlaybackStatistics = async ({ collection, userId, sorting = "desc" }) => {
   // sort order
   const sortOrder = sorting === "desc" ? -1 : 1;
 
@@ -165,11 +156,7 @@ const calculatePlaybackStatistics = async ({
   };
 };
 
-const moveCollectionPlaybacks = async (
-  playback,
-  originCollection,
-  targetCollection
-) => {
+const moveCollectionPlaybacks = async (playback, originCollection, targetCollection) => {
   const originData = await originCollection.find({}).toArray();
 
   if (!originData.length) {
@@ -239,9 +226,4 @@ const sendSnsNotification = async ({ sns, status, detail, snsTopicArn }) => {
   }
 };
 
-export {
-  getTimePeriod,
-  calculatePlaybackStatistics,
-  moveCollectionPlaybacks,
-  sendSnsNotification,
-};
+export { getTimePeriod, calculatePlaybackStatistics, moveCollectionPlaybacks, sendSnsNotification };

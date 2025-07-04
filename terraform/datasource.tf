@@ -1,4 +1,12 @@
-// zip lambda function
+# ========================================
+# ZIP LAMBDA FUNCTION
+# ========================================
+data "archive_file" "dispatcher_lambda_function_zip" {
+  type = "zip"
+  source_dir = local.dispatcher_src_dir
+  output_path = local.dispatcher_output_path
+}
+
 data "archive_file" "stats_lambda_function_zip" {
     type = "zip"
     source_dir = local.stats_src_dir
@@ -11,7 +19,9 @@ data "archive_file" "discord_lambda_function_zip" {
     output_path = local.discord_output_path
 }
 
-// lambda assume role policy
+# ========================================
+# LAMBDA ASSUME ROLE POLICY
+# ========================================
 data "aws_iam_policy_document" "lambda_assume_role_policy" {
    version = "2012-10-17"
 
@@ -27,7 +37,9 @@ data "aws_iam_policy_document" "lambda_assume_role_policy" {
     }
 }
 
-// lambda role policy
+# ========================================
+# LAMBDA ROLE POLICY
+# ========================================
 data "aws_iam_policy_document" "lambda_role_policy" {
     version = "2012-10-17"
 
@@ -42,7 +54,11 @@ data "aws_iam_policy_document" "lambda_role_policy" {
         "logs:DeleteLogStream"
       ]
       // only allow lambda to write logs to this log group
-      resources = ["${aws_cloudwatch_log_group.lambda_log_group.arn}:*","${aws_cloudwatch_log_group.discord_log_group.arn}:*"]
+      resources = [
+        "${aws_cloudwatch_log_group.dispatcher_lambda_log_group.arn}:*",
+        "${aws_cloudwatch_log_group.executor_lambda_log_group.arn}:*",
+        "${aws_cloudwatch_log_group.discord_log_group.arn}:*"
+      ]
     }
 
     // allow lambda to get secret from aws secrets manager
@@ -63,9 +79,21 @@ data "aws_iam_policy_document" "lambda_role_policy" {
       // only allow lambda to publish to this sns topic
       resources = ["${aws_sns_topic.lambda_execution_notification.arn}"]
     }
+
+    // allow lambda to invoke other lambda functions
+    statement {
+      effect = "Allow"
+      actions = ["lambda:InvokeFunction"]
+      // only allow lambda to invoke specific lambda functions
+      resources = [
+        "${aws_lambda_function.stats_playback_executor.arn}",
+      ]
+    }
 }
 
-// sns topic policy
+# ========================================
+# SNS TOPIC POLICY
+# ========================================
 data "aws_iam_policy_document" "sns_topic_policy" {
     version = "2012-10-17"
 

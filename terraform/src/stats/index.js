@@ -1,103 +1,154 @@
-import aws from "aws-sdk";
+import pLimit from "p-limit";
 import { MongoClient } from "mongodb";
-import {
-  sendSnsNotification,
-  moveCollectionPlaybacks,
-  calculatePlaybackStatistics,
-} from "./service.js";
 
-export const handler = async (event) => {
-  let client;
+import { moveCollectionPlaybacks, calculatePlaybackStatistics } from "./service.js";
 
-  const uri = process.env.MONGODB_CONNECTION_STRING;
-  const snsTopicArn = process.env.SNS_TOPIC_ARN;
+const MONGODB_CONNECTION_STRING = process.env.MONGODB_CONNECTION_STRING;
+const BATCH_SIZE = Number(process.env.BATCH_SIZE);
+const MAX_CONCURRENT = Number(process.env.MAX_CONCURRENT);
 
-  const sns = new aws.SNS();
-  const defaultMsg = { sns, snsTopicArn };
+const processBatch = async (
+  playbackBatch,
+  playbackCollection,
+  statsCollection,
+  historyCollection
+) => {
+  const limit = pLimit(MAX_CONCURRENT);
+  let batchDurationMs = 0;
+  let batchSuccessProcessedCount = 0;
+  let batchFailedProcessCount = 0;
+  let batchFailedProcessUsers = [];
 
-  try {
-    client = new MongoClient(uri);
+  await Promise.all(
+    playbackBatch.map((playback) =>
+      limit(async () => {
+        const startTime = Date.now();
 
-    await client.connect();
+        try {
+          const now = new Date();
+          const userQuery = { user: playback.user };
 
-    const db = client.db("mern-joytify");
-    const playbackCollection = db.collection("playbacks");
-    const statsCollection = db.collection("stats");
-    const historyCollection = db.collection("histories");
-
-    const playbacks = await playbackCollection.find({}).toArray();
-
-    if (playbacks.length) {
-      for (const playback of playbacks) {
-        const now = new Date();
-
-        const userQuery = { user: playback.user };
-        const userStats = await statsCollection.findOne(userQuery);
-
-        const { songStats, artistStats, peakHourStats } =
-          await calculatePlaybackStatistics({
+          const { songStats, artistStats, peakHourStats } = await calculatePlaybackStatistics({
             collection: playbackCollection,
             userId: playback.user,
           });
 
-        const statsResult = {
-          songs: songStats,
-          artists: artistStats,
-          peakHour: peakHourStats,
-        };
+          const statsResult = { songs: songStats, artists: artistStats, peakHour: peakHourStats };
 
-        // stats user playbacks
-        if (userStats) {
-          await statsCollection.findOneAndUpdate(userQuery, {
-            $push: { stats: { ...statsResult, createdAt: now } },
-          });
-        } else {
-          await statsCollection.insertOne({
-            user: playback.user,
-            stats: [
-              {
-                songs: songStats,
-                artists: artistStats,
-                peakHour: peakHourStats,
-                createdAt: now,
-              },
-            ],
-            createdAt: now,
-            updatedAt: now,
-            __v: 0,
-          });
+          // stats user playbacks
+          await statsCollection.updateOne(
+            userQuery,
+            {
+              $push: { stats: statsResult },
+              $setOnInsert: { createdAt: now },
+              $set: { updatedAt: now },
+            },
+            { upsert: true }
+          );
+
+          // backup user playbacks to history and clear playbacks
+          await moveCollectionPlaybacks(playback, playbackCollection, historyCollection);
+
+          // accumulate batch execution duration
+          const duration = Date.now() - startTime;
+          batchDurationMs += duration;
+
+          // accumulate success process count
+          batchSuccessProcessedCount++;
+        } catch (error) {
+          // accumulate batch execution duration
+          const duration = Date.now() - startTime;
+          batchDurationMs += duration;
+
+          // accumulate failed process users
+          batchFailedProcessCount++;
+          batchFailedProcessUsers.push(playback.user);
         }
+      })
+    )
+  );
 
-        // backup user playbacks to history and clear playbacks
-        await moveCollectionPlaybacks(
-          playback,
+  return {
+    batchDurationMs,
+    batchSuccessProcessedCount,
+    batchFailedProcessCount,
+    batchFailedProcessUsers,
+  };
+};
+
+export const handler = async (event) => {
+  const { skip, limit } = event;
+  const client = new MongoClient(MONGODB_CONNECTION_STRING);
+
+  let durationMs = 0;
+  let successProcessedCount = 0;
+  let failedProcessCount = 0;
+
+  let batchPlaybacks = [];
+  let failedProcessUsers = [];
+
+  try {
+    await client.connect();
+    const db = client.db("mern-joytify");
+
+    const playbackCollection = db.collection("playbacks");
+    const statsCollection = db.collection("stats");
+    const historyCollection = db.collection("histories");
+
+    const playbacks = playbackCollection.find().skip(skip).limit(limit);
+
+    // process playbacks in batches to avoid memory overflow
+    for await (const playback of playbacks) {
+      // add playback to batch
+      batchPlaybacks.push(playback);
+
+      // process batch if it reaches the specified size
+      if (batchPlaybacks.length >= BATCH_SIZE) {
+        const results = await processBatch(
+          batchPlaybacks,
           playbackCollection,
+          statsCollection,
           historyCollection
         );
 
-        console.log(`${playback.user} stats successfully`);
+        // accumulate results
+        durationMs += results.batchDurationMs;
+        successProcessedCount += results.batchSuccessProcessedCount;
+        failedProcessCount += results.batchFailedProcessCount;
+        failedProcessUsers.push(...results.batchFailedProcessUsers);
+
+        // clear batch array for next batch
+        batchPlaybacks = [];
       }
-    } else {
-      console.log("Playbacks collection is empty");
-      return;
     }
 
-    await sendSnsNotification({
-      ...defaultMsg,
-      status: "success",
-      detail: "Stats Lambda executed successfully",
-    });
-  } catch (error) {
-    await sendSnsNotification({
-      ...defaultMsg,
-      status: "failure",
-      detail: error.message,
-    });
+    // process remaining playbacks in the final batch
+    if (batchPlaybacks.length > 0) {
+      const results = await processBatch(
+        batchPlaybacks,
+        playbackCollection,
+        statsCollection,
+        historyCollection
+      );
 
-    console.log("error:", error);
+      // accumulate results
+      durationMs += results.batchDurationMs;
+      successProcessedCount += results.batchSuccessProcessedCount;
+      failedProcessCount += results.batchFailedProcessCount;
+      failedProcessUsers.push(...results.batchFailedProcessUsers);
+    }
+
+    return {
+      durationMs,
+      successProcessedCount,
+      failedProcessCount,
+      failedProcessUsers,
+    };
+  } catch (error) {
+    console.log("Stats Lambda Error:", error);
 
     throw new Error(error);
   } finally {
-    await client.close();
+    await client?.close();
   }
 };

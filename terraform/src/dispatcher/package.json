@@ -1,5 +1,5 @@
 {
-  "name": "src",
+  "name": "dispatcher",
   "version": "1.0.0",
   "type": "module",
   "description": "",
@@ -12,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1692.0",
-    "mongodb": "^6.12.0",
-    "p-limit": "^6.2.0"
+    "mongodb": "^6.17.0"
   }
 }
