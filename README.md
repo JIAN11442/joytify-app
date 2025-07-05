@@ -1,160 +1,177 @@
-# Joytify
+# Joytify - Full-Stack Music Platform
 
-A Spotify Clone - A music sharing platform under development. Inspired by Spotify's core features and user experience.
+A Spotify-inspired music streaming platform built with modern web technologies, featuring user authentication, music upload/playback, playlist management, and automated data processing.
 
-## Current Status
+## 🎯 Project Overview
 
-🚧 **Under Development**
+**Live Demo**: [Joytify Platform](https://joytify.vercel.app)
 
-### Implemented Features
+Joytify is a full-stack music streaming platform that allows users to upload, organize, and stream music. The platform includes user authentication, playlist management, internationalization, and fully automated, scalable statistics processing.
 
-- Basic project structure
-- Authentication system (Firebase)
-- Basic API endpoints
-- Frontend routing and layout
+---
 
-### In Progress
-
-- Music upload functionality
-- User profile management
-- Music player implementation
-
-## Tech Stack
+## 🛠️ Tech Stack
 
 ### Frontend
 
-- React 18 + TypeScript
-- Vite
-- TailwindCSS
-- React Query
-- Zustand
-- Firebase Auth
+- **React 18** + **TypeScript** – Modern, performant UI with type safety
+- **Vite** – Blazing fast build tooling
+- **TailwindCSS** – Utility-first styling
+- **Zustand** – Lightweight client-side state management
+- **React Query** – Server state synchronization and caching
+- **React Hook Form** – Scalable and performant form management
+- **React Intl** – Internationalization with support for `en-US`, `zh-CN`, `zh-TW`, `ja`, `ko`, `ms`
+- **Skeleton Loading** – Improved user experience during data fetching
+- **Firebase Auth** – Secure user authentication
 
 ### Backend
 
-- Node.js + Express + TypeScript
-- MongoDB + Mongoose
-- AWS S3
-- JWT
-- Firebase Admin
-- Resend
+- **Node.js** + **Express** + **TypeScript** – Robust and scalable backend
+- **Zod** – Input validation and runtime schema checking
+- **MongoDB** + **Mongoose** – NoSQL database with ODM abstraction
+- **JWT** – Secure token-based authentication
+- **Firebase Admin SDK** – Admin-level user management
+- **Resend** – Transactional email delivery (e.g., email verification)
 
-## Development Setup
+### DevOps & Infrastructure
 
-### Prerequisites
+- **Terraform** – Infrastructure as Code (IaC)
+- **AWS Lambda** – Serverless compute for backend processing
+- **AWS SNS** – Pub/sub event notifications
+- **AWS CloudWatch** – Scheduled tasks, metrics, and log management
+- **Discord Webhook** – Real-time alert and execution summaries
 
-- Node.js >= 18
-- MongoDB
-- AWS Account
-- Firebase Project
-- Resend Account
+### Shared Types
 
-### Environment Variables
+- **Monorepo Architecture** – Shared TypeScript interfaces between frontend and backend
+- **Private NPM Package** – Shared types are uploaded to a private NPM registry for seamless reuse across environments
 
-#### Backend (.env)
+---
 
-```env
-# Server Configuration
-NODE_ENV=development
-USE_NGINX_PROXY=false
-BACKEND_PORT=4004
-ORIGIN_APP=http://localhost:5173
+## 🔄 Automated Processing Pipeline
 
-# Database
-MONGODB_CONNECTION_STRING=
+### Basic Flow (Implemented)
 
-# Email Service
-RESEND_API_KEY=
-TEST_EMAIL=onboarding@resend.dev
-SENDER_EMAIL=joytify35@gmail.com
-SEND_LIMIT_PER_PERIOD=3
-PROFILE_FETCH_LIMIT=2
-FETCH_LIMIT_PER_PAGE=2
+> Triggered on the 1st of every month by CloudWatch. Dispatcher Lambda splits the data and invokes multiple Executor Lambdas to handle user statistics calculation concurrently.
 
-# JWT Secrets
-ACCESS_SECRET_KEY=
-REFRESH_SECRET_KEY=
-VERIFICATION_SECRET_KEY=
-
-# AWS Configuration
-AWS_REGION=ap-northeast-1
-AWS_BUCKET_NAME=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_SDK_JS_SUPPRESS_MAINTENANCE_MODE_MESSAGE=
-
-# Firebase Configuration
-FIREBASE_PROJECT_ID=
-FIREBASE_PRIVATE_KEY_ID=
-FIREBASE_PRIVATE_KEY=
-FIREBASE_CLIENT_EMAIL=
-FIREBASE_CLIENT_ID=
+```mermaid
+graph TD;
+    MonthlyCloudWatch --> DispatcherLambda
+    DispatcherLambda -->|Invoke with range| ExecutorLambda1
+    DispatcherLambda -->|Invoke with range| ExecutorLambda2
+    ExecutorLambda1 --> MongoDB
+    ExecutorLambda2 --> MongoDB
+    ExecutorLambda1 --> DispatcherLambda
+    ExecutorLambda2 --> DispatcherLambda
+    DispatcherLambda --> SNS --> DiscordLambda --> DiscordWebhook
 ```
 
-#### Frontend (.env)
+#### Dispatcher Breakdown
 
-```env
-VITE_SERVER_URL=http://localhost:4004
+```mermaid
+graph TD
+  A[Total Records: 10,000] --> B{Split into chunks of 2,000}
+  B --> C1[Chunk 0: 0-1999]
+  B --> C2[Chunk 1: 2000-3999]
+  B --> C3[Chunk 2: 4000-5999]
+  B --> C4[Chunk 3: 6000-7999]
+  B --> C5[Chunk 4: 8000-9999]
+
+  subgraph Batch 1
+    C1 --> L1[Executor 1]
+    C2 --> L2[Executor 2]
+    C3 --> L3[Executor 3]
+    C4 --> L4[Executor 4]
+    C5 --> L5[Executor 5]
+  end
+
+  L1 --> R[Dispatcher collects result]
+  L2 --> R
+  L3 --> R
+  L4 --> R
+  L5 --> R
+  R --> SNS1[SNS Notification]
+  SNS1 --> D1[Discord Lambda]
 ```
 
-### Local Development
+#### Executor Logic
 
-```bash
-# Install dependencies
-cd backend && npm install
-cd ../frontend && npm install
-
-# Run development servers
-# Terminal 1
-cd backend && npm run node # or npm run dev
-
-# Terminal 2
-cd frontend && npm run dev
+```mermaid
+graph TD
+  A[Executor receives 2,000 records] --> B{Split into batches of 1,000}
+  B --> C1[Batch 0: 0–999]
+  B --> C2[Batch 1: 1000–1999]
+  C1 -->|Concurrency 15| MongoDB
+  C2 -->|Concurrency 15| MongoDB
 ```
 
-## Project Structure
+#### Limitations of Basic Flow
 
+- All data is processed in a single window, which may risk AWS Lambda timeout (15 minutes)
+- Poor scalability for 100,000+ records or rapid growth
+- Static monthly scheduling without staging
+
+---
+
+### Extended Scalable Flow (Conceptual – Not Yet Implemented)
+
+> Designed for large-scale data sets. Uses a Scheduler Lambda at the beginning of the month to create a dynamic CloudWatch event rule to trigger processing stages at regular intervals.
+
+```mermaid
+graph TD;
+    MonthlyCloudWatch --> SchedulerLambda
+    SchedulerLambda --> CloudWatchStageRule
+    CloudWatchStageRule --> HourlyStageProcessor
+    HourlyStageProcessor --> DispatcherLambda
+    DispatcherLambda --> ExecutorLambdas
+    ExecutorLambdas --> MongoDB
+    ExecutorLambdas --> DispatcherLambda
+    DispatcherLambda --> SNS --> DiscordLambda --> DiscordWebhook
 ```
-joytify/
-├── frontend/          # React frontend
-│   ├── src/
-│   │   ├── components/    # UI components
-│   │   ├── pages/        # Page components
-│   │   ├── hooks/        # Custom hooks
-│   │   ├── states/       # State management
-│   │   └── utils/        # Utility functions
-├── backend/           # Express backend
-│   ├── src/
-│   │   ├── controllers/  # Route controllers
-│   │   ├── models/       # Database models
-│   │   ├── routes/       # API routes
-│   │   └── services/     # Business logic
-├── share/            # Shared types (local development only)
-└── terraform/        # Infrastructure
-```
 
-### Shared Types Development
+- **Scheduler Lambda**: Calculates total records and determines how many stages are required. Sets up dynamic CloudWatch rules.
+- **CloudWatchStageRule**: Triggers HourlyStageProcessor at fixed intervals (e.g., every 10 minutes)
+- **HourlyStageProcessor**: Determines current stage and invokes Dispatcher for the corresponding data chunk
+- **Dispatcher & Executor**: Same logic as in Basic Flow, but only for that stage
+- **SNS + Discord**: Sends per-stage summaries after all Executors complete
 
-The `share` directory is a separate npm package that contains shared TypeScript types and constants used by both frontend and backend. During development:
+### Key Differences: Basic vs. Extended Flow
 
-1. The `share` directory is a local copy of the shared types package
-2. Use `npm link` to link the local share package for development
-3. In production, the package is installed via npm as `@joytify/shared-types`
+| Aspect               | Basic Flow (Implemented)        | Extended Flow (Conceptual)                         |
+| -------------------- | ------------------------------- | -------------------------------------------------- |
+| Trigger Source       | Monthly CloudWatch              | Monthly CloudWatch → Dynamic interval rule         |
+| Dispatcher Logic     | Processes all users immediately | Processes **one stage** (e.g. 10,000) per interval |
+| Interval Control     | Static schedule (monthly)       | Configurable (e.g. every 10m, hourly...)           |
+| Stage Initialization | N/A                             | Scheduler Lambda creates processing stages         |
+| Progress Tracking    | N/A                             | MongoDB `processing_state` per stage               |
+| Lambda Invocation    | All at once                     | Spread across intervals and stages                 |
+| Notification         | Once per full run               | Once per stage (via SNS → Discord)                 |
+| Use Case             | Small to medium datasets        | Large datasets (100k+ users)                       |
 
-## Development Guidelines
+---
 
-### Code Style
+## ⚙️ Current System Configuration
 
-- ESLint + Prettier
-- TypeScript strict mode
-- Conventional commits
+| Component             | Value                              |
+| --------------------- | ---------------------------------- |
+| CloudWatch Frequency  | Monthly (Basic), Custom (Extended) |
+| Dispatcher Chunk Size | 2000 records                       |
+| Executor Batch Size   | 1000 users                         |
+| Internal Batch Size   | 100 playbacks                      |
+| Max Concurrency       | 15 concurrent operations           |
+| Max Lambda Runtime    | 15 minutes (AWS limit)             |
+| Monthly Cost Estimate | <$1                                |
 
-### Git Workflow
+---
 
-- Feature branches
-- Pull request reviews
-- Conventional commits
+## 🚀 Summary
 
-## License
+Joytify is a modern, end-to-end music platform that demonstrates:
 
-MIT
+- Scalable cloud-first architecture
+- Real-time data processing pipelines
+- Shared type safety across full stack
+- Solid DevOps and cost awareness
+- Production-grade observability and error handling
+
+This project showcases the ability to build, deploy, and monitor a robust system designed to scale with real-world use cases.
