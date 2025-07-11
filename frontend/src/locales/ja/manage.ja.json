@@ -44,5 +44,14 @@
   "manage.following.unfollow.modal.title": "このアーティストのフォローを解除",
   "manage.following.unfollow.modal.content": "本当にこのアーティストのフォローを解除しますか？今後は更新情報を受け取れなくなります。",
   "manage.following.unfollow.modal.button.submit": "フォローを解除する",
-  "manage.following.unfollow.modal.button.cancel": "キャンセル"
+  "manage.following.unfollow.modal.button.cancel": "キャンセル",
+
+  "manage.notification.title": "通知管理",
+  "manage.notification.description": "受信したすべての通知を管理",
+  "manage.notification.header.unread.count": "{count} 件の未読",
+  "manage.notification.header.button.markAllAsRead": "すべて既読にする",
+  "manage.notification.controlPanel.all": "すべて",
+  "manage.notification.controlPanel.monthlyStats": "月間統計",
+  "manage.notification.controlPanel.artistUpdates": "アーティストの更新",
+  "manage.notification.controlPanel.systemAnnouncements": "システムのお知らせ"
 }

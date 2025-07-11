@@ -30,6 +30,7 @@ import {
   Playlist,
   Song,
   Album,
+  PaginationQueryResponse,
 } from "@joytify/shared-types/types";
 import { getPaginatedDocs, remapFields } from "../utils/mongoose.util";
 import { compareHashValue } from "../utils/bcrypt.util";
@@ -59,11 +60,6 @@ interface UpdatePasswordServiceRequest extends ChangePasswordRequest {
 type PaginationOpts = {
   limit: { initial: number; load: number };
   page: number;
-};
-
-type PaginationQueryResponse<T> = {
-  docs: T[];
-  totalDocs: number;
 };
 
 const { PASSWORD_RESET } = VerificationForOptions;
@@ -159,7 +155,7 @@ export const getProfileCollectionsInfo = async (
   page: number,
   collection: ProfileCollectionsType
 ) => {
-  let docs: PaginationQueryResponse<any> = { docs: [], totalDocs: 0 };
+  let docs: PaginationQueryResponse<any> = { docs: [], totalDocs: 0, page: page };
 
   const opts: PaginationOpts = {
     limit: { initial: PROFILE_FETCH_LIMIT * 2, load: FETCH_LIMIT_PER_PAGE },
@@ -226,9 +222,9 @@ export const updateUserInfoById = async (params: UpdateUserServiceRequest) => {
     gender,
     country,
     dateOfBirth,
-    monthlyStatistics,
-    followingArtistUpdates,
-    systemAnnouncements,
+    monthlyStatistic,
+    followingArtistUpdate,
+    systemAnnouncement,
     ...rest
   } = params;
 
@@ -242,9 +238,9 @@ export const updateUserInfoById = async (params: UpdateUserServiceRequest) => {
         "personalInfo.gender": gender,
         "personalInfo.country": country,
         "personalInfo.dateOfBirth": dateOfBirth,
-        "userPreferences.notifications.monthlyStatistics": monthlyStatistics,
-        "userPreferences.notifications.followingArtistUpdates": followingArtistUpdates,
-        "userPreferences.notifications.systemAnnouncements": systemAnnouncements,
+        "userPreferences.notifications.monthlyStatistic": monthlyStatistic,
+        "userPreferences.notifications.followingArtistUpdate": followingArtistUpdate,
+        "userPreferences.notifications.systemAnnouncement": systemAnnouncement,
       },
     },
     { new: true }

@@ -408,3 +408,8 @@ export const PlaylistListCardSkeleton = () => {
     </div>
   );
 };
+
+// notification list skeleton
+export const NotificationControlPanelSkeleton = () => {
+  return <Skeleton className={`w-full h-[3rem] rounded-md`} />;
+};

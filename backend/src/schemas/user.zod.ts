@@ -10,9 +10,9 @@ export const userZodSchema = z.object({
   gender: objectIdZodSchema.optional(),
   country: objectIdZodSchema.optional(),
   dateOfBirth: z.string().optional(),
-  monthlyStatistics: z.boolean().optional(),
-  followingArtistUpdates: z.boolean().optional(),
-  systemAnnouncements: z.boolean().optional(),
+  monthlyStatistic: z.boolean().optional(),
+  followingArtistUpdate: z.boolean().optional(),
+  systemAnnouncement: z.boolean().optional(),
 });
 
 export const updatePasswordZodSchema = z.object({

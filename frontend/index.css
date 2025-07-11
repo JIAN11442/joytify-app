@@ -234,6 +234,14 @@ body,
     rounded-2xl;
   }
 
+  .load-btn {
+    @apply text-sm
+    text-neutral-100/30
+    hover:text-neutral-100/50
+    hover:scale-105
+    transition;
+  }
+
   .no-hover {
     @apply pointer-events-none;
   }
@@ -358,6 +366,10 @@ body,
     border-[0.1px]
     border-neutral-700
     rounded-lg;
+  }
+
+  .control-panel-items-wrapper::-webkit-scrollbar {
+    display: none;
   }
 
   .control-panel-selected {

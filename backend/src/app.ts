@@ -16,11 +16,11 @@ import verificationRoute from "./routes/verification.route";
 import cookieRoute from "./routes/cookie.route";
 import sessionRoute from "./routes/session.route";
 import networkRoute from "./routes/network.route";
+import notificationRoute from "./routes/notification.route";
 
 import authenticate from "./middlewares/authenticate.middleware";
 import firebaseInitialize from "./middlewares/firebase.middleware";
 import errorHandler from "./middlewares/error-handler.middleware";
-
 import { NODE_ENV, ORIGIN_APP } from "./constants/env-validate.constant";
 
 const app = express();
@@ -52,6 +52,7 @@ app.use("/playback", authenticate, playbackRoute);
 app.use("/cookie", cookieRoute);
 app.use("/session", authenticate, sessionRoute);
 app.use("/network", networkRoute);
+app.use("/notification", notificationRoute);
 
 // error handler
 app.use(errorHandler());

@@ -43,6 +43,11 @@ export interface UserDocument extends mongoose.Document {
   songs: mongoose.Types.ObjectId[];
   albums: mongoose.Types.ObjectId[];
   following: mongoose.Types.ObjectId[];
+  notifications: {
+    read: mongoose.Types.ObjectId[];
+    unread: mongoose.Types.ObjectId[];
+    deleted: mongoose.Types.ObjectId[];
+  };
   accountInfo: {
     totalPlaylists: number;
     totalSongs: number;
@@ -58,9 +63,9 @@ export interface UserDocument extends mongoose.Document {
     sidebarCollapsed: boolean;
     locale: SupportedLocaleType;
     notifications: {
-      monthlyStatistics: boolean;
-      followingArtistUpdates: boolean;
-      systemAnnouncements: boolean;
+      monthlyStatistic: boolean;
+      followingArtistUpdate: boolean;
+      systemAnnouncement: boolean;
     };
     player: {
       shuffle: boolean;
@@ -70,6 +75,7 @@ export interface UserDocument extends mongoose.Document {
       playbackQueue: PlaybackQueueWithIds;
     };
   };
+
   comparePassword: (password: string) => Promise<boolean>;
   omitPassword(): Omit<this, "password">;
 }
@@ -117,6 +123,23 @@ const userSchema = new mongoose.Schema<UserDocument>(
       ref: "Musician",
       index: true,
     },
+    notifications: {
+      read: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Notification",
+        index: true,
+      },
+      unread: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Notification",
+        index: true,
+      },
+      deleted: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Notification",
+        index: true,
+      },
+    },
     accountInfo: {
       totalPlaylists: { type: Number, default: 0 },
       totalSongs: { type: Number, default: 0 },
@@ -146,9 +169,9 @@ const userSchema = new mongoose.Schema<UserDocument>(
         default: SupportedLocale.EN_US,
       },
       notifications: {
-        monthlyStatistics: { type: Boolean, default: true },
-        followingArtistUpdates: { type: Boolean, default: true },
-        systemAnnouncements: { type: Boolean, default: true },
+        monthlyStatistic: { type: Boolean, default: true },
+        followingArtistUpdate: { type: Boolean, default: true },
+        systemAnnouncement: { type: Boolean, default: true },
       },
       player: {
         volume: {

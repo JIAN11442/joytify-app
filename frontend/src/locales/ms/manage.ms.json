@@ -44,5 +44,14 @@
   "manage.following.unfollow.modal.title": "Berhenti mengikuti artis ini",
   "manage.following.unfollow.modal.content": "Adakah anda pasti mahu berhenti mengikuti artis ini? Anda tidak akan menerima kemas kini daripadanya lagi.",
   "manage.following.unfollow.modal.button.submit": "Ya, berhenti ikuti",
-  "manage.following.unfollow.modal.button.cancel": "Batal"
+  "manage.following.unfollow.modal.button.cancel": "Batal",
+
+  "manage.notification.title": "Pengurusan Notifikasi",
+  "manage.notification.description": "Urus semua notifikasi yang anda terima",
+  "manage.notification.header.unread.count": "{count} Belum dibaca",
+  "manage.notification.header.button.markAllAsRead": "Tandakan semua sebagai dibaca",
+  "manage.notification.controlPanel.all": "Semua",
+  "manage.notification.controlPanel.monthlyStats": "Statistik Bulanan",
+  "manage.notification.controlPanel.artistUpdates": "Kemas Kini Artis",
+  "manage.notification.controlPanel.systemAnnouncements": "Pengumuman Sistem"
 }

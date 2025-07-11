@@ -44,5 +44,14 @@
   "manage.following.unfollow.modal.title": "아티스트 팔로우 취소",
   "manage.following.unfollow.modal.content": "정말 이 아티스트의 팔로우를 취소하시겠습니까? 더 이상 해당 아티스트의 소식을 받을 수 없습니다.",
   "manage.following.unfollow.modal.button.submit": "네, 팔로우 취소",
-  "manage.following.unfollow.modal.button.cancel": "취소"
+  "manage.following.unfollow.modal.button.cancel": "취소",
+
+  "manage.notification.title": "알림 관리",
+  "manage.notification.description": "수신한 모든 알림을 관리하세요",
+  "manage.notification.header.unread.count": "{count}개 안 읽음",
+  "manage.notification.header.button.markAllAsRead": "모두 읽은 상태로 표시",
+  "manage.notification.controlPanel.all": "전체",
+  "manage.notification.controlPanel.monthlyStats": "월간 통계",
+  "manage.notification.controlPanel.artistUpdates": "아티스트 업데이트",
+  "manage.notification.controlPanel.systemAnnouncements": "시스템 공지"
 }

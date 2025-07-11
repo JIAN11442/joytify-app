@@ -50,12 +50,12 @@
 
   "settings.notifications.title": "알림 설정",
   "settings.notifications.description": "플랫폼에서 받을 알림을 관리하세요",
-  "settings.notifications.monthlyStatisticsReport.title": "월간 통계 리포트",
-  "settings.notifications.monthlyStatisticsReport.description": "청취 활동, 재생 시간, 인기 콘텐츠 요약을 매월 받아보세요",
-  "settings.notifications.followingArtistUpdates.title": "팔로우한 아티스트 업데이트",
-  "settings.notifications.followingArtistUpdates.description": "팔로우 중인 아티스트의 신곡 발매 및 중요한 소식을 알림받기",
-  "settings.notifications.systemAnnouncements.title": "시스템 공지사항",
-  "settings.notifications.systemAnnouncements.description": "중요한 시스템 업데이트 및 플랫폼 공지를 받아보세요",
+  "settings.notifications.monthlyStatisticReport.title": "월간 통계 리포트",
+  "settings.notifications.monthlyStatisticReport.description": "청취 활동, 재생 시간, 인기 콘텐츠 요약을 매월 받아보세요",
+  "settings.notifications.followingArtistUpdate.title": "팔로우한 아티스트 업데이트",
+  "settings.notifications.followingArtistUpdate.description": "팔로우 중인 아티스트의 신곡 발매 및 중요한 소식을 알림받기",
+  "settings.notifications.systemAnnouncement.title": "시스템 공지사항",
+  "settings.notifications.systemAnnouncement.description": "중요한 시스템 업데이트 및 플랫폼 공지를 받아보세요",
 
   "settings.connectedDevices.title": "연결된 장치",
   "settings.connectedDevices.description": "브라우저 장치 정보를 확인하고 관리하세요",

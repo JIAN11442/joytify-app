@@ -1,11 +1,12 @@
 import mongoose, { UpdateQuery } from "mongoose";
 import UserModel from "./user.model";
 import LabelModel from "./label.model";
+import AlbumModel from "./album.model";
 import MusicianModel from "./musician.model";
 import PlaylistModel from "./playlist.model";
-import AlbumModel from "./album.model";
+import NotificationModel from "./notification.model";
 import usePalette from "../hooks/paletee.hook";
-import { SongAssociationAction } from "@joytify/shared-types/constants";
+import { NotificationTypeOptions, SongAssociationAction } from "@joytify/shared-types/constants";
 import { HexPaletee, SongAssociationActionType } from "@joytify/shared-types/types";
 import { bulkUpdateReferenceArrayFields } from "../utils/mongoose.util";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
@@ -276,7 +277,7 @@ songSchema.pre("findOneAndDelete", async function (next) {
 // after created song,...
 songSchema.post("save", async function (doc) {
   const { id, artist, playlistFor, creator, album } = doc;
-  const song = await SongModel.findById(id);
+  const song = await SongModel.findById(id).populate("artist").populate("album");
 
   try {
     if (song) {
@@ -328,6 +329,19 @@ songSchema.post("save", async function (doc) {
       // push created song ID to each relate musician's "albums" property(according to model name)
       // like artist, lyricist, composer fields is reference to same model name, Musician
       await bulkUpdateReferenceArrayFields(song, album, MusicianModel, "albums", "$addToSet");
+
+      // create notification template
+      if (song.artist.followers.length > 0) {
+        await NotificationModel.create({
+          type: NotificationTypeOptions.FOLLOWING_ARTIST_UPDATE,
+          followingArtistUpdate: {
+            artistId: song.artist._id,
+            artistName: song.artist.name,
+            songName: song.title,
+            albumName: song?.album?.title,
+          },
+        });
+      }
     }
   } catch (error) {
     console.log(error);

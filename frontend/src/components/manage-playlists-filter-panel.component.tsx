@@ -41,13 +41,21 @@ const ManagePlaylistsFilterPanel: React.FC<FilterPanelProps> = ({
             className={twMerge(
               `
                 control-panel-btn
-                truncate
-                ${selectedFilter === filterKey ? `control-panel-selected` : "hover:bg-neutral-700"}
+                min-w-[50px]
+                ${
+                  selectedFilter === filterKey
+                    ? `control-panel-selected`
+                    : `
+                        text-neutral-400
+                        hover:text-neutral-300
+                        hover:bg-neutral-700
+                      `
+                }
               `,
               tw?.item
             )}
           >
-            {title}
+            <p className={`truncate`}>{title}</p>
           </button>
         );
       })}

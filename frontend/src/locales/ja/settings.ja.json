@@ -50,12 +50,12 @@
 
   "settings.notifications.title": "通知の設定",
   "settings.notifications.description": "プラットフォームから受け取りたい通知を管理します",
-  "settings.notifications.monthlyStatisticsReport.title": "月間統計レポート",
-  "settings.notifications.monthlyStatisticsReport.description": "月ごとの再生時間、リスニング活動、人気コンテンツの概要を受け取る",
-  "settings.notifications.followingArtistUpdates.title": "フォロー中のアーティストの更新",
-  "settings.notifications.followingArtistUpdates.description": "フォローしているアーティストの新作リリースや重要なお知らせを通知",
-  "settings.notifications.systemAnnouncements.title": "システムからのお知らせ",
-  "settings.notifications.systemAnnouncements.description": "重要なシステム更新やプラットフォームのお知らせを受け取る",
+  "settings.notifications.monthlyStatisticReport.title": "月間統計レポート",
+  "settings.notifications.monthlyStatisticReport.description": "月ごとの再生時間、リスニング活動、人気コンテンツの概要を受け取る",
+  "settings.notifications.followingArtistUpdate.title": "フォロー中のアーティストの更新",
+  "settings.notifications.followingArtistUpdate.description": "フォローしているアーティストの新作リリースや重要なお知らせを通知",
+  "settings.notifications.systemAnnouncement.title": "システムからのお知らせ",
+  "settings.notifications.systemAnnouncement.description": "重要なシステム更新やプラットフォームのお知らせを受け取る",
 
   "settings.connectedDevices.title": "接続済みのデバイス",
   "settings.connectedDevices.description": "ブラウザーデバイス情報の表示と管理",

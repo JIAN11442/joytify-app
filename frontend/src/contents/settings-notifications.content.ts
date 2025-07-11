@@ -1,7 +1,5 @@
-import { RiUserStarLine } from "react-icons/ri";
+import { RiErrorWarningLine, RiUserStarLine } from "react-icons/ri";
 import { IoStatsChartOutline } from "react-icons/io5";
-import { MdOutlineAnnouncement } from "react-icons/md";
-
 import { IconName } from "../components/react-icons.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { DefaultNotificationPreferencesForm } from "../types/form.type";
@@ -20,24 +18,24 @@ export const getSettingsNotificationsFields = (fm: ScopedFormatMessage): Notific
   const fields = [
     {
       id: "monthly-statistics-report",
-      name: "monthlyStatistics",
+      name: "monthlyStatistic",
       icon: { name: IoStatsChartOutline, color: "text-orange-400", size: 25 },
-      title: settingsNotificationsFm("monthlyStatisticsReport.title"),
-      description: settingsNotificationsFm("monthlyStatisticsReport.description"),
+      title: settingsNotificationsFm("monthlyStatisticReport.title"),
+      description: settingsNotificationsFm("monthlyStatisticReport.description"),
     },
     {
-      id: "following-artist-updates",
-      name: "followingArtistUpdates",
+      id: "following-artist-update",
+      name: "followingArtistUpdate",
       icon: { name: RiUserStarLine, color: "text-indigo-400", size: 25 },
-      title: settingsNotificationsFm("followingArtistUpdates.title"),
-      description: settingsNotificationsFm("followingArtistUpdates.description"),
+      title: settingsNotificationsFm("followingArtistUpdate.title"),
+      description: settingsNotificationsFm("followingArtistUpdate.description"),
     },
     {
-      id: "system-announcements",
-      name: "systemAnnouncements",
-      icon: { name: MdOutlineAnnouncement, color: "text-cyan-400", size: 25 },
-      title: settingsNotificationsFm("systemAnnouncements.title"),
-      description: settingsNotificationsFm("systemAnnouncements.description"),
+      id: "system-announcement",
+      name: "systemAnnouncement",
+      icon: { name: RiErrorWarningLine, color: "text-cyan-400", size: 25 },
+      title: settingsNotificationsFm("systemAnnouncement.title"),
+      description: settingsNotificationsFm("systemAnnouncement.description"),
     },
   ];
   return fields as NotificationField[];

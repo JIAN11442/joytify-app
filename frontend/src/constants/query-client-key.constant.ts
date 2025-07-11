@@ -36,6 +36,7 @@ export enum MutationKey {
   UPDATE_TARGET_SONG_INFO = "update-target-song-info",
   FOLLOW_TARGET_MUSICIAN = "follow-target-musician",
   UNFOLLOW_TARGET_MUSICIAN = "unfollow-target-musician",
+  CREATE_NOTIFICATION = "create-notification",
 }
 
 export enum QueryKey {
@@ -64,4 +65,9 @@ export enum QueryKey {
   GET_IP_GEOLOCATION = "get-ip-geolocation",
   GET_TARGET_MUSICIAN = "get-target-musician",
   GET_FOLLOWING_MUSICIANS = "get-following-musicians",
+
+  GET_USER_UNREAD_NOTIFICATION_COUNT = "get-user-unread-notification-count",
+  GET_USER_NOTIFICATIONS = "get-user-notifications",
+  GET_USER_NOTIFICATIONS_BY_TYPE = "get-user-notifications-by-type",
+  GET_USER_NOTIFICATION_COUNTS = "get-user-notification-counts",
 }

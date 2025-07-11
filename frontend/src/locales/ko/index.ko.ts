@@ -13,6 +13,7 @@ import dashboardJSON from "./dashboard.ko.json";
 import musicianJSON from "./musician.ko.json";
 import albumJSON from "./album.ko.json";
 import profileJSON from "./profile.ko.json";
+import notificationJSON from "./notification.ko.json";
 
 const modules = [
   authJSON,
@@ -30,6 +31,7 @@ const modules = [
   musicianJSON,
   albumJSON,
   profileJSON,
+  notificationJSON,
 ];
 
 export default Object.assign({}, ...modules);

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { HiHome } from "react-icons/hi";
 import { IoIosMenu } from "react-icons/io";
 import { BiSearch } from "react-icons/bi";
+import { IoNotificationsOutline } from "react-icons/io5";
 import JoytifyLogo from "../../public/joytify-logo.svg";
 
 import NavbarLink from "./navbar-link.component";
@@ -18,6 +19,7 @@ const Navbar = () => {
   const [searchBarVal, setSearchBarVal] = useState("");
 
   const { authUser } = useUserState();
+  const { screenWidth } = useProviderState();
   const { activeFloatingSidebar, setActiveFloatingSidebar, setCollapseSideBarState } =
     useSidebarState();
   const {
@@ -26,8 +28,6 @@ const Navbar = () => {
     setActiveNavSearchBar,
     setAdjustNavSearchBarPosition,
   } = useNavbarState();
-
-  const { screenWidth } = useProviderState();
 
   const { mutate: updateUserPreferencesFn } = useUpdateUserPreferencesMutation();
 
@@ -75,6 +75,9 @@ const Navbar = () => {
       }
     }
   }, [activeFloatingSidebar]);
+
+  const { notifications } = authUser ?? {};
+  const unreadNotificationCount = notifications?.unread.length ?? 0;
 
   return (
     <div className={`flex flex-col`}>
@@ -170,10 +173,41 @@ const Navbar = () => {
         <div
           className={`
             flex
+            gap-x-3
             items-center
             justify-end
           `}
         >
+          {/* notification */}
+          {authUser && (
+            <div className={`relative group`}>
+              {unreadNotificationCount > 0 && (
+                <div
+                  className={`
+                    absolute
+                    -top-1
+                    -right-1
+                    flex
+                    ${unreadNotificationCount >= 100 ? "w-8" : "w-5"}
+                    h-5
+                    bg-red-500
+                    text-white
+                    text-[10px]
+                    rounded-full
+                    items-center
+                    justify-center
+                    z-10
+                    transition-all
+                  `}
+                >
+                  <p>{unreadNotificationCount >= 100 ? "99+" : unreadNotificationCount}</p>
+                </div>
+              )}
+              <NavbarLink to="/manage/notifications" icon={{ name: IoNotificationsOutline }} />
+            </div>
+          )}
+
+          {/* user entry point */}
           <UserEntryPoint />
         </div>
       </div>

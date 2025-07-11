@@ -44,5 +44,14 @@
   "manage.following.unfollow.modal.title": "取消关注该艺人",
   "manage.following.unfollow.modal.content": "确定要取消关注该艺人吗？你将不再收到该艺人的更新。",
   "manage.following.unfollow.modal.button.submit": "确认取消关注",
-  "manage.following.unfollow.modal.button.cancel": "取消"
+  "manage.following.unfollow.modal.button.cancel": "取消",
+
+  "manage.notification.title": "通知管理",
+  "manage.notification.description": "管理你收到的所有通知",
+  "manage.notification.header.unread.count": "{count} 条未读",
+  "manage.notification.header.button.markAllAsRead": "全部标记为已读",
+  "manage.notification.controlPanel.all": "全部",
+  "manage.notification.controlPanel.monthlyStats": "月度统计",
+  "manage.notification.controlPanel.artistUpdates": "艺人动态",
+  "manage.notification.controlPanel.systemAnnouncements": "系统公告"
 }

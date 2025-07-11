@@ -1,0 +1,188 @@
+[{
+  "_id": {
+    "$oid": "68693247f1f720c5727f8b38"
+  },
+  "user": {
+    "$oid": "67d456398383ed54b105123f"
+  },
+  "createdAt": {
+    "$date": "2025-07-05T14:10:15.493Z"
+  },
+  "stats": [
+    {
+      "songs": [
+        {
+          "song": {
+            "$oid": "67d8ec93d8f69a01d8512bb7"
+          },
+          "totalDuration": 309
+        },
+        {
+          "song": {
+            "$oid": "67e8daaad8a735b80d4ec218"
+          },
+          "totalDuration": 223.91
+        },
+        {
+          "song": {
+            "$oid": "67d45c3a8383ed54b1051276"
+          },
+          "totalDuration": 197.58
+        },
+        {
+          "song": {
+            "$oid": "6805208d7fa3469c9cb850f1"
+          },
+          "totalDuration": 20.62
+        }
+      ],
+      "artists": [
+        {
+          "artist": {
+            "$oid": "67d45c398383ed54b105126c"
+          },
+          "totalDuration": 506.58
+        },
+        {
+          "artist": {
+            "$oid": "67e8daa8d8a735b80d4ec208"
+          },
+          "totalDuration": 223.91
+        },
+        {
+          "artist": {
+            "$oid": "6805208d7fa3469c9cb850ed"
+          },
+          "totalDuration": 20.62
+        }
+      ],
+      "peakHour": [
+        {
+          "hour": 1,
+          "totalDuration": 3.6
+        },
+        {
+          "hour": 2,
+          "totalDuration": 193.69
+        },
+        {
+          "hour": 3,
+          "totalDuration": 3.89
+        },
+        {
+          "hour": 4,
+          "totalDuration": 12.12
+        },
+        {
+          "hour": 5,
+          "totalDuration": 221.07
+        },
+        {
+          "hour": 6,
+          "totalDuration": 295.06
+        },
+        {
+          "hour": 10,
+          "totalDuration": 1.06
+        },
+        {
+          "hour": 12,
+          "totalDuration": 1109.54
+        },
+        {
+          "hour": 13,
+          "totalDuration": 260.81
+        },
+        {
+          "hour": 14,
+          "totalDuration": 3.99
+        }
+      ]
+    }
+  ],
+  "updatedAt": {
+    "$date": "2025-07-05T14:10:15.493Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68693247f1f720c5727f8b39"
+  },
+  "user": {
+    "$oid": "6803caa78298bd83e106a989"
+  },
+  "createdAt": {
+    "$date": "2025-07-05T14:10:15.510Z"
+  },
+  "stats": [
+    {
+      "songs": [
+        {
+          "song": {
+            "$oid": "685bedc0b6b998276c9a0e32"
+          },
+          "totalDuration": 844.77
+        },
+        {
+          "song": {
+            "$oid": "68554c55be2eee5ff61f0716"
+          },
+          "totalDuration": 502.17
+        },
+        {
+          "song": {
+            "$oid": "6805208d7fa3469c9cb850f1"
+          },
+          "totalDuration": 6.78
+        }
+      ],
+      "artists": [
+        {
+          "artist": {
+            "$oid": "68554c55be2eee5ff61f0712"
+          },
+          "totalDuration": 1346.94
+        },
+        {
+          "artist": {
+            "$oid": "6805208d7fa3469c9cb850ed"
+          },
+          "totalDuration": 6.78
+        }
+      ],
+      "peakHour": [
+        {
+          "hour": 2,
+          "totalDuration": 193.69
+        },
+        {
+          "hour": 3,
+          "totalDuration": 3.89
+        },
+        {
+          "hour": 4,
+          "totalDuration": 2.84
+        },
+        {
+          "hour": 5,
+          "totalDuration": 221.07
+        },
+        {
+          "hour": 12,
+          "totalDuration": 1109.54
+        },
+        {
+          "hour": 13,
+          "totalDuration": 260.81
+        },
+        {
+          "hour": 14,
+          "totalDuration": 3.99
+        }
+      ]
+    }
+  ],
+  "updatedAt": {
+    "$date": "2025-07-05T14:10:15.510Z"
+  }
+}]

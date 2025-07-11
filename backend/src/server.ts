@@ -4,9 +4,12 @@ import connectMongoDB from "./config/connect-mongodb.config";
 import { sessionOnlineStatusCheckSchedule } from "./schedules/session-online.schedule";
 import { BACKEND_PORT } from "./constants/env-validate.constant";
 import consoleLogBox from "./utils/console-boxes.util";
+import { createServer } from "http";
+import { initializeSocket } from "./config/socket.config";
 
 const startServer = async () => {
   try {
+    // 1. initialize mongodb connection
     console.log(`\n⏳ Initializing MongoDB connection...\n`);
 
     const db = await connectMongoDB();
@@ -15,7 +18,14 @@ const startServer = async () => {
       throw new Error("Database connection not healthy");
     }
 
-    app.listen(BACKEND_PORT, () => {
+    // 2. initialize socket server
+    console.log(`\n⏳ Initializing Socket server...\n`);
+
+    const server = createServer(app);
+
+    initializeSocket(server);
+
+    server.listen(BACKEND_PORT, () => {
       consoleLogBox(`🚀 Server ready at http://localhost:${BACKEND_PORT}`);
     });
 

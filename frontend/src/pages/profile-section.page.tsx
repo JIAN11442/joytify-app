@@ -123,34 +123,14 @@ const ProfileSectionPage = () => {
           >
             {/* load more */}
             {totalDocs && totalDocs > docs.length && (
-              <button
-                className={`
-                  mt-5
-                  text-sm
-                  text-neutral-100/30
-                  hover:text-neutral-100/50
-                  hover:scale-105
-                  transition
-                `}
-                onClick={() => setPage(page + 1)}
-              >
+              <button className={`load-btn`} onClick={() => setPage(page + 1)}>
                 {profileSectionPageFm("loadMore")}
               </button>
             )}
 
             {/* load less */}
             {page > 1 && docs.length > 0 && (
-              <button
-                className={`
-                  mt-5
-                  text-sm
-                  text-neutral-100/30
-                  hover:text-neutral-100/50
-                  hover:scale-105
-                  transition
-                `}
-                onClick={() => setPage(1)}
-              >
+              <button className={`load-btn`} onClick={() => setPage(1)}>
                 {profileSectionPageFm("loadLess")}
               </button>
             )}

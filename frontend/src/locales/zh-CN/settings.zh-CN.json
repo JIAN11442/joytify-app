@@ -50,12 +50,12 @@
 
   "settings.notifications.title": "通知偏好设置",
   "settings.notifications.description": "管理你想接收哪些平台通知",
-  "settings.notifications.monthlyStatisticsReport.title": "每月统计报告",
-  "settings.notifications.monthlyStatisticsReport.description": "每月接收你的收听活动、播放时间与热门内容摘要",
-  "settings.notifications.followingArtistUpdates.title": "关注艺人更新",
-  "settings.notifications.followingArtistUpdates.description": "接收你关注的艺人最新发行与重要更新通知",
-  "settings.notifications.systemAnnouncements.title": "系统公告",
-  "settings.notifications.systemAnnouncements.description": "掌握系统更新与平台公告等重要信息",
+  "settings.notifications.monthlyStatisticReport.title": "每月统计报告",
+  "settings.notifications.monthlyStatisticReport.description": "每月接收你的收听活动、播放时间与热门内容摘要",
+  "settings.notifications.followingArtistUpdate.title": "关注艺人更新",
+  "settings.notifications.followingArtistUpdate.description": "接收你关注的艺人最新发行与重要更新通知",
+  "settings.notifications.systemAnnouncement.title": "系统公告",
+  "settings.notifications.systemAnnouncement.description": "掌握系统更新与平台公告等重要信息",
 
   "settings.connectedDevices.title": "已连接的设备",
   "settings.connectedDevices.description": "查看和管理您的浏览器设备信息",

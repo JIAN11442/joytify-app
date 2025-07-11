@@ -22,6 +22,7 @@ import MusicianPage from "./pages/musician.page";
 import AlbumPage from "./pages/album.page";
 import SongPage from "./pages/song.page";
 import { setNavigate } from "./lib/navigate.lib";
+import ManageNotificationPage from "./pages/manage-notification.page";
 
 function App() {
   // original navigate function can't be using outside of the component
@@ -56,7 +57,7 @@ function App() {
             <Route path="songs" element={<ManageSongsPage />} />
             <Route path="playlists" element={<ManagePlaylistsPage />} />
             <Route path="following" element={<ManageFollowingPage />} />
-            <Route path="notifications" element={<p>notifications management</p>} />
+            <Route path="notifications" element={<ManageNotificationPage />} />
           </Route>
         </Route>
       </Route>
