@@ -1,0 +1,18 @@
+{
+  "name": "test-data-tools",
+  "version": "1.0.0",
+  "description": "Test data generator for Joytify Lambda functions",
+  "type": "module",
+  "main": "test-data-generator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Joytify Team",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.844.0",
+    "dotenv": "^17.2.0",
+    "mongodb": "^6.17.0"
+  }
+}

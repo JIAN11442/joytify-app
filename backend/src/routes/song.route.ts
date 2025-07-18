@@ -7,6 +7,7 @@ import {
   getSongPlaybackStatsHandler,
   getUserSongsHandler,
   getUserSongsStatsHandler,
+  initializeSongsActivitiesHandler,
   updateSongInfoHandler,
   updateSongPaleteeHandler,
   updateSongPlaybackStatsHandler,
@@ -31,5 +32,6 @@ songRoute.delete("/:id", authenticate, deleteSongByIdHandler);
 songRoute.get("/stats/playback/:id", authenticate, getSongPlaybackStatsHandler); //(*)
 songRoute.patch("/update/activities/:id", authenticate, updateSongPlaybackStatsHandler); //(*)
 songRoute.patch("/paletee", updateSongPaleteeHandler); // (*)
+songRoute.patch("/initialize-activities", initializeSongsActivitiesHandler); // (*)
 
 export default songRoute;

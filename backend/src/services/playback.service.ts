@@ -1,124 +1,85 @@
 import mongoose from "mongoose";
-
 import SongModel from "../models/song.model";
 import HistoryModel from "../models/history.model";
-import PlaybackModel, { PlaybackDocument } from "../models/playback.model";
-
+import PlaybackModel from "../models/playback.model";
+import { trackPlaybackStats } from "./stats.service";
 import { HttpCode } from "@joytify/shared-types/constants";
 import { StorePlaybackLogRequest } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 
-interface UpsertPlaybackLogServiceRequest extends StorePlaybackLogRequest {
+interface CreatePlaybackLogServiceRequest extends StorePlaybackLogRequest {
   userId: string;
 }
 
 const { INTERNAL_SERVER_ERROR } = HttpCode;
 
-// create or update playback logs service
-export const upsertPlaybackLog = async (data: UpsertPlaybackLogServiceRequest) => {
-  const { userId, songId, ...rest } = data;
+export const createPlaybackLog = async (data: CreatePlaybackLogServiceRequest) => {
+  const { userId, songId, duration, state } = data;
 
-  let playbackLog;
-
-  // make sure song exists
   const song = await SongModel.findById(songId);
 
   appAssert(song, INTERNAL_SERVER_ERROR, "Song not found");
 
-  // check if user has playback log
-  const userPlaybackLog: PlaybackDocument = await PlaybackModel.findOne({ user: userId });
+  const artistId = song.artist;
 
-  if (userPlaybackLog) {
-    // Check if the song already exists in the user's playback log
-    const songExists = userPlaybackLog.songs.some(
-      (song) => song.id.toString() === songId.toString()
-    );
+  const playbackLog = await PlaybackModel.create({
+    user: userId,
+    artist: artistId,
+    song: songId,
+    state,
+    duration,
+  });
 
-    if (songExists) {
-      // If song exists, push new stats to the existing song
-      // "$elemMatch" -> find the first song that matches the condition
-      // "$" -> refers to the first song that matches the condition
-      playbackLog = await PlaybackModel.findOneAndUpdate(
-        { user: userId, songs: { $elemMatch: { id: songId } } },
-        { $push: { "songs.$.playbacks": rest } },
-        { new: true }
-      );
+  appAssert(playbackLog, INTERNAL_SERVER_ERROR, "Failed to create playback log");
 
-      appAssert(playbackLog, INTERNAL_SERVER_ERROR, "Failed to record new playback log");
-    } else {
-      // If song does not exist, add new song with stats
-      playbackLog = await PlaybackModel.findOneAndUpdate(
-        { user: userId },
-        {
-          $push: {
-            songs: { id: song.id, artist: song.artist, playbacks: [rest] },
-          },
-        },
-        { new: true }
-      );
-
-      appAssert(playbackLog, INTERNAL_SERVER_ERROR, "Failed to create new song playback log");
-    }
-  } else {
-    // If user does not have a playback log, create a new one
-    playbackLog = await PlaybackModel.create({
-      user: userId,
-      songs: [{ id: song.id, artist: song.artist, playbacks: [rest] }],
-    });
-
-    appAssert(playbackLog, INTERNAL_SERVER_ERROR, "Failed to create a new user playback log");
-  }
+  await trackPlaybackStats({
+    userId,
+    songId,
+    artistId,
+    duration,
+    timestamp: playbackLog.createdAt,
+  });
 
   return { playbackLog };
 };
 
-// get all playback logs service
-export const getAllPlaybackLogs = async () => {
-  const playbackLogs = await PlaybackModel.find({});
-
-  return { playbackLogs };
-};
-
-// get total playback duration and count by song id
-export const getTotalPlaybackDurationAndCount = async (songId: string) => {
+export const getPlaybackStatisticsBySongId = async (songId: string) => {
   const songObjId = new mongoose.Types.ObjectId(songId);
+  const initialResult = { count: 0, totalDuration: 0, durations: [] };
 
-  // stats total playback duration and count by song id
-  const executeAggregateQuery = async (
-    model: mongoose.Model<any>,
-    songId: mongoose.Types.ObjectId
-  ) => {
-    const aggregateQuery = [
-      { $unwind: "$songs" },
-      { $match: { "songs.id": songId } },
-      { $unwind: "$songs.playbacks" },
-      {
-        $group: {
-          _id: null,
-          totalDuration: { $sum: "$songs.playbacks.duration" },
-          count: { $sum: 1 },
-          durations: { $push: "$songs.playbacks.duration" },
-        },
+  const aggregateQuery = [
+    { $match: { song: songObjId } },
+    {
+      $group: {
+        _id: null,
+        count: { $sum: 1 },
+        totalDuration: { $sum: "$duration" },
+        durations: { $push: "$duration" },
       },
-      { $project: { _id: 0, totalDuration: 1, count: 1, durations: 1 } },
-    ];
+    },
+  ];
 
-    const result = await model.aggregate(aggregateQuery);
+  const [playbackResults, historyResults] = await Promise.all([
+    PlaybackModel.aggregate(aggregateQuery),
+    HistoryModel.aggregate(aggregateQuery),
+  ]);
 
-    return result.length > 0 ? result[0] : { totalDuration: 0, count: 0, durations: [] };
-  };
+  const playbackData = playbackResults[0] || initialResult;
+  const historyData = historyResults[0] || initialResult;
 
-  const playbackResult = await executeAggregateQuery(PlaybackModel, songObjId);
-  const historyResult = await executeAggregateQuery(HistoryModel, songObjId);
+  const totalCount = playbackData.count + historyData.count;
+  const totalDuration = playbackData.totalDuration + historyData.totalDuration;
 
-  const totalCount = playbackResult.count + historyResult.count;
-  const totalDuration = playbackResult.totalDuration + historyResult.totalDuration;
-  const durations = [...playbackResult.durations, ...historyResult.durations];
+  if (totalCount === 0) {
+    return { totalDuration: 0, totalCount: 0, weightedAvgDuration: 0 };
+  }
 
-  const weightedAvgDuration = durations.reduce((acc, duration) => {
-    const weight = duration / totalDuration;
-    return acc + duration * weight;
-  }, 0);
+  const allDurations = [...playbackData.durations, ...historyData.durations];
+
+  const weightedAvgDuration =
+    totalDuration > 0
+      ? allDurations.reduce((acc, duration) => acc + duration * duration, 0) / totalDuration
+      : 0;
 
   return { totalDuration, totalCount, weightedAvgDuration };
 };

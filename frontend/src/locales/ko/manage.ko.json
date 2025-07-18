@@ -53,5 +53,22 @@
   "manage.notification.controlPanel.all": "전체",
   "manage.notification.controlPanel.monthlyStats": "월간 통계",
   "manage.notification.controlPanel.artistUpdates": "아티스트 업데이트",
-  "manage.notification.controlPanel.systemAnnouncements": "시스템 공지"
+  "manage.notification.controlPanel.systemAnnouncements": "시스템 공지",
+
+  "manage.notification.list.loadMore": "더 보기",
+  "manage.notification.list.loadLess": "접기",
+  "manage.notification.card.unread": "읽지 않음",
+  "manage.notification.card.monthlyStats.title": "{month} 월간 통계 보고서",
+  "manage.notification.card.artistUpdate.title": "{artist} 이(가) {additionalInfo}로 업데이트됨",
+  "manage.notification.card.artistUpdate.title.additionalInfo.newSong": "신곡",
+  "manage.notification.card.systemAnnouncement.title": "시스템 점검 공지",
+  "manage.notification.card.monthlyStats.description": "이번 달에는 <span>{duration}</span> 동안 음악을 들었습니다",
+  "manage.notification.card.monthlyStats.description.additionalInfo.growth.increase": " 전월 대비 <span>{growthPercentage}%</span> 증가",
+  "manage.notification.card.monthlyStats.description.additionalInfo.growth.decrease": " 전월 대비 <span>{growthPercentage}%</span> 감소",
+  "manage.notification.card.artistUpdate.description": "팔로우한 아티스트 <span>{artist}</span> 에 대해 누군가가 {additionalInfo} 했습니다",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newAlbum": "새 앨범 <span>{album}</span>을 추가했습니다",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "새 노래 <span>{song}</span>을 추가했습니다",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "앨범 <span>{album}</span>에 새 노래 <span>{song}</span>을 추가했습니다",
+  "manage.notification.card.systemAnnouncement.description": "<span>{date}</span> <span>{startTime}</span>부터 <span>{endTime}</span>까지 시스템 점검이 예정되어 있습니다",
+  "manage.notification.list.noNotifications": "알림이 없습니다"
 }

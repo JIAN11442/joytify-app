@@ -1,65 +1,68 @@
 locals {
-    # ========================================
-    # SOURCE DIRECTORY PATHS
-    # ========================================
-    dispatcher_src_dir = "${path.module}/src/dispatcher"
-    stats_src_dir = "${path.module}/src/stats"
-    discord_src_dir = "${path.module}/src/discord"
+  # Source directories
+  monthly_stats_src_dir        = "${path.module}/src/monthly-stats-notification"
+  discord_notification_src_dir = "${path.module}/src/discord-notification"
+  playback_cleanup_src_dir     = "${path.module}/src/playback-data-cleanup"
 
-    # ========================================
-    # LAMBDA PACKAGE OUTPUT PATHS
-    # ========================================
-    dispatcher_output_path = "${local.dispatcher_src_dir}.zip"
-    stats_output_path = "${local.stats_src_dir}.zip"
-    discord_output_path = "${local.discord_src_dir}.zip"
+  # Deployment package outputs
+  monthly_stats_output_path        = "${local.monthly_stats_src_dir}.zip"
+  discord_notification_output_path = "${local.discord_notification_src_dir}.zip"
+  playback_cleanup_output_path     = "${local.playback_cleanup_src_dir}.zip"
 
-    # ========================================
-    # SECRETS & ENVIRONMENT VARIABLES
-    # ========================================
-    secret_data = jsondecode(data.aws_secretsmanager_secret_version.joytify.secret_string)
-    mongodb_connection_string = local.secret_data["MONGODB_CONNECTION_STRING"]
-    discord_webhook_url = local.secret_data["DISCORD_WEBHOOK_URL"]
-    discord_timezone = local.secret_data["DISCORD_TIMEZONE"]
+  # ========================================
+  # SECRETS & ENVIRONMENT VARIABLES
+  # ========================================
+  secret_name               = "MERN_JOYTIFY_ENVS"
+  secret_data               = jsondecode(data.aws_secretsmanager_secret_version.joytify.secret_string)
+  mongodb_connection_string = local.secret_data["MONGODB_CONNECTION_STRING"]
+  discord_webhook_url       = local.secret_data["DISCORD_WEBHOOK_URL"]
+  discord_timezone          = local.secret_data["DISCORD_TIMEZONE"]
 
-    # ========================================
-    # SCHEDULING CONFIGURATION
-    # ========================================
-    stats_period_number = local.secret_data["STATS_PERIOD_NUMBER"]
-    stats_period_unit = local.secret_data["STATS_PERIOD_UNIT"]
+  # ========================================
+  # SCHEDULING CONFIGURATION
+  # ========================================
+  # Schedule mode: "test_auto" or "production"
+  schedule_mode = try(local.secret_data["SCHEDULE_MODE"], "production")
 
-    # ========================================
-    # LAMBDA PERFORMANCE CONFIGURATION
-    # ========================================
-    # Dispatcher: How many records each chunk should contain
-    dispatcher_chunk_size = 2000
-    
-    # Stats Executor: Batch processing configuration
-    stats_executor_batch_size = 100
-    stats_executor_max_concurrent = 15
-    
-    # Lambda timeout and memory settings
-    dispatcher_timeout_seconds = 720
-    executor_timeout_seconds = 600
-    lambda_memory_size_mb = 512
+  # Schedule expressions for different modes
+  test_auto_schedule  = "rate(5 minutes)"   # 測試用自動觸發每5分鐘
+  production_schedule = "cron(0 2 1 * ? *)" # 生產用每月1號凌晨2點 (UTC)
 
-    # ========================================
-    # MONITORING & ALARM CONFIGURATION
-    # ========================================
-    cloudwatch_namespace = "LambdaInitializeErrorMetric"
-    cloudwatch_log_retention_days = 7
-    
-    # Alarm settings
-    alarm_evaluation_periods = 1
-    alarm_period_seconds = 60
-    alarm_statistic = "Sum"
-    alarm_threshold = 1
-    
-    # ========================================
-    # SCHEDULE EXPRESSION
-    # ========================================
-    # Test: Every 5 minutes for testing
-    # Production: Use rate expression based on stats_period_number and stats_period_unit
-    schedule_expression_test = "cron(0,5,10,15,20,25,30,35,40,45,50 * * * ? *)"
-    schedule_expression_production = "rate(${local.stats_period_number} ${local.stats_period_unit})"
+  # Optional weekly cleanup schedule
+  weekly_cleanup_schedule = "cron(0 4 ? * 2 *)" # 每週一凌晨4點清理 (UTC)
+
+  # ========================================
+  # LAMBDA CONFIGURATION
+  # ========================================
+  # Monthly Stats Lambda (notification generation only)
+  monthly_stats_timeout_seconds = 300                    # 5 minutes - reduced since no cleanup
+  monthly_stats_memory_size_mb  = var.lambda_memory_size # Use default Lambda memory size
+
+  # Playback Data Cleanup Lambda
+  playback_cleanup_timeout_seconds = 900                    # 15 minutes for cleanup operations
+  playback_cleanup_memory_size_mb  = var.lambda_memory_size # Use default Lambda memory size
+
+  # Database configuration
+  db_name      = "mern-joytify"
+  test_db_name = "mern-joytify-test"
+
+  # Data cleanup settings
+  cleanup_days = 60 # Keep 60 days of playback data
+
+  # Batch processing settings
+  cleanup_batch_size             = 10000 # Records per batch
+  cleanup_batch_delay_ms         = 100   # Delay between batches (ms)
+  cleanup_timeout_safety_minutes = 14    # Stop processing before Lambda timeout (minutes)
+
+  # ========================================
+  # MONITORING CONFIGURATION
+  # ========================================
+  cloudwatch_log_retention_days = var.cloudwatch_log_retention_days
+
+  # ========================================
+  # SCHEDULE CONFIGURATION
+  # ========================================
+  # Select schedule expression based on mode
+  monthly_stats_schedule_expression = local.schedule_mode == "test_auto" ? local.test_auto_schedule : local.production_schedule
 }
 

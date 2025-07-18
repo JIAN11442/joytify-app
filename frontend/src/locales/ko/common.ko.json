@@ -29,6 +29,10 @@
   "date.format.month": "월",
   "date.format.day": "일",
 
+  "time.unit.seconds": "초",
+  "time.unit.minutes": "분",
+  "time.unit.hours": "시간",
+
   "country.AF": "아프가니스탄",
   "country.AX": "올란드 제도",
   "country.AL": "알바니아",

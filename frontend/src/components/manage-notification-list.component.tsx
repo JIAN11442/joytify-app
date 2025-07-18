@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { IntlShape } from "react-intl";
 import AnimationWrapper from "./animation-wrapper.component";
 import ManageNotificationListCard from "./manage-notification-list-card.component";
+import { NotificationCardListSkeleton } from "./skeleton-loading.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { PaginatedNotificationResponse } from "@joytify/shared-types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
@@ -14,6 +15,7 @@ type NotificationListProps = {
     page: number;
     setPage: (page: number) => void;
   };
+  isPending: boolean;
 };
 
 const ManageNotificationList = ({
@@ -21,7 +23,10 @@ const ManageNotificationList = ({
   intl,
   notifications,
   pageControl,
+  isPending,
 }: NotificationListProps) => {
+  const manageNotificationListFm = fm("manage.notification.list");
+
   const { page, setPage } = pageControl;
 
   const handleLoadMore = useCallback(() => {
@@ -36,7 +41,23 @@ const ManageNotificationList = ({
     });
   }, [page, setPage]);
 
-  if (!notifications) return <p>Loading...</p>;
+  if (isPending) {
+    return <NotificationCardListSkeleton count={3} />;
+  }
+
+  if (!notifications?.docs.length) {
+    return (
+      <p
+        className={`
+          mt-20
+          text-center
+          text-neutral-500
+        `}
+      >
+        {manageNotificationListFm("noNotifications")}
+      </p>
+    );
+  }
 
   const { docs, totalDocs } = notifications;
   const isLoadMore = totalDocs && totalDocs > docs.length;
@@ -49,9 +70,9 @@ const ManageNotificationList = ({
       className={`
         flex
         flex-col
+        gap-10
         items-center
         justify-center
-        gap-10
       `}
     >
       {/* list */}
@@ -64,14 +85,19 @@ const ManageNotificationList = ({
         `}
       >
         {notifications.docs.map((notification, index) => {
-          const { _id } = notification;
+          const { _id, isRead } = notification;
 
           return (
             <AnimationWrapper
               key={`manage-notification-list-${_id}`}
               transition={{ delay: index * 0.2 }}
             >
-              <ManageNotificationListCard fm={fm} intl={intl} notification={notification} />
+              <ManageNotificationListCard
+                fm={fm}
+                intl={intl}
+                notification={notification}
+                className={`${isRead && "opacity-50"}`}
+              />
             </AnimationWrapper>
           );
         })}
@@ -82,7 +108,8 @@ const ManageNotificationList = ({
         className={`
           flex 
           w-full 
-          gap-10 
+          gap-10
+          mb-8
           items-center 
           justify-center
         `}

@@ -29,7 +29,8 @@ const ManageNotificationPage = () => {
   const [selectedNotificationType, setSelectedNotificationType] = useState<NotificationType>(ALL);
 
   const { counts } = useGetUserNotificationCountsQuery();
-  const { notifications, page, setPage } = useGetUserNotificationsQuery(selectedNotificationType);
+  const { notifications, page, setPage, isPending } =
+    useGetUserNotificationsQuery(selectedNotificationType);
 
   const handleActiveOptionsMenu = useCallback(() => {
     timeoutForDelay(() => {
@@ -95,7 +96,7 @@ const ManageNotificationPage = () => {
         />
       </AnimationWrapper>
 
-      {/* messages list */}
+      {/* notification list */}
       <AnimationWrapper
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -106,6 +107,7 @@ const ManageNotificationPage = () => {
           intl={intl}
           notifications={notifications}
           pageControl={{ page, setPage }}
+          isPending={isPending}
         />
       </AnimationWrapper>
     </div>

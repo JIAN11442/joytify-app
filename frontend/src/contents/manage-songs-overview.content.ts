@@ -23,13 +23,13 @@ export const getManageSongsOverviewContent = (
       id: "overview-total-playback-count",
       key: "totalPlaybackCount",
       title: manageSongsOverviewFm("totalPlaybackCount"),
-      unitFormatFn: formatPlaybackCount,
+      unitFormatFn: (duration: number) => formatPlaybackCount(duration),
     },
     {
       id: "overview-total-weighted-playback-duration",
       key: "totalWeightedPlaybackDuration",
       title: manageSongsOverviewFm("totalWeightedPlaybackDuration"),
-      unitFormatFn: formatPlaybackDuration,
+      unitFormatFn: (duration: number) => formatPlaybackDuration({ fm, duration, format: "text" }),
     },
     {
       id: "overview-average-rating",
@@ -39,5 +39,5 @@ export const getManageSongsOverviewContent = (
     },
   ];
 
-  return fields;
+  return fields as ManageSongsOverviewField[];
 };

@@ -29,6 +29,10 @@
   "date.format.month": "月",
   "date.format.day": "日",
 
+  "time.unit.seconds": "秒",
+  "time.unit.minutes": "分钟",
+  "time.unit.hours": "小时",
+
   "country.AF": "阿富汗",
   "country.AX": "奥兰",
   "country.AL": "阿尔巴尼亚",

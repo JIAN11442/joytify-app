@@ -65,7 +65,6 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
           songId: currentSong._id,
           duration: accumulatePlaybackTimeRef.current,
           state: COMPLETED,
-          timestamp: new Date(),
         });
       }
 
@@ -135,7 +134,6 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
           songId: currentSong._id,
           duration: accumulatePlaybackTimeRef.current,
           state: PLAYING,
-          timestamp: new Date(),
         });
       }
 

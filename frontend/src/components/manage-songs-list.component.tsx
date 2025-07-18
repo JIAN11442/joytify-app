@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl";
 
 import ManageSongCard from "./manage-song-card.component";
 import AnimationWrapper from "./animation-wrapper.component";
-import { CardListSkeleton } from "./skeleton-loading.component";
+import { GridCardListSkeleton } from "./skeleton-loading.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
@@ -36,7 +36,7 @@ const ManageSongsList: React.FC<ManageSongsListProps> = ({
   const manageSongsListFm = fm(manageSongsListPrefix);
 
   if (isPending) {
-    return <CardListSkeleton count={2} className={`mt-5`} />;
+    return <GridCardListSkeleton count={2} className={`mt-5`} />;
   }
 
   if (!showSongs) {

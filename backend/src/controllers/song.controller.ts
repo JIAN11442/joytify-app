@@ -12,7 +12,7 @@ import {
   assignSongToPlaylists,
   updateSongInfoById,
 } from "../services/song.service";
-import { getTotalPlaybackDurationAndCount } from "../services/playback.service";
+import { getPlaybackStatisticsBySongId } from "../services/playback.service";
 
 import {
   deleteSongZodSchema,
@@ -156,7 +156,7 @@ export const getSongPlaybackStatsHandler: RequestHandler = async (req, res, next
   try {
     const songId = objectIdZodSchema.parse(req.params.id);
     const { totalCount, totalDuration, weightedAvgDuration } =
-      await getTotalPlaybackDurationAndCount(songId);
+      await getPlaybackStatisticsBySongId(songId);
 
     const averageDuration = parseFloat((totalDuration / totalCount).toFixed(2));
 
@@ -197,6 +197,30 @@ export const updateSongPaleteeHandler: RequestHandler = async (req, res, next) =
     }
 
     return res.status(OK).json({ message: "Update song paletee successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const initializeSongsActivitiesHandler: RequestHandler = async (req, res, next) => {
+  try {
+    await SongModel.updateMany(
+      {},
+      {
+        $set: {
+          ratings: [],
+          activities: {
+            averageRating: 0,
+            totalRatingCount: 0,
+            totalPlaybackCount: 0,
+            totalPlaybackDuration: 0,
+            weightedAveragePlaybackDuration: 0,
+          },
+        },
+      }
+    );
+
+    return res.status(OK).json({ message: "Initialize songs activities successfully" });
   } catch (error) {
     next(error);
   }

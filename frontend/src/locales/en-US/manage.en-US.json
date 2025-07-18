@@ -53,6 +53,7 @@
   "manage.notification.controlPanel.monthlyStats": "Monthly Stats",
   "manage.notification.controlPanel.artistUpdates": "Artist Updates",
   "manage.notification.controlPanel.systemAnnouncements": "System Announcements",
+
   "manage.notification.list.loadMore": "Load more",
   "manage.notification.list.loadLess": "Load less",
   "manage.notification.card.unread": "Unread",
@@ -60,12 +61,13 @@
   "manage.notification.card.artistUpdate.title": "{artist} just got updated with {additionalInfo}",
   "manage.notification.card.artistUpdate.title.additionalInfo.newSong": "a new song",
   "manage.notification.card.systemAnnouncement.title": "System Maintenance Notice",
-  "manage.notification.card.monthlyStats.description": "You listened to <span>{totalHours}</span> hours of music this month",
+  "manage.notification.card.monthlyStats.description": "You listened to <span>{duration}</span> of music this month",
   "manage.notification.card.monthlyStats.description.additionalInfo.growth.increase": ", <span>{growthPercentage}%</span> more than last month",
   "manage.notification.card.monthlyStats.description.additionalInfo.growth.decrease": ", <span>{growthPercentage}%</span> less than last month",
   "manage.notification.card.artistUpdate.description": "A community member just {additionalInfo} for your followed artist <span>{artist}</span>",
   "manage.notification.card.artistUpdate.description.additionalInfo.newAlbum": "added a new album <span>{album}</span>",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "added a new song <span>{song}</span>",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "added a new song <span>{song}</span> to the album <span>{album}</span>",
-  "manage.notification.card.systemAnnouncement.description": "The platform will undergo system maintenance on <span>{date}</span> from <span>{startTime}</span> to <span>{endTime}</span>"
+  "manage.notification.card.systemAnnouncement.description": "The platform will undergo system maintenance on <span>{date}</span> from <span>{startTime}</span> to <span>{endTime}</span>",
+  "manage.notification.list.noNotifications": "No notifications found"
 }

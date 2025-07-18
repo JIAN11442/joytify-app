@@ -53,5 +53,22 @@
   "manage.notification.controlPanel.all": "Semua",
   "manage.notification.controlPanel.monthlyStats": "Statistik Bulanan",
   "manage.notification.controlPanel.artistUpdates": "Kemas Kini Artis",
-  "manage.notification.controlPanel.systemAnnouncements": "Pengumuman Sistem"
+  "manage.notification.controlPanel.systemAnnouncements": "Pengumuman Sistem",
+
+  "manage.notification.list.loadMore": "Muatkan lebih banyak",
+  "manage.notification.list.loadLess": "Tutup",
+  "manage.notification.card.unread": "Belum dibaca",
+  "manage.notification.card.monthlyStats.title": "Laporan Statistik Bulanan {month}",
+  "manage.notification.card.artistUpdate.title": "{artist} baru sahaja dikemas kini dengan {additionalInfo}",
+  "manage.notification.card.artistUpdate.title.additionalInfo.newSong": "lagu baharu",
+  "manage.notification.card.systemAnnouncement.title": "Notis Penyelenggaraan Sistem",
+  "manage.notification.card.monthlyStats.description": "Anda telah mendengar muzik selama <span>{duration}</span> bulan ini",
+  "manage.notification.card.monthlyStats.description.additionalInfo.growth.increase": ", <span>{growthPercentage}%</span> lebih banyak daripada bulan lepas",
+  "manage.notification.card.monthlyStats.description.additionalInfo.growth.decrease": ", <span>{growthPercentage}%</span> kurang daripada bulan lepas",
+  "manage.notification.card.artistUpdate.description": "Ahli komuniti telah {additionalInfo} untuk artis yang anda ikuti <span>{artist}</span>",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newAlbum": "menambah album baharu <span>{album}</span>",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "menambah lagu baharu <span>{song}</span>",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "menambah lagu baharu <span>{song}</span> ke dalam album <span>{album}</span>",
+  "manage.notification.card.systemAnnouncement.description": "Platform akan menjalankan penyelenggaraan sistem pada <span>{date}</span> dari <span>{startTime}</span> hingga <span>{endTime}</span>",
+  "manage.notification.list.noNotifications": "Tiada notifikasi"
 }

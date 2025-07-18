@@ -89,58 +89,66 @@ export const getUserNotificationsByType = async (
 
   const userObjectId = new mongoose.Types.ObjectId(userId);
 
-  // basic aggregation pipeline (get all notifications and filter monthly stats)
+  // basic aggregation pipeline (get all user notifications and filter monthly stats)
   const basePipeline = [
     { $match: { _id: userObjectId } },
     {
       $lookup: {
         from: "notifications",
-        localField: "notifications.read",
-        foreignField: "_id",
-        pipeline: [{ $addFields: { isRead: true } }],
-        as: "readNotifications",
+        let: { readIds: "$notifications.read", unreadIds: "$notifications.unread" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $or: [{ $in: ["$_id", "$$readIds"] }, { $in: ["$_id", "$$unreadIds"] }],
+              },
+            },
+          },
+          {
+            $addFields: {
+              isRead: { $cond: [{ $in: ["$_id", "$$readIds"] }, true, false] },
+            },
+          },
+        ],
+        as: "allNotifications",
       },
     },
+    { $unwind: "$allNotifications" },
+    { $replaceRoot: { newRoot: "$allNotifications" } },
     {
       $lookup: {
-        from: "notifications",
-        localField: "notifications.unread",
-        foreignField: "_id",
-        pipeline: [{ $addFields: { isRead: false } }],
-        as: "unreadNotifications",
-      },
-    },
-    {
-      $project: {
-        allNotifications: {
-          $concatArrays: ["$readNotifications", "$unreadNotifications"],
+        from: "stats",
+        let: {
+          userId: userObjectId,
+          notificationMonth: { $month: "$createdAt" },
+          notificationYear: { $year: "$createdAt" },
         },
+        pipeline: [
+          { $match: { $expr: { $eq: ["$user", "$$userId"] } } },
+          { $unwind: "$stats" },
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: [{ $month: "$stats.createdAt" }, "$$notificationMonth"] },
+                  { $eq: [{ $year: "$stats.createdAt" }, "$$notificationYear"] },
+                ],
+              },
+            },
+          },
+          { $project: { summary: "$stats.summary" } },
+          { $replaceRoot: { newRoot: "$summary" } },
+        ],
+        as: "userMonthlyStats",
       },
-    },
-    {
-      $unwind: "$allNotifications",
-    },
-    {
-      $replaceRoot: { newRoot: "$allNotifications" },
     },
     {
       $addFields: {
         monthlyStatistic: {
           $cond: [
             { $eq: ["$type", MONTHLY_STATISTIC] },
-            {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: "$monthlyStatistics",
-                    as: "item",
-                    cond: { $eq: ["$$item.user", new mongoose.Types.ObjectId(userId)] },
-                  },
-                },
-                0,
-              ],
-            },
-            "$monthlyStatistics",
+            { $arrayElemAt: ["$userMonthlyStats", 0] },
+            null,
           ],
         },
       },

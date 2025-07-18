@@ -29,6 +29,10 @@
   "date.format.month": "MM",
   "date.format.day": "DD",
 
+  "time.unit.seconds": "saat",
+  "time.unit.minutes": "minit",
+  "time.unit.hours": "jam",
+
   "country.AF": "Afghanistan",
   "country.AX": "Kepulauan Aland",
   "country.AL": "Albania",

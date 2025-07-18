@@ -4,19 +4,18 @@ import MusicianModel from "./musician.model";
 import { NotificationTypeOptions } from "@joytify/shared-types/constants";
 import { NotificationType } from "@joytify/shared-types/types";
 
-type MonthlyStats = {
-  user: mongoose.Types.ObjectId;
-  stats: mongoose.Types.ObjectId;
-  month: number;
-  totalHours: number;
-  growthPercentage: number;
-  topArtist: string;
-  topArtistTotalPlaybackTime: number;
-};
+// type MonthlyStats = {
+//   user: mongoose.Types.ObjectId;
+//   stats: mongoose.Types.ObjectId;
+//   month: number;
+//   totalHours: number;
+//   growthPercentage: number;
+//   topArtist: string;
+//   topArtistTotalPlaybackTime: number;
+// };
 
 export interface NotificationDocument extends mongoose.Document {
   type: NotificationType;
-  monthlyStats: MonthlyStats[];
   artistUpdate: {
     artistId: mongoose.Types.ObjectId;
     artistName: string;
@@ -35,23 +34,6 @@ const { FOLLOWING_ARTIST_UPDATE } = NotificationTypeOptions;
 const notificationSchema = new mongoose.Schema<NotificationDocument>(
   {
     type: { type: String, enum: Object.values(NotificationTypeOptions), required: true },
-    monthlyStats: {
-      type: [
-        new mongoose.Schema(
-          {
-            user: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
-            stats: { type: mongoose.Schema.Types.ObjectId, ref: "Stats", index: true },
-            month: { type: Number },
-            totalHours: { type: Number },
-            growthPercentage: { type: Number },
-            topArtist: { type: String },
-            topArtistTotalPlaybackTime: { type: Number },
-          },
-          { timestamps: true }
-        ),
-      ],
-      default: undefined,
-    },
     artistUpdate: {
       artistId: { type: mongoose.Schema.Types.ObjectId, ref: "Musician", index: true },
       artistName: { type: String },

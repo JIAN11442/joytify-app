@@ -1,17 +1,16 @@
 {
-  "name": "dispatcher",
+  "name": "discord-notification",
   "version": "1.0.0",
   "type": "module",
-  "description": "",
+  "description": "Discord webhook notification sender",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Joytify Team",
+  "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.1692.0",
-    "mongodb": "^6.17.0"
+    "axios": "^1.7.9"
   }
 }

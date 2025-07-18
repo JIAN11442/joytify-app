@@ -18,6 +18,13 @@ const ManagePlaylistListCard: React.FC<ManagePlaylistListProps> = ({ fm, playlis
 
   const [isGroupHovered, setIsGroupHovered] = useState<boolean>(false);
 
+  const formattedDuration = formatPlaybackDuration({
+    fm,
+    duration: totalSongDuration,
+    precise: true,
+    format: "text",
+  });
+
   return (
     <div
       onMouseEnter={() => setIsGroupHovered(true)}
@@ -74,7 +81,7 @@ const ManagePlaylistListCard: React.FC<ManagePlaylistListProps> = ({ fm, playlis
           >
             <span>{playlistItemFm("songs.count", { count: totalSongCount })}</span>
             <span>·</span>
-            <span>{formatPlaybackDuration(totalSongDuration, true, "text")}</span>
+            <span>{formattedDuration}</span>
           </p>
         </div>
 

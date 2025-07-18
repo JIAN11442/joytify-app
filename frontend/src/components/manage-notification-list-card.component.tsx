@@ -5,19 +5,22 @@ import ManageNotificationCard from "./manage-notification-card.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { NotificationTypeOptions } from "@joytify/shared-types/constants";
 import { RefactorNotificationResponse } from "@joytify/shared-types/types";
-import { getTimeAgo } from "../utils/get-time.util";
 import useLocaleState from "../states/locale.state";
+import { getTimeAgo } from "../utils/get-time.util";
+import { formatPlaybackDuration } from "../utils/unit-format.util";
 
 type NotificationListCardProps = {
   fm: ScopedFormatMessage;
   intl: IntlShape;
   notification: RefactorNotificationResponse;
+  className?: string;
 };
 
 const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
   fm,
   intl,
   notification,
+  className,
 }) => {
   const notificationControlPanelFm = fm("manage.notification.controlPanel");
   const notificationCardPrefix = "manage.notification.card";
@@ -37,7 +40,7 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
     case MONTHLY_STATISTIC: {
       if (!monthlyStatistic) return null;
 
-      const { month, totalHours, growthPercentage } = monthlyStatistic;
+      const { month, totalDuration, growthPercentage } = monthlyStatistic;
       const tag = notificationControlPanelFm("monthlyStats");
       const title = notificationCardFm("monthlyStats.title", { month });
 
@@ -47,27 +50,32 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
         const isGrowth = growthPercentage > 0;
         const growthType = isGrowth ? "increase" : "decrease";
         const absGrowthPercentage = Math.abs(growthPercentage);
+        const formattedDuration = totalDuration
+          ? formatPlaybackDuration({ fm, duration: totalDuration, format: "text" })
+          : "0s";
 
         return (
           <>
             <FormattedMessage
               id={`${notificationCardPrefix}.monthlyStats.description`}
               values={{
-                totalHours,
+                duration: formattedDuration,
                 span: (chunks: React.ReactNode) => (
-                  <span className={`text-orange-400 font-bold`}>{chunks}</span>
+                  <span className={`text-orange-400 font-bold text-lg`}>{chunks}</span>
                 ),
               }}
             />
-            <FormattedMessage
-              id={`${notificationCardPrefix}.monthlyStats.description.additionalInfo.growth.${growthType}`}
-              values={{
-                growthPercentage: absGrowthPercentage,
-                span: (chunks: React.ReactNode) => (
-                  <span className={`text-orange-400 font-bold`}>{chunks}</span>
-                ),
-              }}
-            />
+            {absGrowthPercentage > 0 && (
+              <FormattedMessage
+                id={`${notificationCardPrefix}.monthlyStats.description.additionalInfo.growth.${growthType}`}
+                values={{
+                  growthPercentage: absGrowthPercentage,
+                  span: (chunks: React.ReactNode) => (
+                    <span className={`text-orange-400 font-bold text-lg`}>{chunks}</span>
+                  ),
+                }}
+              />
+            )}
           </>
         );
       };
@@ -81,6 +89,7 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
           title={title}
           description={<MonthlyStatsDescription />}
           date={localeDateTimeAgo}
+          className={className}
           tw={{ icon: "text-orange-400" }}
         />
       );
@@ -119,11 +128,13 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
                   values={{
                     song: songName,
                     album: albumName,
-                    span: (chunk) => <span className={`text-indigo-400 font-bold`}>{chunk}</span>,
+                    span: (chunk) => (
+                      <span className={`text-indigo-400 font-bold text-lg`}>{chunk}</span>
+                    ),
                   }}
                 />
               ),
-              span: (chunk) => <span className={`text-indigo-400 font-bold`}>{chunk}</span>,
+              span: (chunk) => <span className={`text-indigo-400 font-bold text-lg`}>{chunk}</span>,
             }}
           />
         );
@@ -138,6 +149,7 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
           title={title}
           description={<ArtistUpdateDescription />}
           date={localeDateTimeAgo}
+          className={className}
           tw={{ icon: "text-indigo-400" }}
         />
       );
@@ -173,7 +185,7 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
                 minute: "2-digit",
                 hour12: false,
               }),
-              span: (chunk) => <span className={`text-cyan-400 font-bold`}>{chunk}</span>,
+              span: (chunk) => <span className={`text-cyan-400 font-bold text-lg`}>{chunk}</span>,
             }}
           />
         );
@@ -188,6 +200,7 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
           title={title}
           description={<SystemAnnouncementDescription />}
           date={localeDateTimeAgo}
+          className={className}
           tw={{ icon: "text-cyan-400" }}
         />
       );

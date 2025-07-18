@@ -29,6 +29,10 @@
   "date.format.month": "MM",
   "date.format.day": "DD",
 
+  "time.unit.seconds": "s",
+  "time.unit.minutes": "min",
+  "time.unit.hours": "h",
+
   "country.AF": "Afghanistan",
   "country.AX": "Åland Islands",
   "country.AL": "Albania",

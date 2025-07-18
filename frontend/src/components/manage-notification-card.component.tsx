@@ -1,7 +1,7 @@
+import { twMerge } from "tailwind-merge";
 import { IconBaseProps } from "react-icons";
 import Icon, { IconName } from "./react-icons.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { twMerge } from "tailwind-merge";
 
 type NotificationCardProps = {
   fm: ScopedFormatMessage;
@@ -11,6 +11,7 @@ type NotificationCardProps = {
   title: string;
   description: React.ReactNode;
   date: string;
+  className?: string;
   tw?: { icon?: string };
 };
 
@@ -22,6 +23,7 @@ const ManageNotificationCard: React.FC<NotificationCardProps> = ({
   title,
   description,
   date,
+  className,
   tw,
 }) => {
   const manageNotificationCardFm = fm("manage.notification.card");
@@ -29,7 +31,8 @@ const ManageNotificationCard: React.FC<NotificationCardProps> = ({
 
   return (
     <div
-      className={`
+      className={twMerge(
+        `
         flex
         w-full
         h-full
@@ -45,7 +48,9 @@ const ManageNotificationCard: React.FC<NotificationCardProps> = ({
         cursor-pointer
         rounded-md
         transition-all
-      `}
+      `,
+        className
+      )}
     >
       {/* icon */}
       <Icon name={icon.name} opts={icon.opts} className={twMerge(`shrink-0`, tw?.icon)} />
@@ -89,7 +94,7 @@ const ManageNotificationCard: React.FC<NotificationCardProps> = ({
             )}
           </div>
           {/* date - sm */}
-          <p className={`text-sm text-neutral-500 block max-sm:hidden`}>{date}</p>
+          <p className={`block text-sm text-neutral-500 max-sm:hidden`}>{date}</p>
         </div>
 
         {/* body */}

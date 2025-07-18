@@ -1,18 +1,14 @@
 {
-  "name": "src",
+  "name": "monthly-stats-notification",
   "version": "1.0.0",
   "type": "module",
-  "description": "",
+  "description": "Monthly statistics and notifications generator",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1692.0",
-    "mongodb": "^6.12.0",
-    "p-limit": "^6.2.0"
+    "mongodb": "^6.12.0"
   }
 }
