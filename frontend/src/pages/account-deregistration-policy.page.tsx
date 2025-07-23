@@ -1,10 +1,10 @@
-import logo from "../images/logo-r.png";
+import JoytifyLogoRegistered from "../../public/logos/joytify-logo-registered.png";
 import Modal from "../components/modal.component";
 import Icon from "../components/react-icons.component";
 import LocaleSwitcher from "../components/locale-switcher.component";
+import { getAccountDeregistrationPolicyContents } from "../contents/account-deregistration-policy.content";
 import { useScopedIntl } from "../hooks/intl.hook";
 import useLocaleState from "../states/locale.state";
-import { getAccountDeregistrationPolicyContents } from "../contents/account-deregistration-policy.content";
 
 const AccountDeregistrationPolicyPage = () => {
   const { fm, intl } = useScopedIntl();
@@ -43,7 +43,11 @@ const AccountDeregistrationPolicyPage = () => {
       >
         {/* logo */}
         <div className={`flex justify-center`}>
-          <img src={logo} alt="logo" className={`h-12 md:h-[3.2rem] object-cover`} />
+          <img
+            src={JoytifyLogoRegistered}
+            alt="logo"
+            className={`h-12 md:h-[3.2rem] object-cover`}
+          />
         </div>
 
         {/* title */}

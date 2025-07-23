@@ -4,8 +4,8 @@ import { IoKey } from "react-icons/io5";
 import { MdAlternateEmail } from "react-icons/md";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
-import googleLogo from "../images/google.png";
-import githubLogo from "../images/github.png";
+import googleIcon from "../../public/icons/google.png";
+import githubIcon from "../../public/icons/github.png";
 
 import Loader from "./loader.component";
 import Icon from "./react-icons.component";
@@ -143,7 +143,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
           onClick={() => handleAuthWithThirdParty(GOOGLE)}
           className={`third-party-btn`}
         >
-          <img alt="google logo" src={googleLogo} className={`w-5 h-5`} />
+          <img alt="google logo" src={googleIcon} className={`w-5 h-5`} />
           <p>
             {authFor === SIGN_IN
               ? authFormFm("thirdParty.Google.signIn")
@@ -160,7 +160,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ setModalCloseBtnDisabled }) => {
         >
           <img
             alt="github logo"
-            src={githubLogo}
+            src={githubIcon}
             className={`
               w-6
               h-6

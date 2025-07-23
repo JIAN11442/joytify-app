@@ -12,7 +12,7 @@ type GetNotificationsByTypeRequest = {
   page: number;
 };
 
-export const getUserNotifications = (
+export const getUserNotificationsByType = (
   params: GetNotificationsByTypeRequest
 ): Promise<PaginatedNotificationResponse> => {
   const { type, page } = params;
@@ -20,7 +20,10 @@ export const getUserNotifications = (
   return API.get(`/notification/${type}`, { params: { page } });
 };
 
-export const getUserNotificationCounts = (): Promise<NotificationCountsResponse> =>
+export const getUserUnreadNotificationCount = (): Promise<{ unread: number }> =>
+  API.get("/notification/unread");
+
+export const getUserNotificationTypeCounts = (): Promise<NotificationCountsResponse> =>
   API.get("/notification/counts");
 
 export const createNotification = (

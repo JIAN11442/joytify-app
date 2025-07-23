@@ -3,34 +3,34 @@ import usePlaybackControlState from "../states/playback-control.state";
 import { LoopMode } from "@joytify/shared-types/constants";
 import { Queue } from "@joytify/shared-types/types";
 
-let audio: HTMLAudioElement | null = null;
+let musicAudio: HTMLAudioElement | null = null;
 
-export const getAudioInstance = () => {
-  if (!audio) {
-    audio = new Audio();
+export const getMusicAudioInstance = () => {
+  if (!musicAudio) {
+    musicAudio = new Audio();
     const { audioVolume } = usePlaybackControlState.getState();
 
     // initialize audio volume
     if (isNumber(audioVolume) && isFinite(audioVolume) && audioVolume >= 0 && audioVolume <= 1) {
-      audio.volume = audioVolume;
+      musicAudio.volume = audioVolume;
     } else {
-      audio.volume = 1;
+      musicAudio.volume = 1;
     }
   }
 
-  return audio;
+  return musicAudio;
 };
 
-export const resetAudioInstance = () => {
+export const resetMusicAudioInstance = () => {
   const { setPlaybackQueue, setPlaylistSongs, setIsShuffle, setLoopMode } =
     usePlaybackControlState.getState();
 
-  if (audio) {
-    audio.pause();
-    audio.src = "";
-    audio.currentTime = 0;
-    audio.load();
-    audio = null;
+  if (musicAudio) {
+    musicAudio.pause();
+    musicAudio.src = "";
+    musicAudio.currentTime = 0;
+    musicAudio.load();
+    musicAudio = null;
 
     setPlaybackQueue({ queue: [] as unknown as Queue, currentIndex: 0 });
     setPlaylistSongs([]);

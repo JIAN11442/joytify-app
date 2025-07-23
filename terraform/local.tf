@@ -17,6 +17,8 @@ locals {
   mongodb_connection_string = local.secret_data["MONGODB_CONNECTION_STRING"]
   discord_webhook_url       = local.secret_data["DISCORD_WEBHOOK_URL"]
   discord_timezone          = local.secret_data["DISCORD_TIMEZONE"]
+  internal_api_key          = local.secret_data["INTERNAL_API_KEY"]
+  backend_api_url           = local.secret_data["BACKEND_API_URL"]
 
   # ========================================
   # SCHEDULING CONFIGURATION

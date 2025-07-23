@@ -335,6 +335,7 @@ songSchema.post("save", async function (doc) {
         await NotificationModel.create({
           type: NotificationTypeOptions.FOLLOWING_ARTIST_UPDATE,
           followingArtistUpdate: {
+            uploaderId: creator,
             artistId: song.artist._id,
             artistName: song.artist.name,
             songName: song.title,

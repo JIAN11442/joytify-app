@@ -39,8 +39,8 @@ interface VerifyEmailProps {
 
 const SendImage =
   "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/send-email.png";
-const JoytifyLogo =
-  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/logo-r.png";
+const JoytifyLogoRegistered =
+  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/joytify-logo-registered.png";
 
 export const JoytifyVerificationCodeEmail = (data: VerifyEmailProps) => {
   const { verificationCode } = data;
@@ -64,7 +64,7 @@ export const JoytifyVerificationCodeEmail = (data: VerifyEmailProps) => {
             >
               <tr>
                 <td align="center">
-                  <Img src={JoytifyLogo} width="150" />
+                  <Img src={JoytifyLogoRegistered} width="150" />
                 </td>
               </tr>
             </table>
@@ -83,18 +83,15 @@ export const JoytifyVerificationCodeEmail = (data: VerifyEmailProps) => {
               <Heading style={h1}>Verify your email address</Heading>
 
               <Text style={mainText}>
-                Thanks for starting the new{" "}
-                <span style={spanText}>Joytify</span> account creation process.
-                We want to make sure it's really you. Please verify your account
-                with the code below. If you don&apos;t want to create the
-                account, you can ignore this message.
+                Thanks for starting the new <span style={spanText}>Joytify</span> account creation
+                process. We want to make sure it's really you. Please verify your account with the
+                code below. If you don&apos;t want to create the account, you can ignore this
+                message.
               </Text>
 
               <Section style={verificationSection}>
                 <Text style={codeText}>{verificationCode}</Text>
-                <Text style={validityText}>
-                  (This code is valid for 10 minutes)
-                </Text>
+                <Text style={validityText}>(This code is valid for 10 minutes)</Text>
               </Section>
             </Section>
 
@@ -104,9 +101,8 @@ export const JoytifyVerificationCodeEmail = (data: VerifyEmailProps) => {
             {/* caution */}
             <Section style={lowerSection}>
               <Text style={cautionText}>
-                <span style={spanText}>Joytify</span> will never ask you to
-                reveal or verify your credit card or bank account details via
-                email.
+                <span style={spanText}>Joytify</span> will never ask you to reveal or verify your
+                credit card or bank account details via email.
               </Text>
             </Section>
           </Section>

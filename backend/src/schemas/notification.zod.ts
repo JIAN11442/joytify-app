@@ -33,3 +33,7 @@ export const createNotificationZodSchema = z.object({
     })
     .optional(),
 });
+
+export const triggerNotificationSocketZodSchema = z.object({
+  userIds: z.array(objectIdZodSchema),
+});

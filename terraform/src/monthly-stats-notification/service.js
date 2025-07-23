@@ -68,10 +68,12 @@ const generateMonthlyNotifications = async (
 
   // 保存數據長度用於返回
   const processedUsersCount = monthlyStatsData.length;
+  const socketUserIds = [...userIds];
 
   // 記憶體清理
   monthlyStatsData = null;
   userIds = null;
+
   if (global.gc) {
     global.gc();
     console.log("🗑️ Triggered garbage collection");
@@ -87,7 +89,37 @@ const generateMonthlyNotifications = async (
     usersProcessed: processedUsersCount,
     usersUpdated: updatedUsers,
     notificationId: notification.insertedId,
+    socketUserIds: socketUserIds,
   };
+};
+
+export const triggerSocketNotifications = async (userIds, apiUrl, apiKey) => {
+  if (!userIds?.length || !apiUrl || !apiKey) {
+    console.warn("⚠️ Missing parameters for socket notification");
+    return { success: false, reason: "missing_parameters" };
+  }
+
+  try {
+    const response = await fetch(`${apiUrl}/notification/socket`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+      },
+      body: JSON.stringify({ userIds }),
+    });
+
+    if (response.ok) {
+      console.log(`🔔 Socket notifications triggered for ${userIds.length} users`);
+      return { success: true, count: userIds.length };
+    } else {
+      console.warn(`⚠️ Socket API failed with status: ${response.status}`);
+      return { success: false, status: response.status };
+    }
+  } catch (error) {
+    console.warn("⚠️ Failed to trigger socket notifications:", error.message);
+    return { success: false, error: error.message };
+  }
 };
 
 export { generateMonthlyNotifications };

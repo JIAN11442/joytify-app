@@ -32,7 +32,7 @@ export const getAuthenticatedUserInfoHandler: RequestHandler = async (req, res, 
   try {
     const userId = objectIdZodSchema.parse(req.userId);
 
-    const user = await UserModel.findById(userId).select("profileImage notifications");
+    const user = await UserModel.findById(userId).select("profileImage");
 
     return res.status(OK).json(user);
   } catch (error) {

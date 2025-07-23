@@ -1,81 +1,17 @@
 import mongoose from "mongoose";
 import UserModel from "../models/user.model";
 import NotificationModel from "../models/notification.model";
-import { FETCH_LIMIT_PER_PAGE, PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
+import { FETCH_LIMIT_PER_PAGE } from "../constants/env-validate.constant";
 import { NotificationTypeOptions } from "@joytify/shared-types/constants";
 import {
   CreateNotificationRequest,
   NotificationType,
   PaginationQueryResponse,
 } from "@joytify/shared-types/types";
+import { getSocketServer } from "../config/socket.config";
 
 const { ALL, MONTHLY_STATISTIC, FOLLOWING_ARTIST_UPDATE, SYSTEM_ANNOUNCEMENT } =
   NotificationTypeOptions;
-
-export const getUserNotificationCounts = async (userId: string) => {
-  const counts = await UserModel.aggregate([
-    { $match: { _id: new mongoose.Types.ObjectId(userId) } },
-    {
-      $lookup: {
-        from: "notifications",
-        localField: "notifications.read",
-        foreignField: "_id",
-        as: "readNotifications",
-      },
-    },
-    {
-      $lookup: {
-        from: "notifications",
-        localField: "notifications.unread",
-        foreignField: "_id",
-        as: "unreadNotifications",
-      },
-    },
-    {
-      $project: {
-        allNotifications: {
-          $concatArrays: ["$readNotifications", "$unreadNotifications"],
-        },
-      },
-    },
-    {
-      $unwind: "$allNotifications",
-    },
-    {
-      $group: {
-        _id: null,
-        all: { $sum: 1 },
-        monthlyStatistic: {
-          $sum: { $cond: [{ $eq: ["$allNotifications.type", MONTHLY_STATISTIC] }, 1, 0] },
-        },
-        followingArtistUpdate: {
-          $sum: { $cond: [{ $eq: ["$allNotifications.type", FOLLOWING_ARTIST_UPDATE] }, 1, 0] },
-        },
-        systemAnnouncement: {
-          $sum: { $cond: [{ $eq: ["$allNotifications.type", SYSTEM_ANNOUNCEMENT] }, 1, 0] },
-        },
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-        all: 1,
-        monthlyStatistic: 1,
-        followingArtistUpdate: 1,
-        systemAnnouncement: 1,
-      },
-    },
-  ]);
-
-  return {
-    counts: counts[0] || {
-      all: 0,
-      monthlyStatistic: 0,
-      followingArtistUpdate: 0,
-      systemAnnouncement: 0,
-    },
-  };
-};
 
 export const getUserNotificationsByType = async (
   userId: string,
@@ -84,7 +20,7 @@ export const getUserNotificationsByType = async (
 ) => {
   let docs: PaginationQueryResponse<any> = { docs: [], totalDocs: 0, page: page };
 
-  const load = 3;
+  const load = FETCH_LIMIT_PER_PAGE;
   const fetchLimit = load * page;
 
   const userObjectId = new mongoose.Types.ObjectId(userId);
@@ -183,8 +119,87 @@ export const getUserNotificationsByType = async (
   return { docs };
 };
 
+export const getUserUnreadNotificationCount = async (userId: string) => {
+  const user = await UserModel.findById(userId).select("notifications.unread");
+
+  return user?.notifications.unread.length || 0;
+};
+
+export const getUserNotificationTypeCounts = async (userId: string) => {
+  const counts = await UserModel.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+    {
+      $lookup: {
+        from: "notifications",
+        localField: "notifications.read",
+        foreignField: "_id",
+        as: "readNotifications",
+      },
+    },
+    {
+      $lookup: {
+        from: "notifications",
+        localField: "notifications.unread",
+        foreignField: "_id",
+        as: "unreadNotifications",
+      },
+    },
+    {
+      $project: {
+        allNotifications: {
+          $concatArrays: ["$readNotifications", "$unreadNotifications"],
+        },
+      },
+    },
+    {
+      $unwind: "$allNotifications",
+    },
+    {
+      $group: {
+        _id: null,
+        all: { $sum: 1 },
+        monthlyStatistic: {
+          $sum: { $cond: [{ $eq: ["$allNotifications.type", MONTHLY_STATISTIC] }, 1, 0] },
+        },
+        followingArtistUpdate: {
+          $sum: { $cond: [{ $eq: ["$allNotifications.type", FOLLOWING_ARTIST_UPDATE] }, 1, 0] },
+        },
+        systemAnnouncement: {
+          $sum: { $cond: [{ $eq: ["$allNotifications.type", SYSTEM_ANNOUNCEMENT] }, 1, 0] },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        all: 1,
+        monthlyStatistic: 1,
+        followingArtistUpdate: 1,
+        systemAnnouncement: 1,
+      },
+    },
+  ]);
+
+  return {
+    counts: counts[0] || {
+      all: 0,
+      monthlyStatistic: 0,
+      followingArtistUpdate: 0,
+      systemAnnouncement: 0,
+    },
+  };
+};
+
 export const createNotification = async (params: CreateNotificationRequest) => {
   const notification = await NotificationModel.create(params);
 
   return notification;
+};
+
+export const triggerNotificationSocket = async (userIds: string[]) => {
+  const socket = getSocketServer();
+
+  userIds.forEach((userId) => {
+    socket.to(`user:${userId}`).emit("notification:update");
+  });
 };

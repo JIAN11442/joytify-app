@@ -66,8 +66,7 @@ export enum QueryKey {
   GET_TARGET_MUSICIAN = "get-target-musician",
   GET_FOLLOWING_MUSICIANS = "get-following-musicians",
 
-  GET_USER_UNREAD_NOTIFICATION_COUNT = "get-user-unread-notification-count",
-  GET_USER_NOTIFICATIONS = "get-user-notifications",
   GET_USER_NOTIFICATIONS_BY_TYPE = "get-user-notifications-by-type",
-  GET_USER_NOTIFICATION_COUNTS = "get-user-notification-counts",
+  GET_USER_NOTIFICATION_TYPE_COUNTS = "get-user-notification-type-counts",
+  GET_USER_UNREAD_NOTIFICATION_COUNT = "get-user-unread-notification-count",
 }

@@ -9,12 +9,12 @@ const DISCORD_TIMEZONE =
 // 格式化執行時間為 HH:MM:SS 格式
 const formatExecutionTime = (executionTime) => {
   // 從 "722072ms" 格式中提取毫秒數
-  const ms = parseInt(executionTime.replace('ms', ''));
+  const ms = parseInt(executionTime.replace("ms", ""));
   const totalSeconds = Math.floor(ms / 1000);
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
-  
+
   if (hours > 0) {
     return `${hours}h ${minutes}m ${seconds}s (${executionTime})`;
   } else if (minutes > 0) {
@@ -30,7 +30,7 @@ const formatSnsMessage = (snsMsg, now, cloudWatchLogsUrl) => {
     if (snsMsg.type === "monthly_stats_summary") {
       const data = snsMsg.data;
       const formattedTime = formatExecutionTime(data.executionTime);
-      
+
       return {
         content:
           `## 📊 Monthly Statistics Processed Successfully\n\n` +
@@ -41,26 +41,26 @@ const formatSnsMessage = (snsMsg, now, cloudWatchLogsUrl) => {
           `🧹 **Cleanup Status**: ${data.cleanupTriggered ? "✅ Triggered" : "❌ Failed"}\n` +
           `⏱️ **Execution Time**: ${formattedTime}\n` +
           `🕐 **Completed At**: ${data.timestamp}\n\n` +
-          `📋 [View Detailed Logs](${cloudWatchLogsUrl})`
+          `📋 [View Detailed Logs](${cloudWatchLogsUrl})`,
       };
     }
-    
+
     // 成功的清理處理
     else if (snsMsg.source === "playback-data-cleanup") {
       // 支持新舊兩種消息格式
       const data = snsMsg.data || snsMsg.results;
       const executionTime = data.executionTime || `${data.executionTimeMs}ms`;
       const formattedTime = formatExecutionTime(executionTime);
-      
+
       if (data.success !== false) {
         const isTestMode = data.testMode === true;
         const wasTimeoutStopped = data.wasTimeoutStopped === true;
         const remainingRecords = data.remainingRecords || 0;
         const completionPercentage = data.completionPercentage || 100;
-        
+
         let statusText;
         let titleText;
-        
+
         if (wasTimeoutStopped) {
           statusText = "⏰ Partially Completed (Timeout)";
           titleText = "Playback Data Cleanup Partially Completed";
@@ -71,19 +71,23 @@ const formatSnsMessage = (snsMsg, now, cloudWatchLogsUrl) => {
           statusText = "Completed";
           titleText = "Playback Data Cleanup Completed Successfully";
         }
-        
+
         return {
           content:
             `## 🧹 ${titleText}\n\n` +
             `✅ **Status**: ${statusText}\n` +
             `📦 **Records Deleted**: ${data.recordsDeleted?.toLocaleString() || 0}\n` +
             `📊 **Total Found**: ${data.totalRecordsFound?.toLocaleString() || 0}\n` +
-            (remainingRecords > 0 ? `📋 **Remaining**: ${remainingRecords.toLocaleString()} (${completionPercentage}% complete)\n` : '') +
-            `⚙️ **Processing Mode**: ${data.processingMode || 'unknown'}\n` +
+            (remainingRecords > 0
+              ? `📋 **Remaining**: ${remainingRecords.toLocaleString()} (${completionPercentage}% complete)\n`
+              : "") +
+            `⚙️ **Processing Mode**: ${data.processingMode || "unknown"}\n` +
             `⏱️ **Execution Time**: ${formattedTime}\n` +
             `🕐 **Completed At**: ${snsMsg.timestamp}\n\n` +
-            (wasTimeoutStopped ? `⚠️ **Note**: Process stopped early to prevent timeout. Remaining records will be processed in the next weekly cleanup.\n\n` : '') +
-            `📋 [View Detailed Logs](${cloudWatchLogsUrl})`
+            (wasTimeoutStopped
+              ? `⚠️ **Note**: Process stopped early to prevent timeout. Remaining records will be processed in the next weekly cleanup.\n\n`
+              : "") +
+            `📋 [View Detailed Logs](${cloudWatchLogsUrl})`,
         };
       } else {
         return {
@@ -94,11 +98,11 @@ const formatSnsMessage = (snsMsg, now, cloudWatchLogsUrl) => {
             `⏱️ **Execution Time**: ${formattedTime}\n` +
             `🕐 **Failed At**: ${snsMsg.timestamp}\n\n` +
             `🔧 **Next Steps**: Please check the logs for detailed error information\n` +
-            `📋 [View Error Logs](${cloudWatchLogsUrl})`
+            `📋 [View Error Logs](${cloudWatchLogsUrl})`,
         };
       }
     }
-    
+
     // 錯誤的月度統計處理
     else if (snsMsg.type === "monthly_stats_error") {
       const data = snsMsg.data;
@@ -109,24 +113,24 @@ const formatSnsMessage = (snsMsg, now, cloudWatchLogsUrl) => {
           `⚠️ **Error Message**: \`${data.error}\`\n` +
           `🕐 **Failed At**: ${data.timestamp}\n\n` +
           `🔧 **Next Steps**: Please check the logs for detailed error information\n` +
-          `📋 [View Error Logs](${cloudWatchLogsUrl})`
+          `📋 [View Error Logs](${cloudWatchLogsUrl})`,
       };
     }
-    
+
     // 其他格式的消息（包括 CloudWatch Alarm）
     else {
       // 檢查是否為 CloudWatch Alarm
       const isCloudWatchAlarm = snsMsg.AlarmName && snsMsg.NewStateValue;
-      const title = isCloudWatchAlarm ? 
-        `🚨 CloudWatch Alarm: ${snsMsg.AlarmName}` : 
-        `📢 Lambda Notification`;
-        
+      const title = isCloudWatchAlarm
+        ? `🚨 CloudWatch Alarm: ${snsMsg.AlarmName}`
+        : `📢 Lambda Notification`;
+
       return {
         content:
           `## ${title}\n\n` +
           `**Message**:\n\`\`\`json\n${JSON.stringify(snsMsg, null, 2)}\`\`\`\n\n` +
           `🕐 **Received At**: ${now}\n` +
-          `📋 [View Logs](${cloudWatchLogsUrl})`
+          `📋 [View Logs](${cloudWatchLogsUrl})`,
       };
     }
   } catch (error) {
@@ -136,7 +140,7 @@ const formatSnsMessage = (snsMsg, now, cloudWatchLogsUrl) => {
         `**Error**: \`${error.message}\`\n` +
         `**Raw SNS Message**: \`\`\`json\n${JSON.stringify(snsMsg)}\`\`\`\n\n` +
         `🕐 **Error Time**: ${now}\n` +
-        `📋 [View Logs](${cloudWatchLogsUrl})`
+        `📋 [View Logs](${cloudWatchLogsUrl})`,
     };
   }
 };

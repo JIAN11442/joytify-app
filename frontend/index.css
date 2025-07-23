@@ -112,7 +112,8 @@ body,
   .submit-btn {
     @apply w-[100%]
     p-3
-    border
+    py-2.5
+    text-sm
     bg-green-custom
     border-green-custom/50
     disabled:opacity-80
@@ -121,7 +122,8 @@ body,
     disabled:text-neutral-500
     disabled:border-grey-custom/10
     hover:opacity-80
-    rounded-sm
+    rounded-md
+    border-none
     outline-none
     transition
     shrink-0;
@@ -145,8 +147,6 @@ body,
     w-fit
     px-5
     py-3
-    text-sm
-    rounded-md
     transition-all;
   }
 

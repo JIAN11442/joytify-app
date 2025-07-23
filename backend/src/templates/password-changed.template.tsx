@@ -35,8 +35,8 @@ interface ResetPasswordProps {
 //   ? `https://${import.meta.env.VERCEL_URL}`
 //   : "";
 
-const JoytifyLogo =
-  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/logo-r.png";
+const JoytifyLogoRegistered =
+  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/joytify-logo-registered.png";
 
 export const JoytifyPasswordChangedEmail = (data: ResetPasswordProps) => {
   const { username } = data;
@@ -57,7 +57,7 @@ export const JoytifyPasswordChangedEmail = (data: ResetPasswordProps) => {
             >
               <tr>
                 <td align="center">
-                  <Img src={JoytifyLogo} width="150" />
+                  <Img src={JoytifyLogoRegistered} width="150" />
                 </td>
               </tr>
             </table>
@@ -72,8 +72,8 @@ export const JoytifyPasswordChangedEmail = (data: ResetPasswordProps) => {
 
               {/* main content */}
               <Text style={mainText}>
-                If you didn't request this change, we're here to help secure
-                your account. Please visit our{" "}
+                If you didn't request this change, we're here to help secure your account. Please
+                visit our{" "}
                 <Link href="https://joytify.com/support" style={link}>
                   support page
                 </Link>{" "}
@@ -87,9 +87,8 @@ export const JoytifyPasswordChangedEmail = (data: ResetPasswordProps) => {
             {/* caution */}
             <Section style={lowerSection}>
               <Text style={cautionText}>
-                <span style={spanText}>Joytify</span> will never ask you to
-                reveal or verify your credit card or bank account details via
-                email.
+                <span style={spanText}>Joytify</span> will never ask you to reveal or verify your
+                credit card or bank account details via email.
               </Text>
             </Section>
           </Section>

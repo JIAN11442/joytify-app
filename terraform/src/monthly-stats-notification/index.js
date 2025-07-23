@@ -1,6 +1,6 @@
-import { MongoClient } from "mongodb";
 import AWS from "aws-sdk";
-import { generateMonthlyNotifications } from "./service.js";
+import { MongoClient } from "mongodb";
+import { generateMonthlyNotifications, triggerSocketNotifications } from "./service.js";
 
 const sns = new AWS.SNS();
 
@@ -19,11 +19,12 @@ const handler = async (event) => {
 
   try {
     // 1. 連接 MongoDB
+    console.log("========== PART 1.1: 初始化 ==========");
+
     client = new MongoClient(MONGODB_URI);
     await client.connect();
     const db = client.db(DB_NAME);
 
-    console.log("========== PART 1.1: 初始化 ==========");
     console.log("✅ Connected to MongoDB");
 
     // 2. 獲取當月日期範圍 (使用 UTC 時間)
@@ -33,26 +34,30 @@ const handler = async (event) => {
     const startOfMonth = new Date(Date.UTC(currentYear, currentMonth, 1));
     const startOfNextMonth = new Date(Date.UTC(currentYear, currentMonth + 1, 1));
 
-    console.log("========== PART 1.2: 生成通知 ==========");
-    console.log(
-      `📅 Processing stats for ${currentYear}-${String(currentMonth + 1).padStart(2, "0")}`
-    );
-
     // 3. 獲取所有用戶的當月統計並生成通知
-    const notificationResult = await generateMonthlyNotifications(
-      db,
-      startOfMonth,
-      startOfNextMonth,
-      testMode
-    );
-    console.log(`📮 Generated ${notificationResult.notificationsCreated} monthly notifications`);
-    console.log(
-      `👥 Processed ${notificationResult.usersProcessed} users, updated ${notificationResult.usersUpdated} users`
-    );
+    console.log("========== PART 1.2: 生成通知 ==========");
+    console.log(`📅 Processing stats...`);
 
-    console.log("========== PART 1.3: 觸發數據清理 ==========");
+    const { notificationsCreated, usersProcessed, usersUpdated, notificationId, socketUserIds } =
+      await generateMonthlyNotifications(db, startOfMonth, startOfNextMonth, testMode);
 
-    // 4. 直接觸發 playback cleanup Lambda
+    console.log(`📮 Generated ${notificationsCreated} monthly notifications`);
+    console.log(`👥 Processed ${usersProcessed} users, updated ${usersUpdated} users`);
+
+    // 4. 觸發 Socket 通知
+    console.log("========== PART 1.3: 觸發 Socket 通知 ==========");
+
+    if (usersUpdated > 0 && socketUserIds?.length > 0) {
+      await triggerSocketNotifications(
+        socketUserIds,
+        process.env.BACKEND_API_URL,
+        process.env.INTERNAL_API_KEY
+      );
+    }
+
+    // 5. 直接觸發 playback cleanup Lambda
+    console.log("========== PART 1.4: 觸發數據清理 ==========");
+
     let cleanupTriggered = false;
     try {
       const lambda = new AWS.Lambda();
@@ -78,17 +83,20 @@ const handler = async (event) => {
     const executionTime = Date.now() - startTime;
 
     // 5. 發送執行結果到 SNS (僅通知 Discord)
+    console.log("========== PART 1.5: 發送執行結果到 SNS ==========");
+
     const summaryMessage = {
       source: "monthly-stats-notification",
       type: "monthly_stats_summary",
       data: {
-        notificationsCreated: notificationResult.notificationsCreated,
-        usersProcessed: notificationResult.usersProcessed,
-        usersUpdated: notificationResult.usersUpdated,
+        notificationsCreated,
+        usersProcessed,
+        usersUpdated,
+        notificationId,
         executionTime: `${executionTime}ms`,
         timestamp: new Date().toISOString(),
-        testMode: testMode,
-        cleanupTriggered: cleanupTriggered,
+        testMode,
+        cleanupTriggered,
       },
     };
 

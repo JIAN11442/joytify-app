@@ -12,7 +12,7 @@ import usePlaybackControl from "../hooks/playback-control.hook";
 import { LoopMode } from "@joytify/shared-types/constants";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
 import usePlaybackControlState from "../states/playback-control.state";
-import { resetAudioInstance } from "../lib/audio.lib";
+import { resetMusicAudioInstance } from "../lib/music-audio.lib";
 
 type PlayerOperationProps = {
   song: RefactorSongResponse;
@@ -42,7 +42,7 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, className }) =>
   };
 
   const handleStopAudio = () => {
-    resetAudioInstance();
+    resetMusicAudioInstance();
   };
 
   return (

@@ -11,9 +11,14 @@ import { formatPlaybackDuration } from "../utils/unit-format.util";
 type ManagePlaylistGridCardProps = {
   fm: ScopedFormatMessage;
   playlist: PlaylistResponse;
+  onClick?: () => void;
 };
 
-const ManagePlaylistGridCard: React.FC<ManagePlaylistGridCardProps> = ({ fm, playlist }) => {
+const ManagePlaylistGridCard: React.FC<ManagePlaylistGridCardProps> = ({
+  fm,
+  playlist,
+  onClick,
+}) => {
   const { title, coverImage, stats } = playlist;
   const { totalSongCount, totalSongDuration } = stats;
 
@@ -28,11 +33,12 @@ const ManagePlaylistGridCard: React.FC<ManagePlaylistGridCardProps> = ({ fm, pla
 
   return (
     <div
-      className={`card-wrapper`}
+      onClick={onClick}
       onMouseEnter={() => setIsGroupHovered(true)}
       onMouseLeave={() => setIsGroupHovered(false)}
       onTouchStart={() => setIsGroupHovered(true)}
       onTouchEnd={() => setIsGroupHovered(false)}
+      className={`card-wrapper cursor-pointer`}
     >
       {/* image */}
       <ManagePlaylistCardImage coverImage={coverImage}>

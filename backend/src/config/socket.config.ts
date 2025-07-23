@@ -1,5 +1,5 @@
-import { Socket, Server as SocketIOServer } from "socket.io";
 import { Server as HTTPServer } from "http";
+import { Socket, Server as SocketIOServer } from "socket.io";
 
 import { ORIGIN_APP } from "../constants/env-validate.constant";
 import { AccessTokenSignOptions, verifyToken } from "../utils/jwt.util";
@@ -9,15 +9,17 @@ export interface AuthenticatedSocket extends Socket {
   sessionId?: string;
 }
 
+let socket: SocketIOServer | null = null;
+
 export const initializeSocket = (server: HTTPServer) => {
   try {
     // 1. initialize socket server
-    const io = new SocketIOServer(server, {
+    socket = new SocketIOServer(server, {
       cors: { origin: ORIGIN_APP, methods: ["GET", "POST"], credentials: true },
     });
 
     // 2. authenticate socket connection
-    io.use(async (socket: AuthenticatedSocket, next) => {
+    socket.use(async (socket: AuthenticatedSocket, next) => {
       try {
         // a. get token from handshake by client
         const token =
@@ -53,7 +55,7 @@ export const initializeSocket = (server: HTTPServer) => {
     });
 
     // 3. handle socket connection
-    io.on("connection", (socket: AuthenticatedSocket) => {
+    socket.on("connection", (socket: AuthenticatedSocket) => {
       console.log(`🔌 Socket connected: ${socket.userId} (${socket.id})`);
 
       // a. create user room while client user's socket connect to server(logged in)
@@ -99,4 +101,11 @@ export const initializeSocket = (server: HTTPServer) => {
     console.error("🔴 Socket.io server initialization failed:", error);
     throw error;
   }
+};
+
+export const getSocketServer = (): SocketIOServer => {
+  if (!socket) {
+    throw new Error("Socket.IO server has not been initialized");
+  }
+  return socket;
 };

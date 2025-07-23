@@ -1,6 +1,6 @@
 import { isEqual } from "lodash";
 import { useCallback } from "react";
-import useAudioPlayer from "./audio-player.hook";
+import useMusicAudioPlayer from "./music-audio-player.hook";
 import { LoopMode } from "@joytify/shared-types/constants";
 import {
   Queue,
@@ -18,7 +18,7 @@ interface PlaySongRequest extends PlaybackQueueWithObjects {
 }
 
 const usePlaybackControl = () => {
-  const { play, pause, resume, seek, volume } = useAudioPlayer();
+  const { play, pause, resume, seek, volume } = useMusicAudioPlayer();
   const {
     isShuffle,
     loopMode,

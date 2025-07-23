@@ -11,8 +11,8 @@ import PageSectionTitle from "../components/page-section-title.component";
 import ManageNotificationControlPanel from "../components/manage-notification-control-panel.component";
 import ManageNotificationList from "../components/manage-notification-list.component";
 import {
-  useGetUserNotificationCountsQuery,
-  useGetUserNotificationsQuery,
+  useGetUserNotificationTypeCountsQuery,
+  useGetUserNotificationsByTypeQuery,
 } from "../hooks/notification-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { NotificationTypeOptions } from "@joytify/shared-types/constants";
@@ -28,9 +28,9 @@ const ManageNotificationPage = () => {
   const [activeMenu, setActiveMenu] = useState(false);
   const [selectedNotificationType, setSelectedNotificationType] = useState<NotificationType>(ALL);
 
-  const { counts } = useGetUserNotificationCountsQuery();
+  const { counts } = useGetUserNotificationTypeCountsQuery();
   const { notifications, page, setPage, isPending } =
-    useGetUserNotificationsQuery(selectedNotificationType);
+    useGetUserNotificationsByTypeQuery(selectedNotificationType);
 
   const handleActiveOptionsMenu = useCallback(() => {
     timeoutForDelay(() => {

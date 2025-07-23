@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { BsPeople } from "react-icons/bs";
 import SearchBarInput from "../components/searchbar-input.component";
@@ -6,7 +7,6 @@ import PageSectionTitle from "../components/page-section-title.component";
 import ManageFollowingList from "../components/manage-following-list.component";
 import { useGetFollowingMusiciansQuery } from "../hooks/musician-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { useMemo, useState } from "react";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const ManageFollowingPage = () => {
