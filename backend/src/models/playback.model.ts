@@ -39,7 +39,11 @@ const playbackSchema = new mongoose.Schema<PlaybackDocument>(
       enum: [COMPLETED, PLAYING],
       required: true,
     },
-    duration: { type: Number, required: true },
+    duration: {
+      type: Number,
+      required: true,
+      min: [0.001, "Duration must be greater than 0"],
+    },
   },
   { timestamps: true }
 );

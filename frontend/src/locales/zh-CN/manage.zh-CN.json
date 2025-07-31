@@ -70,5 +70,8 @@
   "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "新增了歌曲 <span>{song}</span>",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "新增了歌曲 <span>{song}</span> 到专辑 <span>{album}</span>",
   "manage.notification.card.systemAnnouncement.description": "平台将于 <span>{date}</span> 从 <span>{startTime}</span> 到 <span>{endTime}</span> 进行系统维护",
-  "manage.notification.list.noNotifications": "暂无通知"
+  "manage.notification.list.noNotifications": "暂无通知",
+
+  "manage.notification.card.menu.markAsRead": "标记为已读",
+  "manage.notification.card.menu.delete": "删除"
 }

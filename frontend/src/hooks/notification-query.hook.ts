@@ -3,12 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getUserNotificationsByType,
   getUserNotificationTypeCounts,
-  getUserUnreadNotificationCount,
+  getUserUnviewedNotificationCount,
 } from "../fetchs/notification.fetch";
+import { useMarkNotificationsAsViewedMutation } from "./notification-mutate.hook";
+import { NotificationTypeOptions } from "@joytify/shared-types/constants";
 import { QueryKey } from "../constants/query-client-key.constant";
 import { NotificationType } from "@joytify/shared-types/types";
-import useUserState from "../states/user.state";
 import useNotificationState from "../states/notification.state";
+import useUserState from "../states/user.state";
 import { playNotificationSound } from "../lib/notification-audio.lib";
 
 const useNotificationCommon = () => {
@@ -19,15 +21,27 @@ const useNotificationCommon = () => {
 };
 
 export const useGetUserNotificationsByTypeQuery = (type: NotificationType, opts: object = {}) => {
+  const { ALL } = NotificationTypeOptions;
+
   const [page, setPage] = useState(1);
   const [isQueryError, setIsQueryError] = useState(false);
+
   const { userId } = useNotificationCommon();
+  const { mutate: markNotificationsAsViewed } = useMarkNotificationsAsViewedMutation();
 
   const { data: notifications, ...rest } = useQuery({
     queryKey: [QueryKey.GET_USER_NOTIFICATIONS_BY_TYPE, userId, page, type],
     queryFn: async () => {
       try {
         const notifications = await getUserNotificationsByType({ type, page });
+        const unviewedNotificationIds = notifications.docs
+          .filter((doc) => doc.viewed === false && doc.type !== ALL && doc.type === type)
+          .map((doc) => doc._id);
+
+        // mark unviewed notifications as viewed
+        if (unviewedNotificationIds.length > 0) {
+          markNotificationsAsViewed(unviewedNotificationIds);
+        }
 
         return notifications;
       } catch (error) {
@@ -45,39 +59,38 @@ export const useGetUserNotificationsByTypeQuery = (type: NotificationType, opts:
   return { notifications, page, setPage, ...rest };
 };
 
-export const useGetUserUnreadNotificationCountQuery = (opts: object = {}) => {
+export const useGetUserUnviewedNotificationCountQuery = (opts: object = {}) => {
   const [isQueryError, setIsQueryError] = useState(false);
   const { userId } = useNotificationCommon();
 
-  const { data: unreadCount, ...rest } = useQuery({
-    queryKey: [QueryKey.GET_USER_UNREAD_NOTIFICATION_COUNT, userId],
+  const { data: unviewedCount, ...rest } = useQuery({
+    queryKey: [QueryKey.GET_USER_UNVIEWED_NOTIFICATION_COUNT, userId],
     queryFn: async () => {
       try {
-        const { unread } = await getUserUnreadNotificationCount();
-
+        const { unviewedCount } = await getUserUnviewedNotificationCount();
         const { shouldPlayNotificationSound, setShouldPlayNotificationSound } =
           useNotificationState.getState();
 
-        // play notification sound if there is unread notification
-        if (shouldPlayNotificationSound && unread !== undefined) {
+        // play notification sound if there is unviewed notification
+        if (shouldPlayNotificationSound && unviewedCount !== undefined) {
           await playNotificationSound();
+
           setShouldPlayNotificationSound(false);
         }
 
-        return unread;
+        return unviewedCount;
       } catch (error) {
         if (error) {
           setIsQueryError(true);
         }
       }
     },
-
     staleTime: Infinity,
     enabled: !!userId && !isQueryError,
     ...opts,
   });
 
-  return { unreadCount, ...rest };
+  return { unviewedCount, ...rest };
 };
 
 export const useGetUserNotificationTypeCountsQuery = (opts: object = {}) => {

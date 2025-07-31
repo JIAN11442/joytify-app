@@ -1,0 +1,22 @@
+{
+  "stats.monthlyStats.title": "{month} 나의 음악 월간 리포트",
+  "stats.monthlyStats.description": "이번 달의 청취 습관을 확인하세요",
+  "stats.monthlyStats.date": "{month} {year}",
+
+  "stats.monthlyStats.overview.totalListeningTime.description": "총 청취 시간",
+  "stats.monthlyStats.overview.growthRate.description": "지난달 대비",
+  "stats.monthlyStats.overview.topArtist.description": "가장 많이 들은 아티스트",
+  "stats.monthlyStats.overview.topSong.description": "가장 많이 들은 곡",
+
+  "stats.monthlyStats.dashboard.24HourListeningPattern.title": "24시간 청취 패턴",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.description": "하루 중 청취 활동",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.xAxis.label": "시간대",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.yAxis.label": "청취 시간 (분)",
+
+  "stats.monthlyStats.dashboard.topTracksBreakdown.title": "상위 5곡 분포",
+  "stats.monthlyStats.dashboard.topTracksBreakdown.description": "당신의 상위 5곡 분포",
+
+  "stats.monthlyStats.leaderboard.songRanking.title": "인기 곡",
+  "stats.monthlyStats.leaderboard.artistRanking.title": "인기 아티스트",
+  "stats.monthlyStats.noData": "데이터 없음"
+}

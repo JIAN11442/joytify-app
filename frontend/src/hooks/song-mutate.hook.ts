@@ -8,10 +8,10 @@ import {
   updateSongPlaylistsAssignment,
 } from "../fetchs/song.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
+import { UpdateSongInfoRequest } from "@joytify/shared-types/types";
 import queryClient from "../config/query-client.config";
 import { navigate } from "../lib/navigate.lib";
 import toast from "../lib/toast.lib";
-import { UpdateSongInfoRequest } from "@joytify/shared-types/types";
 
 type UpdateSongInfoParams = Omit<UpdateSongInfoRequest, "songId">;
 

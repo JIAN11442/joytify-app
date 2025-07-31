@@ -10,6 +10,7 @@ import AnimationWrapper from "../components/animation-wrapper.component";
 import PageSectionTitle from "../components/page-section-title.component";
 import ManageNotificationControlPanel from "../components/manage-notification-control-panel.component";
 import ManageNotificationList from "../components/manage-notification-list.component";
+import { useMarkNotificationsAsReadMutation } from "../hooks/notification-mutate.hook";
 import {
   useGetUserNotificationTypeCountsQuery,
   useGetUserNotificationsByTypeQuery,
@@ -32,6 +33,8 @@ const ManageNotificationPage = () => {
   const { notifications, page, setPage, isPending } =
     useGetUserNotificationsByTypeQuery(selectedNotificationType);
 
+  const { mutate: markNotificationsAsRead } = useMarkNotificationsAsReadMutation();
+
   const handleActiveOptionsMenu = useCallback(() => {
     timeoutForDelay(() => {
       setActiveMenu(!activeMenu);
@@ -43,6 +46,15 @@ const ManageNotificationPage = () => {
       setSelectedNotificationType(type);
     });
   }, []);
+
+  const handleMarkAllAsRead = useCallback(() => {
+    timeoutForDelay(() => {
+      if (!notifications) return;
+
+      const notificationIds = notifications.docs.map((nt) => nt._id);
+      markNotificationsAsRead(notificationIds);
+    });
+  }, [notifications, markNotificationsAsRead]);
 
   return (
     <div className={`settings-page-container`}>
@@ -82,6 +94,7 @@ const ManageNotificationPage = () => {
             <MenuItem
               icon={{ name: IoMdCheckmarkCircleOutline }}
               label={manageNotificationFm("header.button.markAllAsRead")}
+              onClick={handleMarkAllAsRead}
             />
           </Menu>
         </div>

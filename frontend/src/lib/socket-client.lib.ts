@@ -15,7 +15,7 @@ const onNotificationUpdate = async () => {
     predicate: (query) => {
       const queryKey = query.queryKey[0];
       return (
-        queryKey === QueryKey.GET_USER_UNREAD_NOTIFICATION_COUNT ||
+        queryKey === QueryKey.GET_USER_UNVIEWED_NOTIFICATION_COUNT ||
         queryKey === QueryKey.GET_USER_NOTIFICATION_TYPE_COUNTS ||
         queryKey === QueryKey.GET_USER_NOTIFICATIONS_BY_TYPE
       );

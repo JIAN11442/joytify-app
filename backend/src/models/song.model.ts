@@ -277,10 +277,11 @@ songSchema.pre("findOneAndDelete", async function (next) {
 // after created song,...
 songSchema.post("save", async function (doc) {
   const { id, artist, playlistFor, creator, album } = doc;
-  const song = await SongModel.findById(id).populate("artist").populate("album");
+  const song = await SongModel.findById(id);
+  const populatedSong = await SongModel.findById(id).populate("artist").populate("album");
 
   try {
-    if (song) {
+    if (song && populatedSong) {
       // increase count in user's accountInfo and push id to songs
       if (creator) {
         await UserModel.findByIdAndUpdate(creator, {
@@ -331,15 +332,15 @@ songSchema.post("save", async function (doc) {
       await bulkUpdateReferenceArrayFields(song, album, MusicianModel, "albums", "$addToSet");
 
       // create notification template
-      if (song.artist.followers.length > 0) {
+      if (populatedSong.artist?.followers?.length > 0) {
         await NotificationModel.create({
           type: NotificationTypeOptions.FOLLOWING_ARTIST_UPDATE,
           followingArtistUpdate: {
             uploaderId: creator,
-            artistId: song.artist._id,
-            artistName: song.artist.name,
-            songName: song.title,
-            albumName: song?.album?.title,
+            artistId: populatedSong.artist._id,
+            artistName: populatedSong.artist.name,
+            songName: populatedSong.title,
+            albumName: populatedSong?.album?.title,
           },
         });
       }

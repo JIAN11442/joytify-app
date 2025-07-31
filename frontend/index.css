@@ -322,6 +322,17 @@ body,
     transition-all;
   }
 
+  .stats-card-wrapper {
+    @apply flex
+    flex-col
+    w-full
+    p-8
+    gap-5
+    bg-black/30
+    shadow-lg
+    rounded-md;
+  }
+
   .song-card-details {
     @apply text-neutral-300 truncate;
   }
@@ -420,6 +431,10 @@ body,
     caret-transparent
     focus:ring-1
     rounded-md;
+  }
+
+  .hidden-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   .input-slider {

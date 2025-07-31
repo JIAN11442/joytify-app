@@ -70,5 +70,8 @@
   "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "新しい曲 <span>{song}</span> を追加しました",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "アルバム <span>{album}</span> に新しい曲 <span>{song}</span> を追加しました",
   "manage.notification.card.systemAnnouncement.description": "<span>{date}</span> の <span>{startTime}</span> から <span>{endTime}</span> までシステムメンテナンスを実施します",
-  "manage.notification.list.noNotifications": "通知はありません"
+  "manage.notification.list.noNotifications": "通知はありません",
+
+  "manage.notification.card.menu.markAsRead": "既読にする",
+  "manage.notification.card.menu.delete": "削除"
 }

@@ -1,6 +1,7 @@
+import mongoose from "mongoose";
 import StatsModel from "../models/stats.model";
 import MusicianModel from "../models/musician.model";
-import { UserStats } from "@joytify/shared-types/types";
+import { GetMonthlyStatsRequest, UserStats } from "@joytify/shared-types/types";
 
 type StatItem = { [key: string]: any; totalDuration: number; utilization?: number };
 
@@ -22,12 +23,12 @@ type UpdateMonthlyStatsServiceRequest = {
   timestamp: Date;
 };
 
-// 藝術家名稱緩存
+// artist name cache
 const artistNameCache = new Map<string, { name: string; timestamp: number }>();
-const CACHE_DURATION = 30 * 60 * 1000; // 30分鐘
+const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
 
 /**
- * 獲取藝術家名稱（帶緩存）
+ * get artist name (with cache)
  */
 const getArtistName = async (artistId: string): Promise<string> => {
   const cached = artistNameCache.get(artistId);
@@ -47,7 +48,7 @@ const getArtistName = async (artistId: string): Promise<string> => {
 };
 
 /**
- * 計算增長百分比
+ * calculate growth percentage
  */
 const calculateGrowthPercentage = (current: number, previous?: number): number => {
   if (!previous || previous === 0) return 0;
@@ -55,7 +56,7 @@ const calculateGrowthPercentage = (current: number, previous?: number): number =
 };
 
 /**
- * 更新或插入並排序統計項目
+ * update or insert and sort stat item
  */
 const updateOrInsertAndSort = <T extends StatItem>(params: UpdateOrInsertAndSortRequest<T>) => {
   const {
@@ -84,7 +85,7 @@ const updateOrInsertAndSort = <T extends StatItem>(params: UpdateOrInsertAndSort
 };
 
 /**
- * 創建新的月度統計數據
+ * create new month stat
  */
 const createNewMonthStat = async (
   songId: string,
@@ -112,6 +113,7 @@ const createNewMonthStat = async (
     ],
     summary: {
       month: timestamp.getUTCMonth() + 1,
+      year: timestamp.getUTCFullYear(),
       totalDuration: duration,
       growthPercentage,
       topArtist: artistName,
@@ -121,7 +123,7 @@ const createNewMonthStat = async (
 };
 
 /**
- * 更新現有月份的統計數據
+ * update current month stat
  */
 const updateCurrentMonthStat = async (
   currentMonthStat: UserStats,
@@ -168,7 +170,7 @@ const updateCurrentMonthStat = async (
     sortOrder: "asc",
   });
 
-  // 更新 summary
+  // update summary
   const newTotalDuration = currentMonthStat.summary.totalDuration + duration;
   const topArtistId = currentMonthStat.artists[0]?.artist;
   const topArtistName = topArtistId ? await getArtistName(topArtistId) : "Unknown Artist";
@@ -186,7 +188,7 @@ const updateCurrentMonthStat = async (
 };
 
 /**
- * 查找指定日期範圍內的統計數據
+ * find stat in date range
  */
 const findStatInDateRange = (
   stats: UserStats[],
@@ -200,58 +202,41 @@ const findStatInDateRange = (
 };
 
 /**
- * 追蹤播放統計數據
+ * track playback stats with retry logic for version conflicts
  */
 export const trackPlaybackStats = async (params: UpdateMonthlyStatsServiceRequest) => {
   const { userId, songId, artistId, duration, timestamp } = params;
 
-  try {
-    // 1. 計算日期範圍
-    const now = new Date();
-    const previousMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1));
-    const startOfMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
-    const startOfNextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
+  // 1. 計算日期範圍
+  const now = new Date();
+  const previousMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1));
+  const startOfMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+  const startOfNextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
 
-    // 2. 查找用戶的 stats 數據
-    const userStats = await StatsModel.findOne({ user: userId });
+  // 2. 查找用戶的 stats 數據
+  const userStats = await StatsModel.findOne({ user: userId });
 
-    // 2.1. 查詢前一個月的 stats 數據
-    const previousMonthStat = userStats?.stats
-      ? findStatInDateRange(userStats.stats, previousMonth, startOfMonth)
-      : undefined;
+  // 2.1. 查詢前一個月的 stats 數據
+  const previousMonthStat = userStats?.stats
+    ? findStatInDateRange(userStats.stats, previousMonth, startOfMonth)
+    : undefined;
 
-    // 3. 如果存在，那就查詢當月是否紀錄過
-    if (userStats) {
-      const currentMonthStat = findStatInDateRange(userStats.stats, startOfMonth, startOfNextMonth);
+  // 3. 如果存在，那就查詢當月是否紀錄過
+  if (userStats) {
+    const currentMonthStat = findStatInDateRange(userStats.stats, startOfMonth, startOfNextMonth);
 
-      // 3.1. 如果當月已經紀錄過，那就更新當月的 stats 數據
-      if (currentMonthStat) {
-        await updateCurrentMonthStat(
-          currentMonthStat,
-          songId,
-          artistId,
-          duration,
-          timestamp,
-          previousMonthStat
-        );
-      } else {
-        // 3.2. 如果當月還沒紀錄過，那就為這用戶創建一個新的 stats 數據
-        const newMonthStat = await createNewMonthStat(
-          songId,
-          artistId,
-          duration,
-          timestamp,
-          previousMonthStat
-        );
-        userStats.stats.push(newMonthStat);
-      }
-
-      // 3.3. 更新 stats
-      userStats.markModified("stats");
-      await userStats.save();
-    }
-    // 4. 如果不存在，那就為這用戶創建一個新的 stats 數據
-    else {
+    // 3.1. 如果當月已經紀錄過，那就更新當月的 stats 數據
+    if (currentMonthStat) {
+      await updateCurrentMonthStat(
+        currentMonthStat,
+        songId,
+        artistId,
+        duration,
+        timestamp,
+        previousMonthStat
+      );
+    } else {
+      // 3.2. 如果當月還沒紀錄過，那就為這用戶創建一個新的 stats 數據
       const newMonthStat = await createNewMonthStat(
         songId,
         artistId,
@@ -259,21 +244,210 @@ export const trackPlaybackStats = async (params: UpdateMonthlyStatsServiceReques
         timestamp,
         previousMonthStat
       );
-
-      await StatsModel.create({
-        user: userId,
-        stats: [newMonthStat],
-      });
+      userStats.stats.push(newMonthStat);
     }
-  } catch (error) {
-    console.error("Failed to track playback stats:", error);
-    throw new Error(
-      `Failed to track playback stats: ${error instanceof Error ? error.message : "Unknown error"}`
+
+    // 3.3. 更新 stats
+    userStats.markModified("stats");
+    await userStats.save();
+  }
+  // 4. 如果不存在，那就為這用戶創建一個新的 stats 數據
+  else {
+    const newMonthStat = await createNewMonthStat(
+      songId,
+      artistId,
+      duration,
+      timestamp,
+      previousMonthStat
     );
+
+    await StatsModel.create({
+      user: userId,
+      stats: [newMonthStat],
+    });
   }
 };
 
-// 定期清理緩存（每小時）
+export const getMonthlyStats = async (params: GetMonthlyStatsRequest) => {
+  const { userId, yearMonth, timezone } = params;
+  const [year, month] = yearMonth.split("-").map(Number);
+
+  const userStats = await StatsModel.aggregate([
+    { $match: { user: new mongoose.Types.ObjectId(userId) } },
+    { $unwind: "$stats" },
+    {
+      $match: {
+        "stats.summary.year": year,
+        "stats.summary.month": month,
+        createdAt: { $gte: new Date(year, month - 1, 1), $lt: new Date(year, month, 1) },
+      },
+    },
+    // populate songs with artist names while preserving order
+    {
+      $lookup: {
+        from: "songs",
+        let: { songItems: "$stats.songs" },
+        pipeline: [
+          { $match: { $expr: { $in: ["$_id", "$$songItems.song"] } } },
+          {
+            $lookup: {
+              from: "musicians",
+              localField: "artist",
+              foreignField: "_id",
+              as: "artistInfo",
+            },
+          },
+          {
+            $addFields: {
+              artist: { $arrayElemAt: ["$artistInfo.name", 0] },
+              totalDuration: {
+                $let: {
+                  vars: {
+                    matchedSong: {
+                      $arrayElemAt: [
+                        {
+                          $filter: { input: "$$songItems", cond: { $eq: ["$$this.song", "$_id"] } },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                  in: "$$matchedSong.totalDuration",
+                },
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              artist: 1,
+              imageUrl: 1,
+              totalDuration: 1,
+              paletee: 1,
+            },
+          },
+        ],
+        as: "populatedSongs",
+      },
+    },
+    // populate artists while preserving order
+    {
+      $lookup: {
+        from: "musicians",
+        let: { artistItems: "$stats.artists" },
+        pipeline: [
+          { $match: { $expr: { $in: ["$_id", "$$artistItems.artist"] } } },
+          {
+            $addFields: {
+              totalDuration: {
+                $let: {
+                  vars: {
+                    matchedArtist: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$$artistItems",
+                            cond: { $eq: ["$$this.artist", "$_id"] },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                  in: "$$matchedArtist.totalDuration",
+                },
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              name: 1,
+              roles: 1,
+              coverImage: 1,
+              totalDuration: 1,
+            },
+          },
+        ],
+        as: "populatedArtists",
+      },
+    },
+    // reorder populated data to match original order
+    {
+      $addFields: {
+        "stats.songs": {
+          $map: {
+            input: "$stats.songs",
+            as: "songItem",
+            in: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$populatedSongs",
+                    cond: { $eq: ["$$this._id", "$$songItem.song"] },
+                  },
+                },
+                0,
+              ],
+            },
+          },
+        },
+        "stats.artists": {
+          $map: {
+            input: "$stats.artists",
+            as: "artistItem",
+            in: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$populatedArtists",
+                    cond: { $eq: ["$$this._id", "$$artistItem.artist"] },
+                  },
+                },
+                0,
+              ],
+            },
+          },
+        },
+      },
+    },
+    {
+      $replaceRoot: { newRoot: "$stats" },
+    },
+  ]);
+
+  const result = userStats[0] || null;
+
+  // 如果提供了時區，轉換 peakHour 的 UTC 小時為當地時間
+  if (result && timezone) {
+    result.peakHour = result.peakHour.map(
+      (peakHour: { hour: number; totalDuration: number; utilization: number }) => {
+        // 創建一個 UTC 時間對象，然後轉換為指定時區
+        const utcDate = new Date();
+        utcDate.setUTCHours(peakHour.hour, 0, 0, 0);
+
+        // 使用 Intl.DateTimeFormat 來獲取指定時區的小時
+        const localHour = new Intl.DateTimeFormat("en-US", {
+          timeZone: timezone,
+          hour: "numeric",
+          hour12: false,
+        })
+          .formatToParts(utcDate)
+          .find((part) => part.type === "hour")?.value;
+
+        return {
+          ...peakHour,
+          hour: parseInt(localHour || peakHour.hour.toString(), 10),
+        };
+      }
+    );
+  }
+
+  return result;
+};
+
+// clear artist name cache every hour
 setInterval(
   () => {
     const now = Date.now();

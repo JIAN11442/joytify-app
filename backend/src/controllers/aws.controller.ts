@@ -2,9 +2,9 @@ import { RequestHandler } from "express";
 
 import { awsFileUrlZodSchema, awsSignedZodSchema } from "../schemas/aws.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
-import appAssert from "../utils/app-assert.util";
-import awsUrlParser from "../utils/aws-url-parser.util";
 import { deleteAwsFileUrl, generateUploadUrl } from "../utils/aws-s3-url.util";
+import awsUrlParser from "../utils/aws-url-parser.util";
+import appAssert from "../utils/app-assert.util";
 
 const { OK, CREATED, INTERNAL_SERVER_ERROR } = HttpCode;
 

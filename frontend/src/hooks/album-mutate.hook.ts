@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { createAlbum, deleteAlbum, removeAlbum } from "../fetchs/album.fetch";
+import { createAlbum, removeAlbum } from "../fetchs/album.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import queryClient from "../config/query-client.config";
 import toast from "../lib/toast.lib";
@@ -53,34 +53,6 @@ export const useRemoveAlbumMutation = (opts: object = {}) => {
 
       // display success message
       toast.success(`"${title}" already removed`);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-    ...opts,
-  });
-
-  return mutation;
-};
-
-// delete album mutation(*)
-export const useDeleteAlbumMutation = (opts: object = {}) => {
-  const mutation = useMutation({
-    mutationKey: [MutationKey.DELETE_ALBUM_OPTION],
-    mutationFn: deleteAlbum,
-    onSuccess: (data) => {
-      const { title } = data;
-
-      // refetch get albums query
-      queryClient.invalidateQueries({
-        predicate: (query) => {
-          const queryKey = query.queryKey[0];
-          return queryKey === QueryKey.GET_USER_ALBUMS;
-        },
-      });
-
-      // display success message
-      toast.success(`"${title}" already deleted`);
     },
     onError: (error) => {
       toast.error(error.message);

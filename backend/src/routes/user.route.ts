@@ -12,12 +12,12 @@ import authenticate from "../middlewares/authenticate.middleware";
 
 const userRoute = Router();
 
-// prefix: /user
+// prefix: /users
 userRoute.get("/authenticated", authenticate, getAuthenticatedUserInfoHandler);
 userRoute.get("/profile", authenticate, getProfileUserInfoHandler);
 userRoute.get("/profile/:collection", authenticate, getProfileCollectionsInfoHandler);
 
-userRoute.patch("/update", authenticate, updateUserHandler);
+userRoute.patch("/", authenticate, updateUserHandler);
 userRoute.patch("/password/reset/:token", resetPasswordHandler);
 userRoute.patch("/password/change", authenticate, changePasswordHandler);
 

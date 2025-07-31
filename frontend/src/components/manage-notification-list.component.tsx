@@ -85,19 +85,14 @@ const ManageNotificationList = ({
         `}
       >
         {notifications.docs.map((notification, index) => {
-          const { _id, isRead } = notification;
+          const { _id } = notification;
 
           return (
             <AnimationWrapper
               key={`manage-notification-list-${_id}`}
               transition={{ delay: index * 0.2 }}
             >
-              <ManageNotificationListCard
-                fm={fm}
-                intl={intl}
-                notification={notification}
-                className={`${isRead && "opacity-50"}`}
-              />
+              <ManageNotificationListCard fm={fm} intl={intl} notification={notification} />
             </AnimationWrapper>
           );
         })}

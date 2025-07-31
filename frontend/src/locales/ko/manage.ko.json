@@ -70,5 +70,8 @@
   "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "새 노래 <span>{song}</span>을 추가했습니다",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "앨범 <span>{album}</span>에 새 노래 <span>{song}</span>을 추가했습니다",
   "manage.notification.card.systemAnnouncement.description": "<span>{date}</span> <span>{startTime}</span>부터 <span>{endTime}</span>까지 시스템 점검이 예정되어 있습니다",
-  "manage.notification.list.noNotifications": "알림이 없습니다"
+  "manage.notification.list.noNotifications": "알림이 없습니다",
+
+  "manage.notification.card.menu.markAsRead": "읽은 상태로 표시",
+  "manage.notification.card.menu.delete": "삭제"
 }

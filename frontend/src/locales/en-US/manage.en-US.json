@@ -69,5 +69,8 @@
   "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "added a new song <span>{song}</span>",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "added a new song <span>{song}</span> to the album <span>{album}</span>",
   "manage.notification.card.systemAnnouncement.description": "The platform will undergo system maintenance on <span>{date}</span> from <span>{startTime}</span> to <span>{endTime}</span>",
-  "manage.notification.list.noNotifications": "No notifications found"
+  "manage.notification.list.noNotifications": "No notifications found",
+
+  "manage.notification.card.menu.markAsRead": "Mark as read",
+  "manage.notification.card.menu.delete": "Delete"
 }

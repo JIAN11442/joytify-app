@@ -1,3 +1,7 @@
+import { API_ENDPOINTS } from "@joytify/shared-types/constants";
+
+const { NOTIFICATIONS } = API_ENDPOINTS;
+
 // 生成月報通知 - 高效聚合處理
 const generateMonthlyNotifications = async (
   db,
@@ -6,9 +10,9 @@ const generateMonthlyNotifications = async (
   testMode = false
 ) => {
   // 測試模式使用 test 集合
+  const usersCollection = db.collection(testMode ? "test-users" : "users");
   const statsCollection = db.collection(testMode ? "test-stats" : "stats");
   const notificationsCollection = db.collection(testMode ? "test-notifications" : "notifications");
-  const usersCollection = db.collection(testMode ? "test-users" : "users");
 
   console.log("========== PART 1.2.1: 聚合統計數據 ==========");
   console.log("📊 Processing monthly notifications...");
@@ -59,7 +63,7 @@ const generateMonthlyNotifications = async (
       _id: { $in: userIds },
       "userPreferences.notifications.monthlyStatistic": true,
     },
-    { $push: { "notifications.unread": notification.insertedId } }
+    { $addToSet: { notifications: { id: notification.insertedId, viewed: false, read: false } } }
   );
 
   const results = [updateResult.modifiedCount];
@@ -100,7 +104,7 @@ export const triggerSocketNotifications = async (userIds, apiUrl, apiKey) => {
   }
 
   try {
-    const response = await fetch(`${apiUrl}/notification/socket`, {
+    const response = await fetch(`${apiUrl}${NOTIFICATIONS}/socket`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

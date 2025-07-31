@@ -50,7 +50,7 @@ const SongList: React.FC<SongListProps> = ({ songs, paletee, switchFunc = true }
   const showArtist = switchFunc && songListArrangementType === COMPACT;
 
   return (
-    <div className={`overflow-x-auto`}>
+    <div className={`overflow-x-auto hidden-scrollbar`}>
       <table className={`min-w-full text-sm text-left`}>
         {/* header */}
         <thead>

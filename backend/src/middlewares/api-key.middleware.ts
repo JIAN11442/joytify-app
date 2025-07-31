@@ -1,18 +1,18 @@
 import { RequestHandler } from "express";
-import { INTERNAL_API_KEY } from "../constants/env-validate.constant";
+import { INTERNAL_API_KEY, ADMIN_API_KEY } from "../constants/env-validate.constant";
 import { HttpCode } from "@joytify/shared-types/constants";
 import appAssert from "../utils/app-assert.util";
 
 const { UNAUTHORIZED } = HttpCode;
 
-const apiKeyValidate: RequestHandler = (req, res, next) => {
+export const internalApiKeyValidate: RequestHandler = (req, res, next) => {
   try {
     const apiKey = req.headers["x-api-key"] as string;
     const expectedApiKey = INTERNAL_API_KEY;
 
-    appAssert(apiKey, UNAUTHORIZED, "API key is required");
+    appAssert(apiKey, UNAUTHORIZED, "Internal API key is required");
     appAssert(expectedApiKey, UNAUTHORIZED, "Internal API key not configured");
-    appAssert(apiKey === expectedApiKey, UNAUTHORIZED, "Invalid API key");
+    appAssert(apiKey === expectedApiKey, UNAUTHORIZED, "Invalid internal API key");
 
     req.internalApiKey = apiKey;
 
@@ -22,4 +22,19 @@ const apiKeyValidate: RequestHandler = (req, res, next) => {
   }
 };
 
-export default apiKeyValidate;
+export const adminApiKeyValidate: RequestHandler = (req, res, next) => {
+  try {
+    const apiKey = req.headers["x-api-key"] as string;
+    const expectedApiKey = ADMIN_API_KEY;
+
+    appAssert(apiKey, UNAUTHORIZED, "Admin API key is required");
+    appAssert(expectedApiKey, UNAUTHORIZED, "Admin API key not configured");
+    appAssert(apiKey === expectedApiKey, UNAUTHORIZED, "Invalid admin API key");
+
+    req.adminApiKey = apiKey;
+
+    return next();
+  } catch (error) {
+    next(error);
+  }
+};

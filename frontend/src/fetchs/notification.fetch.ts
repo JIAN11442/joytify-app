@@ -1,7 +1,6 @@
+import { API_ENDPOINTS } from "@joytify/shared-types/constants";
 import {
   NotificationType,
-  CreateNotificationRequest,
-  NotificationResponse,
   NotificationCountsResponse,
   PaginatedNotificationResponse,
 } from "@joytify/shared-types/types";
@@ -12,20 +11,27 @@ type GetNotificationsByTypeRequest = {
   page: number;
 };
 
+const { NOTIFICATIONS } = API_ENDPOINTS;
+
 export const getUserNotificationsByType = (
   params: GetNotificationsByTypeRequest
 ): Promise<PaginatedNotificationResponse> => {
   const { type, page } = params;
 
-  return API.get(`/notification/${type}`, { params: { page } });
+  return API.get(`${NOTIFICATIONS}/${type}`, { params: { page } });
 };
 
-export const getUserUnreadNotificationCount = (): Promise<{ unread: number }> =>
-  API.get("/notification/unread");
+export const getUserUnviewedNotificationCount = (): Promise<{ unviewedCount: number }> =>
+  API.get(`${NOTIFICATIONS}/unviewed`);
 
 export const getUserNotificationTypeCounts = (): Promise<NotificationCountsResponse> =>
-  API.get("/notification/counts");
+  API.get(`${NOTIFICATIONS}/counts`);
 
-export const createNotification = (
-  params: CreateNotificationRequest
-): Promise<NotificationResponse> => API.post("/", params);
+export const markNotificationsAsViewed = (notificationIds: string[]) =>
+  API.patch(`${NOTIFICATIONS}/mark-viewed`, { notificationIds });
+
+export const markNotificationsAsRead = (notificationIds: string[]) =>
+  API.patch(`${NOTIFICATIONS}/mark-read`, { notificationIds });
+
+export const deleteTargetNotification = (notificationId: string) =>
+  API.delete(`${NOTIFICATIONS}/${notificationId}`);

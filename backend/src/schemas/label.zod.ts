@@ -4,7 +4,7 @@ import { stringZodSchema } from "./util.zod";
 
 export const defaultLabelZodSchema = z.object({
   type: z.nativeEnum(LabelOptions),
-  createIfAbsent: z.boolean().optional(),
+  createIfAbsent: z.coerce.boolean().optional(),
 });
 
 export const createLabelZodSchema = defaultLabelZodSchema.extend({
@@ -30,7 +30,7 @@ export const getLabelsZodSchema = z.object({
 });
 
 export const getLabelIdZodSchema = defaultLabelZodSchema.extend({
-  default: z.boolean().optional(),
+  default: z.coerce.boolean().optional(),
   label: stringZodSchema.min(0),
 });
 

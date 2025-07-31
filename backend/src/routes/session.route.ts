@@ -10,8 +10,8 @@ const sessionRoute = Router();
 
 // prefix: /session
 sessionRoute.get("/", getUserSessionsHandler);
-sessionRoute.delete("/:id", deleteSessionByIdHandler);
-sessionRoute.delete("/sign-out-all", deleteUserSessionsHandler);
 sessionRoute.patch("/heartbeat", touchSessionHeartBeatHandler);
+sessionRoute.delete("/", deleteUserSessionsHandler);
+sessionRoute.delete("/:id", deleteSessionByIdHandler);
 
 export default sessionRoute;

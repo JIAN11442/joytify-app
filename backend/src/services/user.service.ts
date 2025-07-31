@@ -269,7 +269,7 @@ export const updateUserPassword = async (params: UpdatePasswordServiceRequest) =
   const content = JoytifyPasswordChangedEmail({ username });
   const subject = "Your Joytify password has been changed";
 
-  // await sendEmail({ to: user.email, subject, content });
+  await sendEmail({ to: user.email, subject, content });
 
   return { updatedUser: user.omitPassword() };
 };

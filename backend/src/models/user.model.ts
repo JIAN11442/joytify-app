@@ -31,6 +31,12 @@ import { compareHashValue, hashValue } from "../utils/bcrypt.util";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 import appAssert from "../utils/app-assert.util";
 
+type UserNotification = {
+  id: mongoose.Types.ObjectId;
+  viewed: boolean;
+  read: boolean;
+};
+
 export interface UserDocument extends mongoose.Document {
   email: string;
   password: string;
@@ -43,11 +49,7 @@ export interface UserDocument extends mongoose.Document {
   songs: mongoose.Types.ObjectId[];
   albums: mongoose.Types.ObjectId[];
   following: mongoose.Types.ObjectId[];
-  notifications: {
-    read: mongoose.Types.ObjectId[];
-    unread: mongoose.Types.ObjectId[];
-    deleted: mongoose.Types.ObjectId[];
-  };
+  notifications: UserNotification[];
   accountInfo: {
     totalPlaylists: number;
     totalSongs: number;
@@ -123,23 +125,14 @@ const userSchema = new mongoose.Schema<UserDocument>(
       ref: "Musician",
       index: true,
     },
-    notifications: {
-      read: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "Notification",
-        index: true,
+    notifications: [
+      {
+        id: { type: mongoose.Schema.Types.ObjectId, ref: "Notification", index: true },
+        viewed: { type: Boolean, default: false },
+        read: { type: Boolean, default: false },
+        _id: false,
       },
-      unread: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "Notification",
-        index: true,
-      },
-      deleted: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "Notification",
-        index: true,
-      },
-    },
+    ],
     accountInfo: {
       totalPlaylists: { type: Number, default: 0 },
       totalSongs: { type: Number, default: 0 },

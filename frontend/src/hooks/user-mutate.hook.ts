@@ -13,55 +13,12 @@ import {
   UpdateUserInfoRequest,
   UserResponse,
 } from "@joytify/shared-types/types";
-import useSettingsState from "../states/settings.state";
 import useUserState from "../states/user.state";
+import useSettingsState from "../states/settings.state";
 import queryClient from "../config/query-client.config";
 import toast from "../lib/toast.lib";
 
 const { SUCCESS, FAILURE } = PasswordUpdateStatus;
-
-// reset user password mutation
-export const useResetPasswordMutation = (opts: object = {}) => {
-  const { setPasswordResetStatus } = useUserState();
-
-  const mutation = useMutation({
-    mutationKey: [MutationKey.RESET_USER_PASSWORD],
-    mutationFn: resetUserPassword,
-    onSuccess: () => {
-      setPasswordResetStatus(SUCCESS);
-    },
-    onError: (error) => {
-      if (error) {
-        setPasswordResetStatus(FAILURE);
-      }
-    },
-    ...opts,
-  });
-
-  return mutation;
-};
-
-// change user password mutation
-export const useChangePasswordMutation = (opts: object = {}) => {
-  const { setPasswordChangeStatus } = useSettingsState();
-
-  const mutation = useMutation({
-    mutationKey: [MutationKey.CHANGE_USER_PASSWORD],
-    mutationFn: changeUserPassword,
-    onSuccess: () => {
-      setPasswordChangeStatus(SUCCESS);
-    },
-    onError: (error) => {
-      if (error) {
-        setPasswordChangeStatus(FAILURE);
-        toast.error(error.message);
-      }
-    },
-    ...opts,
-  });
-
-  return mutation;
-};
 
 type UpdateUserMutation = {
   delay?: number;
@@ -113,6 +70,49 @@ export const useUpdateUserMutation = ({
     },
     onError: (error) => {
       toast.error(error.message);
+    },
+    ...opts,
+  });
+
+  return mutation;
+};
+
+// reset user password mutation
+export const useResetPasswordMutation = (opts: object = {}) => {
+  const { setPasswordResetStatus } = useUserState();
+
+  const mutation = useMutation({
+    mutationKey: [MutationKey.RESET_USER_PASSWORD],
+    mutationFn: resetUserPassword,
+    onSuccess: () => {
+      setPasswordResetStatus(SUCCESS);
+    },
+    onError: (error) => {
+      if (error) {
+        setPasswordResetStatus(FAILURE);
+      }
+    },
+    ...opts,
+  });
+
+  return mutation;
+};
+
+// change user password mutation
+export const useChangePasswordMutation = (opts: object = {}) => {
+  const { setPasswordChangeStatus } = useSettingsState();
+
+  const mutation = useMutation({
+    mutationKey: [MutationKey.CHANGE_USER_PASSWORD],
+    mutationFn: changeUserPassword,
+    onSuccess: () => {
+      setPasswordChangeStatus(SUCCESS);
+    },
+    onError: (error) => {
+      if (error) {
+        setPasswordChangeStatus(FAILURE);
+        toast.error(error.message);
+      }
     },
     ...opts,
   });

@@ -2,6 +2,12 @@
 
 > Infrastructure as Code for Joytify's serverless data processing pipeline with automated statistics and intelligent cleanup
 
+## 📋 Project Documentation
+
+- **🏠 [Main Application](https://github.com/JIAN11442/MERN-Joytify/tree/main)** - Application overview, tech stack, features
+- **🏗️ [Infrastructure Pipeline](./README.md)** - AWS Lambda processing pipeline _(You are here)_
+- **📚 [Shared Types](https://github.com/JIAN11442/joytify-shared-types)** - Shared TypeScript interfaces
+
 ---
 
 ## 📋 Table of Contents

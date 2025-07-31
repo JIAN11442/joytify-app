@@ -7,12 +7,10 @@ import {
   getSongById,
   getUserSongs,
   rateTargetSong,
-  refreshSongPlaybackStats,
   statsUserSongs,
   assignSongToPlaylists,
   updateSongInfoById,
 } from "../services/song.service";
-import { getPlaybackStatisticsBySongId } from "../services/playback.service";
 
 import {
   deleteSongZodSchema,
@@ -24,8 +22,6 @@ import {
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
 import { CreateSongRequest } from "@joytify/shared-types/types";
-import SongModel from "../models/song.model";
-import usePalette from "../hooks/paletee.hook";
 
 const { CREATED, OK } = HttpCode;
 
@@ -136,7 +132,7 @@ export const updateSongPlaylistsAssignmentHandler: RequestHandler = async (req, 
   }
 };
 
-// delete song by id handler(*)
+// delete song by id handler
 export const deleteSongByIdHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
@@ -146,81 +142,6 @@ export const deleteSongByIdHandler: RequestHandler = async (req, res, next) => {
     const deletedSong = await deleteSongById({ userId, songId, shouldDeleteSongs });
 
     return res.status(OK).json(deletedSong);
-  } catch (error) {
-    next(error);
-  }
-};
-
-// get song's playback stats handler(*)
-export const getSongPlaybackStatsHandler: RequestHandler = async (req, res, next) => {
-  try {
-    const songId = objectIdZodSchema.parse(req.params.id);
-    const { totalCount, totalDuration, weightedAvgDuration } =
-      await getPlaybackStatisticsBySongId(songId);
-
-    const averageDuration = parseFloat((totalDuration / totalCount).toFixed(2));
-
-    return res.status(OK).json({
-      totalCount,
-      totalDuration,
-      averageDuration,
-      weightedAvgDuration,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// update song's playback stats handler(*)
-export const updateSongPlaybackStatsHandler: RequestHandler = async (req, res, next) => {
-  try {
-    const songId = objectIdZodSchema.parse(req.params.id);
-
-    const { updatedSong } = await refreshSongPlaybackStats(songId);
-
-    return res.status(OK).json({ updatedSong });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// update song's paletee handler(*)
-export const updateSongPaleteeHandler: RequestHandler = async (req, res, next) => {
-  try {
-    const songs = await SongModel.find({
-      imageUrl: { $exists: true },
-    });
-
-    for (const song of songs) {
-      const paletee = await usePalette(song.imageUrl);
-      await SongModel.findByIdAndUpdate(song._id, { paletee });
-    }
-
-    return res.status(OK).json({ message: "Update song paletee successfully" });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const initializeSongsActivitiesHandler: RequestHandler = async (req, res, next) => {
-  try {
-    await SongModel.updateMany(
-      {},
-      {
-        $set: {
-          ratings: [],
-          activities: {
-            averageRating: 0,
-            totalRatingCount: 0,
-            totalPlaybackCount: 0,
-            totalPlaybackDuration: 0,
-            weightedAveragePlaybackDuration: 0,
-          },
-        },
-      }
-    );
-
-    return res.status(OK).json({ message: "Initialize songs activities successfully" });
   } catch (error) {
     next(error);
   }

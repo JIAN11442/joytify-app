@@ -1,0 +1,557 @@
+[
+  {
+    "_id": {
+      "$oid": "67d4563a8383ed54b1051242"
+    },
+    "user": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "Liked Songs",
+    "description": "All your liked songs will be here",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/liked-song.png",
+    "privacy": "private",
+    "default": true,
+    "paletee": {
+      "vibrant": "#4f1bf4",
+      "darkVibrant": "#22067e",
+      "lightVibrant": "#9498e4",
+      "muted": "#280791",
+      "darkMuted": "#280791",
+      "lightMuted": "#bbd9df"
+    },
+    "songs": [
+      {
+        "$oid": "67d8ec93d8f69a01d8512bb7"
+      }
+    ],
+    "stats": {
+      "totalSongCount": 1,
+      "totalSongDuration": 295.056
+    },
+    "createdAt": {
+      "$date": "2025-03-14T16:15:54.759Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67d45a428383ed54b1051253"
+    },
+    "user": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "Anime",
+    "description": "My Playlist #1",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/playlists/image/wvT_Q-g5ymywY61q4Kq1Z-1741970029764.png",
+    "privacy": "public",
+    "default": false,
+    "paletee": {
+      "vibrant": "#e4974f",
+      "darkVibrant": "#711d4c",
+      "lightVibrant": "#e4bc87",
+      "muted": "#b46c84",
+      "darkMuted": "#352954",
+      "lightMuted": "#ccaab4"
+    },
+    "songs": [
+      {
+        "$oid": "67d45c3a8383ed54b1051276"
+      },
+      {
+        "$oid": "67d8ec93d8f69a01d8512bb7"
+      }
+    ],
+    "stats": {
+      "totalSongCount": 2,
+      "totalSongDuration": 581.906612
+    },
+    "createdAt": {
+      "$date": "2025-03-14T16:33:06.599Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67d6eeb73f16a433b9daeb12"
+    },
+    "user": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "Yuching",
+    "description": "My Playlist #1",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/playlists/image/mLDQAmmjG5WiICOrXDFRb-1742139203329.png",
+    "privacy": "public",
+    "default": false,
+    "paletee": {
+      "vibrant": "#3c70b5",
+      "darkVibrant": "#213d63",
+      "lightVibrant": "#9dbdd6",
+      "muted": "#5e7d9f",
+      "darkMuted": "#36435c",
+      "lightMuted": "#dbcdc1"
+    },
+    "songs": [
+      {
+        "$oid": "67e8daaad8a735b80d4ec218"
+      }
+    ],
+    "stats": {
+      "totalSongCount": 1,
+      "totalSongDuration": 221.074286
+    },
+    "createdAt": {
+      "$date": "2025-03-16T15:31:03.735Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67e136dc3715a7fd61adf063"
+    },
+    "user": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "My Playlist #1",
+    "description": "My Playlist #1",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
+    "privacy": "public",
+    "default": false,
+    "paletee": {
+      "vibrant": "#dc2c1c",
+      "darkVibrant": "#6f140c",
+      "lightVibrant": "#f09189",
+      "muted": "#871b11",
+      "darkMuted": "#060404",
+      "lightMuted": "#871b11"
+    },
+    "songs": [],
+    "stats": {
+      "totalSongCount": 0,
+      "totalSongDuration": 0
+    },
+    "createdAt": {
+      "$date": "2025-03-24T10:41:32.967Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67e136e03715a7fd61adf074"
+    },
+    "user": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "My Playlist #2",
+    "description": "My Playlist #2",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
+    "privacy": "public",
+    "default": false,
+    "paletee": {
+      "vibrant": "#dc2c1c",
+      "darkVibrant": "#6f140c",
+      "lightVibrant": "#f09189",
+      "muted": "#871b11",
+      "darkMuted": "#060404",
+      "lightMuted": "#871b11"
+    },
+    "songs": [],
+    "stats": {
+      "totalSongCount": 0,
+      "totalSongDuration": 0
+    },
+    "createdAt": {
+      "$date": "2025-03-24T10:41:36.466Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67e136e23715a7fd61adf084"
+    },
+    "user": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "My Playlist #3",
+    "description": "My Playlist #3",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
+    "privacy": "public",
+    "default": false,
+    "paletee": {
+      "vibrant": "#dc2c1c",
+      "darkVibrant": "#6f140c",
+      "lightVibrant": "#f09189",
+      "muted": "#871b11",
+      "darkMuted": "#060404",
+      "lightMuted": "#871b11"
+    },
+    "songs": [],
+    "stats": {
+      "totalSongCount": 0,
+      "totalSongDuration": 0
+    },
+    "createdAt": {
+      "$date": "2025-03-24T10:41:38.128Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67e136e53715a7fd61adf0a4"
+    },
+    "user": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "My Playlist #5",
+    "description": "My Playlist #5",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
+    "privacy": "public",
+    "default": false,
+    "paletee": {
+      "vibrant": "#dc2c1c",
+      "darkVibrant": "#6f140c",
+      "lightVibrant": "#f09189",
+      "muted": "#871b11",
+      "darkMuted": "#060404",
+      "lightMuted": "#871b11"
+    },
+    "songs": [],
+    "stats": {
+      "totalSongCount": 0,
+      "totalSongDuration": 0
+    },
+    "createdAt": {
+      "$date": "2025-03-24T10:41:41.378Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67e136e73715a7fd61adf0b4"
+    },
+    "user": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "My Playlist #6",
+    "description": "My Playlist #6",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/playlists/image/p_Xbyr9XV-0WsQlqav_2Y-1743504187475.png",
+    "privacy": "public",
+    "default": false,
+    "paletee": {
+      "vibrant": "#3cc4bc",
+      "darkVibrant": "#0c483d",
+      "lightVibrant": "#88d6f3",
+      "muted": "#609c98",
+      "darkMuted": "#415a64",
+      "lightMuted": "#72aabc"
+    },
+    "songs": [],
+    "stats": {
+      "totalSongCount": 0,
+      "totalSongDuration": 0
+    },
+    "createdAt": {
+      "$date": "2025-03-24T10:41:43.217Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67eb765ebd240d1938814ab6"
+    },
+    "user": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "My Playlist #8",
+    "description": "My Playlist #8",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
+    "privacy": "public",
+    "default": false,
+    "paletee": {
+      "vibrant": "#dc2c1c",
+      "darkVibrant": "#6f140c",
+      "lightVibrant": "#f09189",
+      "muted": "#871b11",
+      "darkMuted": "#060404",
+      "lightMuted": "#871b11"
+    },
+    "songs": [],
+    "stats": {
+      "totalSongCount": 0,
+      "totalSongDuration": 0
+    },
+    "createdAt": {
+      "$date": "2025-04-01T05:15:10.486Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6803caa88298bd83e106a98c"
+    },
+    "user": {
+      "$oid": "6803caa78298bd83e106a989"
+    },
+    "title": "Liked Songs",
+    "description": "All your liked songs will be here",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/liked-song.png",
+    "privacy": "private",
+    "default": true,
+    "paletee": {
+      "vibrant": "#4f1bf4",
+      "darkVibrant": "#22067e",
+      "lightVibrant": "#9498e4",
+      "muted": "#280791",
+      "darkMuted": "#280791",
+      "lightMuted": "#bbd9df"
+    },
+    "songs": [
+      {
+        "$oid": "6805208d7fa3469c9cb850f1"
+      }
+    ],
+    "stats": {
+      "totalSongCount": 1,
+      "totalSongDuration": 221.256
+    },
+    "createdAt": {
+      "$date": "2025-04-19T16:09:12.867Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "681706caa5b1c9e41b32f826"
+    },
+    "user": {
+      "$oid": "681706c9a5b1c9e41b32f823"
+    },
+    "title": "Liked Songs",
+    "description": "All your liked songs will be here",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/liked-song.png",
+    "privacy": "private",
+    "default": true,
+    "paletee": {
+      "vibrant": "#4f1bf4",
+      "darkVibrant": "#22067e",
+      "lightVibrant": "#9498e4",
+      "muted": "#280791",
+      "darkMuted": "#280791",
+      "lightMuted": "#bbd9df"
+    },
+    "songs": [],
+    "stats": {
+      "totalSongCount": 0,
+      "totalSongDuration": 0
+    },
+    "createdAt": {
+      "$date": "2025-05-04T06:18:50.845Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "68551529858871a2b8ed53a7"
+    },
+    "user": {
+      "$oid": "6803caa78298bd83e106a989"
+    },
+    "title": "yuching",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/playlists/image/dFnaaIaHg4mTpIVKK0eD2-1750406494361.png",
+    "privacy": "public",
+    "default": false,
+    "paletee": {
+      "vibrant": "#ba4c17",
+      "darkVibrant": "#812c04",
+      "lightVibrant": "#e49e7f",
+      "muted": "#83765e",
+      "darkMuted": "#355632",
+      "lightMuted": "#ceb196"
+    },
+    "songs": [
+      {
+        "$oid": "685bedc0b6b998276c9a0e32"
+      }
+    ],
+    "stats": {
+      "totalSongCount": 1,
+      "totalSongDuration": 258.024
+    },
+    "createdAt": {
+      "$date": "2025-06-20T08:00:41.151Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "68555874fb654775d8de8493"
+    },
+    "user": {
+      "$oid": "68555873fb654775d8de8490"
+    },
+    "title": "Liked Songs",
+    "description": "All your liked songs will be here",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/liked-song.png",
+    "privacy": "private",
+    "default": true,
+    "paletee": {
+      "vibrant": "#4f1bf4",
+      "darkVibrant": "#22067e",
+      "lightVibrant": "#9498e4",
+      "muted": "#280791",
+      "darkMuted": "#280791",
+      "lightMuted": "#bbd9df"
+    },
+    "songs": [],
+    "stats": {
+      "totalSongCount": 0,
+      "totalSongDuration": 0
+    },
+    "createdAt": {
+      "$date": "2025-06-20T12:47:48.847Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "685bd117a661ac54cd5fd2be"
+    },
+    "user": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "My Playlist #9",
+    "description": "My Playlist #9",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/playlists/image/QmMAOBY7McpaXCTAs3Tho-1750849942011.png",
+    "privacy": "public",
+    "default": false,
+    "paletee": {
+      "vibrant": "#7f7f7f",
+      "darkVibrant": "#424242",
+      "lightVibrant": "#bcbcbc",
+      "muted": "#7c7c7c",
+      "darkMuted": "#3c3c3c",
+      "lightMuted": "#bcbcbc"
+    },
+    "songs": [],
+    "stats": {
+      "totalSongCount": 0,
+      "totalSongDuration": 0
+    },
+    "createdAt": {
+      "$date": "2025-06-25T10:36:07.135Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6860b686f69687e6e4d659fa"
+    },
+    "user": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "My Playlist #10",
+    "description": "My Playlist #10",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
+    "privacy": "public",
+    "default": false,
+    "paletee": {
+      "vibrant": "#dc2c1c",
+      "darkVibrant": "#6f140c",
+      "lightVibrant": "#f09189",
+      "muted": "#871b11",
+      "darkMuted": "#060404",
+      "lightMuted": "#871b11"
+    },
+    "songs": [],
+    "stats": {
+      "totalSongCount": 0,
+      "totalSongDuration": 0
+    },
+    "createdAt": {
+      "$date": "2025-06-29T03:44:06.542Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "68870f46b70b05b8bc0e7102"
+    },
+    "user": {
+      "$oid": "68870f44b70b05b8bc0e70ff"
+    },
+    "title": "Liked Songs",
+    "description": "All your liked songs will be here",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/liked-song.png",
+    "privacy": "private",
+    "default": true,
+    "paletee": {
+      "vibrant": "#4f1bf4",
+      "darkVibrant": "#22067e",
+      "lightVibrant": "#9498e4",
+      "muted": "#280791",
+      "darkMuted": "#280791",
+      "lightMuted": "#bbd9df"
+    },
+    "songs": [
+      {
+        "$oid": "68871013b70b05b8bc0e7141"
+      }
+    ],
+    "stats": {
+      "totalSongCount": 1,
+      "totalSongDuration": 201.43020408163267
+    },
+    "createdAt": {
+      "$date": "2025-07-28T05:48:54.186Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T09:04:17.234Z"
+    },
+    "__v": 0
+  }
+]

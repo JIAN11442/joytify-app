@@ -1,17 +1,30 @@
 import mongoose from "mongoose";
 import UserModel from "../models/user.model";
-import NotificationModel from "../models/notification.model";
 import { FETCH_LIMIT_PER_PAGE } from "../constants/env-validate.constant";
-import { NotificationTypeOptions } from "@joytify/shared-types/constants";
-import {
-  CreateNotificationRequest,
-  NotificationType,
-  PaginationQueryResponse,
-} from "@joytify/shared-types/types";
+import { HttpCode, NotificationTypeOptions } from "@joytify/shared-types/constants";
+import { PaginationQueryResponse, NotificationType } from "@joytify/shared-types/types";
 import { getSocketServer } from "../config/socket.config";
+import appAssert from "../utils/app-assert.util";
 
+const { INTERNAL_SERVER_ERROR } = HttpCode;
 const { ALL, MONTHLY_STATISTIC, FOLLOWING_ARTIST_UPDATE, SYSTEM_ANNOUNCEMENT } =
   NotificationTypeOptions;
+
+type BroadcastNotificationToUsersRequest = {
+  userIds: string[];
+  notificationId: string;
+  triggerSocket: boolean;
+};
+
+type MarkNotificationsRequest = {
+  userId: string;
+  notificationIds: string[];
+};
+
+type RemoveUserNotificationRequest = {
+  userId: string;
+  notificationId: string;
+};
 
 export const getUserNotificationsByType = async (
   userId: string,
@@ -31,26 +44,35 @@ export const getUserNotificationsByType = async (
     {
       $lookup: {
         from: "notifications",
-        let: { readIds: "$notifications.read", unreadIds: "$notifications.unread" },
+        let: {
+          notificationIds: "$notifications.id",
+          notificationViewed: "$notifications.viewed",
+          notificationRead: "$notifications.read",
+        },
         pipeline: [
+          { $match: { $expr: { $in: ["$_id", "$$notificationIds"] } } },
           {
-            $match: {
-              $expr: {
-                $or: [{ $in: ["$_id", "$$readIds"] }, { $in: ["$_id", "$$unreadIds"] }],
+            $addFields: {
+              viewed: {
+                $arrayElemAt: [
+                  "$$notificationViewed",
+                  { $indexOfArray: ["$$notificationIds", "$_id"] },
+                ],
+              },
+              read: {
+                $arrayElemAt: [
+                  "$$notificationRead",
+                  { $indexOfArray: ["$$notificationIds", "$_id"] },
+                ],
               },
             },
           },
-          {
-            $addFields: {
-              isRead: { $cond: [{ $in: ["$_id", "$$readIds"] }, true, false] },
-            },
-          },
         ],
-        as: "allNotifications",
+        as: "notificationDetails",
       },
     },
-    { $unwind: "$allNotifications" },
-    { $replaceRoot: { newRoot: "$allNotifications" } },
+    { $unwind: "$notificationDetails" },
+    { $replaceRoot: { newRoot: "$notificationDetails" } },
     {
       $lookup: {
         from: "stats",
@@ -84,10 +106,13 @@ export const getUserNotificationsByType = async (
           $cond: [
             { $eq: ["$type", MONTHLY_STATISTIC] },
             { $arrayElemAt: ["$userMonthlyStats", 0] },
-            null,
+            "$$REMOVE",
           ],
         },
       },
+    },
+    {
+      $unset: "userMonthlyStats",
     },
   ];
 
@@ -119,10 +144,24 @@ export const getUserNotificationsByType = async (
   return { docs };
 };
 
-export const getUserUnreadNotificationCount = async (userId: string) => {
-  const user = await UserModel.findById(userId).select("notifications.unread");
+export const getUserUnviewedNotificationCount = async (userId: string) => {
+  const result = await UserModel.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+    {
+      $project: {
+        unviewedCount: {
+          $size: {
+            $filter: {
+              input: "$notifications",
+              cond: { $eq: ["$$this.viewed", false] },
+            },
+          },
+        },
+      },
+    },
+  ]);
 
-  return user?.notifications.unread.length || 0;
+  return result[0]?.unviewedCount || 0;
 };
 
 export const getUserNotificationTypeCounts = async (userId: string) => {
@@ -131,41 +170,25 @@ export const getUserNotificationTypeCounts = async (userId: string) => {
     {
       $lookup: {
         from: "notifications",
-        localField: "notifications.read",
-        foreignField: "_id",
-        as: "readNotifications",
+        let: { notificationIds: "$notifications.id" },
+        pipeline: [{ $match: { $expr: { $in: ["$_id", "$$notificationIds"] } } }],
+        as: "notificationDetails",
       },
     },
-    {
-      $lookup: {
-        from: "notifications",
-        localField: "notifications.unread",
-        foreignField: "_id",
-        as: "unreadNotifications",
-      },
-    },
-    {
-      $project: {
-        allNotifications: {
-          $concatArrays: ["$readNotifications", "$unreadNotifications"],
-        },
-      },
-    },
-    {
-      $unwind: "$allNotifications",
-    },
+    { $unwind: "$notificationDetails" },
+    { $replaceRoot: { newRoot: "$notificationDetails" } },
     {
       $group: {
         _id: null,
         all: { $sum: 1 },
         monthlyStatistic: {
-          $sum: { $cond: [{ $eq: ["$allNotifications.type", MONTHLY_STATISTIC] }, 1, 0] },
+          $sum: { $cond: [{ $eq: ["$type", MONTHLY_STATISTIC] }, 1, 0] },
         },
         followingArtistUpdate: {
-          $sum: { $cond: [{ $eq: ["$allNotifications.type", FOLLOWING_ARTIST_UPDATE] }, 1, 0] },
+          $sum: { $cond: [{ $eq: ["$type", FOLLOWING_ARTIST_UPDATE] }, 1, 0] },
         },
         systemAnnouncement: {
-          $sum: { $cond: [{ $eq: ["$allNotifications.type", SYSTEM_ANNOUNCEMENT] }, 1, 0] },
+          $sum: { $cond: [{ $eq: ["$type", SYSTEM_ANNOUNCEMENT] }, 1, 0] },
         },
       },
     },
@@ -190,16 +213,81 @@ export const getUserNotificationTypeCounts = async (userId: string) => {
   };
 };
 
-export const createNotification = async (params: CreateNotificationRequest) => {
-  const notification = await NotificationModel.create(params);
-
-  return notification;
-};
-
 export const triggerNotificationSocket = async (userIds: string[]) => {
   const socket = getSocketServer();
 
   userIds.forEach((userId) => {
     socket.to(`user:${userId}`).emit("notification:update");
   });
+};
+
+export const broadcastNotificationToUsers = async (params: BroadcastNotificationToUsersRequest) => {
+  const { userIds, notificationId, triggerSocket } = params;
+
+  const updatedUser = await UserModel.updateMany(
+    { _id: { $in: userIds } },
+    { $addToSet: { notifications: { id: notificationId, viewed: false, read: false } } }
+  );
+
+  appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to push notification to users");
+
+  if (triggerSocket) {
+    triggerNotificationSocket(userIds);
+  }
+
+  return { modifiedUserCount: updatedUser.modifiedCount };
+};
+
+export const markNotificationsAsViewed = async (params: MarkNotificationsRequest) => {
+  const { userId, notificationIds } = params;
+
+  const updatedUser = await UserModel.updateOne(
+    { _id: userId },
+    { $set: { "notifications.$[elem].viewed": true } },
+    { arrayFilters: [{ "elem.id": { $in: notificationIds } }] }
+  );
+
+  appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to mark notifications as viewed");
+
+  return { modifiedCount: updatedUser.modifiedCount };
+};
+
+export const markNotificationsAsRead = async (params: MarkNotificationsRequest) => {
+  const { userId, notificationIds } = params;
+
+  const updatedUser = await UserModel.updateOne(
+    { _id: userId },
+    {
+      $set: {
+        "notifications.$[elem].read": true,
+        "notifications.$[elem].viewed": true,
+      },
+    },
+    {
+      arrayFilters: [
+        {
+          "elem.id": { $in: notificationIds },
+          "elem.read": false, // only update notifications that are not already read
+        },
+      ],
+    }
+  );
+
+  appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to mark notifications as read");
+
+  return { modifiedCount: updatedUser.modifiedCount };
+};
+
+export const removeUserNotification = async (params: RemoveUserNotificationRequest) => {
+  const { userId, notificationId } = params;
+
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    userId,
+    { $pull: { notifications: { id: notificationId } } },
+    { new: true }
+  );
+
+  appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to remove user notification");
+
+  return { modifiedCount: updatedUser.modifiedCount };
 };

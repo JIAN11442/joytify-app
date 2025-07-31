@@ -70,5 +70,8 @@
   "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "menambah lagu baharu <span>{song}</span>",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "menambah lagu baharu <span>{song}</span> ke dalam album <span>{album}</span>",
   "manage.notification.card.systemAnnouncement.description": "Platform akan menjalankan penyelenggaraan sistem pada <span>{date}</span> dari <span>{startTime}</span> hingga <span>{endTime}</span>",
-  "manage.notification.list.noNotifications": "Tiada notifikasi"
+  "manage.notification.list.noNotifications": "Tiada notifikasi",
+
+  "manage.notification.card.menu.markAsRead": "Tanda sebagai telah dibaca",
+  "manage.notification.card.menu.delete": "Padam"
 }

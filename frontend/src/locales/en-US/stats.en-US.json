@@ -1,0 +1,22 @@
+{
+  "stats.monthlyStats.title": "Your {month} in music",
+  "stats.monthlyStats.description": "See how you listened this month",
+  "stats.monthlyStats.date": "{month} {year}",
+
+  "stats.monthlyStats.overview.totalListeningTime.description": "total listening time",
+  "stats.monthlyStats.overview.growthRate.description": "vs. last month",
+  "stats.monthlyStats.overview.topArtist.description": "Most played artist",
+  "stats.monthlyStats.overview.topSong.description": "Most played song",
+
+  "stats.monthlyStats.dashboard.24HourListeningPattern.title": "24-Hour Listening Pattern",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.description": "Your listening activity throughout the day",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.xAxis.label": "Time",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.yAxis.label": "Listening Time (minutes)",
+
+  "stats.monthlyStats.dashboard.topTracksBreakdown.title": "Top 5 Tracks Breakdown",
+  "stats.monthlyStats.dashboard.topTracksBreakdown.description": "Your top 5 tracks breakdown",
+
+  "stats.monthlyStats.leaderboard.songRanking.title": "Your Top Songs",
+  "stats.monthlyStats.leaderboard.artistRanking.title": "Your Top Artists",
+  "stats.monthlyStats.noData": "No data available"
+}

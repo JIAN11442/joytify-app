@@ -9,7 +9,7 @@ import NavbarLink from "./navbar-link.component";
 import UserEntryPoint from "./user-entry-point.component";
 import NavbarSearchBar from "./navbar-searchbar.component";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
-import { useGetUserUnreadNotificationCountQuery } from "../hooks/notification-query.hook";
+import { useGetUserUnviewedNotificationCountQuery } from "../hooks/notification-query.hook";
 import useProviderState from "../states/provider.state";
 import useSidebarState from "../states/sidebar.state";
 import useNavbarState from "../states/navbar.state";
@@ -30,7 +30,7 @@ const Navbar = () => {
     setAdjustNavSearchBarPosition,
   } = useNavbarState();
 
-  const { unreadCount } = useGetUserUnreadNotificationCountQuery();
+  const { unviewedCount } = useGetUserUnviewedNotificationCountQuery();
   const { mutate: updateUserPreferencesFn } = useUpdateUserPreferencesMutation();
 
   const handleActiveFloatSidebar = () => {
@@ -180,14 +180,14 @@ const Navbar = () => {
           {/* notification */}
           {authUser && (
             <div className={`relative group`}>
-              {unreadCount !== undefined && unreadCount > 0 && (
+              {unviewedCount !== undefined && unviewedCount > 0 && (
                 <div
                   className={`
                     absolute
                     -top-1
                     -right-1
                     flex
-                    ${unreadCount >= 100 ? "w-8" : "w-5"}
+                    ${unviewedCount >= 100 ? "w-8" : "w-5"}
                     h-5
                     bg-red-500
                     text-white
@@ -199,7 +199,7 @@ const Navbar = () => {
                     transition-all
                   `}
                 >
-                  <p>{unreadCount >= 100 ? "99+" : unreadCount}</p>
+                  <p>{unviewedCount >= 100 ? "99+" : unviewedCount}</p>
                 </div>
               )}
               <NavbarLink to="/manage/notifications" icon={{ name: IoNotificationsOutline }} />

@@ -3,7 +3,7 @@ import { stringZodSchema, fileUrlZodSchema, objectIdZodSchema } from "./util.zod
 
 export const songZodSchema = z.object({
   title: stringZodSchema,
-  artist: stringZodSchema,
+  artist: objectIdZodSchema,
   songUrl: fileUrlZodSchema,
   playlistFor: objectIdZodSchema,
   duration: z.number(),

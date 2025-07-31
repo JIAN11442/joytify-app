@@ -1,23 +1,22 @@
 import { RequestHandler } from "express";
 import { objectIdZodSchema, pageZodSchema } from "../schemas/util.zod";
 import {
-  createNotificationZodSchema,
+  markNotificationsZodSchema,
   triggerNotificationSocketZodSchema,
 } from "../schemas/notification.zod";
 import {
-  createNotification,
   getUserNotificationsByType,
   getUserNotificationTypeCounts,
-  getUserUnreadNotificationCount,
+  getUserUnviewedNotificationCount,
+  markNotificationsAsRead,
+  markNotificationsAsViewed,
+  removeUserNotification,
   triggerNotificationSocket,
 } from "../services/notification.service";
 import { HttpCode } from "@joytify/shared-types/constants";
-import { CreateNotificationRequest, NotificationType } from "@joytify/shared-types/types";
-import UserModel from "../models/user.model";
-import appAssert from "../utils/app-assert.util";
-import NotificationModel from "../models/notification.model";
+import { NotificationType } from "@joytify/shared-types/types";
 
-const { OK, NOT_FOUND } = HttpCode;
+const { OK } = HttpCode;
 
 export const getUserNotificationsByTypeHandler: RequestHandler = async (req, res, next) => {
   try {
@@ -27,18 +26,18 @@ export const getUserNotificationsByTypeHandler: RequestHandler = async (req, res
 
     const { docs } = await getUserNotificationsByType(userId, page, type);
 
-    return res.status(OK).json(docs || {});
+    return res.status(OK).json(docs);
   } catch (error) {
     next(error);
   }
 };
 
-export const getUserUnreadNotificationCountHandler: RequestHandler = async (req, res, next) => {
+export const getUserUnviewedNotificationCountHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const count = await getUserUnreadNotificationCount(userId);
+    const count = await getUserUnviewedNotificationCount(userId);
 
-    return res.status(OK).json({ unread: count });
+    return res.status(OK).json({ unviewedCount: count });
   } catch (error) {
     next(error);
   }
@@ -55,17 +54,7 @@ export const getUserNotificationTypeCountsHandler: RequestHandler = async (req, 
   }
 };
 
-export const createNotificationHandler: RequestHandler = async (req, res, next) => {
-  try {
-    const params: CreateNotificationRequest = createNotificationZodSchema.parse(req.body);
-    const notification = await createNotification(params);
-
-    return res.status(OK).json({ notification });
-  } catch (error) {
-    next(error);
-  }
-};
-
+// for aws lambda service
 export const triggerNotificationSocketHandler: RequestHandler = async (req, res, next) => {
   try {
     const { userIds } = triggerNotificationSocketZodSchema.parse(req.body);
@@ -78,20 +67,40 @@ export const triggerNotificationSocketHandler: RequestHandler = async (req, res,
   }
 };
 
-export const deleteNotificationHandler: RequestHandler = async (req, res, next) => {
+export const markNotificationsAsViewedHandler: RequestHandler = async (req, res, next) => {
   try {
+    const userId = objectIdZodSchema.parse(req.userId);
+    const { notificationIds } = markNotificationsZodSchema.parse(req.body);
+
+    const { modifiedCount } = await markNotificationsAsViewed({ userId, notificationIds });
+
+    return res.status(OK).json({ message: `${modifiedCount} notifications marked as viewed` });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const markNotificationsAsReadHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = objectIdZodSchema.parse(req.userId);
+    const { notificationIds } = markNotificationsZodSchema.parse(req.body);
+
+    const { modifiedCount } = await markNotificationsAsRead({ userId, notificationIds });
+
+    return res.status(OK).json({ message: `${modifiedCount} notifications marked as read` });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const removeUserNotificationHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = objectIdZodSchema.parse(req.userId);
     const notificationId = objectIdZodSchema.parse(req.params.id);
 
-    const updatedUser = await UserModel.updateMany(
-      { "notifications.unread": notificationId },
-      { $pull: { "notifications.unread": notificationId } }
-    );
+    await removeUserNotification({ userId, notificationId });
 
-    await NotificationModel.findByIdAndDelete(notificationId);
-
-    return res
-      .status(OK)
-      .json({ message: `${updatedUser.modifiedCount} users updated and notification deleted` });
+    return res.status(OK).json({ message: `Notification ${notificationId} removed` });
   } catch (error) {
     next(error);
   }

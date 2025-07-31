@@ -21,8 +21,9 @@ import ManageFollowingPage from "./pages/manage-following.page";
 import MusicianPage from "./pages/musician.page";
 import AlbumPage from "./pages/album.page";
 import SongPage from "./pages/song.page";
-import { setNavigate } from "./lib/navigate.lib";
+import MonthlyStatsPage from "./pages/monthly-stats.page";
 import ManageNotificationPage from "./pages/manage-notification.page";
+import { setNavigate } from "./lib/navigate.lib";
 
 function App() {
   // original navigate function can't be using outside of the component
@@ -77,6 +78,7 @@ function App() {
             </DeregistrationIntlProvider>
           }
         />
+        <Route path="/user/:userId/monthly-stats/:yearMonth" element={<MonthlyStatsPage />} />
       </Route>
 
       <Route path="*" element={<h1>404</h1>} />

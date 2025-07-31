@@ -1,13 +1,18 @@
-import { FormattedMessage, IntlShape } from "react-intl";
+import { useCallback } from "react";
 import { IoStatsChartOutline } from "react-icons/io5";
+import { FormattedMessage, IntlShape } from "react-intl";
 import { RiErrorWarningLine, RiUserStarLine } from "react-icons/ri";
 import ManageNotificationCard from "./manage-notification-card.component";
+import { useMarkNotificationsAsReadMutation } from "../hooks/notification-mutate.hook";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { NotificationTypeOptions } from "@joytify/shared-types/constants";
 import { RefactorNotificationResponse } from "@joytify/shared-types/types";
 import useLocaleState from "../states/locale.state";
+import useUserState from "../states/user.state";
 import { getTimeAgo } from "../utils/get-time.util";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
+import { timeoutForDelay } from "../lib/timeout.lib";
+import { navigate } from "../lib/navigate.lib";
 
 type NotificationListCardProps = {
   fm: ScopedFormatMessage;
@@ -26,12 +31,27 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
   const notificationCardPrefix = "manage.notification.card";
   const notificationCardFm = fm(notificationCardPrefix);
 
-  const { themeLocale } = useLocaleState();
-
-  const { type, isRead, monthlyStatistic, followingArtistUpdate, systemAnnouncement, createdAt } =
-    notification;
   const { MONTHLY_STATISTIC, FOLLOWING_ARTIST_UPDATE, SYSTEM_ANNOUNCEMENT } =
     NotificationTypeOptions;
+  const {
+    _id: notificationId,
+    type,
+    read,
+    monthlyStatistic,
+    followingArtistUpdate,
+    systemAnnouncement,
+    createdAt,
+  } = notification;
+
+  const { themeLocale } = useLocaleState();
+  const { authUser } = useUserState();
+  const { mutate: markNotificationsAsRead } = useMarkNotificationsAsReadMutation();
+
+  const markAsReadFn = useCallback(() => {
+    if (!read) {
+      markNotificationsAsRead([notificationId]);
+    }
+  }, [read, notificationId]);
 
   const localeDateTimeAgo = getTimeAgo(createdAt.toString(), themeLocale);
 
@@ -40,9 +60,12 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
     case MONTHLY_STATISTIC: {
       if (!monthlyStatistic) return null;
 
-      const { month, totalDuration, growthPercentage } = monthlyStatistic;
+      const { month, year, totalDuration, growthPercentage } = monthlyStatistic;
+
       const tag = notificationControlPanelFm("monthlyStats");
       const title = notificationCardFm("monthlyStats.title", { month });
+      const yearMonth = `${year}-${month?.toString().padStart(2, "0")}`;
+      const userId = authUser?._id;
 
       const MonthlyStatsDescription = () => {
         if (growthPercentage === undefined) return null;
@@ -80,15 +103,24 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
         );
       };
 
+      const handleNavigateToMonthlyStatsPage = () => {
+        timeoutForDelay(() => {
+          window.open(`/user/${userId}/monthly-stats/${yearMonth}`, "_blank");
+          markAsReadFn();
+        });
+      };
+
       return (
         <ManageNotificationCard
           fm={fm}
           icon={{ name: IoStatsChartOutline, opts: { size: 22 } }}
+          notificationId={notificationId}
           tag={tag}
-          isRead={isRead}
+          isRead={read}
           title={title}
           description={<MonthlyStatsDescription />}
           date={localeDateTimeAgo}
+          onClick={handleNavigateToMonthlyStatsPage}
           className={className}
           tw={{ icon: "text-orange-400" }}
         />
@@ -99,7 +131,7 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
     case FOLLOWING_ARTIST_UPDATE: {
       if (!followingArtistUpdate) return null;
 
-      const { artistName, songName, albumName } = followingArtistUpdate;
+      const { artistId, artistName, songName, albumName } = followingArtistUpdate;
 
       const artistUpdateFm = fm(`${notificationCardPrefix}.artistUpdate`);
 
@@ -140,15 +172,24 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
         );
       };
 
+      const handleNavigateToArtistPage = () => {
+        timeoutForDelay(() => {
+          navigate(`/musician/${artistId}`);
+          markAsReadFn();
+        });
+      };
+
       return (
         <ManageNotificationCard
           fm={fm}
           icon={{ name: RiUserStarLine, opts: { size: 22 } }}
+          notificationId={notificationId}
           tag={tag}
-          isRead={isRead}
+          isRead={read}
           title={title}
           description={<ArtistUpdateDescription />}
           date={localeDateTimeAgo}
+          onClick={handleNavigateToArtistPage}
           className={className}
           tw={{ icon: "text-indigo-400" }}
         />
@@ -195,8 +236,9 @@ const ManageNotificationListCard: React.FC<NotificationListCardProps> = ({
         <ManageNotificationCard
           fm={fm}
           icon={{ name: RiErrorWarningLine, opts: { size: 25 } }}
+          notificationId={notificationId}
           tag={notificationControlPanelFm("systemAnnouncements")}
-          isRead={isRead}
+          isRead={read}
           title={title}
           description={<SystemAnnouncementDescription />}
           date={localeDateTimeAgo}

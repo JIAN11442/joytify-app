@@ -121,7 +121,7 @@ export const sendCodeEmailToUser = async (params: SendCodeServiceRequest) => {
   const sessionToken = signToken({ sessionId: hashedSession }, VerificationTokenSignOptions);
 
   // send verification email
-  // await sendEmail({ to: email, subject, content });
+  await sendEmail({ to: email, subject, content });
 
   return {
     id: doc._id,
@@ -215,7 +215,7 @@ export const sendLinkEmailToUser = async (email: string) => {
   const subject = "Reset your password for Joytify";
 
   // send email
-  // await sendEmail({ to: email, subject, content });
+  await sendEmail({ to: email, subject, content });
 
   return { url };
 };

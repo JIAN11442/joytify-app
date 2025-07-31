@@ -1,11 +1,5 @@
 import { RequestHandler } from "express";
-import {
-  createAlbum,
-  deleteAlbum,
-  getAlbumById,
-  getUserAlbums,
-  removeAlbum,
-} from "../services/album.service";
+import { createAlbum, getAlbumById, getUserAlbums, removeAlbum } from "../services/album.service";
 import { albumZodSchema } from "../schemas/album.zod";
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
@@ -62,20 +56,6 @@ export const removeUserAlbumHandler: RequestHandler = async (req, res, next) => 
     const { updatedAlbum } = await removeAlbum({ userId, albumId });
 
     return res.status(OK).json(updatedAlbum);
-  } catch (error) {
-    next(error);
-  }
-};
-
-// delete album handler(*)
-export const deleteUserAlbumHandler: RequestHandler = async (req, res, next) => {
-  try {
-    const userId = objectIdZodSchema.parse(req.userId);
-    const albumId = objectIdZodSchema.parse(req.params.id);
-
-    const { deletedAlbum } = await deleteAlbum({ userId, albumId });
-
-    return res.status(OK).json(deletedAlbum);
   } catch (error) {
     next(error);
   }

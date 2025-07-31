@@ -8,11 +8,7 @@ import authenticate from "../middlewares/authenticate.middleware";
 const cookieRoute = Router();
 
 // prefix: /cookie
-cookieRoute.get("/get-user-preferences", getUserPreferencesCookiePayloadHandler);
-cookieRoute.post(
-  "/update-user-preferences",
-  authenticate,
-  updateUserPreferencesCookiePayloadHandler
-);
+cookieRoute.get("/preferences", getUserPreferencesCookiePayloadHandler);
+cookieRoute.patch("/preferences", authenticate, updateUserPreferencesCookiePayloadHandler);
 
 export default cookieRoute;

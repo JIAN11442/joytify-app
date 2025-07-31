@@ -18,6 +18,7 @@ type PeakHourStats = {
 
 type MonthlySummaryStats = {
   month: number;
+  year: number;
   totalDuration: number;
   growthPercentage: number;
   topArtist: string;
@@ -78,6 +79,7 @@ const statsSchema = new mongoose.Schema<StatsDocument>(
           summary: new mongoose.Schema(
             {
               month: { type: Number, required: true },
+              year: { type: Number, required: true },
               totalDuration: { type: Number, required: true, default: 0 },
               growthPercentage: { type: Number, required: true, default: 0 },
               topArtist: { type: String, required: true },

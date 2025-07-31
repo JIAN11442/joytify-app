@@ -1,6 +1,6 @@
 import { getIdToken, AuthProvider } from "firebase/auth";
 
-import { AuthForOptions } from "@joytify/shared-types/constants";
+import { AuthForOptions, API_ENDPOINTS } from "@joytify/shared-types/constants";
 import {
   RegisterRequest,
   LoginRequest,
@@ -16,11 +16,13 @@ type AuthWithThirdPartyParams = {
   sessionInfo: SessionInfo;
 };
 
+const { AUTH } = API_ENDPOINTS;
+
 // register
-export const signup = async (params: RegisterRequest) => API.post("/auth/register", params);
+export const signup = async (params: RegisterRequest) => API.post(`${AUTH}/register`, params);
 
 // login
-export const signin = async (params: LoginRequest) => API.post("/auth/login", params);
+export const signin = async (params: LoginRequest) => API.post(`${AUTH}/login`, params);
 
 // auth with third party
 export const authWithThirdParty = async (params: AuthWithThirdPartyParams) => {
@@ -33,7 +35,7 @@ export const authWithThirdParty = async (params: AuthWithThirdPartyParams) => {
         const token = await getIdToken(user);
         const authType = authFor === SIGN_IN ? "login" : "register";
 
-        return API.post(`/auth/third-party/${authType}`, { token, sessionInfo });
+        return API.post(`${AUTH}/third-party/${authType}`, { token, sessionInfo });
       }
     })
     .catch((error) => {
@@ -43,4 +45,4 @@ export const authWithThirdParty = async (params: AuthWithThirdPartyParams) => {
 };
 
 // logout
-export const logout = async () => API.get("/auth/logout");
+export const logout = async () => API.post(`${AUTH}/logout`);

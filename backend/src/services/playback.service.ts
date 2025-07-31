@@ -4,10 +4,10 @@ import HistoryModel from "../models/history.model";
 import PlaybackModel from "../models/playback.model";
 import { trackPlaybackStats } from "./stats.service";
 import { HttpCode } from "@joytify/shared-types/constants";
-import { StorePlaybackLogRequest } from "@joytify/shared-types/types";
+import { CreatePlaybackLogRequest } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 
-interface CreatePlaybackLogServiceRequest extends StorePlaybackLogRequest {
+interface CreatePlaybackLogServiceRequest extends CreatePlaybackLogRequest {
   userId: string;
 }
 
@@ -15,6 +15,11 @@ const { INTERNAL_SERVER_ERROR } = HttpCode;
 
 export const createPlaybackLog = async (data: CreatePlaybackLogServiceRequest) => {
   const { userId, songId, duration, state } = data;
+
+  // 如果 duration 小於等於 0，那就直接返回，不紀錄
+  if (duration <= 0) {
+    return { playbackLog: null };
+  }
 
   const song = await SongModel.findById(songId);
 

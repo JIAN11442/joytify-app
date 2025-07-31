@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import UserModel from "./user.model";
 import MusicianModel from "./musician.model";
+import UserModel, { UserDocument } from "./user.model";
+import { broadcastNotificationToUsers } from "../services/notification.service";
 import { NotificationTypeOptions } from "@joytify/shared-types/constants";
 import { NotificationType } from "@joytify/shared-types/types";
-import { getSocketServer } from "../config/socket.config";
 
 export interface NotificationDocument extends mongoose.Document {
   type: NotificationType;
@@ -21,7 +21,7 @@ export interface NotificationDocument extends mongoose.Document {
   };
 }
 
-const { FOLLOWING_ARTIST_UPDATE } = NotificationTypeOptions;
+const { FOLLOWING_ARTIST_UPDATE, SYSTEM_ANNOUNCEMENT } = NotificationTypeOptions;
 
 const notificationSchema = new mongoose.Schema<NotificationDocument>(
   {
@@ -44,36 +44,46 @@ const notificationSchema = new mongoose.Schema<NotificationDocument>(
 
 // after create notification,...
 notificationSchema.post("save", async function (doc) {
-  const { _id: notificationId, type, followingArtistUpdate } = doc;
+  const { _id, type, followingArtistUpdate } = doc;
   const { artistId, uploaderId } = followingArtistUpdate;
+  const notificationId = _id?.toString() ?? "";
 
-  if (type === FOLLOWING_ARTIST_UPDATE) {
-    const musician = await MusicianModel.findById(artistId);
+  switch (type) {
+    case FOLLOWING_ARTIST_UPDATE:
+      const musician = await MusicianModel.findById(artistId);
 
-    if (musician) {
-      // 1. get all followers of the artist (excluding the uploader)
-      const targetUserIds = musician.followers.filter(
-        (id: string) => id.toString() !== uploaderId?.toString()
-      );
-
-      if (targetUserIds.length > 0) {
-        // 2. push notification to target followers
-        await UserModel.updateMany(
-          {
-            _id: { $in: targetUserIds },
-            "userPreferences.notifications.followingArtistUpdate": true,
-          },
-          { $addToSet: { "notifications.unread": notificationId } }
-        );
-
-        // 3. emit notification update socket event
-        const socket = getSocketServer();
-
-        targetUserIds.forEach((userId: string) => {
-          socket.to(`user:${userId}`).emit("notification:update");
+      if (musician) {
+        // 1. get all followers of the artist (excluding the uploader)
+        const users = await UserModel.find({
+          _id: { $in: musician.followers, $ne: uploaderId },
+          "userPreferences.notifications.followingArtistUpdate": true,
         });
+
+        if (users.length > 0) {
+          const userIds = users.map((user: UserDocument) => user._id);
+
+          // 2. broadcast notification to target followers
+          await broadcastNotificationToUsers({
+            userIds,
+            notificationId,
+            triggerSocket: true,
+          });
+        }
       }
-    }
+      break;
+
+    case SYSTEM_ANNOUNCEMENT:
+      const users = await UserModel.find({
+        "userPreferences.notifications.systemAnnouncement": true,
+      });
+      const userIds = users.map((user: UserDocument) => user._id);
+
+      await broadcastNotificationToUsers({
+        userIds,
+        notificationId,
+        triggerSocket: true,
+      });
+      break;
   }
 });
 

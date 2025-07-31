@@ -3,7 +3,12 @@ import { nanoid } from "nanoid";
 import API from "../config/api-client.config";
 import { uploadFileToAws } from "./aws.fetch";
 import { getMusicianId } from "./musician.fetch";
-import { MusicianOptions, FileExtension, UploadFolder } from "@joytify/shared-types/constants";
+import {
+  MusicianOptions,
+  FileExtension,
+  UploadFolder,
+  API_ENDPOINTS,
+} from "@joytify/shared-types/constants";
 import {
   SongResponse,
   RefactorSongResponse,
@@ -15,6 +20,8 @@ import {
 } from "@joytify/shared-types/types";
 import { DefaultSongForm } from "../types/form.type";
 import getAudioDuration from "../utils/get-audio-duration.util";
+
+const { SONGS } = API_ENDPOINTS;
 
 // create song data
 export const createSongData = async (params: DefaultSongForm): Promise<SongResponse> => {
@@ -38,7 +45,7 @@ export const createSongData = async (params: DefaultSongForm): Promise<SongRespo
     console.log("Failed to get audio duration", error);
   }
 
-  // get song url from AWS
+  // // get song url from AWS
   const songUrl = await uploadFileToAws({
     subfolder: UploadFolder.SONGS_MP3,
     extension: FileExtension.MP3,
@@ -46,7 +53,7 @@ export const createSongData = async (params: DefaultSongForm): Promise<SongRespo
     nanoID,
   });
 
-  // get song image url from AWS
+  // // get song image url from AWS
   if (imageFile?.length) {
     imageUrl = await uploadFileToAws({
       subfolder: UploadFolder.SONGS_IMAGE,
@@ -89,7 +96,7 @@ export const createSongData = async (params: DefaultSongForm): Promise<SongRespo
   }
 
   // finally, fetch the request API
-  return API.post("/song", {
+  return API.post(`${SONGS}`, {
     ...rest,
     ...musicianParams,
     ...(imageUrl ? { imageUrl } : {}),
@@ -99,29 +106,29 @@ export const createSongData = async (params: DefaultSongForm): Promise<SongRespo
 };
 
 // get all songs
-export const getAllSongs = (): Promise<RefactorSongResponse[]> => API.get("/song/all");
+export const getAllSongs = (): Promise<RefactorSongResponse[]> => API.get(`${SONGS}/all`);
 
 // get song by id
-export const getSongById = (id: string): Promise<RefactorSongResponse> => API.get(`/song/${id}`);
+export const getSongById = (id: string): Promise<RefactorSongResponse> => API.get(`${SONGS}/${id}`);
 
 // get user's songs
-export const getUserSongs = (): Promise<RefactorSongResponse[]> => API.get("/song/user");
+export const getUserSongs = (): Promise<RefactorSongResponse[]> => API.get(`${SONGS}`);
 
 // get user's songs stats
-export const getUserSongsStats = (): Promise<SongStatsResponse> => API.get("/song/stats");
+export const getUserSongsStats = (): Promise<SongStatsResponse> => API.get(`${SONGS}/stats`);
 
 // update song's info
 export const updateSongInfo = (params: UpdateSongInfoRequest): Promise<RefactorSongResponse> => {
   const { songId, ...rest } = params;
 
-  return API.patch(`/song/${songId}/info`, rest);
+  return API.patch(`${SONGS}/${songId}/info`, rest);
 };
 
 // update song's rating state
 export const rateSong = (params: UpdateSongRateStateRequest): Promise<RefactorSongResponse> => {
   const { songId, ...rest } = params;
 
-  return API.patch(`/song/${songId}/rating`, rest);
+  return API.patch(`${SONGS}/${songId}/rating`, rest);
 };
 
 // update song's playlists assignment
@@ -130,12 +137,12 @@ export const updateSongPlaylistsAssignment = (
 ): Promise<RefactorSongResponse> => {
   const { songId, ...rest } = params;
 
-  return API.patch(`/song/${songId}/playlist-assignment`, rest);
+  return API.patch(`${SONGS}/${songId}/playlist-assignment`, rest);
 };
 
 // delete song by id
 export const deleteTargetSong = (params: DeleteSongRequest): Promise<RefactorSongResponse> => {
   const { songId, shouldDeleteSongs } = params;
 
-  return API.delete(`/song/${songId}`, { data: { shouldDeleteSongs } });
+  return API.delete(`${SONGS}/${songId}`, { data: { shouldDeleteSongs } });
 };

@@ -35,10 +35,15 @@ const ManagePlaylistCardActions: React.FC<ManagePlaylistCardActionsProps> = ({
       {playlistCardActions.map((action) => {
         const { id, color, hidden, onClick } = action;
 
+        const handleOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+          e.stopPropagation();
+          onClick();
+        };
+
         return (
           <button
             key={id}
-            onClick={onClick}
+            onClick={handleOnClick}
             style={{ color: isGroupHovered ? color : undefined }}
             className={twMerge(
               `
