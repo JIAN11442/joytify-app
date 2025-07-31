@@ -64,32 +64,12 @@ const SongDeleteConfirmationForm = ({
         `}
       >
         {/* next */}
-        <button
-          type="button"
-          onClick={switchToNextPageFn}
-          className={`
-            submit-btn
-            py-2.5
-            bg-red-500
-            rounded-md
-            border-none
-          `}
-        >
+        <button type="button" onClick={switchToNextPageFn} className={`submit-btn bg-red-500`}>
           {modalConfirmationFm("next")}
         </button>
 
         {/* cancel */}
-        <button
-          type="button"
-          onClick={closeModalFn}
-          className={`
-            submit-btn
-            py-2.5
-            bg-neutral-500/50
-            rounded-md
-            border-none
-          `}
-        >
+        <button type="button" onClick={closeModalFn} className={`submit-btn bg-neutral-500/50`}>
           {modalConfirmationFm("cancel")}
         </button>
       </div>

@@ -112,7 +112,8 @@ body,
   .submit-btn {
     @apply w-[100%]
     p-3
-    border
+    py-2.5
+    text-sm
     bg-green-custom
     border-green-custom/50
     disabled:opacity-80
@@ -121,7 +122,8 @@ body,
     disabled:text-neutral-500
     disabled:border-grey-custom/10
     hover:opacity-80
-    rounded-sm
+    rounded-md
+    border-none
     outline-none
     transition
     shrink-0;
@@ -145,8 +147,6 @@ body,
     w-fit
     px-5
     py-3
-    text-sm
-    rounded-md
     transition-all;
   }
 
@@ -234,6 +234,14 @@ body,
     rounded-2xl;
   }
 
+  .load-btn {
+    @apply text-sm
+    text-neutral-100/30
+    hover:text-neutral-100/50
+    hover:scale-105
+    transition;
+  }
+
   .no-hover {
     @apply pointer-events-none;
   }
@@ -314,6 +322,17 @@ body,
     transition-all;
   }
 
+  .stats-card-wrapper {
+    @apply flex
+    flex-col
+    w-full
+    p-8
+    gap-5
+    bg-black/30
+    shadow-lg
+    rounded-md;
+  }
+
   .song-card-details {
     @apply text-neutral-300 truncate;
   }
@@ -358,6 +377,10 @@ body,
     border-[0.1px]
     border-neutral-700
     rounded-lg;
+  }
+
+  .control-panel-items-wrapper::-webkit-scrollbar {
+    display: none;
   }
 
   .control-panel-selected {
@@ -408,6 +431,10 @@ body,
     caret-transparent
     focus:ring-1
     rounded-md;
+  }
+
+  .hidden-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   .input-slider {

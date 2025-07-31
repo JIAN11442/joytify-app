@@ -1,160 +1,191 @@
-# Joytify
+# <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/joytify-logo.svg" alt="Joytify" width="26" height="26"> Joytify - Full-Stack Music Platform
 
-A Spotify Clone - A music sharing platform under development. Inspired by Spotify's core features and user experience.
+> A Spotify-inspired music streaming platform built with modern web technologies, featuring user authentication, music upload/playback, playlist management, and automated data processing.
 
-## Current Status
+## 📋 Project Documentation
 
-🚧 **Under Development**
+- **🏠 [Main Application](./README.md)** - Application overview, tech stack, features _(You are here)_
+- **🏗️ [Infrastructure Pipeline](./terraform/README.md)** - AWS Lambda processing pipeline, capacity analysis
+- **📚 [Shared Types](https://github.com/JIAN11442/joytify-shared-types)** - Shared TypeScript interfaces
 
-### Implemented Features
+---
 
-- Basic project structure
-- Authentication system (Firebase)
-- Basic API endpoints
-- Frontend routing and layout
+## 📋 Table of Contents
 
-### In Progress
+- [🎯 Project Overview](#-project-overview)
+- [🎵 Platform Features](#-platform-features)
+- [🛠️ Tech Stack](#-tech-stack)
+- [🏗️ System Architecture](#-system-architecture)
+- [🚀 Quick Start](#-quick-start)
 
-- Music upload functionality
-- User profile management
-- Music player implementation
+---
 
-## Tech Stack
+## 🎯 Project Overview
+
+**Live Demo**: Coming Soon
+
+Joytify is a full-stack music streaming platform that allows users to upload, organize, and stream music. The platform includes user authentication, playlist management, internationalization, and fully automated, scalable statistics processing.
+
+## 🎵 Platform Features
+
+### Core Music Features
+
+- **🎧 Audio Player** - Full-featured music streaming with queue management
+- **📋 Playlist Management** - Create, edit, and organize music collections
+- **🎤 Artist Platform** - Music upload and album management
+- **🔍 Search & Discovery** - Find music, artists, and playlists
+
+### User Experience
+
+- **🔐 Authentication** - Firebase Auth + JWT security
+- **👤 User Profiles** - Complete profile and preference management
+- **⚙️ User Preferences** - Locale settings, sidebar collapsed state, playback history (music, loop mode, volume)
+- **🌐 Multi-language Support** - Full i18n with 6 languages (en-US, zh-CN, zh-TW, ja, ko, ms)
+- **📱 Device Management** - Multi-device session handling
+- **⌨️ Platform Shortcuts** - Keyboard shortcuts for enhanced user experience
+- **🔔 Notifications** - Real-time notification system
+- **📊 Analytics Dashboard** - Monthly statistics with animated data visualization
+
+---
+
+## 🛠️ Tech Stack
 
 ### Frontend
 
-- React 18 + TypeScript
-- Vite
-- TailwindCSS
-- React Query
-- Zustand
-- Firebase Auth
+- **React 18** + **TypeScript** – Modern, performant UI with type safety
+- **Vite** – Blazing fast build tooling
+- **TailwindCSS** – Utility-first styling
+- **Zustand** – Lightweight client-side state management
+- **React Query** – Server state synchronization and caching
+- **React Hook Form** – Scalable and performant form management
+- **React Intl** – Internationalization with support for `en-US`, `zh-CN`, `zh-TW`, `ja`, `ko`, `ms`
+- **Skeleton Loading** – Improved user experience during data fetching
+- **Firebase Auth** – Secure user authentication
+- **Socket.IO Client** – Real-time communication for notifications
+- **Recharts** – Data visualization for analytics dashboard
+- **Odometer.js** – Animated number display for statistics
 
 ### Backend
 
-- Node.js + Express + TypeScript
-- MongoDB + Mongoose
-- AWS S3
-- JWT
-- Firebase Admin
-- Resend
+- **Node.js** + **Express** + **TypeScript** – Robust and scalable backend
+- **Zod** – Input validation and runtime schema checking
+- **MongoDB** + **Mongoose** – NoSQL database with ODM abstraction
+- **JWT** – Secure token-based authentication
+- **Firebase Admin SDK** – Admin-level user management
+- **Resend** – Transactional email delivery (e.g., email verification)
+- **Socket.IO** – Real-time communication for notifications
 
-## Development Setup
+### DevOps & Infrastructure
+
+- **Terraform** – Infrastructure as Code (IaC)
+- **AWS Lambda** – Serverless compute for backend processing
+- **AWS SNS** – Pub/sub event notifications
+- **AWS CloudWatch** – Scheduled tasks, metrics, and log management
+- **Discord Webhook** – Real-time alert and execution summaries
+
+### Shared Types
+
+- **Monorepo Architecture** – Shared TypeScript interfaces between frontend and backend
+- **Private NPM Package** – Shared types are uploaded to a private NPM registry for seamless reuse across environments
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+graph TB
+    subgraph "🎵 Application Layer"
+        FE[React Frontend<br/>90+ Components]
+        BE[Node.js Backend<br/>16 Controllers]
+        ST[Shared Types<br/>NPM Package]
+    end
+
+    subgraph "🏗️ Processing Layer"
+        ML[📊 Monthly Stats λ<br/>User Analytics]
+        CL[🧹 Playback Cleanup λ<br/>60-day Retention]
+        DL[🤖 Discord Notify λ<br/>Real-time Alerts]
+    end
+
+    subgraph "☁️ Infrastructure"
+        CW1[📅 Monthly Schedule<br/>Every 1st 2AM UTC]
+        CW2[📅 Weekly Schedule<br/>Every Mon 4AM UTC]
+        SNS[📢 SNS Topic]
+        DB[(🗄 MongoDB Atlas<br/>M0 - 512MB)]
+    end
+
+    %% Application Layer
+    FE -->|API Calls| BE
+    BE -->|ODM| DB
+    ST -->|Types| FE
+    ST -->|Types| BE
+
+    %% Infrastructure to Processing
+    CW1 -->|Trigger| ML
+    CW2 -->|Trigger| CL
+    ML -->|Direct Invoke| CL
+    ML -->|Notifications| SNS
+    CL -->|Results| SNS
+    SNS -->|Webhook| DL
+
+    %% Data flows
+    ML -->|Process Stats| DB
+    CL -->|Clean Data| DB
+
+    classDef app fill:#e1f5fe
+    classDef lambda fill:#fff3e0
+    classDef infra fill:#f3e5f5
+
+    class FE,BE,ST app
+    class ML,CL,DL lambda
+    class CW1,CW2,SNS,DB infra
+```
+
+Joytify follows a modern three-layer architecture:
+
+- **🎵 Application Layer**: React frontend (90+ components) with Node.js backend (16 controllers), sharing types via NPM package
+- **🏗️ Processing Layer**: AWS Lambda functions for monthly statistics, data cleanup, and real-time notifications
+- **☁️ Infrastructure**: CloudWatch schedules, SNS messaging, and MongoDB Atlas database
+
+The system processes user analytics monthly and maintains data retention policies automatically.
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js >= 18
-- MongoDB
-- AWS Account
-- Firebase Project
-- Resend Account
+- Node.js 18+
+- MongoDB Atlas account
+- AWS account (for Lambda functions)
 
-### Environment Variables
+### Installation
 
-#### Backend (.env)
-
-```env
-# Server Configuration
-NODE_ENV=development
-USE_NGINX_PROXY=false
-BACKEND_PORT=4004
-ORIGIN_APP=http://localhost:5173
-
-# Database
-MONGODB_CONNECTION_STRING=
-
-# Email Service
-RESEND_API_KEY=
-TEST_EMAIL=onboarding@resend.dev
-SENDER_EMAIL=joytify35@gmail.com
-SEND_LIMIT_PER_PERIOD=3
-PROFILE_FETCH_LIMIT=2
-FETCH_LIMIT_PER_PAGE=2
-
-# JWT Secrets
-ACCESS_SECRET_KEY=
-REFRESH_SECRET_KEY=
-VERIFICATION_SECRET_KEY=
-
-# AWS Configuration
-AWS_REGION=ap-northeast-1
-AWS_BUCKET_NAME=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_SDK_JS_SUPPRESS_MAINTENANCE_MODE_MESSAGE=
-
-# Firebase Configuration
-FIREBASE_PROJECT_ID=
-FIREBASE_PRIVATE_KEY_ID=
-FIREBASE_PRIVATE_KEY=
-FIREBASE_CLIENT_EMAIL=
-FIREBASE_CLIENT_ID=
-```
-
-#### Frontend (.env)
-
-```env
-VITE_SERVER_URL=http://localhost:4004
-```
-
-### Local Development
+**1. Clone the repository**
 
 ```bash
-# Install dependencies
+git clone https://github.com/JIAN11442/MERN-Joytify.git
+cd MERN-Joytify
+```
+
+**2. Install dependencies**
+
+```bash
 cd backend && npm install
 cd ../frontend && npm install
-
-# Run development servers
-# Terminal 1
-cd backend && npm run node # or npm run dev
-
-# Terminal 2
-cd frontend && npm run dev
 ```
 
-## Project Structure
+**3. Set up environment variables**
 
-```
-joytify/
-├── frontend/          # React frontend
-│   ├── src/
-│   │   ├── components/    # UI components
-│   │   ├── pages/        # Page components
-│   │   ├── hooks/        # Custom hooks
-│   │   ├── states/       # State management
-│   │   └── utils/        # Utility functions
-├── backend/           # Express backend
-│   ├── src/
-│   │   ├── controllers/  # Route controllers
-│   │   ├── models/       # Database models
-│   │   ├── routes/       # API routes
-│   │   └── services/     # Business logic
-├── share/            # Shared types (local development only)
-└── terraform/        # Infrastructure
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 ```
 
-### Shared Types Development
+**4. Start development servers**
 
-The `share` directory is a separate npm package that contains shared TypeScript types and constants used by both frontend and backend. During development:
+```bash
+cd backend && npm run dev
+cd ../frontend && npm run dev
+```
 
-1. The `share` directory is a local copy of the shared types package
-2. Use `npm link` to link the local share package for development
-3. In production, the package is installed via npm as `@joytify/shared-types`
+### Environment Setup
 
-## Development Guidelines
-
-### Code Style
-
-- ESLint + Prettier
-- TypeScript strict mode
-- Conventional commits
-
-### Git Workflow
-
-- Feature branches
-- Pull request reviews
-- Conventional commits
-
-## License
-
-MIT
+See the [Backend](./backend/) and [Frontend](./frontend/) directories for detailed configuration and setup instructions.

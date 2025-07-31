@@ -64,3 +64,6 @@ share
 
 # SonarQube Folder
 .scannerwork
+
+# Claude code
+CLAUDE.md

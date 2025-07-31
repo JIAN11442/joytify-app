@@ -25,9 +25,26 @@
   "month.November": "十一月",
   "month.December": "十二月",
 
+  "month.01": "一月",
+  "month.02": "二月",
+  "month.03": "三月",
+  "month.04": "四月",
+  "month.05": "五月",
+  "month.06": "六月",
+  "month.07": "七月",
+  "month.08": "八月",
+  "month.09": "九月",
+  "month.10": "十月",
+  "month.11": "十一月",
+  "month.12": "十二月",
+
   "date.format.year": "年",
   "date.format.month": "月",
   "date.format.day": "日",
+
+  "time.unit.seconds": "秒",
+  "time.unit.minutes": "分钟",
+  "time.unit.hours": "小时",
 
   "country.AF": "阿富汗",
   "country.AX": "奥兰",

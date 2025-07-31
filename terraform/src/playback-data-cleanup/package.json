@@ -1,0 +1,17 @@
+{
+  "name": "playback-data-cleanup",
+  "version": "1.0.0",
+  "description": "Lambda function for cleaning up playback data with configurable strategies",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "mongodb": "^6.0.0",
+    "aws-sdk": "^2.1490.0"
+  },
+  "keywords": ["aws", "lambda", "mongodb", "cleanup", "playback"],
+  "author": "Joytify",
+  "license": "MIT"
+}

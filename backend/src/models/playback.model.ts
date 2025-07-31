@@ -1,12 +1,15 @@
 import mongoose, { UpdateQuery } from "mongoose";
-
 import { refreshSongPlaybackStats } from "../services/song.service";
 import { PlaybackStateOptions } from "@joytify/shared-types/constants";
-import { PlaybackSong } from "@joytify/shared-types/types";
 
 export interface PlaybackDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
-  songs: PlaybackSong[];
+  song: mongoose.Types.ObjectId;
+  artist: mongoose.Types.ObjectId;
+  state: String;
+  duration: Number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const { COMPLETED, PLAYING } = PlaybackStateOptions;
@@ -19,39 +22,28 @@ const playbackSchema = new mongoose.Schema<PlaybackDocument>(
       index: true,
       required: true,
     },
-    songs: [
-      new mongoose.Schema(
-        {
-          id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Song",
-            index: true,
-            required: true,
-          },
-          artist: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Musician",
-            index: true,
-            required: true,
-          },
-          playbacks: [
-            new mongoose.Schema(
-              {
-                duration: { type: Number, required: true },
-                state: {
-                  type: String,
-                  enum: [COMPLETED, PLAYING],
-                  required: true,
-                },
-                timestamp: { type: Date, required: true },
-              },
-              { _id: false }
-            ),
-          ],
-        },
-        { _id: false }
-      ),
-    ],
+    song: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Song",
+      index: true,
+      required: true,
+    },
+    artist: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Musician",
+      index: true,
+      required: true,
+    },
+    state: {
+      type: String,
+      enum: [COMPLETED, PLAYING],
+      required: true,
+    },
+    duration: {
+      type: Number,
+      required: true,
+      min: [0.001, "Duration must be greater than 0"],
+    },
   },
   { timestamps: true }
 );
@@ -59,10 +51,10 @@ const playbackSchema = new mongoose.Schema<PlaybackDocument>(
 // after save playback, ...
 playbackSchema.post("save", async function (doc) {
   try {
-    const songId = doc.songs[0].id;
+    const songId = doc.song.toString();
 
-    if (songId && !this.isModified("songs")) {
-      await refreshSongPlaybackStats(songId.toString());
+    if (songId && !this.isModified("song")) {
+      await refreshSongPlaybackStats(songId);
     }
   } catch (error) {
     console.log(error);

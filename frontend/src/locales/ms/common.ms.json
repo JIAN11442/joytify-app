@@ -25,9 +25,26 @@
   "month.November": "November",
   "month.December": "Disember",
 
+  "month.01": "Januari",
+  "month.02": "Februari",
+  "month.03": "Mac",
+  "month.04": "April",
+  "month.05": "Mei",
+  "month.06": "Jun",
+  "month.07": "Julai",
+  "month.08": "Ogos",
+  "month.09": "September",
+  "month.10": "Oktober",
+  "month.11": "November",
+  "month.12": "Disember",
+
   "date.format.year": "YYYY",
   "date.format.month": "MM",
   "date.format.day": "DD",
+
+  "time.unit.seconds": "saat",
+  "time.unit.minutes": "minit",
+  "time.unit.hours": "jam",
 
   "country.AF": "Afghanistan",
   "country.AX": "Kepulauan Aland",

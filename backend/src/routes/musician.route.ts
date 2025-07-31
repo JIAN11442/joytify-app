@@ -9,11 +9,11 @@ import {
 
 const musicianRoute = Router();
 
-// prefix: /musician
+// prefix: /musicians
 musicianRoute.get("/following", getFollowingMusiciansHandler);
+musicianRoute.get("/getId", getMusicianIdHandler);
 musicianRoute.get("/:id", getMusicianByIdHandler);
 
-musicianRoute.post("/getId", getMusicianIdHandler);
 musicianRoute.patch("/follow/:id", followMusicianHandler);
 musicianRoute.patch("/unfollow/:id", unfollowMusicianHandler);
 

@@ -8,10 +8,11 @@ import {
 
 const labelRoute = Router();
 
-// prefix: label
+// prefix: labels
 labelRoute.get("/", getLabelsHandler);
+labelRoute.get("/getId", getLabelIdHandler);
+
 labelRoute.post("/create", createLabelHandler);
 labelRoute.patch("/remove/:id", removeLabelHandler);
-labelRoute.post("/getId", getLabelIdHandler);
 
 export default labelRoute;

@@ -1,0 +1,15 @@
+{
+  "name": "monthly-stats-notification",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Monthly statistics and notifications generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@joytify/shared-types": "^1.3.1",
+    "aws-sdk": "^2.1692.0",
+    "mongodb": "^6.12.0"
+  }
+}

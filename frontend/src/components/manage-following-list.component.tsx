@@ -2,10 +2,12 @@ import { twMerge } from "tailwind-merge";
 import { FormattedMessage } from "react-intl";
 import AnimationWrapper from "./animation-wrapper.component";
 import ManageMusicianCard from "./manage-musician-card.component";
-import { CardListSkeleton } from "./skeleton-loading.component";
+import { GridCardListSkeleton } from "./skeleton-loading.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { MusicianResponse } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
+import { navigate } from "../lib/navigate.lib";
 
 type ManageFollowingListProps = {
   fm: ScopedFormatMessage;
@@ -35,8 +37,14 @@ const ManageFollowingList: React.FC<ManageFollowingListProps> = ({
   const manageFollowingListPrefix = "manage.following.list";
   const manageFollowingListFm = fm(manageFollowingListPrefix);
 
+  const handleMusicianCardOnClick = (musicianId: string) => {
+    timeoutForDelay(() => {
+      navigate(`/musician/${musicianId}`);
+    });
+  };
+
   if (isPending) {
-    return <CardListSkeleton count={2} className={`mt-5`} />;
+    return <GridCardListSkeleton count={2} className={`mt-5`} />;
   }
 
   if (!showMusicians) {
@@ -77,10 +85,12 @@ const ManageFollowingList: React.FC<ManageFollowingListProps> = ({
       )}
     >
       {filteredMusicians?.map((musician) => {
-        const { _id } = musician;
+        const { _id: musicianId } = musician;
+        const navigateToMusicianPage = () => handleMusicianCardOnClick(musicianId);
+
         return (
-          <AnimationWrapper key={`manage-musician-card-${_id}`}>
-            <ManageMusicianCard fm={fm} musician={musician} />
+          <AnimationWrapper key={`manage-musician-card-${musicianId}`}>
+            <ManageMusicianCard fm={fm} musician={musician} onClick={navigateToMusicianPage} />
           </AnimationWrapper>
         );
       })}

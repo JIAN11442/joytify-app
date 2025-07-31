@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { HiHome } from "react-icons/hi";
 import { IoIosMenu } from "react-icons/io";
 import { BiSearch } from "react-icons/bi";
-import JoytifyLogo from "../../public/joytify-logo.svg";
+import { IoNotificationsOutline } from "react-icons/io5";
+import JoytifyLogo from "../../public/logos/joytify-logo.svg";
 
 import NavbarLink from "./navbar-link.component";
 import UserEntryPoint from "./user-entry-point.component";
 import NavbarSearchBar from "./navbar-searchbar.component";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
+import { useGetUserUnviewedNotificationCountQuery } from "../hooks/notification-query.hook";
 import useProviderState from "../states/provider.state";
 import useSidebarState from "../states/sidebar.state";
 import useNavbarState from "../states/navbar.state";
@@ -18,6 +20,7 @@ const Navbar = () => {
   const [searchBarVal, setSearchBarVal] = useState("");
 
   const { authUser } = useUserState();
+  const { screenWidth } = useProviderState();
   const { activeFloatingSidebar, setActiveFloatingSidebar, setCollapseSideBarState } =
     useSidebarState();
   const {
@@ -27,8 +30,7 @@ const Navbar = () => {
     setAdjustNavSearchBarPosition,
   } = useNavbarState();
 
-  const { screenWidth } = useProviderState();
-
+  const { unviewedCount } = useGetUserUnviewedNotificationCountQuery();
   const { mutate: updateUserPreferencesFn } = useUpdateUserPreferencesMutation();
 
   const handleActiveFloatSidebar = () => {
@@ -170,10 +172,41 @@ const Navbar = () => {
         <div
           className={`
             flex
+            gap-x-3
             items-center
             justify-end
           `}
         >
+          {/* notification */}
+          {authUser && (
+            <div className={`relative group`}>
+              {unviewedCount !== undefined && unviewedCount > 0 && (
+                <div
+                  className={`
+                    absolute
+                    -top-1
+                    -right-1
+                    flex
+                    ${unviewedCount >= 100 ? "w-8" : "w-5"}
+                    h-5
+                    bg-red-500
+                    text-white
+                    text-[10px]
+                    rounded-full
+                    items-center
+                    justify-center
+                    z-10
+                    transition-all
+                  `}
+                >
+                  <p>{unviewedCount >= 100 ? "99+" : unviewedCount}</p>
+                </div>
+              )}
+              <NavbarLink to="/manage/notifications" icon={{ name: IoNotificationsOutline }} />
+            </div>
+          )}
+
+          {/* user entry point */}
           <UserEntryPoint />
         </div>
       </div>

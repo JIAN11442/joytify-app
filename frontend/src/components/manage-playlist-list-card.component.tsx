@@ -1,16 +1,17 @@
+import { useState } from "react";
 import ManagePlaylistCardImage from "./manage-playlist-card-image.component";
+import ManagePlaylistCardActions from "./manage-playlist-card-actions.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { PlaylistResponse } from "@joytify/shared-types/types";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
-import ManagePlaylistCardActions from "./manage-playlist-card-actions.component";
-import { useState } from "react";
 
 type ManagePlaylistListProps = {
   fm: ScopedFormatMessage;
   playlist: PlaylistResponse;
+  onClick?: () => void;
 };
 
-const ManagePlaylistListCard: React.FC<ManagePlaylistListProps> = ({ fm, playlist }) => {
+const ManagePlaylistListCard: React.FC<ManagePlaylistListProps> = ({ fm, playlist, onClick }) => {
   const playlistItemFm = fm("playlist.item");
 
   const { title, description, coverImage, stats } = playlist;
@@ -18,8 +19,16 @@ const ManagePlaylistListCard: React.FC<ManagePlaylistListProps> = ({ fm, playlis
 
   const [isGroupHovered, setIsGroupHovered] = useState<boolean>(false);
 
+  const formattedDuration = formatPlaybackDuration({
+    fm,
+    duration: totalSongDuration,
+    precise: true,
+    format: "text",
+  });
+
   return (
     <div
+      onClick={onClick}
       onMouseEnter={() => setIsGroupHovered(true)}
       onMouseLeave={() => setIsGroupHovered(false)}
       onTouchStart={() => setIsGroupHovered(true)}
@@ -31,6 +40,7 @@ const ManagePlaylistListCard: React.FC<ManagePlaylistListProps> = ({ fm, playlis
         gap-5
         from-neutral-500/10
         hover:scale-[1.01]
+        cursor-pointer
         ease-in-out
         duration-200
         transition
@@ -74,7 +84,7 @@ const ManagePlaylistListCard: React.FC<ManagePlaylistListProps> = ({ fm, playlis
           >
             <span>{playlistItemFm("songs.count", { count: totalSongCount })}</span>
             <span>·</span>
-            <span>{formatPlaybackDuration(totalSongDuration, true, "text")}</span>
+            <span>{formattedDuration}</span>
           </p>
         </div>
 

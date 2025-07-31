@@ -68,11 +68,7 @@ const ManageSongsPage = () => {
       </AnimationWrapper>
 
       {/* songs card */}
-      <AnimationWrapper
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className={`h-full`}
-      >
+      <AnimationWrapper initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <ManageSongsList
           fm={fm}
           songs={songs}

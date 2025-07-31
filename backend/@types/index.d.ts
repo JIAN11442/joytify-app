@@ -9,6 +9,8 @@ declare global {
     interface Request {
       userId: mongoose.Types.ObjectId | UserDocument["_id"];
       sessionId: mongoose.Types.ObjectId | SessionDocument["_id"];
+      internalApiKey: string;
+      adminApiKey: string;
     }
   }
 }

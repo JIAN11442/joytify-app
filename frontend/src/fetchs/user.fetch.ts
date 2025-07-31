@@ -11,15 +11,17 @@ import {
   DeregisterUserAccountRequest,
 } from "@joytify/shared-types/types";
 import { getLabelId } from "./label.fetch";
-import { LabelOptions } from "@joytify/shared-types/constants";
+import { LabelOptions, API_ENDPOINTS } from "@joytify/shared-types/constants";
+
+const { USERS } = API_ENDPOINTS;
 
 // get authenticated user info
 export const getAuthUserInfo = async (): Promise<AuthUserResponse> =>
-  API.get("/user/authenticated");
+  API.get(`${USERS}/authenticated`);
 
 // get profile user info
 export const getProfileUserInfo = async (page: number): Promise<RefactorProfileUserResponse> =>
-  API.get("/user/profile", { params: { page } });
+  API.get(`${USERS}/profile`, { params: { page } });
 
 // get profile collection docs info
 export const getProfileCollectionInfo = async (
@@ -27,7 +29,7 @@ export const getProfileCollectionInfo = async (
 ): Promise<ProfileCollectionInfoResponse> => {
   const { page, collection } = params;
 
-  return API.get(`/user/profile/${collection}`, { params: { page } });
+  return API.get(`${USERS}/profile/${collection}`, { params: { page } });
 };
 
 // update user info
@@ -48,20 +50,20 @@ export const updateUserInfo = async (params: UpdateUserInfoRequest): Promise<Use
     }
   }
 
-  return API.patch("/user/update", payload);
+  return API.patch(`${USERS}`, payload);
 };
 
 // reset user password
 export const resetUserPassword = async (params: ResetPasswordRequest) => {
   const { token, ...rest } = params;
 
-  return API.patch(`/user/password/reset/${token}`, rest);
+  return API.patch(`${USERS}/password/reset/${token}`, rest);
 };
 
 // change user password
 export const changeUserPassword = async (params: ChangePasswordRequest) =>
-  API.patch(`/user/password/change`, params);
+  API.patch(`${USERS}/password/change`, params);
 
 // deregister user account
 export const deregisterUserAccount = async (params: DeregisterUserAccountRequest) =>
-  API.delete("/user/deregister", { data: params });
+  API.delete(`${USERS}/deregister`, { data: params });

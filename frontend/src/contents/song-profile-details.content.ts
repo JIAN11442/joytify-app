@@ -93,27 +93,32 @@ export const getSongProfileDetailsContent = (
         {
           id: "stats-info-total-rating-count",
           title: songDetailsFm("rating.count.total"),
-          value: song.activities.totalRatingCount || "N/A",
+          value: song.activities.totalRatingCount || 0,
         },
         {
           id: "stats-info-average-rating",
           title: songDetailsFm("rating.count.average"),
-          value: song.activities.averageRating || "N/A",
+          value: song.activities.averageRating || 0,
         },
         {
           id: "stats-info-total-playback-count",
           title: songDetailsFm("total.playback.count"),
-          value: song.activities.totalPlaybackCount || "N/A",
+          value: song.activities.totalPlaybackCount || 0,
         },
         {
           id: "stats-info-total-playback-duration",
           title: songDetailsFm("total.playback.duration"),
-          value: formatPlaybackDuration(song.activities.totalPlaybackDuration) || "N/A",
+          value:
+            formatPlaybackDuration({ fm, duration: song.activities.totalPlaybackDuration }) || 0,
         },
         {
           id: "stats-info-weighted-average-playback-duration",
           title: songDetailsFm("weighted.average.playback.duration"),
-          value: formatPlaybackDuration(song.activities.weightedAveragePlaybackDuration) || "N/A",
+          value:
+            formatPlaybackDuration({
+              fm,
+              duration: song.activities.weightedAveragePlaybackDuration,
+            }) || 0,
         },
       ],
     },

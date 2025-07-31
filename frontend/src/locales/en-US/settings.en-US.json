@@ -50,12 +50,12 @@
 
   "settings.notifications.title": "Notifications Preferences",
   "settings.notifications.description": "Manage what notifications you receive from the platform",
-  "settings.notifications.monthlyStatisticsReport.title": "Monthly statistics reports",
-  "settings.notifications.monthlyStatisticsReport.description": "Monthly reports on your listening habits, play time, and favorite content",
-  "settings.notifications.followingArtistUpdates.title": "Following artist updates",
-  "settings.notifications.followingArtistUpdates.description": "Updates about artists you follow, including new content and announcements",
-  "settings.notifications.systemAnnouncements.title": "System announcements",
-  "settings.notifications.systemAnnouncements.description": "Important system updates and announcements",
+  "settings.notifications.monthlyStatisticReport.title": "Monthly statistics reports",
+  "settings.notifications.monthlyStatisticReport.description": "Monthly reports on your listening habits, play time, and favorite content",
+  "settings.notifications.followingArtistUpdate.title": "Following artist updates",
+  "settings.notifications.followingArtistUpdate.description": "Updates about artists you follow, including new content and announcements",
+  "settings.notifications.systemAnnouncement.title": "System announcements",
+  "settings.notifications.systemAnnouncement.description": "Important system updates and announcements",
 
   "settings.connectedDevices.title": "Connected Devices",
   "settings.connectedDevices.description": "View and manage your browser device info",

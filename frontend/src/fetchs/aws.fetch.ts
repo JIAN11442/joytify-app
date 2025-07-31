@@ -1,5 +1,5 @@
 import API from "../config/api-client.config";
-import { FileExtension, UploadFolder } from "@joytify/shared-types/constants";
+import { FileExtension, UploadFolder, API_ENDPOINTS } from "@joytify/shared-types/constants";
 
 export interface SignedUrlRequest {
   subfolder?: UploadFolder;
@@ -11,9 +11,11 @@ interface UploadFileRequest extends SignedUrlRequest {
   file: File;
 }
 
+const { AWS } = API_ENDPOINTS;
+
 // get signed url for upload
-export const getSignedUrl = async (params: SignedUrlRequest): Promise<{ uploadUrl: string }> =>
-  await API.post("/aws/get-signed-url", params);
+export const getAwsSignedUrl = async (params: SignedUrlRequest): Promise<{ uploadUrl: string }> =>
+  await API.post(`${AWS}/signed-url`, params);
 
 // upload file to AWS S3
 export const uploadFileToAws = async (params: UploadFileRequest): Promise<string | null> => {
@@ -24,7 +26,7 @@ export const uploadFileToAws = async (params: UploadFileRequest): Promise<string
   const { file, subfolder, extension, nanoID } = params;
 
   // get signed url first
-  const { uploadUrl } = await getSignedUrl({ subfolder, extension, nanoID });
+  const { uploadUrl } = await getAwsSignedUrl({ subfolder, extension, nanoID });
 
   // upload file to AWS S3
   // withCredentials is set to false to avoid CORS issue
@@ -44,4 +46,4 @@ export const uploadFileToAws = async (params: UploadFileRequest): Promise<string
 // the request payload must be wrapped in a 'data' object
 // because the DELETE method in Axios requires it for sending a request body
 export const deleteFileFromAws = async (awsUrl: string) =>
-  await API.delete("/aws/delete-file-url", { data: { awsUrl } });
+  await API.delete(`${AWS}/file-url`, { data: { awsUrl } });

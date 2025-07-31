@@ -4,13 +4,8 @@ import { PlaybackStateOptions } from "@joytify/shared-types/constants";
 
 export const playbackZodSchema = z.object({
   songId: objectIdZodSchema,
-  duration: z.number(),
+  duration: z.number().min(0.001, "Duration must be greater than 0"),
   state: z.nativeEnum(PlaybackStateOptions),
-  timestamp: z.preprocess((arg) => {
-    if (typeof arg === "string" || arg instanceof Date) {
-      return new Date(arg);
-    }
-  }, z.date()),
 });
 
 export type playbackZodSchemaType = z.infer<typeof playbackZodSchema>;

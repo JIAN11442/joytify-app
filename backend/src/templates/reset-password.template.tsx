@@ -42,8 +42,8 @@ interface ResetPasswordProps {
 
 const SendImage =
   "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/reset-password-02.png";
-const JoytifyLogo =
-  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/logo-r.png";
+const JoytifyLogoRegistered =
+  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/joytify-logo-registered.png";
 
 export const JoytifyResetPasswordLinkEmail = (data: ResetPasswordProps) => {
   const { url, username } = data;
@@ -64,7 +64,7 @@ export const JoytifyResetPasswordLinkEmail = (data: ResetPasswordProps) => {
             >
               <tr>
                 <td align="center">
-                  <Img src={JoytifyLogo} width="150" />
+                  <Img src={JoytifyLogoRegistered} width="150" />
                 </td>
               </tr>
             </table>
@@ -83,22 +83,16 @@ export const JoytifyResetPasswordLinkEmail = (data: ResetPasswordProps) => {
               <Heading style={h1}>Hi, {username}</Heading>
 
               <Text style={mainText}>
-                Trouble accessing your <span style={spanText}>Joytify</span>{" "}
-                account? No problem, we're here to help. Select the button below
-                to reset your password.
+                Trouble accessing your <span style={spanText}>Joytify</span> account? No problem,
+                we're here to help. Select the button below to reset your password.
               </Text>
 
-              <Button
-                href={url}
-                style={{ ...button, margin: "0 auto", marginBottom: "20px" }}
-              >
+              <Button href={url} style={{ ...button, margin: "0 auto", marginBottom: "20px" }}>
                 RESET PASSWORD
               </Button>
 
               <Section style={verificationSection}>
-                <Text style={validityText}>
-                  (This link is valid for 10 minutes)
-                </Text>
+                <Text style={validityText}>(This link is valid for 10 minutes)</Text>
               </Section>
             </Section>
 
@@ -108,9 +102,8 @@ export const JoytifyResetPasswordLinkEmail = (data: ResetPasswordProps) => {
             {/* caution */}
             <Section style={lowerSection}>
               <Text style={cautionText}>
-                <span style={spanText}>Joytify</span> will never ask you to
-                reveal or verify your credit card or bank account details via
-                email.
+                <span style={spanText}>Joytify</span> will never ask you to reveal or verify your
+                credit card or bank account details via email.
               </Text>
             </Section>
           </Section>

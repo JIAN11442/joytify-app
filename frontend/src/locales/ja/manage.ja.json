@@ -44,5 +44,34 @@
   "manage.following.unfollow.modal.title": "このアーティストのフォローを解除",
   "manage.following.unfollow.modal.content": "本当にこのアーティストのフォローを解除しますか？今後は更新情報を受け取れなくなります。",
   "manage.following.unfollow.modal.button.submit": "フォローを解除する",
-  "manage.following.unfollow.modal.button.cancel": "キャンセル"
+  "manage.following.unfollow.modal.button.cancel": "キャンセル",
+
+  "manage.notification.title": "通知管理",
+  "manage.notification.description": "受信したすべての通知を管理",
+  "manage.notification.header.unread.count": "{count} 件の未読",
+  "manage.notification.header.button.markAllAsRead": "すべて既読にする",
+  "manage.notification.controlPanel.all": "すべて",
+  "manage.notification.controlPanel.monthlyStats": "月間統計",
+  "manage.notification.controlPanel.artistUpdates": "アーティストの更新",
+  "manage.notification.controlPanel.systemAnnouncements": "システムのお知らせ",
+
+  "manage.notification.list.loadMore": "もっと見る",
+  "manage.notification.list.loadLess": "閉じる",
+  "manage.notification.card.unread": "未読",
+  "manage.notification.card.monthlyStats.title": "{month} の月間統計レポート",
+  "manage.notification.card.artistUpdate.title": "{artist} が {additionalInfo} に更新されました",
+  "manage.notification.card.artistUpdate.title.additionalInfo.newSong": "新曲",
+  "manage.notification.card.systemAnnouncement.title": "システムメンテナンスのお知らせ",
+  "manage.notification.card.monthlyStats.description": "今月は <span>{duration}</span> の音楽を聴きました",
+  "manage.notification.card.monthlyStats.description.additionalInfo.growth.increase": "、先月より <span>{growthPercentage}%</span> 増加しました",
+  "manage.notification.card.monthlyStats.description.additionalInfo.growth.decrease": "、先月より <span>{growthPercentage}%</span> 減少しました",
+  "manage.notification.card.artistUpdate.description": "フォロー中のアーティスト <span>{artist}</span> に対して、誰かが {additionalInfo}",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newAlbum": "新しいアルバム <span>{album}</span> を追加しました",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "新しい曲 <span>{song}</span> を追加しました",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "アルバム <span>{album}</span> に新しい曲 <span>{song}</span> を追加しました",
+  "manage.notification.card.systemAnnouncement.description": "<span>{date}</span> の <span>{startTime}</span> から <span>{endTime}</span> までシステムメンテナンスを実施します",
+  "manage.notification.list.noNotifications": "通知はありません",
+
+  "manage.notification.card.menu.markAsRead": "既読にする",
+  "manage.notification.card.menu.delete": "削除"
 }

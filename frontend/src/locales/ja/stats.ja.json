@@ -1,0 +1,22 @@
+{
+  "stats.monthlyStats.title": "あなたの {month} 音楽月報",
+  "stats.monthlyStats.description": "今月のリスニング傾向をチェック",
+  "stats.monthlyStats.date": "{month} {year}",
+
+  "stats.monthlyStats.overview.totalListeningTime.description": "総リスニング時間",
+  "stats.monthlyStats.overview.growthRate.description": "前月との比較",
+  "stats.monthlyStats.overview.topArtist.description": "最も再生されたアーティスト",
+  "stats.monthlyStats.overview.topSong.description": "最も再生された楽曲",
+
+  "stats.monthlyStats.dashboard.24HourListeningPattern.title": "24時間のリスニングパターン",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.description": "一日の中でのリスニング活動",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.xAxis.label": "時間帯",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.yAxis.label": "リスニング時間（分）",
+
+  "stats.monthlyStats.dashboard.topTracksBreakdown.title": "トップ5楽曲の内訳",
+  "stats.monthlyStats.dashboard.topTracksBreakdown.description": "あなたのトップ5楽曲の分布",
+
+  "stats.monthlyStats.leaderboard.songRanking.title": "お気に入りの楽曲",
+  "stats.monthlyStats.leaderboard.artistRanking.title": "お気に入りのアーティスト",
+  "stats.monthlyStats.noData": "データなし"
+}

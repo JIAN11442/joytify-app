@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from "@joytify/shared-types/constants";
 import API from "../config/api-client.config";
 import {
   CreateLabelRequest,
@@ -7,6 +8,8 @@ import {
   RefactorLabelResponse,
 } from "@joytify/shared-types/types";
 
+const { LABELS } = API_ENDPOINTS;
+
 // get user all labels
 export const getLabels = async (
   types?: LabelOptionsType[],
@@ -15,21 +18,21 @@ export const getLabels = async (
   const query =
     types && types.length > 0
       ? sortBySequence
-        ? `?types=${types.join(",")}&sort_by_sequence=${sortBySequence}`
-        : `?types=${types.join(",")}`
+        ? `types=${types.join(",")}&sort_by_sequence=${sortBySequence}`
+        : `types=${types.join(",")}`
       : "";
 
-  return API.get(`/label${query}`);
+  return API.get(`${LABELS}?${query}`);
 };
 
 // create label
 export const createLabel = async (params: CreateLabelRequest): Promise<LabelResponse> =>
-  API.post("/label/create", params);
-
-// remove label
-export const removeLabel = async (id: string): Promise<LabelResponse> =>
-  API.patch(`/label/remove/${id}`);
+  API.post(`${LABELS}/create`, params);
 
 // get label id
 export const getLabelId = async (params: GetLabelIdRequest): Promise<string> =>
-  await API.post("/label/getId", params);
+  await API.get(`${LABELS}/getId`, { params });
+
+// remove label
+export const removeLabel = async (id: string): Promise<LabelResponse> =>
+  API.patch(`${LABELS}/remove/${id}`);

@@ -1,0 +1,22 @@
+{
+  "stats.monthlyStats.title": "你的 {month} 音樂月報",
+  "stats.monthlyStats.description": "看看你這個月的聆聽方式",
+  "stats.monthlyStats.date": "{month} {year}",
+
+  "stats.monthlyStats.overview.totalListeningTime.description": "總聆聽時間",
+  "stats.monthlyStats.overview.growthRate.description": "與上月相比",
+  "stats.monthlyStats.overview.topArtist.description": "最多播放的藝人",
+  "stats.monthlyStats.overview.topSong.description": "最多播放的歌曲",
+
+  "stats.monthlyStats.dashboard.24HourListeningPattern.title": "24 小時聆聽模式",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.description": "你一天中的聆聽活動",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.xAxis.label": "時間",
+  "stats.monthlyStats.dashboard.24HourListeningPattern.yAxis.label": "聆聽時間（分鐘）",
+
+  "stats.monthlyStats.dashboard.topTracksBreakdown.title": "前五首歌曲分布",
+  "stats.monthlyStats.dashboard.topTracksBreakdown.description": "你的前五首歌曲分布",
+
+  "stats.monthlyStats.leaderboard.songRanking.title": "你的熱門歌曲",
+  "stats.monthlyStats.leaderboard.artistRanking.title": "你的熱門藝人",
+  "stats.monthlyStats.noData": "暫無資料"
+}

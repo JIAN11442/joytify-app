@@ -17,7 +17,7 @@ const { OK } = HttpCode;
 // get musician ID handler
 export const getMusicianIdHandler: RequestHandler = async (req, res, next) => {
   try {
-    const params: GetMusicianIdRequest = musicianZodSchema.parse(req.body);
+    const params: GetMusicianIdRequest = musicianZodSchema.parse(req.query);
 
     const { id } = await getMusicianId(params);
 

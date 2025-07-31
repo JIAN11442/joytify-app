@@ -104,17 +104,3 @@ export const removeAlbum = async (data: DeleteAlbumServiceRequest) => {
 
   return { updatedAlbum };
 };
-
-// delete user album service(*)
-export const deleteAlbum = async (data: DeleteAlbumServiceRequest) => {
-  const { userId, albumId } = data;
-
-  const deletedAlbum = await AlbumModel.findOneAndDelete({
-    _id: albumId,
-    users: userId,
-  });
-
-  appAssert(deletedAlbum !== null, INTERNAL_SERVER_ERROR, "Failed to delete album");
-
-  return { deletedAlbum };
-};

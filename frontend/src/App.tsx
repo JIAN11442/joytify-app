@@ -21,6 +21,8 @@ import ManageFollowingPage from "./pages/manage-following.page";
 import MusicianPage from "./pages/musician.page";
 import AlbumPage from "./pages/album.page";
 import SongPage from "./pages/song.page";
+import MonthlyStatsPage from "./pages/monthly-stats.page";
+import ManageNotificationPage from "./pages/manage-notification.page";
 import { setNavigate } from "./lib/navigate.lib";
 
 function App() {
@@ -56,7 +58,7 @@ function App() {
             <Route path="songs" element={<ManageSongsPage />} />
             <Route path="playlists" element={<ManagePlaylistsPage />} />
             <Route path="following" element={<ManageFollowingPage />} />
-            <Route path="notifications" element={<p>notifications management</p>} />
+            <Route path="notifications" element={<ManageNotificationPage />} />
           </Route>
         </Route>
       </Route>
@@ -76,6 +78,7 @@ function App() {
             </DeregistrationIntlProvider>
           }
         />
+        <Route path="/user/:userId/monthly-stats/:yearMonth" element={<MonthlyStatsPage />} />
       </Route>
 
       <Route path="*" element={<h1>404</h1>} />

@@ -10,7 +10,7 @@ import useCookieState from "../states/cookie.state";
 import useLocaleState from "../states/locale.state";
 import useUserState from "../states/user.state";
 import { Queue } from "@joytify/shared-types/types";
-import { getAudioInstance } from "../lib/audio.lib";
+import { getMusicAudioInstance } from "../lib/music-audio.lib";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type UserPreferencesProps = {
@@ -38,7 +38,7 @@ const UserPreferencesProvider: React.FC<UserPreferencesProps> = ({ children }) =
   const { sidebarCollapsed, locale, player } = userPreferences ?? {};
   const { EN_US } = SupportedLocale;
 
-  const audio = getAudioInstance();
+  const musicAudio = getMusicAudioInstance();
 
   // initialize sidebar collapsed state
   // initialize theme locale
@@ -90,7 +90,7 @@ const UserPreferencesProvider: React.FC<UserPreferencesProps> = ({ children }) =
           setInitializedFormCookie(true);
 
           if (refactorQueue[currentIndex]) {
-            audio.src = refactorQueue[currentIndex].songUrl;
+            musicAudio.src = refactorQueue[currentIndex].songUrl;
           }
 
           initializePlayerRef.current = true;

@@ -44,5 +44,34 @@
   "manage.following.unfollow.modal.title": "取消追蹤此藝人",
   "manage.following.unfollow.modal.content": "確定要取消追蹤這位藝人嗎？你將不再收到他的更新。",
   "manage.following.unfollow.modal.button.submit": "確定取消追蹤",
-  "manage.following.unfollow.modal.button.cancel": "取消"
+  "manage.following.unfollow.modal.button.cancel": "取消",
+
+  "manage.notification.title": "通知管理",
+  "manage.notification.description": "管理您收到的所有通知",
+  "manage.notification.header.unread.count": "{count} 個未讀",
+  "manage.notification.header.button.markAllAsRead": "全部標記為已讀",
+  "manage.notification.controlPanel.all": "全部",
+  "manage.notification.controlPanel.monthlyStats": "月度統計",
+  "manage.notification.controlPanel.artistUpdates": "藝人更新",
+  "manage.notification.controlPanel.systemAnnouncements": "系統公告",
+
+  "manage.notification.list.loadMore": "載入更多",
+  "manage.notification.list.loadLess": "收起",
+  "manage.notification.card.unread": "未讀",
+  "manage.notification.card.monthlyStats.title": "{month} 月度統計報告",
+  "manage.notification.card.artistUpdate.title": "{artist} 剛剛更新了 {additionalInfo}",
+  "manage.notification.card.artistUpdate.title.additionalInfo.newSong": "新歌曲",
+  "manage.notification.card.systemAnnouncement.title": "系統維護通知",
+  "manage.notification.card.monthlyStats.description": "你本月總共聆聽了 <span>{duration}</span> 的音樂",
+  "manage.notification.card.monthlyStats.description.additionalInfo.growth.increase": "，比上個月多了 <span>{growthPercentage}%</span>",
+  "manage.notification.card.monthlyStats.description.additionalInfo.growth.decrease": "，比上個月少了 <span>{growthPercentage}%</span>",
+  "manage.notification.card.artistUpdate.description": "有社群成員為你關注的藝人 <span>{artist}</span> {additionalInfo}",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newAlbum": "新增了專輯 <span>{album}</span>",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "新增了歌曲 <span>{song}</span>",
+  "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "新增了歌曲 <span>{song}</span> 到專輯 <span>{album}</span>",
+  "manage.notification.card.systemAnnouncement.description": "平台將於 <span>{date}</span> 從 <span>{startTime}</span> 到 <span>{endTime}</span> 進行系統維護",
+  "manage.notification.list.noNotifications": "尚無通知",
+
+  "manage.notification.card.menu.markAsRead": "標記為已讀",
+  "manage.notification.card.menu.delete": "刪除"
 }

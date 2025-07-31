@@ -5,7 +5,7 @@ import { MusicianOptions } from "@joytify/shared-types/constants";
 export const musicianZodSchema = z.object({
   musician: stringZodSchema,
   type: z.nativeEnum(MusicianOptions),
-  createIfAbsent: z.boolean().optional(),
+  createIfAbsent: z.coerce.boolean().optional(),
 });
 
 export type musicianZodSchemaType = z.infer<typeof musicianZodSchema>;

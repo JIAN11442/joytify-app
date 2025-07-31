@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import Loader from "./loader.component";
 import DonationTermsAgreement from "./donation-terms-agreement.component";
 import { TermsChecked } from "./account-deregistration-agreement.component";
 import AccountDeregistrationAgreement from "./account-deregistration-agreement.component";
@@ -6,7 +7,6 @@ import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { useDeleteSongMutation } from "../hooks/song-mutate.hook";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import Loader from "./loader.component";
 
 type SongDeleteDonationFormProps = {
   fm: ScopedFormatMessage;
@@ -81,13 +81,7 @@ const SongDeleteDonationForm: React.FC<SongDeleteDonationFormProps> = ({
           type="button"
           disabled={deleteBtnDisabled}
           onClick={handleDeleteSong}
-          className={`
-            submit-btn
-            py-2.5
-            bg-red-500
-            rounded-md
-            border-none
-          `}
+          className={`submit-btn bg-red-500`}
         >
           {isPending ? <Loader loader={{ size: 20 }} /> : donationFormFm("delete")}
         </button>
@@ -95,13 +89,7 @@ const SongDeleteDonationForm: React.FC<SongDeleteDonationFormProps> = ({
           type="button"
           disabled={isPending}
           onClick={backToInitialPageFn}
-          className={`
-            submit-btn
-            py-2.5
-            bg-neutral-500/50
-            rounded-md
-            border-none
-          `}
+          className={`submit-btn bg-neutral-500/50`}
         >
           {donationFormFm("back")}
         </button>

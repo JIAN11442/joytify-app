@@ -76,9 +76,9 @@ export const defaultAccountDetailsData = {
 };
 
 export const defaultNotificationPreferencesData = {
-  monthlyStatistics: undefined as boolean | undefined,
-  followingArtistUpdates: undefined as boolean | undefined,
-  systemAnnouncements: undefined as boolean | undefined,
+  monthlyStatistic: undefined as boolean | undefined,
+  followingArtistUpdate: undefined as boolean | undefined,
+  systemAnnouncement: undefined as boolean | undefined,
 };
 
 export const defaultSongRateData = {

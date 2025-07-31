@@ -179,7 +179,7 @@ const ManagePlaylistsControlPanel: React.FC<ManagePlaylistsControlPanelProps> = 
           filterField={filterField}
           onFilterOptionChange={(filterOpt) => handleFilterOnChange(filterOpt)}
           className={`
-            w-full 
+            w-full
             ${isCollapsed ? `max-md:grid max-md:grid-cols-3` : `max-lg:grid max-lg:grid-cols-3`}`}
         />
 

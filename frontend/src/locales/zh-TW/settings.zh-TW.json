@@ -50,12 +50,12 @@
 
   "settings.notifications.title": "通知偏好設定",
   "settings.notifications.description": "管理你想接收哪些平台通知",
-  "settings.notifications.monthlyStatisticsReport.title": "每月統計報告",
-  "settings.notifications.monthlyStatisticsReport.description": "每月接收你的收聽活動、播放時間與熱門內容摘要",
-  "settings.notifications.followingArtistUpdates.title": "追蹤藝人更新",
-  "settings.notifications.followingArtistUpdates.description": "接收你追蹤的藝人最新發行與重要更新通知",
-  "settings.notifications.systemAnnouncements.title": "系統公告",
-  "settings.notifications.systemAnnouncements.description": "掌握系統更新與平台公告等重要資訊",
+  "settings.notifications.monthlyStatisticReport.title": "每月統計報告",
+  "settings.notifications.monthlyStatisticReport.description": "每月接收你的收聽活動、播放時間與熱門內容摘要",
+  "settings.notifications.followingArtistUpdate.title": "追蹤藝人更新",
+  "settings.notifications.followingArtistUpdate.description": "接收你追蹤的藝人最新發行與重要更新通知",
+  "settings.notifications.systemAnnouncement.title": "系統公告",
+  "settings.notifications.systemAnnouncement.description": "掌握系統更新與平台公告等重要資訊",
 
   "settings.connectedDevices.title": "已連線的裝置",
   "settings.connectedDevices.description": "查看並管理您的瀏覽器裝置信息",

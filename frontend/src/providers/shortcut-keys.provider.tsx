@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import useUserState from "../states/user.state";
 import useNavbarState from "../states/navbar.state";
@@ -6,8 +6,9 @@ import useLibraryState from "../states/library.state";
 import useSidebarState from "../states/sidebar.state";
 import usePlaylistState from "../states/playlist.state";
 import usePlaybackControl from "../hooks/playback-control.hook";
+import usePlaybackControlState from "../states/playback-control.state";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
-import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
+import { timeoutForEventListener } from "../lib/timeout.lib";
 import { isEditableElement } from "../lib/element.lib";
 import { navigate } from "../lib/navigate.lib";
 
@@ -16,33 +17,47 @@ type ShortcutKeysProps = {
 };
 
 const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
-  const { authUser } = useUserState();
-  const { activeNavSearchBar, setActiveNavSearchBar } = useNavbarState();
-  const { collapseSideBarState, setCollapseSideBarState } = useSidebarState();
-  const { setActiveAddingOptions, setActiveLibrarySearchBar } = useLibraryState();
-  const { setActivePlaylistEditOptionsMenu } = usePlaylistState();
-  const { togglePlayback, audioSong } = usePlaybackControl();
-
-  const { isCollapsed } = collapseSideBarState;
-
   const { mutate: updateUserPreferencesFn } = useUpdateUserPreferencesMutation();
+  const { togglePlayback } = usePlaybackControl();
+
+  // Debounce for rapid key presses
+  const lastKeyPressRef = useRef<{ key: string; time: number }>({ key: "", time: 0 });
+  const DEBOUNCE_DELAY = 200;
 
   const toggleSidebar = useCallback(() => {
-    timeoutForDelay(() => {
-      setCollapseSideBarState({
-        isCollapsed: !isCollapsed,
-        isManualToggle: true,
-      });
+    const { isCollapsed } = useSidebarState.getState().collapseSideBarState;
+    const { setCollapseSideBarState } = useSidebarState.getState();
 
-      updateUserPreferencesFn({ sidebarCollapsed: !isCollapsed });
+    setCollapseSideBarState({
+      isCollapsed: !isCollapsed,
+      isManualToggle: true,
     });
-  }, [isCollapsed]);
+
+    updateUserPreferencesFn({ sidebarCollapsed: !isCollapsed });
+  }, [updateUserPreferencesFn]);
 
   const handleOnKeyDown = useCallback(
     (e: Event) => {
       const ekey = e as KeyboardEvent;
       const key = ekey.key;
       const isEditing = isEditableElement(ekey.target);
+      const currentTime = Date.now();
+
+      // Debounce rapid key presses
+      if (
+        lastKeyPressRef.current.key === key &&
+        currentTime - lastKeyPressRef.current.time < DEBOUNCE_DELAY
+      ) {
+        return;
+      }
+      lastKeyPressRef.current = { key, time: currentTime };
+
+      // Get latest state from stores
+      const { authUser } = useUserState.getState();
+      const { activeNavSearchBar, setActiveNavSearchBar } = useNavbarState.getState();
+      const { audioSong } = usePlaybackControlState.getState();
+      const { setActiveAddingOptions, setActiveLibrarySearchBar } = useLibraryState.getState();
+      const { setActivePlaylistEditOptionsMenu } = usePlaylistState.getState();
 
       // handle modifier key combinations
       if (ekey.metaKey || ekey.ctrlKey) {
@@ -66,17 +81,15 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
             // to search page
             if (!activeNavSearchBar) {
               ekey.preventDefault();
-              timeoutForDelay(() => {
-                setActiveNavSearchBar(!activeNavSearchBar);
-                navigate("/search");
-              });
+              setActiveNavSearchBar(true);
+              navigate("/search");
             }
             break;
           case "P":
             // to profile page
             if (authUser) {
               ekey.preventDefault();
-              navigate(`/profile/${authUser?._id}`);
+              navigate(`/profile/${authUser._id}`);
             }
             break;
           case "S":
@@ -111,6 +124,11 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
             }
             break;
           case "Escape":
+            // blur focused input if editing
+            if (isEditing && ekey.target instanceof HTMLElement) {
+              ekey.target.blur();
+            }
+
             // reset all active states
             setActiveNavSearchBar(false);
             setActiveAddingOptions(false);
@@ -120,11 +138,12 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
         }
       }
     },
-    [audioSong, activeNavSearchBar, toggleSidebar]
+    [toggleSidebar, togglePlayback]
   );
 
   useEffect(() => {
-    return timeoutForEventListener(document, "keydown", handleOnKeyDown);
+    const cleanup = timeoutForEventListener(document, "keydown", handleOnKeyDown);
+    return cleanup;
   }, [handleOnKeyDown]);
 
   return <>{children}</>;

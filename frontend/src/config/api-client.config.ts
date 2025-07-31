@@ -3,6 +3,9 @@ import axios, { AxiosRequestConfig } from "axios";
 
 import queryClient from "./query-client.config";
 import { navigate } from "../lib/navigate.lib";
+import { API_ENDPOINTS } from "@joytify/shared-types/constants";
+
+const { AUTH } = API_ENDPOINTS;
 
 const options: AxiosRequestConfig = {
   baseURL: import.meta.env.VITE_SERVER_URL,
@@ -39,12 +42,13 @@ API.interceptors.response.use(
       if (data?.errorCode === "InvalidAccessToken") {
         try {
           if (!refreshPromise) {
-            refreshPromise = RefreshTokensClient.get("/auth/refresh");
+            refreshPromise = RefreshTokensClient.post(`${AUTH}/refresh`);
           }
 
           await refreshPromise;
+          refreshPromise = null;
 
-          return RefreshTokensClient(config);
+          return API(config);
         } catch (error) {
           // if refresh token failed, clear the query cache
           queryClient.clear();

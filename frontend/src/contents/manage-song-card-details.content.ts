@@ -66,12 +66,15 @@ export const getManageSongCardDetailsContent = (
     {
       id: "song-details-total-playback-duration",
       title: songDetailsFm("total.playback.duration"),
-      value: formatPlaybackDuration(song.activities.totalPlaybackDuration) || "N/A",
+      value:
+        formatPlaybackDuration({ fm, duration: song.activities.totalPlaybackDuration }) || "N/A",
     },
     {
       id: "song-details-weighted-average-playback-duration",
       title: songDetailsFm("weighted.average.playback.duration"),
-      value: formatPlaybackDuration(song.activities.weightedAveragePlaybackDuration) || "N/A",
+      value:
+        formatPlaybackDuration({ fm, duration: song.activities.weightedAveragePlaybackDuration }) ||
+        "N/A",
     },
   ];
 

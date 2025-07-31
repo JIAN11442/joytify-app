@@ -37,7 +37,7 @@ type CardSkeleton = {
   tw?: { image?: string };
 };
 
-type CardListSkeleton = Omit<CardSkeleton, "tw"> & {
+type GridCardListSkeleton = Omit<CardSkeleton, "tw"> & {
   count?: number;
   tw?: {
     container?: string;
@@ -335,8 +335,12 @@ export const CardSkeleton: React.FC<CardSkeleton> = ({ className, tw }) => {
   );
 };
 
-// card list skeleton
-export const CardListSkeleton: React.FC<CardListSkeleton> = ({ count = 1, className, tw }) => {
+// grid card list skeleton
+export const GridCardListSkeleton: React.FC<GridCardListSkeleton> = ({
+  count = 1,
+  className,
+  tw,
+}) => {
   const { isCollapsed } = useSkeletonCommon();
 
   return (
@@ -405,6 +409,64 @@ export const PlaylistListCardSkeleton = () => {
         <Skeleton className={`w-5 h-5 rounded-full`} />
         <Skeleton className={`w-5 h-5 rounded-full`} />
       </div>
+    </div>
+  );
+};
+
+// notification control panel skeleton
+export const NotificationControlPanelSkeleton = () => {
+  return <Skeleton className={`w-full h-[3rem] rounded-md`} />;
+};
+
+// notification card list skeleton
+export const NotificationCardListSkeleton = ({ count = 1 }: { count?: number }) => {
+  return (
+    <div
+      className={`
+        flex
+        flex-col
+        w-full
+        gap-3
+      `}
+    >
+      {Array.from({ length: count }).map((_, index) => {
+        return (
+          <div
+            key={`notification-card-list-skeleton-${index}`}
+            className={`
+              flex
+              w-full
+              h-full
+              p-5
+              gap-5
+              bg-neutral-700/20
+              rounded-md
+          `}
+          >
+            <ImageSkeleton />
+
+            <div className={`flex w-full flex-col gap-3`}>
+              {/* header */}
+              <div className={`flex w-full items-center justify-between`}>
+                <div className={`flex gap-2`}>
+                  {Array.from({ length: 2 }).map((_, index) => {
+                    return (
+                      <Skeleton
+                        key={`notification-card-list-skeleton-${index}`}
+                        className={`w-20 h-4 rounded-full`}
+                      />
+                    );
+                  })}
+                </div>
+                <Skeleton className={`w-20 h-4 rounded-full`} />
+              </div>
+
+              {/* body */}
+              <TextSkeleton count={2} />
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };

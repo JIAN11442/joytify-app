@@ -36,7 +36,7 @@ export const getLabelsHandler: RequestHandler = async (req, res, next) => {
 // get label id handler
 export const getLabelIdHandler: RequestHandler = async (req, res, next) => {
   try {
-    const params: GetLabelIdRequest = getLabelIdZodSchema.parse(req.body);
+    const params: GetLabelIdRequest = getLabelIdZodSchema.parse(req.query);
 
     const { id } = await getLabelId(params);
 

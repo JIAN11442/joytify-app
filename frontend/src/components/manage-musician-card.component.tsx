@@ -10,10 +10,11 @@ import { timeoutForDelay } from "../lib/timeout.lib";
 type ManageMusicianCardProps = {
   fm: ScopedFormatMessage;
   musician: MusicianResponse;
+  onClick?: () => void;
   tw?: { img?: string };
 };
 
-const ManageMusicianCard: React.FC<ManageMusicianCardProps> = ({ fm, musician, tw }) => {
+const ManageMusicianCard: React.FC<ManageMusicianCardProps> = ({ fm, musician, onClick, tw }) => {
   const [isGroupHovered, setIsGroupHovered] = useState(false);
   const { setActiveMusicianUnFollowModal } = useManagesState();
 
@@ -27,6 +28,7 @@ const ManageMusicianCard: React.FC<ManageMusicianCardProps> = ({ fm, musician, t
 
   return (
     <div
+      onClick={onClick}
       onMouseEnter={() => setIsGroupHovered(true)}
       onMouseLeave={() => setIsGroupHovered(false)}
       onTouchStart={() => setIsGroupHovered(true)}
@@ -34,6 +36,7 @@ const ManageMusicianCard: React.FC<ManageMusicianCardProps> = ({ fm, musician, t
       className={`
         card-wrapper
         items-center
+        cursor-pointer
       `}
     >
       {/* image */}

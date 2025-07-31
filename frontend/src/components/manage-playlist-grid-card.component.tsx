@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { PiClock, PiMusicNoteFill } from "react-icons/pi";
 
 import Icon from "./react-icons.component";
@@ -8,22 +9,36 @@ import { PlaylistResponse } from "@joytify/shared-types/types";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
 
 type ManagePlaylistGridCardProps = {
+  fm: ScopedFormatMessage;
   playlist: PlaylistResponse;
+  onClick?: () => void;
 };
 
-const ManagePlaylistGridCard: React.FC<ManagePlaylistGridCardProps> = ({ playlist }) => {
+const ManagePlaylistGridCard: React.FC<ManagePlaylistGridCardProps> = ({
+  fm,
+  playlist,
+  onClick,
+}) => {
   const { title, coverImage, stats } = playlist;
   const { totalSongCount, totalSongDuration } = stats;
 
   const [isGroupHovered, setIsGroupHovered] = useState(false);
 
+  const formattedDuration = formatPlaybackDuration({
+    fm,
+    duration: totalSongDuration,
+    precise: true,
+    format: "text",
+  });
+
   return (
     <div
-      className={`card-wrapper`}
+      onClick={onClick}
       onMouseEnter={() => setIsGroupHovered(true)}
       onMouseLeave={() => setIsGroupHovered(false)}
       onTouchStart={() => setIsGroupHovered(true)}
       onTouchEnd={() => setIsGroupHovered(false)}
+      className={`card-wrapper cursor-pointer`}
     >
       {/* image */}
       <ManagePlaylistCardImage coverImage={coverImage}>
@@ -43,7 +58,7 @@ const ManagePlaylistGridCard: React.FC<ManagePlaylistGridCardProps> = ({ playlis
         >
           <div className={`tag-label-secondary`}>
             <Icon name={PiClock} opts={{ size: 16 }} />
-            <p>{formatPlaybackDuration(totalSongDuration, true, "text")}</p>
+            <p>{formattedDuration}</p>
           </div>
 
           <div className={`tag-label-secondary`}>

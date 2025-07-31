@@ -2,7 +2,7 @@ import mongoose, { FilterQuery } from "mongoose";
 import SongModel, { SongDocument } from "../models/song.model";
 import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
 
-import { getTotalPlaybackDurationAndCount } from "./playback.service";
+import { getPlaybackStatisticsBySongId } from "./playback.service";
 import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
 import {
   CreateSongRequest,
@@ -166,7 +166,7 @@ export const getUserSongs = async (userId: string) => {
 // re-calculate target song's total duration, total count and average duration
 export const refreshSongPlaybackStats = async (songId: string) => {
   const { totalDuration, totalCount, weightedAvgDuration } =
-    await getTotalPlaybackDurationAndCount(songId);
+    await getPlaybackStatisticsBySongId(songId);
 
   const updatedSong = await SongModel.findByIdAndUpdate(
     songId,

@@ -42,31 +42,6 @@ export const useGetAllSongsQuery = (opts: object = {}) => {
   return { songs, ...rest };
 };
 
-// get song by id
-export const useGetSongByIdQuery = (id: string, opts: object = {}) => {
-  const [isQueryError, setIsQueryError] = useState(false);
-
-  const { data: song, ...rest } = useQuery({
-    queryKey: [QueryKey.GET_TARGET_SONG, id],
-    queryFn: async () => {
-      try {
-        const song = await getSongById(id);
-
-        return song;
-      } catch (error) {
-        if (error) {
-          setIsQueryError(true);
-        }
-      }
-    },
-    staleTime: Infinity,
-    enabled: !!id && !isQueryError,
-    ...opts,
-  });
-
-  return { song, ...rest };
-};
-
 // get user's songs query
 export const useGetUserSongsQuery = (opts: object = {}) => {
   const [isQueryError, setIsQueryError] = useState(false);
@@ -113,4 +88,29 @@ export const useGetUserSongStatsQuery = (opts: object = {}) => {
   });
 
   return { songStats, ...rest };
+};
+
+// get song by id
+export const useGetSongByIdQuery = (id: string, opts: object = {}) => {
+  const [isQueryError, setIsQueryError] = useState(false);
+
+  const { data: song, ...rest } = useQuery({
+    queryKey: [QueryKey.GET_TARGET_SONG, id],
+    queryFn: async () => {
+      try {
+        const song = await getSongById(id);
+
+        return song;
+      } catch (error) {
+        if (error) {
+          setIsQueryError(true);
+        }
+      }
+    },
+    staleTime: Infinity,
+    enabled: !!id && !isQueryError,
+    ...opts,
+  });
+
+  return { song, ...rest };
 };

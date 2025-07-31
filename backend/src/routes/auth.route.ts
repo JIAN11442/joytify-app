@@ -16,7 +16,7 @@ authRoute.post("/login", loginHandler);
 authRoute.post("/third-party/login", loginWithThirdPartyHandler);
 authRoute.post("/third-party/register", registerWithThirdPartyHandler);
 
-authRoute.get("/logout", logoutHandler);
-authRoute.get("/refresh", refreshTokensHandler);
+authRoute.post("/logout", logoutHandler);
+authRoute.post("/refresh", refreshTokensHandler);
 
 export default authRoute;

@@ -1,8 +1,8 @@
+import { twMerge } from "tailwind-merge";
+import { IconBaseProps } from "react-icons";
 import Icon, { IconName } from "./react-icons.component";
 import { getManagePlaylistCardActionsContent } from "../contents/manage-playlist-card-actions.content";
 import { PlaylistResponse } from "@joytify/shared-types/types";
-import { twMerge } from "tailwind-merge";
-import { IconBaseProps } from "react-icons";
 
 type ManagePlaylistCardActionsProps = {
   isGroupHovered: boolean;
@@ -35,10 +35,15 @@ const ManagePlaylistCardActions: React.FC<ManagePlaylistCardActionsProps> = ({
       {playlistCardActions.map((action) => {
         const { id, color, hidden, onClick } = action;
 
+        const handleOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+          e.stopPropagation();
+          onClick();
+        };
+
         return (
           <button
             key={id}
-            onClick={onClick}
+            onClick={handleOnClick}
             style={{ color: isGroupHovered ? color : undefined }}
             className={twMerge(
               `

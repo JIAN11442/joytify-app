@@ -6,7 +6,9 @@ import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { LoopMode, PlaybackStateOptions } from "@joytify/shared-types/constants";
 import usePlaybackControlState from "../states/playback-control.state";
 import useCookieState from "../states/cookie.state";
-import { getAudioInstance } from "../lib/audio.lib";
+import { timeoutForEventListener } from "../lib/timeout.lib";
+import { getMusicAudioInstance } from "../lib/music-audio.lib";
+import { initializeNotificationAudioInstance } from "../lib/notification-audio.lib";
 
 type PlaybackControlProps = {
   children: React.ReactNode;
@@ -39,7 +41,7 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
   const { TRACK, PLAYLIST } = LoopMode;
   const { COMPLETED, PLAYING } = PlaybackStateOptions;
 
-  const audio = getAudioInstance();
+  const musicAudio = getMusicAudioInstance();
 
   const player = useMemo(() => {
     return {
@@ -54,7 +56,7 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
   // audio play ended event
   useEffect(() => {
     const handleEnded = () => {
-      if (!audio) return;
+      if (!musicAudio) return;
 
       const { queue, currentIndex } = playbackQueue;
       const currentSong = queue[currentIndex];
@@ -65,7 +67,6 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
           songId: currentSong._id,
           duration: accumulatePlaybackTimeRef.current,
           state: COMPLETED,
-          timestamp: new Date(),
         });
       }
 
@@ -86,17 +87,17 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
 
         // if no shuffle and loop mode, just reset
         default:
-          audio.currentTime = 0;
+          musicAudio.currentTime = 0;
           setIsPlaying(false);
       }
     };
 
-    audio.addEventListener("ended", handleEnded);
+    musicAudio.addEventListener("ended", handleEnded);
 
     return () => {
-      audio.removeEventListener("ended", handleEnded);
+      musicAudio.removeEventListener("ended", handleEnded);
     };
-  }, [audio, loopMode, isShuffle, playbackQueue, isPlaying]);
+  }, [musicAudio, loopMode, isShuffle, playbackQueue, isPlaying]);
 
   // audio time update event
   useEffect(() => {
@@ -104,9 +105,9 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
     const currentSong = queue[currentIndex];
 
     const handleTimeUpdate = () => {
-      if (!audio || !currentSong) return;
+      if (!musicAudio || !currentSong) return;
 
-      const audioCurrentTime = audio.currentTime;
+      const audioCurrentTime = musicAudio.currentTime;
       const timeInterval = audioCurrentTime - audioCurrentTimeRef.current;
       const validTimeInterval =
         timeInterval > 0.3 ? playbackTimeRef.current : timeInterval < 0 ? 0 : timeInterval;
@@ -119,15 +120,15 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
       setPlaybackTime(accumulatePlaybackTimeRef.current);
     };
 
-    audioSrcRef.current = audio.src;
-    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audioSrcRef.current = musicAudio.src;
+    musicAudio.addEventListener("timeupdate", handleTimeUpdate);
 
     return () => {
       if (
         isPlaying &&
-        audio.src &&
+        musicAudio.src &&
         audioSrcRef.current &&
-        audio.src !== audioSrcRef.current &&
+        musicAudio.src !== audioSrcRef.current &&
         currentSong &&
         audioCurrentTimeRef.current !== currentSong.duration
       ) {
@@ -135,7 +136,6 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
           songId: currentSong._id,
           duration: accumulatePlaybackTimeRef.current,
           state: PLAYING,
-          timestamp: new Date(),
         });
       }
 
@@ -143,9 +143,9 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
       playbackTimeRef.current = 0;
       accumulatePlaybackTimeRef.current = 0;
 
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      musicAudio.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, [audio.src, playbackQueue, isPlaying]);
+  }, [musicAudio.src, playbackQueue, isPlaying]);
 
   // update player cookie while state changes
   useEffect(() => {
@@ -163,6 +163,36 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
     setRefactorCookiePlayer(player);
     updateUserPreferencesFn({ player: refactorPlayer });
   }, [initializedFormCookie, refactorCookiePlayer, player]);
+
+  // To bypass browser's autoplay restrictions, we must unlock the notification audio
+  // by playing it (even silently) after a user interaction (click or keydown).
+  // This ensures notification sounds can be played automatically later (e.g., via WebSocket).
+  // This useEffect only needs to run once on app initialization.
+  useEffect(() => {
+    let cleanupClick: (() => void) | null = null;
+    let cleanupKeydown: (() => void) | null = null;
+
+    const unlockAudio = async () => {
+      try {
+        await initializeNotificationAudioInstance();
+
+        // remove event listener immediately after initialize
+        // cause it just need to be called once to unlock audio
+        cleanupClick?.();
+        cleanupKeydown?.();
+      } catch (error) {
+        console.warn("Failed to unlock audio:", error);
+      }
+    };
+
+    cleanupClick = timeoutForEventListener(window, "click", unlockAudio);
+    cleanupKeydown = timeoutForEventListener(window, "keydown", unlockAudio);
+
+    return () => {
+      cleanupClick?.();
+      cleanupKeydown?.();
+    };
+  }, []);
 
   return <>{children}</>;
 };

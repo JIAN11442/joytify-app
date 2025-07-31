@@ -4,7 +4,7 @@ import { BiPlus } from "react-icons/bi";
 import Icon from "./react-icons.component";
 import ManagePlaylistGridCard from "./manage-playlist-grid-card.component";
 import ManagePlaylistListCard from "./manage-playlist-list-card.component";
-import { CardListSkeleton, PlaylistListCardSkeleton } from "./skeleton-loading.component";
+import { GridCardListSkeleton, PlaylistListCardSkeleton } from "./skeleton-loading.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { ManagePlaylistsArrangement } from "../constants/manage.constant";
 import { ManagePlaylistsArrangementType } from "../types/manage.type";
@@ -12,6 +12,7 @@ import { PlaylistResponse } from "@joytify/shared-types/types";
 import usePlaylistState from "../states/playlist.state";
 import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import { navigate } from "../lib/navigate.lib";
 
 type ManagePlaylistsListProps = {
   fm: ScopedFormatMessage;
@@ -34,6 +35,12 @@ const ManagePlaylistsList: React.FC<ManagePlaylistsListProps> = ({
   const handleActivePlaylistAdvancedCreateModal = () => {
     timeoutForDelay(() => {
       setActivePlaylistAdvancedCreateModal(true);
+    });
+  };
+
+  const handlePlaylistCardOnClick = (playlistId: string) => {
+    timeoutForDelay(() => {
+      navigate(`/playlist/${playlistId}`);
     });
   };
 
@@ -177,20 +184,33 @@ const ManagePlaylistsList: React.FC<ManagePlaylistsListProps> = ({
         <>
           {Array.from({ length: 3 }).map((_, index) =>
             arrangement === GRID ? (
-              <CardListSkeleton key={`card-list-skeleton-${index}`} className={`block`} />
+              <GridCardListSkeleton key={`card-list-skeleton-${index}`} className={`block`} />
             ) : (
               <PlaylistListCardSkeleton key={`playlist-list-card-skeleton-${index}`} />
             )
           )}
         </>
       ) : (
-        playlists.map((playlist) =>
-          arrangement === GRID ? (
-            <ManagePlaylistGridCard key={playlist._id} playlist={playlist} />
+        playlists.map((playlist) => {
+          const { _id: playlistId } = playlist;
+          const navigateToTargetPlaylistPage = () => handlePlaylistCardOnClick(playlistId);
+
+          return arrangement === GRID ? (
+            <ManagePlaylistGridCard
+              key={playlistId}
+              fm={fm}
+              playlist={playlist}
+              onClick={navigateToTargetPlaylistPage}
+            />
           ) : (
-            <ManagePlaylistListCard key={playlist._id} fm={fm} playlist={playlist} />
-          )
-        )
+            <ManagePlaylistListCard
+              key={playlistId}
+              fm={fm}
+              playlist={playlist}
+              onClick={navigateToTargetPlaylistPage}
+            />
+          );
+        })
       )}
     </div>
   );

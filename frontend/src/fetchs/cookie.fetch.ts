@@ -1,12 +1,15 @@
 import API from "../config/api-client.config";
+import { API_ENDPOINTS } from "@joytify/shared-types/constants";
 import {
   UpdateUserPreferencesCookieRequest,
   VerifiedUserPreferencesCookieResponse,
 } from "@joytify/shared-types/types";
 
+const { COOKIE } = API_ENDPOINTS;
+
 export const getUserPreferencesCookie =
   async (): Promise<VerifiedUserPreferencesCookieResponse | null> =>
-    API.get("/cookie/get-user-preferences");
+    API.get(`${COOKIE}/preferences`);
 
 export const updateUserPreferencesCookie = async (params: UpdateUserPreferencesCookieRequest) =>
-  API.post("/cookie/update-user-preferences", params);
+  API.patch(`${COOKIE}/preferences`, params);
