@@ -10,8 +10,8 @@ const albumRoute = Router();
 
 // prefix: albums
 albumRoute.get("/", getUserAlbumsHandler);
-albumRoute.get("/:id", getAlbumByIdHandler);
-albumRoute.post("/create", createAlbumHandler);
-albumRoute.patch("/remove/:id", removeUserAlbumHandler);
+albumRoute.get("/:albumId", getAlbumByIdHandler);
+albumRoute.post("/", createAlbumHandler);
+albumRoute.patch("/remove/:albumId", removeUserAlbumHandler);
 
 export default albumRoute;

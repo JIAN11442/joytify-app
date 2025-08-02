@@ -17,7 +17,7 @@ const { OK } = HttpCode;
 // Notifications
 export const deleteNotificationHandler: RequestHandler = async (req, res, next) => {
   try {
-    const notificationId = objectIdZodSchema.parse(req.params.id);
+    const notificationId = objectIdZodSchema.parse(req.params.notificationId);
 
     const { modifiedCount } = await deleteTargetNotification(notificationId);
 
@@ -84,4 +84,3 @@ export const initializePlaylistStatsHandler: RequestHandler = async (req, res, n
     next(error);
   }
 };
-

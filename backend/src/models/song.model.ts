@@ -11,12 +11,6 @@ import { HexPaletee, SongAssociationActionType } from "@joytify/shared-types/typ
 import { bulkUpdateReferenceArrayFields } from "../utils/mongoose.util";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
-type SongRating = {
-  id: mongoose.Types.ObjectId;
-  rating: number;
-  comment: string;
-};
-
 export interface SongDocument extends mongoose.Document {
   title: string;
   creator: mongoose.Types.ObjectId;
@@ -35,7 +29,7 @@ export interface SongDocument extends mongoose.Document {
   releaseDate: Date; // 發行日期
   paletee: HexPaletee; // 主題色
   favorites: mongoose.Types.ObjectId[]; // 收藏者
-  ratings: SongRating[];
+  ratings: mongoose.Types.ObjectId[];
   activities: {
     totalRatingCount: number;
     averageRating: number;
@@ -117,27 +111,11 @@ const songSchema = new mongoose.Schema<SongDocument>(
       ref: "User",
       index: true,
     },
-    ratings: [
-      new mongoose.Schema(
-        {
-          id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            index: true,
-            required: true,
-          },
-          rating: {
-            type: Number,
-            min: 0,
-            max: 5,
-            default: 0,
-            required: true,
-          },
-          comment: { type: String, default: "" },
-        },
-        { _id: false, timestamps: true }
-      ),
-    ],
+    ratings: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Rating",
+      index: true,
+    },
     activities: {
       totalRatingCount: { type: Number, default: 0 },
       averageRating: { type: Number, default: 0 },

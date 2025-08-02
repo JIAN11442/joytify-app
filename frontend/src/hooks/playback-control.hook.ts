@@ -224,6 +224,12 @@ const usePlaybackControl = () => {
     [volume]
   );
 
+  const pausePlayback = useCallback(() => {
+    pause();
+    seek(0); // Reset to beginning without triggering resume
+    setIsPlaying(false);
+  }, [pause, seek, setIsPlaying]);
+
   return {
     audioSong: getAudioContent().audioSong,
     progressTime,
@@ -236,6 +242,7 @@ const usePlaybackControl = () => {
     switchSong,
     adjustVolume,
     resume,
+    pausePlayback,
   };
 };
 

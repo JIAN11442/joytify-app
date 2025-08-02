@@ -23,12 +23,6 @@ export const updateSongInfoZodSchema = z.object({
   imageUrl: fileUrlZodSchema.optional(),
 });
 
-export const updateSongRateZodSchema = z.object({
-  rating: z.number(),
-  isLiked: z.boolean(),
-  comment: stringZodSchema,
-});
-
 export const deleteSongZodSchema = z.object({
   shouldDeleteSongs: z.boolean(),
 });

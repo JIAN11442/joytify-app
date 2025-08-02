@@ -45,7 +45,7 @@ export const getAlbumById = async (id: string) => {
     })
     .lean<PopulatedAlbumResponse>();
 
-  appAssert(album, NOT_FOUND, "Failed to get album by id");
+  appAssert(album, NOT_FOUND, "Album not found");
 
   const refactorAlbum: RefactorAlbumResponse = {
     ...album,
@@ -96,11 +96,7 @@ export const removeAlbum = async (data: DeleteAlbumServiceRequest) => {
     { new: true }
   );
 
-  appAssert(
-    updatedAlbum,
-    INTERNAL_SERVER_ERROR,
-    "Failed to remove user ID from album's users property"
-  );
+  appAssert(updatedAlbum, NOT_FOUND, "Album not found");
 
   return { updatedAlbum };
 };

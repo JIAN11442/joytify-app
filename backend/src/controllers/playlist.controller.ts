@@ -10,7 +10,6 @@ import {
 import { createPlaylistZodSchema, playlistZodSchema } from "../schemas/playlist.zod";
 import { objectIdZodSchema, stringZodSchema } from "../schemas/util.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
-import PlaylistModel from "../models/playlist.model";
 
 const { OK, CREATED } = HttpCode;
 
@@ -32,9 +31,8 @@ export const getPlaylistsHandler: RequestHandler = async (req, res, next) => {
 export const getTargetPlaylistHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const playlistId = objectIdZodSchema.parse(req.params.id);
+    const playlistId = objectIdZodSchema.parse(req.params.playlistId);
 
-    // get target playlist
     const { playlist } = await getUserPlaylistById(playlistId, userId);
 
     return res.status(OK).json(playlist);
@@ -49,7 +47,6 @@ export const createPlaylistHandler: RequestHandler = async (req, res, next) => {
     const userId = objectIdZodSchema.parse(req.userId);
     const params = createPlaylistZodSchema.parse(req.body);
 
-    // create playlist
     const { playlist } = await createNewPlaylist({ userId, ...params });
 
     res.status(CREATED).json(playlist);
@@ -61,11 +58,10 @@ export const createPlaylistHandler: RequestHandler = async (req, res, next) => {
 // update playlist cover image handler
 export const updatePlaylistHandler: RequestHandler = async (req, res, next) => {
   try {
-    const playlistId = objectIdZodSchema.parse(req.params.id);
+    const playlistId = objectIdZodSchema.parse(req.params.playlistId);
     const userId = objectIdZodSchema.parse(req.userId);
     const params = playlistZodSchema.parse(req.body);
 
-    // update playlist cover image
     const { playlist } = await updatePlaylistById({ playlistId, userId, ...params });
 
     return res.status(OK).json(playlist);
@@ -78,7 +74,7 @@ export const updatePlaylistHandler: RequestHandler = async (req, res, next) => {
 export const deletePlaylistHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const currentPlaylistId = objectIdZodSchema.parse(req.params.id);
+    const currentPlaylistId = objectIdZodSchema.parse(req.params.playlistId);
     const { targetPlaylistId } = req.body;
 
     const deletedPlaylist = await deletePlaylistById({

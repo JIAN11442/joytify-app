@@ -49,7 +49,7 @@ export const getMusicianId = async (params: GetMusicianIdRequest) => {
     { new: true }
   );
 
-  appAssert(musician, INTERNAL_SERVER_ERROR, "Failed to push type to roles prop");
+  appAssert(musician, NOT_FOUND, "Musician not found");
 
   // otherwise, return musician id
   return { id: musician._id };
@@ -70,7 +70,7 @@ export const getMusicianById = async (id: string) => {
     })
     .lean<PopulatedMusicianResponse>();
 
-  appAssert(musician, NOT_FOUND, "Failed to get musician by id");
+  appAssert(musician, NOT_FOUND, "Musician not found");
 
   const refactorMusician: RefactorMusicianResponse = {
     ...musician,
@@ -102,7 +102,7 @@ export const followTargetMusician = async (params: MusicianFollowService) => {
     $addToSet: { followers: userId },
   });
 
-  appAssert(updatedMusician, NOT_FOUND, "Failed to updated followers of musician");
+  appAssert(updatedMusician, NOT_FOUND, "Musician not found");
 
   // 2. update user following
   const updatedUser = await UserModel.findByIdAndUpdate(userId, {
@@ -110,7 +110,7 @@ export const followTargetMusician = async (params: MusicianFollowService) => {
     $inc: { "accountInfo.totalFollowing": 1 },
   });
 
-  appAssert(updatedUser, NOT_FOUND, "Failed to updated following of user");
+  appAssert(updatedUser, NOT_FOUND, "User not found");
 
   return { musician: updatedMusician, user: updatedUser };
 };
@@ -124,7 +124,7 @@ export const unfollowTargetMusician = async (params: MusicianFollowService) => {
     $pull: { followers: userId },
   });
 
-  appAssert(updatedMusician, NOT_FOUND, "Failed to updated followers of musician");
+  appAssert(updatedMusician, NOT_FOUND, "Musician not found");
 
   // 2. update user following
   const updatedUser = await UserModel.findByIdAndUpdate(userId, {
@@ -132,7 +132,7 @@ export const unfollowTargetMusician = async (params: MusicianFollowService) => {
     $inc: { "accountInfo.totalFollowing": -1 },
   });
 
-  appAssert(updatedUser, NOT_FOUND, "Failed to updated following of user");
+  appAssert(updatedUser, NOT_FOUND, "User not found");
 
   return { musician: updatedMusician, user: updatedUser };
 };

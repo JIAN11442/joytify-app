@@ -15,8 +15,8 @@ export const getPlaylists = async (query?: string): Promise<PlaylistResponse[]> 
   API.get(PLAYLISTS, { params: { search: query } });
 
 // get playlist by id
-export const getPlaylistById = async (id: string): Promise<RefactorPlaylistResponse> =>
-  API.get(`${PLAYLISTS}/${id}`);
+export const getPlaylistById = async (playlistId: string): Promise<RefactorPlaylistResponse> =>
+  API.get(`${PLAYLISTS}/${playlistId}`);
 
 // create playlist
 export const createPlaylist = async (params: CreatePlaylistRequest): Promise<PlaylistResponse> =>

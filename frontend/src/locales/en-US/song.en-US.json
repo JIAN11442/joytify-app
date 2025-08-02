@@ -104,5 +104,6 @@
   "song.hero.section.type": "Song",
   "song.action.panel.menu.editDetails": "Edit song details",
   "song.action.panel.menu.assignmentPlaylist": "Add to playlists",
+  "song.action.panel.menu.rate": "Rate this song",
   "song.comment.list.title": "Ratings & Comments ({count})"
 }

@@ -32,6 +32,7 @@ export const generateUploadUrl = async ({
     return uploadUrl;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 };
 

@@ -34,5 +34,5 @@ export const getLabelId = async (params: GetLabelIdRequest): Promise<string> =>
   await API.get(`${LABELS}/getId`, { params });
 
 // remove label
-export const removeLabel = async (id: string): Promise<LabelResponse> =>
-  API.patch(`${LABELS}/remove/${id}`);
+export const removeLabel = async (labelId: string): Promise<LabelResponse> =>
+  API.patch(`${LABELS}/remove/${labelId}`);

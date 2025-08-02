@@ -30,7 +30,7 @@ export const getMusicianIdHandler: RequestHandler = async (req, res, next) => {
 // get musician by id handler
 export const getMusicianByIdHandler: RequestHandler = async (req, res, next) => {
   try {
-    const musicianId = objectIdZodSchema.parse(req.params.id);
+    const musicianId = objectIdZodSchema.parse(req.params.musicianId);
 
     const { musician } = await getMusicianById(musicianId);
 
@@ -56,7 +56,7 @@ export const getFollowingMusiciansHandler: RequestHandler = async (req, res, nex
 export const followMusicianHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const musicianId = objectIdZodSchema.parse(req.params.id);
+    const musicianId = objectIdZodSchema.parse(req.params.musicianId);
 
     const { musician } = await followTargetMusician({ userId, musicianId });
 
@@ -70,7 +70,7 @@ export const followMusicianHandler: RequestHandler = async (req, res, next) => {
 export const unfollowMusicianHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const musicianId = objectIdZodSchema.parse(req.params.id);
+    const musicianId = objectIdZodSchema.parse(req.params.musicianId);
 
     const { musician } = await unfollowTargetMusician({ userId, musicianId });
 

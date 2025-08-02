@@ -1,10 +1,8 @@
 import _ from "lodash";
 
+import UserModel from "../models/user.model";
 import { HttpCode } from "@joytify/shared-types/constants";
-import {
-  UpdateUserPreferencesCookieRequest,
-  RefactorSongResponse,
-} from "@joytify/shared-types/types";
+import { UpdateUserPreferencesCookieRequest } from "@joytify/shared-types/types";
 import {
   signToken,
   UserPreferenceSignOptions,
@@ -12,9 +10,8 @@ import {
   UserPreferenceTokenPayload,
 } from "../utils/jwt.util";
 import appAssert from "../utils/app-assert.util";
-import UserModel from "../models/user.model";
 
-const { UNAUTHORIZED, INTERNAL_SERVER_ERROR } = HttpCode;
+const { UNAUTHORIZED, NOT_FOUND } = HttpCode;
 
 type GetVerifiedPrefsCookieServiceRequest = {
   cookie: string;
@@ -80,7 +77,7 @@ export const updateUserPreferencesCookie = async (params: UpdatePrefsCookieServi
     { new: true }
   );
 
-  appAssert(updatedUserPreferences, INTERNAL_SERVER_ERROR, "Failed to update user preferences");
+  appAssert(updatedUserPreferences, NOT_FOUND, "User not found");
 
   return { newCookie };
 };

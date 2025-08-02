@@ -51,7 +51,9 @@ export const useGetUserSongsQuery = (opts: object = {}) => {
     queryKey: [QueryKey.GET_USER_SONGS, userId],
     queryFn: async () => {
       try {
-        return await getUserSongs();
+        const userSongs = await getUserSongs();
+
+        return userSongs;
       } catch (error) {
         if (error) {
           setIsQueryError(true);

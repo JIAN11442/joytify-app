@@ -76,6 +76,7 @@ const ManageSongCard: React.FC<ManageSongCardProps> = ({ songs, currentIndex }) 
           grid
           grid-cols-2
           mt-1
+          gap-3
           items-center
           justify-between
           text-sm
@@ -90,9 +91,9 @@ const ManageSongCard: React.FC<ManageSongCardProps> = ({ songs, currentIndex }) 
             items-start
           `}
         >
-          <span className={`font-semibold whitespace-nowrap`}>{title}</span>
+          <span className={`font-semibold line-clamp-1`}>{title}</span>
           <span>·</span>
-          <span className={`text-neutral-500 truncate`}>{artist}</span>
+          <span className={`text-neutral-500 whitespace-nowrap`}>{artist}</span>
         </p>
 
         {/* actions */}

@@ -5,7 +5,7 @@ import { objectIdZodSchema } from "../schemas/util.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
 import appAssert from "../utils/app-assert.util";
 
-const { OK, INTERNAL_SERVER_ERROR } = HttpCode;
+const { OK, INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;
 
 // get user sessions handler
 export const getUserSessionsHandler: RequestHandler = async (req, res, next) => {
@@ -64,15 +64,11 @@ export const deleteUserSessionsHandler: RequestHandler = async (req, res, next) 
 // delete session by id handler
 export const deleteSessionByIdHandler: RequestHandler = async (req, res, next) => {
   try {
-    const sessionId = objectIdZodSchema.parse(req.params.id);
+    const sessionId = objectIdZodSchema.parse(req.params.sessionId);
 
     const deletedSession = await SessionModel.deleteOne({ _id: sessionId });
 
-    appAssert(
-      deletedSession.acknowledged === true,
-      INTERNAL_SERVER_ERROR,
-      `Failed to delete session ${sessionId}`
-    );
+    appAssert(deletedSession.deletedCount > 0, NOT_FOUND, "Session not found");
 
     return res.status(OK).json({ message: "Delete session successfully" });
   } catch (error) {

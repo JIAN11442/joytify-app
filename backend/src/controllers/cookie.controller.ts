@@ -4,11 +4,11 @@ import {
   getVerifiedUserPreferencesCookie,
   updateUserPreferencesCookie,
 } from "../services/cookie.service";
+import { objectIdZodSchema } from "../schemas/util.zod";
+import { userPreferencesCookieSchema } from "../schemas/cookie.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
 import { UpdateUserPreferencesCookieRequest } from "@joytify/shared-types/types";
 import { setUserPreferenceCookie } from "../utils/cookies.util";
-import { userPreferencesCookieSchema } from "../schemas/cookie.zod";
-import { objectIdZodSchema } from "../schemas/util.zod";
 
 const { OK } = HttpCode;
 

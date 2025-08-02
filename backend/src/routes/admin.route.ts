@@ -25,6 +25,6 @@ adminRoute.patch(`${PLAYLISTS}/initialize-stats`, initializePlaylistStatsHandler
 // notifications
 adminRoute.post(`${NOTIFICATIONS}/system-announcement`, createSystemAnnouncementHandler);
 adminRoute.patch(`${NOTIFICATIONS}/reset-status`, resetUserNotificationsStatusHandler);
-adminRoute.delete(`${NOTIFICATIONS}/:id`, deleteNotificationHandler);
+adminRoute.delete(`${NOTIFICATIONS}/:notificationId`, deleteNotificationHandler);
 
 export default adminRoute;

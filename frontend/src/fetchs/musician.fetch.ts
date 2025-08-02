@@ -12,8 +12,8 @@ const { MUSICIANS } = API_ENDPOINTS;
 export const getMusicianId = async (params: GetMusicianIdRequest): Promise<string> =>
   API.get(`${MUSICIANS}/getId`, { params });
 
-export const getMusicianById = async (id: string): Promise<RefactorMusicianResponse> =>
-  API.get(`${MUSICIANS}/${id}`);
+export const getMusicianById = async (musicianId: string): Promise<RefactorMusicianResponse> =>
+  API.get(`${MUSICIANS}/${musicianId}`);
 
 export const getFollowingMusicians = async (): Promise<MusicianResponse[]> =>
   API.get(`${MUSICIANS}/following`);

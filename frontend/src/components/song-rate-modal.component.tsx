@@ -1,33 +1,29 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaHeart, FaRegComment, FaRegHeart } from "react-icons/fa";
 import Modal from "./modal.component";
 import Icon from "./react-icons.component";
 import StarRating from "./star-rating.component";
 import SongTitleItem from "./song-title-item.component";
 import AnimationWrapper from "./animation-wrapper.component";
-import { useRateSongMutation } from "../hooks/song-mutate.hook";
+import { useGetUserSongRating } from "../hooks/rating-query.hook";
+import { useRateSongMutation } from "../hooks/rating-mutate.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
 import useUserState from "../states/user.state";
 import useSongState from "../states/song.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const SongRateModal = () => {
+  const { fm } = useScopedIntl();
+  const songRateModalFm = fm("song.rate.modal");
+
   const [rating, setRating] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { fm } = useScopedIntl();
-  const songRateModalFm = fm("song.rate.modal");
-
   const { authUser } = useUserState();
   const { activeSongRateModal, setActiveSongRateModal } = useSongState();
-
-  const handleCloseModal = useCallback(() => {
-    timeoutForDelay(() => {
-      setActiveSongRateModal({ active: false, song: null });
-    });
-  }, [setActiveSongRateModal]);
+  const { song, active } = activeSongRateModal;
 
   const handleRatingSong = (rating: number) => {
     timeoutForDelay(() => {
@@ -41,11 +37,13 @@ const SongRateModal = () => {
     });
   };
 
-  const { mutate: rateSongFn } = useRateSongMutation(handleCloseModal);
+  const handleCloseModal = useCallback(() => {
+    timeoutForDelay(() => {
+      setActiveSongRateModal({ active: false, song: null });
+    });
+  }, [setActiveSongRateModal]);
 
   const handleSubmit = useCallback(() => {
-    const { song } = activeSongRateModal;
-
     if (!song) return;
 
     timeoutForDelay(() => {
@@ -53,23 +51,36 @@ const SongRateModal = () => {
 
       rateSongFn({
         songId: song._id,
+        songDuration: song.duration,
         rating,
-        isLiked,
         comment,
+        liked: isLiked,
       });
 
       setIsSubmitting(false);
     });
-  }, [rating, isLiked, comment, activeSongRateModal]);
+  }, [rating, comment, isLiked, song, activeSongRateModal]);
 
-  const { active, song } = activeSongRateModal;
+  const { songRating } = useGetUserSongRating(song?._id ?? "");
+  const { mutate: rateSongFn } = useRateSongMutation(handleCloseModal);
+
+  // initialize
+  useEffect(() => {
+    if (songRating) {
+      const { rating, comment } = songRating;
+
+      setRating(rating ?? 0);
+      setComment(comment ?? "");
+    }
+  }, [songRating]);
 
   if (!song) return null;
 
   const { title, artist, imageUrl, paletee, favorites } = song;
 
-  const isLikedByUser = authUser && favorites.includes(authUser._id);
-  const isDirty = rating > 0;
+  const isLikedByUser = authUser && favorites?.includes(authUser._id);
+  const isDirty =
+    (rating > 0 && rating !== songRating?.rating) || comment !== songRating?.comment || isLiked;
 
   return (
     <Modal title={songRateModalFm("title")} activeState={active} closeModalFn={handleCloseModal}>
@@ -117,6 +128,7 @@ const SongRateModal = () => {
 
           <StarRating
             count={5}
+            rating={rating}
             icon={{ opts: { size: 32 } }}
             isStarEditable={true}
             onRatingClick={handleRatingSong}

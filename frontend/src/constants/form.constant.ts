@@ -83,7 +83,7 @@ export const defaultNotificationPreferencesData = {
 
 export const defaultSongRateData = {
   rating: undefined as number | undefined,
-  favorite: undefined as boolean | undefined,
+  liked: undefined as boolean | undefined,
   comment: undefined as string | undefined,
 };
 

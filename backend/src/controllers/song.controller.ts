@@ -6,7 +6,6 @@ import {
   getAllSongs,
   getSongById,
   getUserSongs,
-  rateTargetSong,
   statsUserSongs,
   assignSongToPlaylists,
   updateSongInfoById,
@@ -17,7 +16,6 @@ import {
   songZodSchema,
   updateSongInfoZodSchema,
   updateSongPlaylistsZodSchema,
-  updateSongRateZodSchema,
 } from "../schemas/song.zod";
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
@@ -53,9 +51,9 @@ export const getAllSongsHandler: RequestHandler = async (req, res, next) => {
 // get song by id handler
 export const getSongByIdHandler: RequestHandler = async (req, res, next) => {
   try {
-    const id = objectIdZodSchema.parse(req.params.id);
+    const songId = objectIdZodSchema.parse(req.params.songId);
 
-    const { song } = await getSongById(id);
+    const { song } = await getSongById(songId);
 
     return res.status(OK).json(song);
   } catch (error) {
@@ -91,25 +89,10 @@ export const getUserSongsStatsHandler: RequestHandler = async (req, res, next) =
 export const updateSongInfoHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const songId = objectIdZodSchema.parse(req.params.id);
+    const songId = objectIdZodSchema.parse(req.params.songId);
     const request = updateSongInfoZodSchema.parse(req.body);
 
     const { updatedSong } = await updateSongInfoById({ userId, songId, ...request });
-
-    return res.status(OK).json(updatedSong);
-  } catch (error) {
-    next(error);
-  }
-};
-
-// update target song's rating state handler
-export const updateSongRatingHandler: RequestHandler = async (req, res, next) => {
-  try {
-    const userId = objectIdZodSchema.parse(req.userId);
-    const songId = objectIdZodSchema.parse(req.params.id);
-    const request = updateSongRateZodSchema.parse(req.body);
-
-    const { updatedSong } = await rateTargetSong({ userId, songId, ...request });
 
     return res.status(OK).json(updatedSong);
   } catch (error) {
@@ -121,7 +104,7 @@ export const updateSongRatingHandler: RequestHandler = async (req, res, next) =>
 export const updateSongPlaylistsAssignmentHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const songId = objectIdZodSchema.parse(req.params.id);
+    const songId = objectIdZodSchema.parse(req.params.songId);
     const params = updateSongPlaylistsZodSchema.parse(req.body);
 
     const { updatedSong } = await assignSongToPlaylists({ userId, songId, ...params });
@@ -136,7 +119,7 @@ export const updateSongPlaylistsAssignmentHandler: RequestHandler = async (req, 
 export const deleteSongByIdHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const songId = objectIdZodSchema.parse(req.params.id);
+    const songId = objectIdZodSchema.parse(req.params.songId);
     const { shouldDeleteSongs } = deleteSongZodSchema.parse(req.body);
 
     const deletedSong = await deleteSongById({ userId, songId, shouldDeleteSongs });

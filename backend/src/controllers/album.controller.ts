@@ -5,7 +5,7 @@ import { objectIdZodSchema } from "../schemas/util.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
 import { CreateAlbumRequest } from "@joytify/shared-types/types";
 
-const { OK } = HttpCode;
+const { OK, CREATED } = HttpCode;
 
 // get user albums handler
 export const getUserAlbumsHandler: RequestHandler = async (req, res, next) => {
@@ -23,7 +23,7 @@ export const getUserAlbumsHandler: RequestHandler = async (req, res, next) => {
 // get album by id handler
 export const getAlbumByIdHandler: RequestHandler = async (req, res, next) => {
   try {
-    const albumId = objectIdZodSchema.parse(req.params.id);
+    const albumId = objectIdZodSchema.parse(req.params.albumId);
 
     const { album } = await getAlbumById(albumId);
 
@@ -41,7 +41,7 @@ export const createAlbumHandler: RequestHandler = async (req, res, next) => {
 
     const { album } = await createAlbum({ userId, ...params });
 
-    return res.status(OK).json(album);
+    return res.status(CREATED).json(album);
   } catch (error) {
     next(error);
   }
@@ -51,7 +51,7 @@ export const createAlbumHandler: RequestHandler = async (req, res, next) => {
 export const removeUserAlbumHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const albumId = objectIdZodSchema.parse(req.params.id);
+    const albumId = objectIdZodSchema.parse(req.params.albumId);
 
     const { updatedAlbum } = await removeAlbum({ userId, albumId });
 

@@ -1,6 +1,7 @@
 import { isEqual } from "lodash";
 import { useEffect, useMemo, useRef } from "react";
 import usePlaybackControl from "../hooks/playback-control.hook";
+import { usePlaybackCompletion } from "../hooks/playback-completion.hook";
 import { useRecordPlaybackLogMutation } from "../hooks/playback-mutate.hook";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { LoopMode, PlaybackStateOptions } from "@joytify/shared-types/constants";
@@ -35,6 +36,7 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
   } = usePlaybackControlState();
   const { refactorCookiePlayer, setRefactorCookiePlayer } = useCookieState();
 
+  const { handlePlaybackCompletion } = usePlaybackCompletion();
   const { mutate: recordPlaybackLogFn } = useRecordPlaybackLogMutation();
   const { mutate: updateUserPreferencesFn } = useUpdateUserPreferencesMutation();
 
@@ -61,35 +63,40 @@ const PlaybackControlProvider: React.FC<PlaybackControlProps> = ({ children }) =
       const { queue, currentIndex } = playbackQueue;
       const currentSong = queue[currentIndex];
 
-      // record first
+      function handleNextPlayback() {
+        switch (true) {
+          // if track mode, seek to 0 and resume
+          case loopMode === TRACK:
+            seekAudio(0);
+            resume();
+            break;
+
+          // if shuffle or playlist mode, play next song
+          case isShuffle || loopMode === PLAYLIST:
+            switchSong("next");
+            break;
+
+          // if no shuffle and loop mode, just reset
+          default:
+            musicAudio.currentTime = 0;
+            setIsPlaying(false);
+        }
+      }
+
+      // handle playback completion (record + rating check)
       if (isPlaying) {
-        recordPlaybackLogFn({
+        handlePlaybackCompletion({
           songId: currentSong._id,
           duration: accumulatePlaybackTimeRef.current,
           state: COMPLETED,
+          onContinuePlayback: handleNextPlayback,
         });
+      } else {
+        handleNextPlayback();
       }
 
       // reset accumulated time
       accumulatePlaybackTimeRef.current = 0;
-
-      switch (true) {
-        // if track mode, seek to 0 and resume
-        case loopMode === TRACK:
-          seekAudio(0);
-          resume();
-          break;
-
-        // if shuffle or playlist mode, play next song
-        case isShuffle || loopMode === PLAYLIST:
-          switchSong("next");
-          break;
-
-        // if no shuffle and loop mode, just reset
-        default:
-          musicAudio.currentTime = 0;
-          setIsPlaying(false);
-      }
     };
 
     musicAudio.addEventListener("ended", handleEnded);

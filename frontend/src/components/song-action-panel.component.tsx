@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { PiPlaylist } from "react-icons/pi";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { FaStar } from "react-icons/fa";
 
 import Menu from "./menu.component";
 import Icon from "./react-icons.component";
@@ -20,13 +21,20 @@ type SongActionPanelProps = {
 const SongActionPanel: React.FC<SongActionPanelProps> = ({ fm, song, editable }) => {
   const [activeEditMenu, setActiveEditMenu] = useState(false);
 
-  const { setActiveSongEditModal, setActiveSongAssignmentModal } = useSongState();
+  const { setActiveSongEditModal, setActiveSongAssignmentModal, setActiveSongRateModal } =
+    useSongState();
 
   const handleActiveSongOptionsMenu = useCallback(() => {
     timeoutForDelay(() => {
       setActiveEditMenu(!activeEditMenu);
     });
   }, [activeEditMenu]);
+
+  const handleActiveSongRateModal = useCallback(() => {
+    timeoutForDelay(() => {
+      setActiveSongRateModal({ active: true, song });
+    });
+  }, [song]);
 
   const handleActiveSongEditModal = useCallback(() => {
     timeoutForDelay(() => {
@@ -83,6 +91,16 @@ const SongActionPanel: React.FC<SongActionPanelProps> = ({ fm, song, editable })
           wrapper={{ transformOrigin: "top right" }}
           className={`absolute top-0 right-10 w-[210px]`}
         >
+          {/* rate song */}
+          <button
+            type="button"
+            onClick={handleActiveSongRateModal}
+            className={`menu-btn normal-case`}
+          >
+            <Icon name={FaStar} opts={{ size: 18 }} />
+            <p>{songActionPanelFm("menu.rate")}</p>
+          </button>
+
           {/* edit details */}
           {editable && (
             <button

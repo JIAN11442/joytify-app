@@ -11,22 +11,25 @@ interface CreatePlaybackLogServiceRequest extends CreatePlaybackLogRequest {
   userId: string;
 }
 
-const { INTERNAL_SERVER_ERROR } = HttpCode;
+const { INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;
 
 export const createPlaybackLog = async (data: CreatePlaybackLogServiceRequest) => {
   const { userId, songId, duration, state } = data;
 
-  // 如果 duration 小於等於 0，那就直接返回，不紀錄
+  // 1. if duration is less than or equal to 0, return
   if (duration <= 0) {
     return { playbackLog: null };
   }
 
+  // 2. check if song exists
   const song = await SongModel.findById(songId);
 
-  appAssert(song, INTERNAL_SERVER_ERROR, "Song not found");
+  appAssert(song, NOT_FOUND, "Song not found");
 
+  // 3. get artist id
   const artistId = song.artist;
 
+  // 4. create playback log
   const playbackLog = await PlaybackModel.create({
     user: userId,
     artist: artistId,
@@ -37,6 +40,7 @@ export const createPlaybackLog = async (data: CreatePlaybackLogServiceRequest) =
 
   appAssert(playbackLog, INTERNAL_SERVER_ERROR, "Failed to create playback log");
 
+  // 5. track playback stats
   await trackPlaybackStats({
     userId,
     songId,

@@ -13,12 +13,9 @@ export const getAwsSignedUrlHandler: RequestHandler = async (req, res, next) => 
   try {
     const { subfolder, extension, nanoID } = awsSignedZodSchema.parse(req.body);
 
-    // Generate signed URL and return it to the client
-    generateUploadUrl({ subfolder, extension, nanoID })
-      .then((url) => res.status(CREATED).json({ uploadUrl: url }))
-      .catch((error) => {
-        console.log(error.message);
-      });
+    const uploadUrl = await generateUploadUrl({ subfolder, extension, nanoID });
+
+    return res.status(CREATED).json({ uploadUrl });
   } catch (error) {
     next(error);
   }

@@ -12,6 +12,6 @@ const sessionRoute = Router();
 sessionRoute.get("/", getUserSessionsHandler);
 sessionRoute.patch("/heartbeat", touchSessionHeartBeatHandler);
 sessionRoute.delete("/", deleteUserSessionsHandler);
-sessionRoute.delete("/:id", deleteSessionByIdHandler);
+sessionRoute.delete("/:sessionId", deleteSessionByIdHandler);
 
 export default sessionRoute;

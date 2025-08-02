@@ -24,7 +24,7 @@ import {
   setAuthCookies,
 } from "../utils/cookies.util";
 
-const { OK, CREATED, UNAUTHORIZED } = HttpCode;
+const { OK, CREATED, NO_CONTENT, BAD_REQUEST } = HttpCode;
 
 // register handler
 export const registerHandler: RequestHandler = async (req, res, next) => {
@@ -64,7 +64,7 @@ export const logoutHandler: RequestHandler = async (req, res, next) => {
     await logoutUser(accessToken);
 
     // clear cookies and return response
-    return clearAuthCookies(res).status(OK).json({ message: "Logout successfully" });
+    return clearAuthCookies(res).status(NO_CONTENT).send();
   } catch (error) {
     next(error);
   }
@@ -75,7 +75,7 @@ export const refreshTokensHandler: RequestHandler = async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies;
 
-    appAssert(refreshToken, UNAUTHORIZED, "Missing refresh token");
+    appAssert(refreshToken, BAD_REQUEST, "Missing refresh token");
 
     const { newAccessToken, newRefreshToken } = await refreshTokens(refreshToken);
 

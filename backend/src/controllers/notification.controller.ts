@@ -96,7 +96,7 @@ export const markNotificationsAsReadHandler: RequestHandler = async (req, res, n
 export const removeUserNotificationHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const notificationId = objectIdZodSchema.parse(req.params.id);
+    const notificationId = objectIdZodSchema.parse(req.params.notificationId);
 
     await removeUserNotification({ userId, notificationId });
 

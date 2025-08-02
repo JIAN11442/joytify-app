@@ -12,9 +12,9 @@ const musicianRoute = Router();
 // prefix: /musicians
 musicianRoute.get("/following", getFollowingMusiciansHandler);
 musicianRoute.get("/getId", getMusicianIdHandler);
-musicianRoute.get("/:id", getMusicianByIdHandler);
+musicianRoute.get("/:musicianId", getMusicianByIdHandler);
 
-musicianRoute.patch("/follow/:id", followMusicianHandler);
-musicianRoute.patch("/unfollow/:id", unfollowMusicianHandler);
+musicianRoute.patch("/follow/:musicianId", followMusicianHandler);
+musicianRoute.patch("/unfollow/:musicianId", unfollowMusicianHandler);
 
 export default musicianRoute;

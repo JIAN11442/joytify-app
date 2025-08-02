@@ -12,10 +12,10 @@ const playlistRoute = Router();
 
 // prefix: /playlists
 playlistRoute.get("/", authenticate, getPlaylistsHandler);
-playlistRoute.get("/:id", authenticate, getTargetPlaylistHandler);
+playlistRoute.get("/:playlistId", authenticate, getTargetPlaylistHandler);
 
 playlistRoute.post("/", authenticate, createPlaylistHandler);
-playlistRoute.patch("/:id", authenticate, updatePlaylistHandler);
-playlistRoute.delete("/:id", authenticate, deletePlaylistHandler);
+playlistRoute.patch("/:playlistId", authenticate, updatePlaylistHandler);
+playlistRoute.delete("/:playlistId", authenticate, deletePlaylistHandler);
 
 export default playlistRoute;

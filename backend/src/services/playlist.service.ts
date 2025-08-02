@@ -1,5 +1,5 @@
-import { FilterQuery, UpdateQuery } from "mongoose";
 import mongoose from "mongoose";
+import { FilterQuery, UpdateQuery } from "mongoose";
 
 import SongModel, { SongDocument } from "../models/song.model";
 import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
@@ -128,7 +128,7 @@ export const createNewPlaylist = async (params: CreatePlaylistServiceRequest) =>
       { $addToSet: { playlistFor: playlist._id } }
     );
 
-    appAssert(updatedSongs, INTERNAL_SERVER_ERROR, "Failed to add songs to playlist");
+    appAssert(updatedSongs.acknowledged, INTERNAL_SERVER_ERROR, "Failed to add songs to playlist");
   }
 
   return { playlist };
@@ -161,7 +161,7 @@ export const updatePlaylistById = async (params: UpdatePlaylistServiceRequest) =
     { new: true }
   );
 
-  appAssert(updatedPlaylist, INTERNAL_SERVER_ERROR, "Failed to update playlist");
+  appAssert(updatedPlaylist, NOT_FOUND, "Playlist not found or access denied");
 
   // update song if playlist is default and have songs to remove
   if (hasSongsToRemove) {
@@ -175,7 +175,7 @@ export const updatePlaylistById = async (params: UpdatePlaylistServiceRequest) =
       }
     );
 
-    appAssert(updatedSongs, INTERNAL_SERVER_ERROR, "Failed to update songs");
+    appAssert(updatedSongs.acknowledged, INTERNAL_SERVER_ERROR, "Failed to update songs");
   }
 
   return { playlist: updatedPlaylist };
@@ -212,15 +212,11 @@ export const deletePlaylistById = async (params: DeletePlaylistServiceRequest) =
         { new: true }
       ),
     ]);
+    appAssert(updatedPlaylist, NOT_FOUND, "Target playlist not found");
     appAssert(
-      updatedPlaylist,
+      updatedSongs.acknowledged,
       INTERNAL_SERVER_ERROR,
-      "Failed to add songs ID from delete playlist to target playlist"
-    );
-    appAssert(
-      updatedSongs.modifiedCount > 0,
-      INTERNAL_SERVER_ERROR,
-      "Failed to add target playlist ID to songs's s playlistFor property "
+      "Failed to add target playlist ID to songs's playlistFor property"
     );
   }
 
@@ -230,11 +226,7 @@ export const deletePlaylistById = async (params: DeletePlaylistServiceRequest) =
     user: userId,
   });
 
-  appAssert(
-    deletedPlaylist !== null,
-    INTERNAL_SERVER_ERROR,
-    `Failed to delete target playlist ${currentPlaylistId}`
-  );
+  appAssert(deletedPlaylist !== null, NOT_FOUND, "Playlist not found or access denied");
 
   return playlist;
 };

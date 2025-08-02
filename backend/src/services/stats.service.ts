@@ -27,9 +27,7 @@ type UpdateMonthlyStatsServiceRequest = {
 const artistNameCache = new Map<string, { name: string; timestamp: number }>();
 const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
 
-/**
- * get artist name (with cache)
- */
+// get artist name (with cache)
 const getArtistName = async (artistId: string): Promise<string> => {
   const cached = artistNameCache.get(artistId);
   if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
@@ -47,17 +45,13 @@ const getArtistName = async (artistId: string): Promise<string> => {
   }
 };
 
-/**
- * calculate growth percentage
- */
+// calculate growth percentage
 const calculateGrowthPercentage = (current: number, previous?: number): number => {
   if (!previous || previous === 0) return 0;
   return parseFloat((((current - previous) / previous) * 100).toFixed(2));
 };
 
-/**
- * update or insert and sort stat item
- */
+// update or insert and sort stat item
 const updateOrInsertAndSort = <T extends StatItem>(params: UpdateOrInsertAndSortRequest<T>) => {
   const {
     key,
@@ -84,9 +78,7 @@ const updateOrInsertAndSort = <T extends StatItem>(params: UpdateOrInsertAndSort
   itemStats.sort((a, b) => (sortOrder === "asc" ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy]));
 };
 
-/**
- * create new month stat
- */
+// create new month stat
 const createNewMonthStat = async (
   songId: string,
   artistId: string,
@@ -122,9 +114,7 @@ const createNewMonthStat = async (
   };
 };
 
-/**
- * update current month stat
- */
+// update current month stat
 const updateCurrentMonthStat = async (
   currentMonthStat: UserStats,
   songId: string,
@@ -187,9 +177,7 @@ const updateCurrentMonthStat = async (
   };
 };
 
-/**
- * find stat in date range
- */
+// find stat in date range
 const findStatInDateRange = (
   stats: UserStats[],
   startDate: Date,
@@ -201,9 +189,7 @@ const findStatInDateRange = (
   });
 };
 
-/**
- * track playback stats with retry logic for version conflicts
- */
+// track playback stats with retry logic for version conflicts
 export const trackPlaybackStats = async (params: UpdateMonthlyStatsServiceRequest) => {
   const { userId, songId, artistId, duration, timestamp } = params;
 

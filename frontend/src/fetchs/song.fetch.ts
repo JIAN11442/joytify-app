@@ -13,7 +13,6 @@ import {
   SongResponse,
   RefactorSongResponse,
   SongStatsResponse,
-  UpdateSongRateStateRequest,
   DeleteSongRequest,
   UpdateSongPlaylistsRequest,
   UpdateSongInfoRequest,
@@ -109,7 +108,8 @@ export const createSongData = async (params: DefaultSongForm): Promise<SongRespo
 export const getAllSongs = (): Promise<RefactorSongResponse[]> => API.get(`${SONGS}/all`);
 
 // get song by id
-export const getSongById = (id: string): Promise<RefactorSongResponse> => API.get(`${SONGS}/${id}`);
+export const getSongById = (songId: string): Promise<RefactorSongResponse> =>
+  API.get(`${SONGS}/${songId}`);
 
 // get user's songs
 export const getUserSongs = (): Promise<RefactorSongResponse[]> => API.get(`${SONGS}`);
@@ -122,13 +122,6 @@ export const updateSongInfo = (params: UpdateSongInfoRequest): Promise<RefactorS
   const { songId, ...rest } = params;
 
   return API.patch(`${SONGS}/${songId}/info`, rest);
-};
-
-// update song's rating state
-export const rateSong = (params: UpdateSongRateStateRequest): Promise<RefactorSongResponse> => {
-  const { songId, ...rest } = params;
-
-  return API.patch(`${SONGS}/${songId}/rating`, rest);
 };
 
 // update song's playlists assignment

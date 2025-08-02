@@ -8,7 +8,6 @@ import {
   getUserSongsStatsHandler,
   updateSongInfoHandler,
   updateSongPlaylistsAssignmentHandler,
-  updateSongRatingHandler,
 } from "../controllers/song.controller";
 import authenticate from "../middlewares/authenticate.middleware";
 
@@ -18,14 +17,13 @@ const songRoute = Router();
 songRoute.get("/all", getAllSongsHandler);
 songRoute.get("/stats", authenticate, getUserSongsStatsHandler);
 songRoute.get("/", authenticate, getUserSongsHandler);
-songRoute.get("/:id", authenticate, getSongByIdHandler);
+songRoute.get("/:songId", authenticate, getSongByIdHandler);
 
 songRoute.post("/", authenticate, createSongHandler);
 
-songRoute.patch("/:id/info", authenticate, updateSongInfoHandler);
-songRoute.patch("/:id/rating", authenticate, updateSongRatingHandler);
-songRoute.patch("/:id/playlist-assignment", authenticate, updateSongPlaylistsAssignmentHandler);
+songRoute.patch("/:songId/info", authenticate, updateSongInfoHandler);
+songRoute.patch("/:songId/playlist-assignment", authenticate, updateSongPlaylistsAssignmentHandler);
 
-songRoute.delete("/:id", authenticate, deleteSongByIdHandler);
+songRoute.delete("/:songId", authenticate, deleteSongByIdHandler);
 
 export default songRoute;

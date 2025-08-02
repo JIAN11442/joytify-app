@@ -189,6 +189,8 @@ export const getProfileCollectionsInfo = async (
     case ALBUMS:
       const user = await UserModel.findById(userId);
 
+      appAssert(user, NOT_FOUND, "User not found");
+
       docs = await getPaginatedDocs({
         model: AlbumModel,
         filter: { _id: { $in: user.albums } },
@@ -246,7 +248,7 @@ export const updateUserInfoById = async (params: UpdateUserServiceRequest) => {
     { new: true }
   );
 
-  appAssert(updatedUserInfo, INTERNAL_SERVER_ERROR, "Failed to update user info");
+  appAssert(updatedUserInfo, NOT_FOUND, "User not found");
 
   return { user: updatedUserInfo.omitPassword() };
 };
@@ -337,11 +339,7 @@ export const deregisterUserAccount = async (params: DeregisterAccountServiceRequ
         for (const songId of songs) {
           const deletedSong = await SongModel.findByIdAndDelete(songId);
 
-          appAssert(
-            deletedSong,
-            INTERNAL_SERVER_ERROR,
-            `Failed to delete song ${songId} in deregistration process`
-          );
+          appAssert(deletedSong, NOT_FOUND, `Song ${songId} not found in deregistration process`);
         }
 
         // delete all user playback records
@@ -393,8 +391,8 @@ export const deregisterUserAccount = async (params: DeregisterAccountServiceRequ
 
   appAssert(
     deletedUserAccount !== null,
-    INTERNAL_SERVER_ERROR,
-    `Failed to delete user ${userId} in deregistration process`
+    NOT_FOUND,
+    `User ${userId} not found in deregistration process`
   );
 
   return { deletedUser: deletedUserAccount.omitPassword() };

@@ -12,13 +12,13 @@ const { ALBUMS } = API_ENDPOINTS;
 export const getUserAlbums = async (): Promise<AlbumResponse[]> => API.get(ALBUMS);
 
 // get target album
-export const getAlbumById = async (id: string): Promise<RefactorAlbumResponse> =>
-  API.get(`${ALBUMS}/${id}`);
+export const getAlbumById = async (albumId: string): Promise<RefactorAlbumResponse> =>
+  API.get(`${ALBUMS}/${albumId}`);
 
 // create album
 export const createAlbum = async (params: CreateAlbumRequest): Promise<AlbumResponse> =>
-  API.post(`${ALBUMS}/create`, params);
+  API.post(ALBUMS, params);
 
 // remove album
-export const removeAlbum = async (id: string): Promise<AlbumResponse> =>
-  API.patch(`${ALBUMS}/remove/${id}`);
+export const removeAlbum = async (albumId: string): Promise<AlbumResponse> =>
+  API.patch(`${ALBUMS}/remove/${albumId}`);

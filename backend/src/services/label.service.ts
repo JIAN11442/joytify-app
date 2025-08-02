@@ -91,7 +91,7 @@ export const getLabels = async (params: GetLabelsServiceRequest) => {
     },
   ]);
 
-  return { labels: labels[0] };
+  return { labels: labels[0] || {} };
 };
 
 // get label ID service

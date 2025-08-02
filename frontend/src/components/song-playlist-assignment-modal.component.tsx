@@ -15,6 +15,7 @@ import { useScopedIntl } from "../hooks/intl.hook";
 import { PlaylistResponse, PlaylistsResponse } from "@joytify/shared-types/types";
 import useSongState from "../states/song.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import useUserState from "../states/user.state";
 
 const SongPlaylistAssignmentModal = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,6 +25,7 @@ const SongPlaylistAssignmentModal = () => {
   );
 
   const { fm } = useScopedIntl();
+  const { authUser } = useUserState();
   const { playlists, isPending } = useGetPlaylistsQuery();
   const { activeSongAssignmentModal, setActiveSongAssignmentModal } = useSongState();
   const { active, song } = activeSongAssignmentModal;
@@ -111,7 +113,10 @@ const SongPlaylistAssignmentModal = () => {
 
   const { title, artist, imageUrl, paletee } = song;
   const showPlaylistList = addedPlaylists.length > 0 || notAddedPlaylists.length > 0;
-  const isDirty = addedPlaylists.length > 0 && !isEqual(addedPlaylists, initialAddedPlaylists);
+
+  const isUserSong = authUser?._id === song.creator;
+  const isSelectedChanged = !isEqual(selectedPlaylists, initialAddedPlaylists);
+  const isDirty = isUserSong ? addedPlaylists.length > 0 && isSelectedChanged : isSelectedChanged;
 
   const songAssignmentModalFm = fm("song.playlist.assignment.modal");
 
@@ -202,7 +207,7 @@ const SongPlaylistAssignmentModal = () => {
           </div>
         ) : (
           <p className={`text-center text-neutral-500`}>
-            {`${songAssignmentModalFm("searchbar.nofound")}: `}
+            {`${songAssignmentModalFm("nofound")}: `}
             <span className={`text-neutral-300`}>{` "${searchQuery}"`}</span>
           </p>
         )}

@@ -9,9 +9,8 @@ import {
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
 import { CreateLabelRequest, GetLabelIdRequest } from "@joytify/shared-types/types";
-import appAssert from "../utils/app-assert.util";
 
-const { OK, CREATED, INTERNAL_SERVER_ERROR } = HttpCode;
+const { OK, CREATED } = HttpCode;
 
 // get all labels handler
 export const getLabelsHandler: RequestHandler = async (req, res, next) => {
@@ -24,8 +23,6 @@ export const getLabelsHandler: RequestHandler = async (req, res, next) => {
     });
 
     const { labels } = await getLabels({ userId, ...params });
-
-    appAssert(labels, INTERNAL_SERVER_ERROR, "Failed to get all labels");
 
     res.status(OK).json(labels);
   } catch (error) {
@@ -64,9 +61,9 @@ export const createLabelHandler: RequestHandler = async (req, res, next) => {
 export const removeLabelHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const id = objectIdZodSchema.parse(req.params.id);
+    const labelId = objectIdZodSchema.parse(req.params.labelId);
 
-    const { removedLabel } = await removeLabel({ userId, id });
+    const { removedLabel } = await removeLabel({ userId, id: labelId });
 
     return res.status(OK).json(removedLabel);
   } catch (error) {

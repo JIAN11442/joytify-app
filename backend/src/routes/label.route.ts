@@ -12,7 +12,7 @@ const labelRoute = Router();
 labelRoute.get("/", getLabelsHandler);
 labelRoute.get("/getId", getLabelIdHandler);
 
-labelRoute.post("/create", createLabelHandler);
-labelRoute.patch("/remove/:id", removeLabelHandler);
+labelRoute.post("/", createLabelHandler);
+labelRoute.patch("/remove/:labelId", removeLabelHandler);
 
 export default labelRoute;

@@ -20,6 +20,6 @@ notificationRoute.get("/:type", authenticate, getUserNotificationsByTypeHandler)
 notificationRoute.post("/socket", internalApiKeyValidate, triggerNotificationSocketHandler);
 notificationRoute.patch("/mark-viewed", authenticate, markNotificationsAsViewedHandler);
 notificationRoute.patch("/mark-read", authenticate, markNotificationsAsReadHandler);
-notificationRoute.delete("/:id", authenticate, removeUserNotificationHandler);
+notificationRoute.delete("/:notificationId", authenticate, removeUserNotificationHandler);
 
 export default notificationRoute;

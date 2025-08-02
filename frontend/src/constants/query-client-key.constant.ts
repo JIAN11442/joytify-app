@@ -74,4 +74,5 @@ export enum QueryKey {
   GET_USER_UNVIEWED_NOTIFICATION_COUNT = "get-user-unviewed-notification-count",
 
   GET_USER_MONTHLY_STATS = "get-user-monthly-stats",
+  GET_USER_SONG_RATING = "get-user-song-rating",
 }

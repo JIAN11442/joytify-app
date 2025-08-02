@@ -3,7 +3,6 @@ import { useMutation } from "@tanstack/react-query";
 import {
   createSongData,
   deleteTargetSong,
-  rateSong,
   updateSongInfo,
   updateSongPlaylistsAssignment,
 } from "../fetchs/song.fetch";
@@ -93,38 +92,6 @@ export const useUpdateSongInfoMutation = (
   return mutation;
 };
 
-// rate song mutation
-export const useRateSongMutation = (closeModalFn: () => void, opts: object = {}) => {
-  const mutation = useMutation({
-    mutationKey: [MutationKey.RATE_SONG],
-    mutationFn: rateSong,
-    onSuccess: (data) => {
-      // refetch related queries
-      queryClient.invalidateQueries({
-        predicate: (query) => {
-          const queryKey = query.queryKey[0];
-          return (
-            queryKey === QueryKey.GET_USER_SONGS ||
-            queryKey === QueryKey.GET_USER_SONGS_STATS ||
-            queryKey === QueryKey.GET_USER_PLAYLISTS
-          );
-        },
-      });
-
-      closeModalFn();
-
-      toast.success(`${data.title} has been rated successfully`);
-    },
-    onError: (error) => {
-      console.log(error.message);
-      toast.error(error.message);
-    },
-    ...opts,
-  });
-
-  return mutation;
-};
-
 // assign song to playlists mutation
 export const useAssignSongToPlaylistsMutation = (closeModalFn: () => void, opts: object = {}) => {
   const mutation = useMutation({
@@ -135,7 +102,12 @@ export const useAssignSongToPlaylistsMutation = (closeModalFn: () => void, opts:
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey[0];
-          return queryKey === QueryKey.GET_USER_PLAYLISTS || queryKey === QueryKey.GET_USER_SONGS;
+          return (
+            queryKey === QueryKey.GET_USER_SONGS ||
+            queryKey === QueryKey.GET_TARGET_SONG ||
+            queryKey === QueryKey.GET_USER_SONG_RATING ||
+            queryKey === QueryKey.GET_USER_PLAYLISTS
+          );
         },
       });
 

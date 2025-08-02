@@ -28,6 +28,7 @@ import errorHandler from "./middlewares/error-handler.middleware";
 import { API_ENDPOINTS } from "@joytify/shared-types/constants";
 import { NODE_ENV, ORIGIN_APP } from "./constants/env-validate.constant";
 import { adminApiKeyValidate } from "./middlewares/api-key.middleware";
+import ratingRoute from "./routes/rating.route";
 
 const {
   AUTH,
@@ -45,6 +46,7 @@ const {
   MUSICIANS,
   NOTIFICATIONS,
   SESSIONS,
+  RATINGS,
   ADMIN,
 } = API_ENDPOINTS;
 
@@ -80,6 +82,7 @@ app.use(ALBUMS, authenticate, albumRoute);
 app.use(MUSICIANS, authenticate, musicianRoute);
 app.use(NOTIFICATIONS, notificationRoute);
 app.use(SESSIONS, authenticate, sessionRoute);
+app.use(RATINGS, authenticate, ratingRoute);
 
 app.use(ADMIN, adminApiKeyValidate, adminRoute);
 

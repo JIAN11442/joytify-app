@@ -30,6 +30,8 @@ const env = cleanEnv(process.env, {
   FIREBASE_CLIENT_ID: str(),
   IP2LOCATION_KEY: str(),
   SESSION_THRESHOLD: num(),
+  MIN_RATING_PROMPT_THRESHOLD: num(),
+  MAX_RATING_PROMPT_THRESHOLD: num(),
 });
 
 export const {
@@ -62,4 +64,6 @@ export const {
   FIREBASE_CLIENT_ID,
   IP2LOCATION_KEY,
   SESSION_THRESHOLD,
+  MIN_RATING_PROMPT_THRESHOLD,
+  MAX_RATING_PROMPT_THRESHOLD,
 } = env;

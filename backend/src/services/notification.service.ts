@@ -6,7 +6,7 @@ import { PaginationQueryResponse, NotificationType } from "@joytify/shared-types
 import { getSocketServer } from "../config/socket.config";
 import appAssert from "../utils/app-assert.util";
 
-const { INTERNAL_SERVER_ERROR } = HttpCode;
+const { INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;
 const { ALL, MONTHLY_STATISTIC, FOLLOWING_ARTIST_UPDATE, SYSTEM_ANNOUNCEMENT } =
   NotificationTypeOptions;
 
@@ -247,7 +247,7 @@ export const markNotificationsAsViewed = async (params: MarkNotificationsRequest
     { arrayFilters: [{ "elem.id": { $in: notificationIds } }] }
   );
 
-  appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to mark notifications as viewed");
+  appAssert(updatedUser.matchedCount > 0, NOT_FOUND, "User not found");
 
   return { modifiedCount: updatedUser.modifiedCount };
 };
@@ -273,7 +273,7 @@ export const markNotificationsAsRead = async (params: MarkNotificationsRequest) 
     }
   );
 
-  appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to mark notifications as read");
+  appAssert(updatedUser.matchedCount > 0, NOT_FOUND, "User not found");
 
   return { modifiedCount: updatedUser.modifiedCount };
 };
@@ -287,7 +287,7 @@ export const removeUserNotification = async (params: RemoveUserNotificationReque
     { new: true }
   );
 
-  appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to remove user notification");
+  appAssert(updatedUser, NOT_FOUND, "User not found");
 
   return { modifiedCount: updatedUser.modifiedCount };
 };

@@ -88,8 +88,8 @@ export const sendCodeEmailToUser = async (params: SendCodeServiceRequest) => {
   }
 
   // generate a new verification code and session ID
-  // const code = generateVerificationCode();
-  const code = "K-108866";
+  // const code = "K-108866";
+  const code = generateVerificationCode();
   const content = JoytifyVerificationCodeEmail({ verificationCode: code });
   const subject = `${code} is your Joytify verification code`;
   const hashedSession = await generateNanoId(true);
@@ -158,8 +158,8 @@ export const verifyCode = async (params: VerifyCodeServiceRequest) => {
 
         appAssert(
           deletedVerificationCode !== null,
-          INTERNAL_SERVER_ERROR,
-          "Failed to delete verification code"
+          CONFLICT,
+          "Verification code has already been used or expired"
         );
       }
     }

@@ -7,15 +7,15 @@ import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
 import {
   CreateSongRequest,
   DeleteSongRequest,
+  UpdateSongInfoRequest,
+  UpdateSongPlaylistsRequest,
   SongResponse,
   RefactorSongResponse,
-  Musician,
+  PopulatedSongResponse,
+  PopulatedSongRate,
   Label,
   Album,
-  UpdateSongRateStateRequest,
-  PopulatedSongRate,
-  UpdateSongPlaylistsRequest,
-  UpdateSongInfoRequest,
+  Musician,
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 import { joinLabels } from "../utils/join-labels.util";
@@ -31,17 +31,13 @@ interface UpdateSongInfoServiceRequest extends UpdateSongInfoRequest {
   userId: string;
 }
 
-interface UpdateSongRateServiceRequest extends UpdateSongRateStateRequest {
-  userId: string;
-}
-
 interface UpdateSongPlaylistsServiceRequest extends UpdateSongPlaylistsRequest {
   userId: string;
 }
 
 type AppAssert = [errorCode?: ErrorCode, firebaseUID?: string | null, awsUrl?: string[] | null];
 
-const { INTERNAL_SERVER_ERROR, CONFLICT } = HttpCode;
+const { INTERNAL_SERVER_ERROR, CONFLICT, NOT_FOUND } = HttpCode;
 const { CREATE_SONG_ERROR } = ErrorCode;
 
 // create new song
@@ -108,10 +104,16 @@ export const getSongById = async (id: string) => {
     .populate({ path: "composers", select: "name", transform: (doc: Musician) => doc.name })
     .populate({ path: "languages", select: "label", transform: (doc: Label) => doc.label })
     .populate({ path: "album", select: "title", transform: (doc: Album) => doc.title })
-    .populate({ path: "ratings.id", select: "username profileImage" })
-    .lean<SongResponse>();
+    .populate({
+      path: "ratings",
+      populate: {
+        path: "user",
+        select: "username profileImage",
+      },
+    })
+    .lean<PopulatedSongResponse[]>();
 
-  appAssert(song, INTERNAL_SERVER_ERROR, "Song not found");
+  appAssert(song, NOT_FOUND, "Song not found");
 
   // refactor song's params from array to string
   const refactorSong: RefactorSongResponse = {
@@ -121,9 +123,9 @@ export const getSongById = async (id: string) => {
     languages: joinLabels(song.languages),
     album: song.album || "",
     ratings: song.ratings.map((rating: PopulatedSongRate) => ({
-      id: rating.id._id,
-      username: rating.id.username,
-      profileImage: rating.id.profileImage,
+      id: rating._id,
+      username: rating.user.username,
+      profileImage: rating.user.profileImage,
       rating: rating.rating,
       comment: rating.comment,
     })),
@@ -142,19 +144,25 @@ export const getUserSongs = async (userId: string) => {
     .populate({ path: "album", select: "title", transform: (doc: Album) => doc.title })
     .populate({ path: "genres", select: "label", transform: (doc: Label) => doc.label })
     .populate({ path: "tags", select: "label", transform: (doc: Label) => doc.label })
-    .populate({ path: "ratings.id", select: "username profileImage" })
-    .lean<PopulatedSongRate[]>();
+    .populate({
+      path: "ratings",
+      populate: {
+        path: "user",
+        select: "username profileImage",
+      },
+    })
+    .lean<PopulatedSongResponse[]>();
 
-  const refactorSongs: RefactorSongResponse[] = songs.map((song: SongResponse) => ({
+  const refactorSongs: RefactorSongResponse[] = songs.map((song: PopulatedSongResponse) => ({
     ...song,
     lyricists: joinLabels(song.lyricists),
     composers: joinLabels(song.composers),
     languages: joinLabels(song.languages),
     album: song.album || "",
     ratings: song.ratings.map((rating) => ({
-      id: rating.id._id,
-      username: rating.id.username,
-      profileImage: rating.id.profileImage,
+      id: rating._id,
+      username: rating.user.username,
+      profileImage: rating.user.profileImage,
       rating: rating.rating,
       comment: rating.comment,
     })),
@@ -178,7 +186,7 @@ export const refreshSongPlaybackStats = async (songId: string) => {
     { new: true }
   );
 
-  appAssert(updatedSong, INTERNAL_SERVER_ERROR, "Failed to update song's activities");
+  appAssert(updatedSong, NOT_FOUND, "Song not found");
 
   return { updatedSong };
 };
@@ -237,46 +245,9 @@ export const updateSongInfoById = async (params: UpdateSongInfoServiceRequest) =
     { new: true }
   );
 
-  appAssert(updatedSong, INTERNAL_SERVER_ERROR, "Failed to update song's info");
+  appAssert(updatedSong, NOT_FOUND, "Song not found or access denied");
 
   return { updatedSong };
-};
-
-// update target song's rating
-export const rateTargetSong = async (params: UpdateSongRateServiceRequest) => {
-  const { userId, songId, rating, isLiked, comment } = params;
-
-  // update default playlist if liked and get playlist ID for song's playlistFor
-  const playlistId = isLiked
-    ? (
-        await PlaylistModel.findOneAndUpdate(
-          { user: userId, default: true },
-          { $addToSet: { songs: songId } },
-          { new: true }
-        )
-      )?._id.toString()
-    : undefined;
-
-  // update rating if exists
-  let updatedSongRating = await SongModel.findOneAndUpdate(
-    { _id: songId, "ratings.id": userId },
-    {
-      $set: { "ratings.$.rating": rating, "ratings.$.comment": comment },
-      ...(isLiked && { $addToSet: { favorites: userId, playlistFor: playlistId } }),
-    },
-    { new: true }
-  );
-
-  // create new rating if doesn't exist
-  if (!updatedSongRating) {
-    updatedSongRating = await SongModel.findByIdAndUpdate(songId, {
-      $push: { ratings: { id: userId, rating, comment } },
-      ...(isLiked && { $addToSet: { favorites: userId, playlistFor: playlistId } }),
-    });
-  }
-
-  appAssert(updatedSongRating, INTERNAL_SERVER_ERROR, "Failed to update song's rating");
-  return { updatedSong: updatedSongRating };
 };
 
 // update target song's playlists
@@ -321,7 +292,7 @@ export const assignSongToPlaylists = async (params: UpdateSongPlaylistsServiceRe
       );
     }
 
-    appAssert(updatedSong, INTERNAL_SERVER_ERROR, "Failed to update song's playlists");
+    appAssert(updatedSong, NOT_FOUND, "Song not found");
 
     // update playlists' songs
     await Promise.all([
@@ -385,11 +356,7 @@ export const deleteSongById = async (params: DeleteSongServiceRequest) => {
   if (shouldDeleteSongs) {
     const deletedSong = await SongModel.findOneAndDelete(queryParams);
 
-    appAssert(
-      deletedSong !== null,
-      INTERNAL_SERVER_ERROR,
-      `Failed to delete target song ${songId}`
-    );
+    appAssert(deletedSong !== null, NOT_FOUND, "Song not found or access denied");
 
     return { deletedSong };
   } else {
@@ -399,7 +366,7 @@ export const deleteSongById = async (params: DeleteSongServiceRequest) => {
       { new: true }
     );
 
-    appAssert(updatedSong, INTERNAL_SERVER_ERROR, "Failed to update target song's ownership");
+    appAssert(updatedSong, NOT_FOUND, "Song not found or access denied");
 
     return { updatedSong };
   }

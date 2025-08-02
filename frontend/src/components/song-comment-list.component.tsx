@@ -1,12 +1,12 @@
+import { useCallback, useState } from "react";
+import { twMerge } from "tailwind-merge";
 import { FaRegComment } from "react-icons/fa";
 import Icon from "./react-icons.component";
 import StarRating from "./star-rating.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
-import { useCallback, useState } from "react";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { twMerge } from "tailwind-merge";
 
 type SongCommentListProps = {
   fm: ScopedFormatMessage;

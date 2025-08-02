@@ -39,7 +39,8 @@ export interface AuthWithThirdPartyServiceRequest {
   sessionInfo: SessionInfo;
 }
 
-const { INTERNAL_SERVER_ERROR, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, CONFLICT } = HttpCode;
+const { INTERNAL_SERVER_ERROR, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, CONFLICT, BAD_REQUEST } =
+  HttpCode;
 const { INVALID_FIREBASE_CREDENTIAL } = ErrorCode;
 
 // create account service
@@ -239,7 +240,7 @@ export const verifyFirebaseAccessToken = async (token: string) => {
   // if third party not provide email, then return error
   appAssert(
     email,
-    INTERNAL_SERVER_ERROR,
+    BAD_REQUEST,
     "Third-party do not provide email",
     INVALID_FIREBASE_CREDENTIAL,
     uid
