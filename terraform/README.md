@@ -449,7 +449,11 @@ aws sns get-topic-attributes --topic-arn arn:aws:sns:ap-northeast-1:ACCOUNT:joyt
 
 The infrastructure automatically sends execution status and monitoring alerts to Discord via webhooks:
 
-![Discord Notifications](https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/readme/discord-notifications.png)
+<div align="left">
+  <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/readme/discord-notifications.png" width="60%" alt="Discord Notifications">
+  <br>
+  <em>Real-time execution status and monitoring alerts via Discord webhooks</em>
+</div>
 
 ---
 

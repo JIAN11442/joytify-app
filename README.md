@@ -1,12 +1,13 @@
 # <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/joytify-logo.svg" alt="Joytify" width="26" height="26"> Joytify - Full-Stack Music Platform
 
-> A Spotify-inspired music streaming platform built with modern web technologies, featuring user authentication, music upload/playback, playlist management, and automated data processing.
+> A Spotify-inspired music streaming platform built with modern web technologies, featuring user authentication, music upload/playback, playlist management, song rating system, and automated data processing.
 
 ## 📋 Project Documentation
 
 - **🏠 [Main Application](./README.md)** - Application overview, tech stack, features _(You are here)_
 - **🏗️ [Infrastructure Pipeline](./terraform/README.md)** - AWS Lambda processing pipeline, capacity analysis
 - **📚 [Shared Types](https://github.com/JIAN11442/joytify-shared-types)** - Shared TypeScript interfaces
+- **📡 [API Documentation](https://documenter.getpostman.com/view/31719938/2sB3B7Msyz)** - Complete REST API reference with sample requests/responses
 
 ---
 
@@ -22,29 +23,49 @@
 
 ## 🎯 Project Overview
 
-**Live Demo**: Coming Soon
+**Development Status**: Currently in local development with full-stack implementation complete. Cloud deployment roadmap in progress.
 
-Joytify is a full-stack music streaming platform that allows users to upload, organize, and stream music. The platform includes user authentication, playlist management, internationalization, and fully automated, scalable statistics processing.
+Joytify is a full-stack music streaming platform that allows users to upload, organize, and stream music. The platform includes user authentication, playlist management, intelligent song rating system, internationalization, and fully automated, scalable statistics processing.
+
+<!--
+<div align="center">
+  <img src="./docs/screenshots/app-overview.png" width="45%" alt="Application Overview">
+  <img src="./docs/screenshots/music-player.png" width="45%" alt="Music Player Interface">
+  <br>
+  <em>Application overview and music player interface</em>
+</div>
+-->
 
 ## 🎵 Platform Features
 
 ### Core Music Features
 
-- **🎧 Audio Player** - Full-featured music streaming with queue management
-- **📋 Playlist Management** - Create, edit, and organize music collections
-- **🎤 Artist Platform** - Music upload and album management
-- **🔍 Search & Discovery** - Find music, artists, and playlists
+- **🎧 Audio Player** - Full-featured streaming with loop modes, shuffle, queue management
+- **📋 Playlist Management** - Create playlists and assign songs with statistics tracking
+- **🎤 Music Upload** - Upload with comprehensive metadata (lyrics, tags, languages, genres)
+- **🔍 Artist System** - Artist profiles with follow functionality
+- **⭐ Song Rating** - 5-star rating with comments and intelligent prompting
+- **📅 Album Management** - Album creation and organization
+- **📊 Playback Analytics** - Detailed listening statistics and monthly insights
 
 ### User Experience
 
-- **🔐 Authentication** - Firebase Auth + JWT security
-- **👤 User Profiles** - Complete profile and preference management
-- **⚙️ User Preferences** - Locale settings, sidebar collapsed state, playback history (music, loop mode, volume)
-- **🌐 Multi-language Support** - Full i18n with 6 languages (en-US, zh-CN, zh-TW, ja, ko, ms)
-- **📱 Device Management** - Multi-device session handling
-- **⌨️ Platform Shortcuts** - Keyboard shortcuts for enhanced user experience
-- **🔔 Notifications** - Real-time notification system
-- **📊 Analytics Dashboard** - Monthly statistics with animated data visualization
+- **🔐 Authentication** - Firebase Auth + JWT with session management
+- **🌐 Multi-language Support** - Modular i18n system supporting 6 languages (en-US, zh-CN, zh-TW, ja, ko, ms) with easy expansion capability
+- **🎨 Dynamic Theming** - Auto color palette extraction from album artwork
+- **🔔 Real-time Notifications** - Live updates via Socket.io for uploads and announcements
+- **📊 Analytics Dashboard** - Monthly listening insights with animated visualizations
+- **📱 Multi-device Sessions** - Cross-device session tracking with automated heartbeat and online status management
+- **📧 Email System** - Professional React Email templates for verification and notifications
+
+<!--
+<div align="center">
+  <img src="./docs/screenshots/analytics-dashboard.png" width="45%" alt="Analytics Dashboard">
+  <img src="./docs/screenshots/multi-language.png" width="45%" alt="Multi-language Support">
+  <br>
+  <em>Analytics dashboard and multi-language support</em>
+</div>
+-->
 
 ---
 
@@ -53,27 +74,28 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 ### Frontend
 
 - **React 18** + **TypeScript** – Modern, performant UI with type safety
-- **Vite** – Blazing fast build tooling
-- **TailwindCSS** – Utility-first styling
-- **Zustand** – Lightweight client-side state management
+- **Vite** – Blazing fast build tooling with hot module replacement
+- **TailwindCSS** – Utility-first styling with dynamic color theming
+- **Zustand** (16 stores) – Granular state management across application domains
 - **React Query** – Server state synchronization and caching
 - **React Hook Form** – Scalable and performant form management
-- **React Intl** – Internationalization with support for `en-US`, `zh-CN`, `zh-TW`, `ja`, `ko`, `ms`
-- **Skeleton Loading** – Improved user experience during data fetching
-- **Firebase Auth** – Secure user authentication
-- **Socket.IO Client** – Real-time communication for notifications
-- **Recharts** – Data visualization for analytics dashboard
-- **Odometer.js** – Animated number display for statistics
+- **React Intl** – Internationalization with 6-language support
+- **Firebase Auth** + **JWT** – Secure dual authentication flow
+- **Socket.IO Client** – Real-time notifications with token validation
+- **Recharts** + **Odometer.js** – Animated data visualization and statistics
+- **Custom Hook Architecture** – 30+ hooks for feature-specific logic
+- **Skeleton Loading** – Theme-aware loading components with multiple patterns (Image, Text, DeviceList)
 
 ### Backend
 
 - **Node.js** + **Express** + **TypeScript** – Robust and scalable backend
 - **Zod** – Input validation and runtime schema checking
 - **MongoDB** + **Mongoose** – NoSQL database with ODM abstraction
-- **JWT** – Secure token-based authentication
-- **Firebase Admin SDK** – Admin-level user management
-- **Resend** – Transactional email delivery (e.g., email verification)
-- **Socket.IO** – Real-time communication for notifications
+- **JWT** + **Firebase Auth** – Dual authentication with HTTP-only cookies
+- **Multi-tier API Keys** – Internal and admin-level access control
+- **Sharp** + **Node Vibrant** – Image processing and color palette extraction
+- **React Email** + **Resend** – Component-based email templates and delivery
+- **Socket.IO** – Real-time notifications with authentication middleware
 
 ### DevOps & Infrastructure
 
@@ -83,10 +105,13 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 - **AWS CloudWatch** – Scheduled tasks, metrics, and log management
 - **Discord Webhook** – Real-time alert and execution summaries
 
-### Shared Types
+### Development & Architecture
 
 - **Monorepo Architecture** – Shared TypeScript interfaces between frontend and backend
-- **Private NPM Package** – Shared types are uploaded to a private NPM registry for seamless reuse across environments
+- **Private NPM Package** – ESM/CJS dual builds for cross-environment compatibility
+- **Database Seeding** – Multi-language label system and development data tools
+- **Keyboard Shortcuts Provider** – Debounced key processing with user preference persistence
+- **Component Composition** – 138 React components (PlaybackControls, RatingModal, AuthButton) with reusable patterns
 
 ---
 
@@ -95,8 +120,8 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 ```mermaid
 graph TB
     subgraph "🎵 Application Layer"
-        FE[React Frontend<br/>90+ Components]
-        BE[Node.js Backend<br/>16 Controllers]
+        FE[React Frontend<br/>138 Components]
+        BE[Node.js Backend<br/>17 Controllers]
         ST[Shared Types<br/>NPM Package]
     end
 
@@ -115,6 +140,7 @@ graph TB
 
     %% Application Layer
     FE -->|API Calls| BE
+    FE -.->|Real-time| BE
     BE -->|ODM| DB
     ST -->|Types| FE
     ST -->|Types| BE
@@ -142,11 +168,20 @@ graph TB
 
 Joytify follows a modern three-layer architecture:
 
-- **🎵 Application Layer**: React frontend (90+ components) with Node.js backend (16 controllers), sharing types via NPM package
-- **🏗️ Processing Layer**: AWS Lambda functions for monthly statistics, data cleanup, and real-time notifications
-- **☁️ Infrastructure**: CloudWatch schedules, SNS messaging, and MongoDB Atlas database
+- **🎵 Application Layer**: React frontend (138 components) with Node.js backend (17 controllers), sharing types via NPM package
+- **🏗️ Processing Layer**: Scheduled AWS Lambda functions for statistics generation and data cleanup
+- **☁️ Infrastructure**: Serverless architecture with CloudWatch schedules, SNS messaging, and MongoDB Atlas
 
-The system processes user analytics monthly and maintains data retention policies automatically.
+The system uses automated data processing with serverless backend functions, currently optimized for MongoDB M0 (512MB) with scalable architecture design.
+
+<!--
+<div align="center">
+  <img src="./docs/screenshots/notifications.png" width="45%" alt="Real-time Notifications">
+  <img src="./docs/screenshots/rating-system.png" width="45%" alt="Smart Rating System">
+  <br>
+  <em>Real-time notifications and intelligent rating system</em>
+</div>
+-->
 
 ## 🚀 Quick Start
 
@@ -178,6 +213,17 @@ cd ../frontend && npm install
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
+
+Key environment variables needed:
+
+- `MONGODB_CONNECTION_STRING` - Database connection
+- `ACCESS_SECRET_KEY` - JWT authentication
+- `FIREBASE_PROJECT_ID` - Firebase configuration
+- `AWS_ACCESS_KEY_ID` - S3 file storage
+- `RESEND_API_KEY` - Email service
+- ...
+
+See `.env.example` files for complete configuration details.
 
 **4. Start development servers**
 
