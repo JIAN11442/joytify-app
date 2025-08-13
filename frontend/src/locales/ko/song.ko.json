@@ -91,18 +91,23 @@
   "song.playlist.assignment.modal.button.cancel": "취소",
   "song.playlist.assignment.modal.button.submit": "제출",
 
-  "song.list.header.title": "제목",
-  "song.list.header.artist": "아티스트",
-  "song.list.header.album": "앨범",
-  "song.list.header.date": "추가 날짜",
-
-  "song.list.arrangement.menu.layout.title": "보기 방식",
-  "song.list.arrangement.menu.layout.grid": "그리드",
-  "song.list.arrangement.menu.layout.list": "리스트",
-  "song.list.arrangement.menu.layout.compact": "컴팩트",
+  "song.tableList.header.title": "제목",
+  "song.tableList.header.artist": "아티스트",
+  "song.tableList.header.album": "앨범",
+  "song.tableList.header.date": "추가 날짜",
+  "song.tableList.arrangement.menu.layout.title": "보기 방식",
+  "song.tableList.arrangement.menu.layout.grid": "그리드",
+  "song.tableList.arrangement.menu.layout.list": "리스트",
+  "song.tableList.arrangement.menu.layout.compact": "컴팩트",
+  "song.tableList.actions.navigateToMain": "곡 페이지로 이동",
+  "song.tableList.actions.addToPlaylist": "재생목록에 추가",
+  "song.tableList.actions.rate": "이 곡 평가하기",
+  "song.tableList.noSongs.1": "아직 곡이 없습니다",
+  "song.tableList.noSongs.2": "사이드바의 <strong>+</strong> 버튼을 통해 음악을 업로드할 수 있습니다",
 
   "song.hero.section.type": "곡",
   "song.action.panel.menu.editDetails": "곡 정보 수정",
   "song.action.panel.menu.assignmentPlaylist": "재생목록에 추가",
+  "song.action.panel.menu.rate": "이 곡 평가하기",
   "song.comment.list.title": "다른 사용자의 평가 ({count})"
 }

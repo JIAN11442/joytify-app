@@ -5,6 +5,18 @@
   "musician.role.composer": "作曲者",
   "musician.role.lyricist": "作詞者",
 
+  "label.type.language": "言語",
+  "label.type.tag": "タグ",
+  "label.type.genre": "ジャンル",
+  "label.type.theme": "テーマ",
+  "label.type.feature": "特徴",
+  "label.type.region": "地域",
+  "label.type.country": "国",
+  "label.type.gender": "性別",
+
+  "pagination.loadMore": "もっと見る",
+  "pagination.loadLess": "折りたたむ",
+
   "gender.male": "男性",
   "gender.female": "女性",
   "gender.nonBinary": "ノンバイナリー",

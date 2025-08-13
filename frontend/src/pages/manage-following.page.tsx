@@ -4,7 +4,7 @@ import { BsPeople } from "react-icons/bs";
 import SearchBarInput from "../components/searchbar-input.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import PageSectionTitle from "../components/page-section-title.component";
-import ManageFollowingList from "../components/manage-following-list.component";
+import ManageMusicianCardList from "../components/manage-musician-card-list.component";
 import { useGetFollowingMusiciansQuery } from "../hooks/musician-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { timeoutForDelay } from "../lib/timeout.lib";
@@ -38,7 +38,7 @@ const ManageFollowingPage = () => {
   }, [musicians, searchQuery]);
 
   return (
-    <div className={`settings-page-container`}>
+    <div className={`page-container`}>
       <AnimationWrapper initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         {/* title */}
         <PageSectionTitle
@@ -58,13 +58,13 @@ const ManageFollowingPage = () => {
         />
       </AnimationWrapper>
 
-      {/* following artist card */}
+      {/* following musician list */}
       <AnimationWrapper
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1 }}
         className={`-mt-5 h-full`}
       >
-        <ManageFollowingList
+        <ManageMusicianCardList
           fm={fm}
           musicians={musicians}
           filteredMusicians={filteredMusicians}

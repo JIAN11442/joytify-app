@@ -1,0 +1,10 @@
+{
+  "search.filterType.all": "All",
+  "search.filterType.songs": "Songs",
+  "search.filterType.albums": "Albums",
+  "search.filterType.musicians": "Musicians",
+  "search.filterType.genresAndTags": "Genres & Tags",
+  "search.filterType.languages": "Languages",
+
+  "search.filterItem.noFound": "No {type} found for <strong>\"{searchQuery}\"</strong>"
+}

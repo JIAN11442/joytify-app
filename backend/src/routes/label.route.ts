@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createLabelHandler,
+  getLabelByIdHandler,
   getLabelIdHandler,
   getLabelsHandler,
   removeLabelHandler,
@@ -9,8 +10,9 @@ import {
 const labelRoute = Router();
 
 // prefix: labels
-labelRoute.get("/", getLabelsHandler);
 labelRoute.get("/getId", getLabelIdHandler);
+labelRoute.get("/:labelId", getLabelByIdHandler);
+labelRoute.get("/", getLabelsHandler);
 
 labelRoute.post("/", createLabelHandler);
 labelRoute.patch("/remove/:labelId", removeLabelHandler);

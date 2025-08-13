@@ -32,11 +32,7 @@ const SongPage = () => {
           #171717 70%
         )`,
       }}
-      className={`
-        min-h-screen
-        pt-10
-        rounded-b-none
-      `}
+      className={`min-h-screen pt-10 overflow-x-hidden rounded-b-none`}
     >
       {/* hero section */}
       <SongHeroSection song={song} editable={isCreator} />
@@ -46,14 +42,14 @@ const SongPage = () => {
           flex
           flex-col
           mt-10
-          mb-5
-          w-full
-          h-full
           p-6
           gap-5
+          w-full
+          h-full
           bg-gradient-to-b
           from-neutral-900/20
-          to-neutral-900  
+          to-neutral-900 
+          overflow-y-auto
         `}
       >
         {/* actions panel */}

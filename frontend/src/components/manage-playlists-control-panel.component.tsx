@@ -3,8 +3,8 @@ import ManagePlaylistsSortPanel from "./manage-playlists-sort-panel.component";
 import ManagePlaylistsFilterPanel from "./manage-playlists-filter-panel.component";
 import ManagePlaylistsSortDirectionPanel from "./manage-playlists-direction-panel.component";
 import ManagePlaylistsArrangementPanel from "./manage-playlists-arrangement-panel.component";
-import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { getManagePlaylistsControlPanelContent } from "../contents/manage-playlists-control-panel.content";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 import {
   ManagePlaylistsFilter,
   ManagePlaylistsSort,
@@ -175,7 +175,7 @@ const ManagePlaylistsControlPanel: React.FC<ManagePlaylistsControlPanelProps> = 
       >
         {/* filter */}
         <ManagePlaylistsFilterPanel
-          initialFilter={ALL}
+          initialFilter={filter}
           filterField={filterField}
           onFilterOptionChange={(filterOpt) => handleFilterOnChange(filterOpt)}
           className={`

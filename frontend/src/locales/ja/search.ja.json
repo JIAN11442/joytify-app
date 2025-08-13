@@ -1,0 +1,10 @@
+{
+  "search.filterType.all": "すべて",
+  "search.filterType.songs": "楽曲",
+  "search.filterType.albums": "アルバム",
+  "search.filterType.musicians": "ミュージシャン",
+  "search.filterType.genresAndTags": "ジャンルとタグ",
+  "search.filterType.languages": "言語",
+
+  "search.filterItem.noFound": "<strong>\"{searchQuery}\"</strong> に一致する{type}が見つかりません"
+}

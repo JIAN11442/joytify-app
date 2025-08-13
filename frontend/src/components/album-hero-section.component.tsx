@@ -1,63 +1,66 @@
+import { twMerge } from "tailwind-merge";
 import ImageLabel from "./image-label.component";
-import { useScopedIntl } from "../hooks/intl.hook";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
 import { RefactorAlbumResponse } from "@joytify/shared-types/types";
-import useSidebarState from "../states/sidebar.state";
+import { formatPlaybackDuration } from "../utils/unit-format.util";
 
 type AlbumHeroSectionProps = {
+  fm: ScopedFormatMessage;
   album: RefactorAlbumResponse;
+  className?: string;
 };
 
-const AlbumHeroSection: React.FC<AlbumHeroSectionProps> = ({ album }) => {
-  const { fm } = useScopedIntl();
-  const albumHeroSectionFm = fm("album.hero.section");
-
-  const { collapseSideBarState } = useSidebarState();
-
-  const { isCollapsed } = collapseSideBarState;
+const AlbumHeroSection: React.FC<AlbumHeroSectionProps> = ({ fm, album, className }) => {
+  const { ALBUMS_IMAGE } = UploadFolder;
   const { title, coverImage, songs } = album;
+
+  const totalDuration = songs.reduce((acc, song) => acc + song.duration, 0);
+
+  const albumHeroSectionFm = fm("album.hero.section");
 
   return (
     <div
-      className={`
-        relative
-        flex
-        px-6
-        gap-x-5
-        w-full
-    `}
+      className={twMerge(
+        `
+          flex
+          w-full
+          px-6
+          gap-x-5
+        `,
+        className
+      )}
     >
       {/* cover image */}
-      <ImageLabel src={coverImage} subfolder={UploadFolder.ALBUMS_IMAGE} isDefault={true} />
+      <ImageLabel src={coverImage} subfolder={ALBUMS_IMAGE} isDefault={true} />
 
       {/* content */}
       <div
         className={`
           flex
+          flex-1
           flex-col
-          w-full
-          lg:py-0
           items-start
-          justify-between
+          justify-evenly
         `}
       >
         {/* album */}
-        <p>{albumHeroSectionFm("type")}</p>
+        <p className={`hero-section--type`}>{albumHeroSectionFm("type")}</p>
 
         {/* title */}
-        <h1
-          style={{ lineHeight: "1.15" }}
-          className={`
-            info-title
-            ${isCollapsed ? "max-sm:text-[2rem] sm:text-[3rem] lg:text-[5rem]" : "lg:text-[4.5rem]"}
-          `}
-        >
-          {title}
-        </h1>
+        <h1 className={`info-title`}>{title}</h1>
 
         {/* other - songs count */}
-        <p className={`text-grey-custom/50 line-clamp-1`}>
-          {albumHeroSectionFm("description", { count: songs.length })}
+        <p className={`hero-section--description`}>
+          {albumHeroSectionFm("description", {
+            count: songs.length,
+            duration: formatPlaybackDuration({
+              fm,
+              duration: totalDuration,
+              precise: true,
+              format: "text",
+            }),
+          })}
         </p>
       </div>
     </div>

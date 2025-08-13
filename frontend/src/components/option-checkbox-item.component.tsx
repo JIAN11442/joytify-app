@@ -6,6 +6,8 @@ import { Label } from "@joytify/shared-types/types";
 
 interface CheckBoxItemProps {
   opt: Label;
+  checked?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   deleteFunc: () => void;
   tw?: {
     input?: string;

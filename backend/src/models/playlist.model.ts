@@ -3,7 +3,7 @@ import UserModel from "./user.model";
 import SongModel from "./song.model";
 
 import usePalette from "../hooks/paletee.hook";
-import { PrivacyOptions } from "@joytify/shared-types/constants";
+import { PrivacyOptions, S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
 import { PrivacyType, HexPaletee } from "@joytify/shared-types/types";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
@@ -32,11 +32,7 @@ const playlistSchema = new mongoose.Schema<PlaylistDocument>(
     },
     title: { type: String },
     description: { type: String },
-    coverImage: {
-      type: String,
-      default:
-        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
-    },
+    coverImage: { type: String, default: S3_DEFAULT_IMAGES.DEFAULT_PLAYLIST },
     privacy: { type: String, default: PrivacyOptions.PUBLIC },
     default: { type: Boolean, default: false },
     paletee: {

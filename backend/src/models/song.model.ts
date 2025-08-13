@@ -6,7 +6,11 @@ import MusicianModel from "./musician.model";
 import PlaylistModel from "./playlist.model";
 import NotificationModel from "./notification.model";
 import usePalette from "../hooks/paletee.hook";
-import { NotificationTypeOptions, SongAssociationAction } from "@joytify/shared-types/constants";
+import {
+  NotificationFilterOptions,
+  SongAssociationAction,
+  S3_DEFAULT_IMAGES,
+} from "@joytify/shared-types/constants";
 import { HexPaletee, SongAssociationActionType } from "@joytify/shared-types/types";
 import { bulkUpdateReferenceArrayFields } from "../utils/mongoose.util";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
@@ -69,11 +73,7 @@ const songSchema = new mongoose.Schema<SongDocument>(
       index: true,
     },
     songUrl: { type: String, required: true },
-    imageUrl: {
-      type: String,
-      default:
-        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-unknown-image.png",
-    },
+    imageUrl: { type: String, default: S3_DEFAULT_IMAGES.SONG },
     duration: { type: Number, required: true },
     playlistFor: {
       type: [mongoose.Schema.Types.ObjectId],
@@ -134,7 +134,7 @@ const songSchema = new mongoose.Schema<SongDocument>(
 const { DELETE_PERMANENTLY, DELETE_WITH_DONATE } = SongAssociationAction;
 
 const removeSongAssociations = async (song: SongDocument, action: SongAssociationActionType) => {
-  const { _id: songId, creator, playlistFor, songUrl, imageUrl, album } = song;
+  const { _id: songId, creator, artist, playlistFor, songUrl, imageUrl, album } = song;
 
   // reduce count in user's totalSongs and remove id from songs
   if (creator) {
@@ -179,7 +179,7 @@ const removeSongAssociations = async (song: SongDocument, action: SongAssociatio
     // decrease song duration to album's totalDuration
     if (album) {
       await AlbumModel.findByIdAndUpdate(album, {
-        $pull: { songs: songId },
+        $pull: { songs: songId, artists: artist },
         $inc: { totalDuration: song.duration * -1 },
       });
     }
@@ -211,45 +211,6 @@ songSchema.pre("save", async function (next) {
   }
 
   next();
-});
-
-// before update song,...
-songSchema.pre("findOneAndUpdate", async function (next) {
-  const findQuery = this.getQuery();
-  let updateDoc = this.getUpdate() as UpdateQuery<SongDocument>;
-
-  const originalDoc =
-    findQuery._id && typeof findQuery._id === "string"
-      ? await SongModel.findById(findQuery._id)
-      : await SongModel.findOne(findQuery);
-
-  if (updateDoc.$set?.imageUrl) {
-    const paletee = await usePalette(updateDoc.$set.imageUrl);
-    updateDoc.paletee = paletee;
-
-    if (originalDoc) {
-      await deleteAwsFileUrlOnModel(originalDoc.imageUrl);
-    }
-  }
-
-  next();
-});
-
-// before delete song,...
-songSchema.pre("findOneAndDelete", async function (next) {
-  try {
-    const findQuery = this.getQuery();
-    const songId = findQuery._id;
-    const song = await SongModel.findById(songId);
-
-    if (song) {
-      await removeSongAssociations(song, DELETE_PERMANENTLY);
-    }
-
-    next();
-  } catch (error) {
-    console.log(error);
-  }
 });
 
 // after created song,...
@@ -292,7 +253,7 @@ songSchema.post("save", async function (doc) {
       // increate song duration to album's totalDuration
       if (album) {
         await AlbumModel.findByIdAndUpdate(album, {
-          $addToSet: { songs: id },
+          $addToSet: { songs: id, artists: artist },
           $inc: { totalDuration: song.duration },
         });
       }
@@ -312,7 +273,7 @@ songSchema.post("save", async function (doc) {
       // create notification template
       if (populatedSong.artist?.followers?.length > 0) {
         await NotificationModel.create({
-          type: NotificationTypeOptions.FOLLOWING_ARTIST_UPDATE,
+          type: NotificationFilterOptions.FOLLOWING_ARTIST_UPDATE,
           followingArtistUpdate: {
             uploaderId: creator,
             artistId: populatedSong.artist._id,
@@ -326,6 +287,28 @@ songSchema.post("save", async function (doc) {
   } catch (error) {
     console.log(error);
   }
+});
+
+// before update song,...
+songSchema.pre("findOneAndUpdate", async function (next) {
+  const findQuery = this.getQuery();
+  let updateDoc = this.getUpdate() as UpdateQuery<SongDocument>;
+
+  const originalDoc =
+    findQuery._id && typeof findQuery._id === "string"
+      ? await SongModel.findById(findQuery._id)
+      : await SongModel.findOne(findQuery);
+
+  if (updateDoc.$set?.imageUrl) {
+    const paletee = await usePalette(updateDoc.$set.imageUrl);
+    updateDoc.paletee = paletee;
+
+    if (originalDoc) {
+      await deleteAwsFileUrlOnModel(originalDoc.imageUrl);
+    }
+  }
+
+  next();
 });
 
 // after update song,...
@@ -371,6 +354,23 @@ songSchema.post("findOneAndUpdate", async function (doc) {
     if (song) {
       await removeSongAssociations(song, DELETE_WITH_DONATE);
     }
+  }
+});
+
+// before delete song,...
+songSchema.pre("findOneAndDelete", async function (next) {
+  try {
+    const findQuery = this.getQuery();
+    const songId = findQuery._id;
+    const song = await SongModel.findById(songId);
+
+    if (song) {
+      await removeSongAssociations(song, DELETE_PERMANENTLY);
+    }
+
+    next();
+  } catch (error) {
+    console.log(error);
   }
 });
 

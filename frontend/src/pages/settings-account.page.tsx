@@ -2,13 +2,13 @@ import { RiUserSettingsLine } from "react-icons/ri";
 import Loader from "../components/loader.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import PageSectionTitle from "../components/page-section-title.component";
-import AccountProfileCard from "../components/account-profile-card.component";
 import AccountDetailsForm from "../components/account-details-form.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import useSettingsState from "../states/settings.state";
 import useSidebarState from "../states/sidebar.state";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import AccountInfoSection from "../components/account-info-section.component";
 
 const SettingsAccountPage = () => {
   const { fm } = useScopedIntl();
@@ -41,7 +41,7 @@ const SettingsAccountPage = () => {
   return (
     <div
       className={`
-        settings-page-container
+        page-container
         h-fit
         ${isCollapsed && "md:w-[95%] lg:w-[85%]"}
       `}
@@ -73,7 +73,7 @@ const SettingsAccountPage = () => {
           `}
         >
           {/* account profile card */}
-          <AccountProfileCard profileUser={profileUser} />
+          <AccountInfoSection profileUser={profileUser} />
 
           {/* divider */}
           <hr className={`mt-4 border-neutral-900/80`} />

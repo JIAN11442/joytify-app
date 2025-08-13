@@ -12,7 +12,6 @@
   "stats.monthlyStats.dashboard.24HourListeningPattern.description": "一日の中でのリスニング活動",
   "stats.monthlyStats.dashboard.24HourListeningPattern.xAxis.label": "時間帯",
   "stats.monthlyStats.dashboard.24HourListeningPattern.yAxis.label": "リスニング時間（分）",
-
   "stats.monthlyStats.dashboard.topTracksBreakdown.title": "トップ5楽曲の内訳",
   "stats.monthlyStats.dashboard.topTracksBreakdown.description": "あなたのトップ5楽曲の分布",
 

@@ -5,6 +5,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { MdLibraryMusic, MdMusicNote } from "react-icons/md";
 
 import Menu from "./menu.component";
+import MenuItem from "./menu-item.component";
 import Icon from "./react-icons.component";
 import SidebarItem from "./sidebar-item.component";
 import SearchBarInput from "./searchbar-input.component";
@@ -149,7 +150,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
         w-full
       `}
     >
-      {/* Header */}
+      {/* header */}
       <div
         className={`
           flex
@@ -161,7 +162,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
           ${!isSidebarExpandedOrFloating && "flex-col"}
         `}
       >
-        {/* Title */}
+        {/* title */}
         <SidebarItem
           icon={{ name: LuLibrary }}
           label={libraryFm("title")}
@@ -171,14 +172,14 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
           tw={{ label: "text-lgc" }}
         />
 
-        {/* Buttons */}
+        {/* buttons */}
         <div
           className={`
             flex 
             gap-1
           `}
         >
-          {/* Search button */}
+          {/* search */}
           <button
             onClick={handleActiveSearchBar}
             className={`
@@ -201,7 +202,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
             />
           </button>
 
-          {/* Adding button */}
+          {/* adding */}
           <div className={`relative`}>
             <button
               onClick={handleActiveAddingOptions}
@@ -230,7 +231,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
               />
             </button>
 
-            {/* Adding options menu */}
+            {/* library adding options menu */}
             <Menu
               ref={addingMenuRef}
               activeState={{
@@ -240,41 +241,25 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
               wrapper={{ transformOrigin: "top left" }}
               className={`fixed w-[210px]`}
             >
-              {/* Add new song button */}
-              <button
+              {/* add new song */}
+              <MenuItem
+                label={libraryFm("actions.song.create")}
+                icon={{ name: MdMusicNote, opts: { size: 16 } }}
                 onClick={handleActiveUploadMusicModal}
-                className={`
-                  menu-btn
-                  flex
-                  gap-3
-                  items-center
-                  normal-case
-                `}
-              >
-                <Icon name={MdMusicNote} opts={{ size: 16 }} />
-                <p>{libraryFm("actions.song.create")}</p>
-              </button>
+              />
 
-              {/* Add new playlist button */}
-              <button
+              {/* add new playlist */}
+              <MenuItem
+                label={libraryFm("actions.playlist.create")}
+                icon={{ name: MdLibraryMusic, opts: { size: 16 } }}
                 onClick={handleCreateNewPlaylist}
-                className={`
-                  menu-btn
-                  flex
-                  gap-3
-                  items-center
-                  normal-case
-                `}
-              >
-                <Icon name={MdLibraryMusic} opts={{ size: 16 }} />
-                <p>{libraryFm("actions.playlist.create")}</p>
-              </button>
+              />
             </Menu>
           </div>
         </div>
       </div>
 
-      {/* Search bar */}
+      {/* search bar */}
       <SearchBarInput
         id="library-searchbar"
         placeholder={libraryFm("search.placeholder")}

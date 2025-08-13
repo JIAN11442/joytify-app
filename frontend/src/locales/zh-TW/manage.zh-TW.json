@@ -13,9 +13,8 @@
   "manage.songs.overview.totalPlaybackCount": "總播放次數",
   "manage.songs.overview.totalWeightedPlaybackDuration": "平均播放時長(加權)",
   "manage.songs.overview.averageRating": "平均評分",
-
   "manage.songs.list.noSongs": "暫無歌曲",
-  "manage.songs.list.noFound": "未找到相關歌曲",
+  "manage.songs.list.noFound": "未找到符合 <strong>“{searchQuery}”</strong> 的歌曲",
 
   "manage.playlists.title": "播放清單管理",
   "manage.playlists.description": "管理你的播放清單",
@@ -39,7 +38,7 @@
   "manage.following.title": "追蹤藝人管理",
   "manage.following.description": "管理你追蹤的藝人",
   "manage.following.searchbar.placeholder": "搜尋你追蹤的藝人",
-  "manage.following.list.noFound": "找不到與 <strong>「{searchQuery}」</strong> 相符的藝人",
+  "manage.following.list.noFound": "找不到與 <strong>「{searchQuery}」</strong> 相符的歌手",
   "manage.following.list.noFollowing": "你尚未追蹤任何藝人",
   "manage.following.unfollow.modal.title": "取消追蹤此藝人",
   "manage.following.unfollow.modal.content": "確定要取消追蹤這位藝人嗎？你將不再收到他的更新。",
@@ -55,8 +54,6 @@
   "manage.notification.controlPanel.artistUpdates": "藝人更新",
   "manage.notification.controlPanel.systemAnnouncements": "系統公告",
 
-  "manage.notification.list.loadMore": "載入更多",
-  "manage.notification.list.loadLess": "收起",
   "manage.notification.card.unread": "未讀",
   "manage.notification.card.monthlyStats.title": "{month} 月度統計報告",
   "manage.notification.card.artistUpdate.title": "{artist} 剛剛更新了 {additionalInfo}",
@@ -70,6 +67,7 @@
   "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "新增了歌曲 <span>{song}</span>",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "新增了歌曲 <span>{song}</span> 到專輯 <span>{album}</span>",
   "manage.notification.card.systemAnnouncement.description": "平台將於 <span>{date}</span> 從 <span>{startTime}</span> 到 <span>{endTime}</span> 進行系統維護",
+  "manage.notification.list.somethingWentWrong": "出錯了，請稍後再試",
   "manage.notification.list.noNotifications": "尚無通知",
 
   "manage.notification.card.menu.markAsRead": "標記為已讀",

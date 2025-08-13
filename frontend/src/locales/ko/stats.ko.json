@@ -12,7 +12,6 @@
   "stats.monthlyStats.dashboard.24HourListeningPattern.description": "하루 중 청취 활동",
   "stats.monthlyStats.dashboard.24HourListeningPattern.xAxis.label": "시간대",
   "stats.monthlyStats.dashboard.24HourListeningPattern.yAxis.label": "청취 시간 (분)",
-
   "stats.monthlyStats.dashboard.topTracksBreakdown.title": "상위 5곡 분포",
   "stats.monthlyStats.dashboard.topTracksBreakdown.description": "당신의 상위 5곡 분포",
 

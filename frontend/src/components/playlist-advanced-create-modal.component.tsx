@@ -93,7 +93,7 @@ const PlaylistAdvancedCreateModal = () => {
     return songs.filter(
       (song) =>
         song.title.toLowerCase().includes(lowerSearchQuery) ||
-        song.artist.toLowerCase().includes(lowerSearchQuery)
+        song.artist.name.toLowerCase().includes(lowerSearchQuery)
     );
   }, [songs, searchQuery]);
 
@@ -228,7 +228,7 @@ const PlaylistAdvancedCreateModal = () => {
                             <span className={`text-neutral-300 font-semibold line-clamp-1`}>
                               {title}
                             </span>
-                            <span className={`text-neutral-400 line-clamp-1`}>{artist}</span>
+                            <span className={`text-neutral-400 line-clamp-1`}>{artist.name}</span>
                           </p>
 
                           <button
@@ -256,7 +256,7 @@ const PlaylistAdvancedCreateModal = () => {
               ) : (
                 <p
                   className={`
-                    text-sm
+                    py-10
                     text-center
                     text-neutral-500
                   `}

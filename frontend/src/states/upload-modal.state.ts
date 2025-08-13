@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { OptionType } from "../components/multi-select-input-box.component";
-import { RefactorLabelResponse } from "@joytify/shared-types/types";
+import { RefactorInputLabelResponse } from "@joytify/shared-types/types";
 
 export type RefetchType<T> = (
   options?: RefetchOptions
@@ -10,7 +10,7 @@ export type RefetchType<T> = (
 type ActiveCreateLabelModal = {
   active: boolean;
   options: OptionType | null;
-  labelRefetch: RefetchType<RefactorLabelResponse> | null;
+  labelRefetch: RefetchType<RefactorInputLabelResponse> | null;
 };
 
 type ActiveCreatePlaylistModal = {

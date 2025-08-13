@@ -1,30 +1,25 @@
 import { twMerge } from "tailwind-merge";
 import ImageLabel from "./image-label.component";
-import { useScopedIntl } from "../hooks/intl.hook";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
 import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
 import usePlaylistState from "../states/playlist.state";
-import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import { formatPlaybackDuration } from "../utils/unit-format.util";
 
 type PlaylistHeroSectionProps = {
+  fm: ScopedFormatMessage;
   playlist: RefactorPlaylistResponse;
   className?: string;
 };
 
-const PlaylistHeroSection: React.FC<PlaylistHeroSectionProps> = ({ playlist, className }) => {
+const PlaylistHeroSection: React.FC<PlaylistHeroSectionProps> = ({ fm, playlist, className }) => {
   const { _id: playlistId, title, songs, description, coverImage, default: isDefault } = playlist;
 
-  const { fm } = useScopedIntl();
-  const playlistItemFm = fm("playlist.item");
-  const playlistHeroSectionFm = fm("playlist.hero.section");
-
   const { setActivePlaylistEditModal } = usePlaylistState();
-  const { collapseSideBarState } = useSidebarState();
-  const { isCollapsed } = collapseSideBarState;
+  const { mutate: updatePlaylistFn, isPending } = useUpdatePlaylistMutation(playlistId);
 
-  // handle active playlist edit modal
   const handleActivePlaylistEditModal = () => {
     if (isDefault) return;
 
@@ -33,17 +28,19 @@ const PlaylistHeroSection: React.FC<PlaylistHeroSectionProps> = ({ playlist, cla
     });
   };
 
-  // update playlist mutation
-  const { mutate: updatePlaylistFn, isPending } = useUpdatePlaylistMutation(playlistId);
+  const playlistItemFm = fm("playlist.item");
+  const playlistHeroSectionFm = fm("playlist.hero.section");
+
+  const totalDuration = songs.reduce((acc, song) => acc + song.duration, 0);
 
   return (
     <div
       className={twMerge(
         `
           flex
+          w-full
           px-6
           gap-x-5
-          w-full
         `,
         className
       )}
@@ -63,19 +60,23 @@ const PlaylistHeroSection: React.FC<PlaylistHeroSectionProps> = ({ playlist, cla
       <div
         className={`
           flex
+          flex-1
           flex-col
-          w-full
-          lg:py-0
           items-start
-          justify-between
+          justify-evenly
         `}
       >
         {/* type */}
-        <p>
+        <p className={`hero-section--type`}>
           {playlistHeroSectionFm("type", {
             type: playlistItemFm("type"),
-            separator: description ? " · " : "",
-            description: description ? playlistItemFm("songs.count", { count: songs.length }) : "",
+            songCount: playlistItemFm("songs.count", { count: songs.length }),
+            duration: formatPlaybackDuration({
+              fm,
+              duration: totalDuration,
+              precise: true,
+              format: "text",
+            }),
           })}
         </p>
 
@@ -83,23 +84,13 @@ const PlaylistHeroSection: React.FC<PlaylistHeroSectionProps> = ({ playlist, cla
         <button
           type="button"
           onClick={handleActivePlaylistEditModal}
-          className={`
-            ${isDefault ? "cursor-default" : "cursor-pointer"}
-          `}
+          className={`${isDefault && "cursor-default"}`}
         >
-          <h1
-            style={{ lineHeight: "1.15" }}
-            className={`
-              info-title
-              ${isCollapsed ? "lg:text-[7rem]" : "lg:text-[6.5rem]"}
-            `}
-          >
-            {title}
-          </h1>
+          <h1 className={`info-title`}>{title}</h1>
         </button>
 
         {/* other - description or songs count */}
-        <p className={`text-grey-custom/50 line-clamp-1`}>
+        <p className={`hero-section--description`}>
           {description ? description : playlistItemFm("songs.count", { count: songs.length })}
         </p>
       </div>

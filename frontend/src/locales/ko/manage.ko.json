@@ -13,9 +13,8 @@
   "manage.songs.overview.totalPlaybackCount": "총 재생 횟수",
   "manage.songs.overview.totalWeightedPlaybackDuration": "총 가중 재생 시간",
   "manage.songs.overview.averageRating": "평균 평점",
-
   "manage.songs.list.noSongs": "아직 노래가 없습니다",
-  "manage.songs.list.noFound": "노래를 찾을 수 없습니다",
+  "manage.songs.list.noFound": "<strong>\"{searchQuery}\"</strong>에 해당하는 노래를 찾을 수 없습니다",
 
   "manage.playlists.title": "플레이리스트 관리",
   "manage.playlists.description": "내 플레이리스트를 관리하세요",
@@ -55,8 +54,6 @@
   "manage.notification.controlPanel.artistUpdates": "아티스트 업데이트",
   "manage.notification.controlPanel.systemAnnouncements": "시스템 공지",
 
-  "manage.notification.list.loadMore": "더 보기",
-  "manage.notification.list.loadLess": "접기",
   "manage.notification.card.unread": "읽지 않음",
   "manage.notification.card.monthlyStats.title": "{month} 월간 통계 보고서",
   "manage.notification.card.artistUpdate.title": "{artist} 이(가) {additionalInfo}로 업데이트됨",
@@ -70,6 +67,7 @@
   "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "새 노래 <span>{song}</span>을 추가했습니다",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "앨범 <span>{album}</span>에 새 노래 <span>{song}</span>을 추가했습니다",
   "manage.notification.card.systemAnnouncement.description": "<span>{date}</span> <span>{startTime}</span>부터 <span>{endTime}</span>까지 시스템 점검이 예정되어 있습니다",
+  "manage.notification.list.somethingWentWrong": "문제가 발생했습니다. 잠시 후 다시 시도해주세요",
   "manage.notification.list.noNotifications": "알림이 없습니다",
 
   "manage.notification.card.menu.markAsRead": "읽은 상태로 표시",

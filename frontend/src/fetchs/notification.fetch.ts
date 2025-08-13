@@ -1,13 +1,13 @@
 import { API_ENDPOINTS } from "@joytify/shared-types/constants";
 import {
-  NotificationType,
+  NotificationFilterType,
   NotificationCountsResponse,
   PaginatedNotificationResponse,
 } from "@joytify/shared-types/types";
 import API from "../config/api-client.config";
 
 type GetNotificationsByTypeRequest = {
-  type: NotificationType;
+  type: NotificationFilterType;
   page: number;
 };
 

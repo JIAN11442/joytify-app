@@ -1,11 +1,12 @@
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
 import API from "../config/api-client.config";
+import { API_ENDPOINTS } from "@joytify/shared-types/constants";
 import {
   CreateLabelRequest,
   GetLabelIdRequest,
   LabelOptionsType,
   LabelResponse,
-  RefactorLabelResponse,
+  RefactorInputLabelResponse,
+  RefactorSearchLabelResponse,
 } from "@joytify/shared-types/types";
 
 const { LABELS } = API_ENDPOINTS;
@@ -14,7 +15,7 @@ const { LABELS } = API_ENDPOINTS;
 export const getLabels = async (
   types?: LabelOptionsType[],
   sortBySequence?: boolean
-): Promise<RefactorLabelResponse> => {
+): Promise<RefactorInputLabelResponse> => {
   const query =
     types && types.length > 0
       ? sortBySequence
@@ -32,6 +33,10 @@ export const createLabel = async (params: CreateLabelRequest): Promise<LabelResp
 // get label id
 export const getLabelId = async (params: GetLabelIdRequest): Promise<string> =>
   await API.get(`${LABELS}/getId`, { params });
+
+// get label by id
+export const getLabelById = async (labelId: string): Promise<RefactorSearchLabelResponse> =>
+  API.get(`${LABELS}/${labelId}`);
 
 // remove label
 export const removeLabel = async (labelId: string): Promise<LabelResponse> =>

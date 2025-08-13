@@ -1,0 +1,1788 @@
+[
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e2"
+    },
+    "label": "Metal",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:55:57.458Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934dd"
+    },
+    "label": "Classical",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:55:58.127Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e0"
+    },
+    "label": "Reggae",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:55:58.914Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e3"
+    },
+    "label": "Folk",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:55:59.684Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d9"
+    },
+    "label": "Pop",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "users": [],
+    "songs": [
+      {
+        "$oid": "67d438c79e1e897be0e0f870"
+      },
+      {
+        "$oid": "67d8ec93d8f69a01d8512bb7"
+      },
+      {
+        "$oid": "67e8daaad8a735b80d4ec218"
+      },
+      {
+        "$oid": "6887505f9f0bcad3a0812da6"
+      }
+    ],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:00.427Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934da"
+    },
+    "label": "Rock",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:00.839Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934db"
+    },
+    "label": "Hip-Hop",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:01.255Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934de"
+    },
+    "label": "Electronic",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:01.677Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934df"
+    },
+    "label": "Country",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:02.109Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e1"
+    },
+    "label": "Blues",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:02.530Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934dc"
+    },
+    "label": "Jazz",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:02.921Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67fe6cfc8bf05210dfe0a025"
+    },
+    "label": "R&B",
+    "type": "genre",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-genre.png",
+    "paletee": {
+      "vibrant": "#e18737",
+      "darkVibrant": "#085474",
+      "lightVibrant": "#c48c7e",
+      "muted": "#ae5d5d",
+      "darkMuted": "#6c3541",
+      "lightMuted": "#a9a9ab"
+    },
+    "author": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "users": [
+      {
+        "$oid": "67d456398383ed54b105123f"
+      }
+    ],
+    "songs": [],
+    "default": false,
+    "createdAt": {
+      "$date": "2025-04-15T14:28:12.744Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:03.341Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ca"
+    },
+    "label": "Chinese",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [
+      {
+        "$oid": "67d438c79e1e897be0e0f870"
+      }
+    ],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:03.787Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d3"
+    },
+    "label": "Russian",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:04.530Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d4"
+    },
+    "label": "Hindi",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:04.948Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934cf"
+    },
+    "label": "Italian",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:05.369Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934c9"
+    },
+    "label": "English",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [
+      {
+        "$oid": "67e8daaad8a735b80d4ec218"
+      }
+    ],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:05.777Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934cd"
+    },
+    "label": "Spanish",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:06.189Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d2"
+    },
+    "label": "Portuguese",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:06.615Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d5"
+    },
+    "label": "Turkish",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:07.029Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d8"
+    },
+    "label": "Dutch",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:07.443Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934cc"
+    },
+    "label": "Korean",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [
+      {
+        "$oid": "67e8daaad8a735b80d4ec218"
+      }
+    ],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:07.838Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d6"
+    },
+    "label": "Greek",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:08.236Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ce"
+    },
+    "label": "French",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:08.636Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934cb"
+    },
+    "label": "Japanese",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [
+      {
+        "$oid": "67d45c3a8383ed54b1051276"
+      },
+      {
+        "$oid": "67d8ec93d8f69a01d8512bb7"
+      },
+      {
+        "$oid": "6887505f9f0bcad3a0812da6"
+      }
+    ],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:09.373Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d1"
+    },
+    "label": "German",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:09.765Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d0"
+    },
+    "label": "Malay",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.568Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:10.184Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934d7"
+    },
+    "label": "Swedish",
+    "type": "language",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-language.png",
+    "paletee": {
+      "vibrant": "#ba7c06",
+      "darkVibrant": "#c47c04",
+      "lightVibrant": "#fad07e",
+      "muted": "#947154",
+      "darkMuted": "#693a7a",
+      "lightMuted": "#946204"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.569Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:16.566Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e4"
+    },
+    "label": "Happy",
+    "type": "tag",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-tag.png",
+    "paletee": {
+      "vibrant": "#fa3862",
+      "darkVibrant": "#0464a0",
+      "lightVibrant": "#f1917c",
+      "muted": "#5e7da2",
+      "darkMuted": "#5c826c",
+      "lightMuted": "#a780a9"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:56:49.554Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ea"
+    },
+    "label": "Uplifting",
+    "type": "tag",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-tag.png",
+    "paletee": {
+      "vibrant": "#fa3862",
+      "darkVibrant": "#0464a0",
+      "lightVibrant": "#f1917c",
+      "muted": "#5e7da2",
+      "darkMuted": "#5c826c",
+      "lightMuted": "#a780a9"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:57:26.883Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e9"
+    },
+    "label": "Chill",
+    "type": "tag",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-tag.png",
+    "paletee": {
+      "vibrant": "#fa3862",
+      "darkVibrant": "#0464a0",
+      "lightVibrant": "#f1917c",
+      "muted": "#5e7da2",
+      "darkMuted": "#5c826c",
+      "lightMuted": "#a780a9"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:58:12.333Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e5"
+    },
+    "label": "Sad",
+    "type": "tag",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-tag.png",
+    "paletee": {
+      "vibrant": "#fa3862",
+      "darkVibrant": "#0464a0",
+      "lightVibrant": "#f1917c",
+      "muted": "#5e7da2",
+      "darkMuted": "#5c826c",
+      "lightMuted": "#a780a9"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:58:57.538Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e6"
+    },
+    "label": "Energetic",
+    "type": "tag",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-tag.png",
+    "paletee": {
+      "vibrant": "#fa3862",
+      "darkVibrant": "#0464a0",
+      "lightVibrant": "#f1917c",
+      "muted": "#5e7da2",
+      "darkMuted": "#5c826c",
+      "lightMuted": "#a780a9"
+    },
+    "users": [],
+    "songs": [
+      {
+        "$oid": "6887505f9f0bcad3a0812da6"
+      }
+    ],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:59:25.379Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e7"
+    },
+    "label": "Melancholic",
+    "type": "tag",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-tag.png",
+    "paletee": {
+      "vibrant": "#fa3862",
+      "darkVibrant": "#0464a0",
+      "lightVibrant": "#f1917c",
+      "muted": "#5e7da2",
+      "darkMuted": "#5c826c",
+      "lightMuted": "#a780a9"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T13:59:56.444Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934e8"
+    },
+    "label": "Romantic",
+    "type": "tag",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-tag.png",
+    "paletee": {
+      "vibrant": "#fa3862",
+      "darkVibrant": "#0464a0",
+      "lightVibrant": "#f1917c",
+      "muted": "#5e7da2",
+      "darkMuted": "#5c826c",
+      "lightMuted": "#a780a9"
+    },
+    "users": [],
+    "songs": [
+      {
+        "$oid": "67d438c79e1e897be0e0f870"
+      },
+      {
+        "$oid": "67e8daaad8a735b80d4ec218"
+      }
+    ],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:01:27.506Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ec"
+    },
+    "label": "Heartbreak",
+    "type": "theme",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:03.201Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ee"
+    },
+    "label": "Friendship",
+    "type": "theme",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:24.351Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934eb"
+    },
+    "label": "Love",
+    "type": "theme",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:25.279Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f1"
+    },
+    "label": "Nature",
+    "type": "theme",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:25.642Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f0"
+    },
+    "label": "Life",
+    "type": "theme",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:25.917Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ef"
+    },
+    "label": "Social Issues",
+    "type": "theme",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:26.521Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ed"
+    },
+    "label": "Party",
+    "type": "theme",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:26.799Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934fc"
+    },
+    "label": "Asian",
+    "type": "region",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:27.083Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c6193500"
+    },
+    "label": "European",
+    "type": "region",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:27.368Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934fb"
+    },
+    "label": "African",
+    "type": "region",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:27.656Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934ff"
+    },
+    "label": "South American",
+    "type": "region",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:27.946Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934fa"
+    },
+    "label": "Latin",
+    "type": "region",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:28.238Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934fd"
+    },
+    "label": "Indie",
+    "type": "region",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:28.522Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934fe"
+    },
+    "label": "North American",
+    "type": "region",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:28.816Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f47d378e69de6d5e0ceec0"
+    },
+    "label": "Non-binary",
+    "type": "gender",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "index": 3,
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:29.110Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f47ed98e69de6d5e0ceec3"
+    },
+    "label": "I prefer not to say",
+    "type": "gender",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "index": 6,
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:29.400Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f479dc8e69de6d5e0ceebe"
+    },
+    "label": "Male",
+    "type": "gender",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "index": 1,
+    "users": [
+      {
+        "$oid": "681706c9a5b1c9e41b32f823"
+      },
+      {
+        "$oid": "67d456398383ed54b105123f"
+      }
+    ],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:30.014Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f47c048e69de6d5e0ceebf"
+    },
+    "label": "Female",
+    "type": "gender",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "index": 2,
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:30.304Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f47e3d8e69de6d5e0ceec1"
+    },
+    "label": "Transgender",
+    "type": "gender",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "index": 4,
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:30.941Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67f47e828e69de6d5e0ceec2"
+    },
+    "label": "Intersex",
+    "type": "gender",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "index": 5,
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:31.231Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67ff051ba5776f9034c79e4f"
+    },
+    "label": "Taiwan",
+    "type": "country",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2025-04-16T01:17:15.879Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:31.527Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67ffb7903b2175de8899a20f"
+    },
+    "label": "Afghanistan",
+    "type": "country",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2025-04-16T13:58:40.830Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:31.822Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6801230f3b2175de8899a604"
+    },
+    "label": "Malaysia",
+    "type": "country",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [
+      {
+        "$oid": "67d456398383ed54b105123f"
+      }
+    ],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2025-04-17T15:49:35.146Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:32.120Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f5"
+    },
+    "label": "Remix",
+    "type": "feature",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:32.415Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f8"
+    },
+    "label": "Remastered",
+    "type": "feature",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:32.707Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f4"
+    },
+    "label": "Cover",
+    "type": "feature",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:33.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f3"
+    },
+    "label": "Live",
+    "type": "feature",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:33.296Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f9"
+    },
+    "label": "Demo",
+    "type": "feature",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:33.594Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f2"
+    },
+    "label": "Acoustic",
+    "type": "feature",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:33.884Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f6"
+    },
+    "label": "Instrumental",
+    "type": "feature",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:34.492Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6739d0593dc1bb25c61934f7"
+    },
+    "label": "Acapella",
+    "type": "feature",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-label-other.png",
+    "paletee": {
+      "vibrant": "#e16b8c",
+      "darkVibrant": "#04848c",
+      "lightVibrant": "#cd6c89",
+      "muted": "#997188",
+      "darkMuted": "#335b64",
+      "lightMuted": "#b87689"
+    },
+    "users": [],
+    "songs": [],
+    "default": true,
+    "createdAt": {
+      "$date": "2024-11-17T11:15:37.570Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-10T14:02:34.794Z"
+    },
+    "__v": 0
+  }
+]

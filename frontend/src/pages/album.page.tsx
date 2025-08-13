@@ -1,12 +1,14 @@
 import { useParams } from "react-router-dom";
 import Loader from "../components/loader.component";
-import SongList from "../components/song-list.component";
+import SongTableList from "../components/song-table-list.component";
 import AlbumHeroSection from "../components/album-hero-section.component";
 import AlbumActionPanel from "../components/album-action-panel.component";
 import { useGetAlbumByIdQuery } from "../hooks/album-query.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 const AlbumPage = () => {
   const { id } = useParams();
+  const { fm } = useScopedIntl();
   const { album } = useGetAlbumByIdQuery(String(id));
 
   if (!album) {
@@ -25,15 +27,10 @@ const AlbumPage = () => {
           #171717 70%
         )`,
       }}
-      className={`
-        h-full
-        pt-10
-        rounded-b-none
-        overflow-x-hidden
-      `}
+      className={`h-full pt-10 overflow-x-hidden rounded-b-none`}
     >
       {/* hero section */}
-      <AlbumHeroSection album={album} />
+      <AlbumHeroSection fm={fm} album={album} />
 
       {/* content section */}
       <div
@@ -52,10 +49,10 @@ const AlbumPage = () => {
         `}
       >
         {/* action panel */}
-        <AlbumActionPanel album={album} />
+        <AlbumActionPanel fm={fm} album={album} />
 
         {/* song list */}
-        <SongList songs={songs} paletee={paletee} />
+        <SongTableList fm={fm} songs={songs} paletee={paletee} />
       </div>
     </div>
   );

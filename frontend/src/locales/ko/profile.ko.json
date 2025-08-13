@@ -1,6 +1,6 @@
 {
   "profile.hero.section.type": "프로필",
-  "profile.hero.section.description": "{totalPlaylists}개의 재생목록 · {totalSongs}곡",
+  "profile.hero.section.description": "재생목록 {playlistCount}개 · 앨범 {albumCount}장 · 팔로잉 {followingCount}명 · 노래 {songCount}곡",
 
   "profile.action.panel.editDetails": "정보 수정",
 

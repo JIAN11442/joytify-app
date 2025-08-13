@@ -17,6 +17,8 @@ const SongDeleteConfirmationForm = ({
   switchToNextPageFn,
 }: SongDeleteConfirmationFormProps) => {
   const { title, imageUrl, artist, paletee } = song;
+  const { name: artistName } = artist;
+
   const modalConfirmationFm = fm("song.delete.modal.confirmation");
 
   return (
@@ -25,7 +27,7 @@ const SongDeleteConfirmationForm = ({
       <SongTitleItem
         title={title}
         imageUrl={imageUrl}
-        artist={artist}
+        artist={artistName}
         style={{
           backgroundImage: `linear-gradient(
             to top,

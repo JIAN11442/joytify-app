@@ -3,7 +3,7 @@
   "playlist.item.songs.count": "{count} lagu",
   "playlist.item.description": "{type} · {count}",
 
-  "playlist.hero.section.type": "{type}{separator}{description}",
+  "playlist.hero.section.type": "{type} · {songCount} · {duration}",
 
   "playlist.menu.action.editDetails": "Edit butiran",
   "playlist.menu.action.deletePlaylist": "Padam senarai main",
@@ -20,7 +20,6 @@
   "playlist.advanced.edit.modal.all.songs.removed": "Semua lagu dalam senarai main ini telah ditandakan untuk dipadam. Penghapusan sebenar akan berlaku selepas anda menyimpan perubahan.",
   "playlist.advanced.edit.modal.button.submit": "Simpan perubahan",
   "playlist.advanced.edit.modal.button.cancel": "Batal",
-
   "playlist.advanced.create.modal.title": "Cipta Senarai Main",
   "playlist.advanced.create.modal.input.title.placeholder": "Tajuk",
   "playlist.advanced.create.modal.input.description.placeholder": "Penerangan",

@@ -58,12 +58,10 @@ export enum QueryKey {
   GET_ALL_SONGS = "get-all-songs",
   GET_USER_SONGS = "get-user-songs",
   GET_TARGET_SONG = "get-target-song",
-  GET_UPLOAD_SONG_LABELS = "get-upload-song-labels",
   GET_USER_SONGS_STATS = "get-user-songs-stats",
 
   GET_USER_ALBUMS = "get-user-albums",
   GET_TARGET_ALBUM = "get-target-album",
-  GET_GENRE_LABELS = "get-genre-labels",
 
   GET_IP_GEOLOCATION = "get-ip-geolocation",
   GET_TARGET_MUSICIAN = "get-target-musician",
@@ -75,4 +73,10 @@ export enum QueryKey {
 
   GET_USER_MONTHLY_STATS = "get-user-monthly-stats",
   GET_USER_SONG_RATING = "get-user-song-rating",
+
+  GET_SEARCH_CONTENT_BY_TYPE = "get-search-content-by-type",
+
+  GET_TARGET_LABEL = "get-target-label",
+  GET_GENRE_LABELS = "get-genre-labels",
+  GET_UPLOAD_SONG_LABELS = "get-upload-song-labels",
 }

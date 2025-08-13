@@ -19,6 +19,7 @@ import albumRoute from "./routes/album.route";
 import musicianRoute from "./routes/musician.route";
 import notificationRoute from "./routes/notification.route";
 import sessionRoute from "./routes/session.route";
+import ratingRoute from "./routes/rating.route";
 import adminRoute from "./routes/admin.route";
 
 import authenticate from "./middlewares/authenticate.middleware";
@@ -28,7 +29,7 @@ import errorHandler from "./middlewares/error-handler.middleware";
 import { API_ENDPOINTS } from "@joytify/shared-types/constants";
 import { NODE_ENV, ORIGIN_APP } from "./constants/env-validate.constant";
 import { adminApiKeyValidate } from "./middlewares/api-key.middleware";
-import ratingRoute from "./routes/rating.route";
+import searchRoute from "./routes/search.route";
 
 const {
   AUTH,
@@ -47,6 +48,7 @@ const {
   NOTIFICATIONS,
   SESSIONS,
   RATINGS,
+  SEARCHES,
   ADMIN,
 } = API_ENDPOINTS;
 
@@ -83,6 +85,7 @@ app.use(MUSICIANS, authenticate, musicianRoute);
 app.use(NOTIFICATIONS, notificationRoute);
 app.use(SESSIONS, authenticate, sessionRoute);
 app.use(RATINGS, authenticate, ratingRoute);
+app.use(SEARCHES, searchRoute);
 
 app.use(ADMIN, adminApiKeyValidate, adminRoute);
 

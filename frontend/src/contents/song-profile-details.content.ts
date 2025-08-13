@@ -41,12 +41,12 @@ export const getSongProfileDetailsContent = (
         {
           id: "basic-info-title",
           title: songDetailsFm("title"),
-          value: song.title || "N/A",
+          value: song.title ?? "N/A",
         },
         {
           id: "basic-info-artist",
           title: songDetailsFm("artist"),
-          value: song.artist || "N/A",
+          value: song.artist?.name ?? "N/A",
         },
         {
           id: "basic-info-composer",
@@ -61,12 +61,12 @@ export const getSongProfileDetailsContent = (
         {
           id: "basic-info-album",
           title: songDetailsFm("album"),
-          value: song.album || "N/A",
+          value: song.album?.title ?? "N/A",
         },
         {
           id: "basic-info-duration",
           title: songDetailsFm("duration"),
-          value: getDuration(song.duration) || "N/A",
+          value: getDuration(song.duration) ?? "N/A",
         },
         {
           id: "basic-info-language",
@@ -76,12 +76,13 @@ export const getSongProfileDetailsContent = (
         {
           id: "basic-info-release-date",
           title: songDetailsFm("releaseDate"),
-          value:
-            intl.formatDate(song.releaseDate, {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            }) || "N/A",
+          value: song.releaseDate
+            ? intl.formatDate(song.releaseDate, {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+            : "N/A",
         },
       ],
     },
@@ -93,23 +94,23 @@ export const getSongProfileDetailsContent = (
         {
           id: "stats-info-total-rating-count",
           title: songDetailsFm("rating.count.total"),
-          value: song.activities.totalRatingCount || 0,
+          value: song.activities?.totalRatingCount ?? 0,
         },
         {
           id: "stats-info-average-rating",
           title: songDetailsFm("rating.count.average"),
-          value: song.activities.averageRating || 0,
+          value: song.activities?.averageRating ?? 0,
         },
         {
           id: "stats-info-total-playback-count",
           title: songDetailsFm("total.playback.count"),
-          value: song.activities.totalPlaybackCount || 0,
+          value: song.activities?.totalPlaybackCount ?? 0,
         },
         {
           id: "stats-info-total-playback-duration",
           title: songDetailsFm("total.playback.duration"),
           value:
-            formatPlaybackDuration({ fm, duration: song.activities.totalPlaybackDuration }) || 0,
+            formatPlaybackDuration({ fm, duration: song.activities?.totalPlaybackDuration }) ?? 0,
         },
         {
           id: "stats-info-weighted-average-playback-duration",
@@ -117,8 +118,8 @@ export const getSongProfileDetailsContent = (
           value:
             formatPlaybackDuration({
               fm,
-              duration: song.activities.weightedAveragePlaybackDuration,
-            }) || 0,
+              duration: song.activities?.weightedAveragePlaybackDuration,
+            }) ?? 0,
         },
       ],
     },

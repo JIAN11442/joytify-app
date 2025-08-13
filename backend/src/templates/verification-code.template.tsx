@@ -28,6 +28,7 @@ import {
   link,
   divider,
 } from "./template-styles";
+import { S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
 
 interface VerifyEmailProps {
   verificationCode: string;
@@ -37,10 +38,8 @@ interface VerifyEmailProps {
 //   ? `https://${import.meta.env.VERCEL_URL}`
 //   : "";
 
-const SendImage =
-  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/send-email.png";
-const JoytifyLogoRegistered =
-  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/joytify-logo-registered.png";
+const sendImageSrc = S3_DEFAULT_IMAGES.SEND_EMAIL;
+const registeredLogoSrc = S3_DEFAULT_IMAGES.REGISTERED_LOGO;
 
 export const JoytifyVerificationCodeEmail = (data: VerifyEmailProps) => {
   const { verificationCode } = data;
@@ -64,7 +63,7 @@ export const JoytifyVerificationCodeEmail = (data: VerifyEmailProps) => {
             >
               <tr>
                 <td align="center">
-                  <Img src={JoytifyLogoRegistered} width="150" />
+                  <Img src={registeredLogoSrc} width="150" />
                 </td>
               </tr>
             </table>
@@ -73,7 +72,7 @@ export const JoytifyVerificationCodeEmail = (data: VerifyEmailProps) => {
             <table role="presentation" align="center" width="100%">
               <tr>
                 <td align="center">
-                  <Img src={SendImage} height="200" />
+                  <Img src={sendImageSrc} height="200" />
                 </td>
               </tr>
             </table>

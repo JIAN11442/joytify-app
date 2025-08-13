@@ -1,0 +1,44 @@
+import { twMerge } from "tailwind-merge";
+import LabelCard from "./label-card.component";
+import AnimationWrapper from "./animation-wrapper.component";
+import { RefactorSearchLabelResponse } from "@joytify/shared-types/types";
+import useSidebarState from "../states/sidebar.state";
+
+type LabelCardListProps = {
+  labels: RefactorSearchLabelResponse[];
+  children?: React.ReactNode;
+  className?: string;
+  tw?: { wrapper?: string; card?: string };
+};
+
+const LabelCardList: React.FC<LabelCardListProps> = ({ labels, children, className, tw }) => {
+  const { collapseSideBarState } = useSidebarState();
+  const { isCollapsed } = collapseSideBarState;
+
+  return (
+    <div
+      className={twMerge(
+        `${isCollapsed ? "card-list-arrange--collapsed" : "card-list-arrange--expanded"}`,
+        className
+      )}
+    >
+      {labels.map((label, index) => {
+        const labelId = label?._id;
+
+        return (
+          <AnimationWrapper
+            key={`label-card-${labelId}`}
+            transition={{ delay: index * 0.1 }}
+            className={tw?.wrapper}
+          >
+            <LabelCard label={label} className={tw?.card} />
+          </AnimationWrapper>
+        );
+      })}
+
+      {children}
+    </div>
+  );
+};
+
+export default LabelCardList;

@@ -38,10 +38,10 @@ const SongTitleItem: React.FC<SongTitleItemProps> = ({
       style={style}
       className={twMerge(
         `
-        flex
-        gap-3
-        items-center
-      `,
+          flex
+          gap-3
+          items-center
+        `,
         className?.item
       )}
     >
@@ -59,20 +59,11 @@ const SongTitleItem: React.FC<SongTitleItemProps> = ({
         )}
       />
 
-      <div className={className?.content}>
-        <p
-          className={twMerge(`
-            text-white 
-            line-clamp-1
-            ${className?.title}
-          `)}
-        >
-          {title}
-        </p>
+      <div className={twMerge(`flex flex-col gap-1 min-w-[100px]`, className?.content)}>
+        <p className={twMerge(`text-white truncate`, className?.title)}>{title}</p>
         <p
           className={twMerge(
-            `
-              text-[12px]
+            ` text-[12px]
               ${switchFunc && songListArrangementType === compact ? "hidden" : "block"}
             `,
             className?.artist

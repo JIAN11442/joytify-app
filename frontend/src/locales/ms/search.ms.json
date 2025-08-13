@@ -1,0 +1,10 @@
+{
+  "search.filterType.all": "Semua",
+  "search.filterType.songs": "Lagu",
+  "search.filterType.albums": "Album",
+  "search.filterType.musicians": "Pemuzik",
+  "search.filterType.genresAndTags": "Genre & Tag",
+  "search.filterType.languages": "Bahasa",
+
+  "search.filterItem.noFound": "Tiada {type} dijumpai untuk <strong>\"{searchQuery}\"</strong>"
+}

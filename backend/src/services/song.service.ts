@@ -9,16 +9,10 @@ import {
   DeleteSongRequest,
   UpdateSongInfoRequest,
   UpdateSongPlaylistsRequest,
-  SongResponse,
   RefactorSongResponse,
   PopulatedSongResponse,
-  PopulatedSongRate,
-  Label,
-  Album,
-  Musician,
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
-import { joinLabels } from "../utils/join-labels.util";
 import { parseToFloat } from "../utils/parse-float.util";
 
 type CreateSongServiceRequest = { userId: string; songInfo: CreateSongRequest };
@@ -74,101 +68,32 @@ export const createNewSong = async (params: CreateSongServiceRequest) => {
 
 // get all songs
 export const getAllSongs = async () => {
-  // get songs
   const songs = await SongModel.find()
-    .populate({ path: "artist", select: "name", transform: (doc: Musician) => doc.name })
-    .populate({ path: "lyricists", select: "name", transform: (doc: Musician) => doc.name })
-    .populate({ path: "composers", select: "name", transform: (doc: Musician) => doc.name })
-    .populate({ path: "languages", select: "label", transform: (doc: Label) => doc.label })
-    .populate({ path: "album", select: "title", transform: (doc: Album) => doc.title })
-    .lean<SongResponse[]>();
+    .populateSongDetails()
+    .refactorSongData<PopulatedSongResponse>()
+    .lean<RefactorSongResponse[]>();
 
-  // refactor songs's params from array to string
-  const refactorSongs: RefactorSongResponse[] = songs.map((song: SongResponse) => ({
-    ...song,
-    lyricists: joinLabels(song.lyricists),
-    composers: joinLabels(song.composers),
-    languages: joinLabels(song.languages),
-    album: song.album || "",
-  }));
-
-  return { songs: refactorSongs };
+  return { songs };
 };
 
 // get song by id
 export const getSongById = async (id: string) => {
-  // get target id song
   const song = await SongModel.findOne({ _id: id })
-    .populate({ path: "artist", select: "name", transform: (doc: Musician) => doc.name })
-    .populate({ path: "lyricists", select: "name", transform: (doc: Musician) => doc.name })
-    .populate({ path: "composers", select: "name", transform: (doc: Musician) => doc.name })
-    .populate({ path: "languages", select: "label", transform: (doc: Label) => doc.label })
-    .populate({ path: "album", select: "title", transform: (doc: Album) => doc.title })
-    .populate({
-      path: "ratings",
-      populate: {
-        path: "user",
-        select: "username profileImage",
-      },
-    })
-    .lean<PopulatedSongResponse[]>();
+    .populateSongDetails()
+    .refactorSongData<PopulatedSongResponse>()
+    .lean<RefactorSongResponse>();
 
-  appAssert(song, NOT_FOUND, "Song not found");
-
-  // refactor song's params from array to string
-  const refactorSong: RefactorSongResponse = {
-    ...song,
-    lyricists: joinLabels(song.lyricists),
-    composers: joinLabels(song.composers),
-    languages: joinLabels(song.languages),
-    album: song.album || "",
-    ratings: song.ratings.map((rating: PopulatedSongRate) => ({
-      id: rating._id,
-      username: rating.user.username,
-      profileImage: rating.user.profileImage,
-      rating: rating.rating,
-      comment: rating.comment,
-    })),
-  };
-
-  return { song: refactorSong };
+  return { song };
 };
 
 // get user's songs
 export const getUserSongs = async (userId: string) => {
   const songs = await SongModel.find({ creator: userId, "ownership.isPlatformOwned": false })
-    .populate({ path: "artist", select: "name", transform: (doc: Musician) => doc.name })
-    .populate({ path: "lyricists", select: "name", transform: (doc: Musician) => doc.name })
-    .populate({ path: "composers", select: "name", transform: (doc: Musician) => doc.name })
-    .populate({ path: "languages", select: "label", transform: (doc: Label) => doc.label })
-    .populate({ path: "album", select: "title", transform: (doc: Album) => doc.title })
-    .populate({ path: "genres", select: "label", transform: (doc: Label) => doc.label })
-    .populate({ path: "tags", select: "label", transform: (doc: Label) => doc.label })
-    .populate({
-      path: "ratings",
-      populate: {
-        path: "user",
-        select: "username profileImage",
-      },
-    })
-    .lean<PopulatedSongResponse[]>();
+    .populateSongDetails()
+    .refactorSongData<PopulatedSongResponse>()
+    .lean<RefactorSongResponse[]>();
 
-  const refactorSongs: RefactorSongResponse[] = songs.map((song: PopulatedSongResponse) => ({
-    ...song,
-    lyricists: joinLabels(song.lyricists),
-    composers: joinLabels(song.composers),
-    languages: joinLabels(song.languages),
-    album: song.album || "",
-    ratings: song.ratings.map((rating) => ({
-      id: rating._id,
-      username: rating.user.username,
-      profileImage: rating.user.profileImage,
-      rating: rating.rating,
-      comment: rating.comment,
-    })),
-  }));
-
-  return { songs: refactorSongs };
+  return { songs };
 };
 
 // re-calculate target song's total duration, total count and average duration

@@ -1,4 +1,8 @@
-# <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/joytify-logo.svg" alt="Joytify" width="26" height="26"> Joytify - Full-Stack Music Platform
+<!-- 有刪除帳號協議頁面 -->
+<!-- 有音樂權轉讓協議 -->
+<!-- 手刻組件，包括 input，menu 等 -->
+
+# <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/logo.svg" alt="Joytify" width="26" height="26"> Joytify - Full-Stack Music Platform
 
 > A Spotify-inspired music streaming platform built with modern web technologies, featuring user authentication, music upload/playback, playlist management, song rating system, and automated data processing.
 

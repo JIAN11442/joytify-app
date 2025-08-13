@@ -1,0 +1,10 @@
+{
+  "search.filterType.all": "全部",
+  "search.filterType.songs": "歌曲",
+  "search.filterType.albums": "專輯",
+  "search.filterType.musicians": "音樂人",
+  "search.filterType.genresAndTags": "曲風與標籤",
+  "search.filterType.languages": "語言",
+
+  "search.filterItem.noFound": "找不到符合 <strong>\"{searchQuery}\"</strong> 的{type}"
+}

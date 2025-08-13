@@ -47,10 +47,14 @@ export const useCreatePlaylistMutation = (closeModalFn?: () => void, opts: objec
     ...opts,
   });
 
-  // the mutate function requires an argument due to its type definition.
-  // to allow calling createPlaylistFn without explicitly passing undefined,
-  // we wrap mutate in a function that accepts an optional title parameter.
-  const refactoredMutate = (params: CreatePlaylistRequest) => mutate(params);
+  // refactor mutate to allow calling with or without parameters
+  const refactoredMutate = (params?: CreatePlaylistRequest) => {
+    if (params) {
+      mutate(params);
+    } else {
+      mutate({});
+    }
+  };
 
   return { mutate: refactoredMutate, ...rest };
 };

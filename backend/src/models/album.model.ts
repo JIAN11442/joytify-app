@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { HexPaletee } from "@joytify/shared-types/types";
+import { S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
 import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
 
 export interface AlbumDocument extends mongoose.Document {
@@ -7,7 +8,7 @@ export interface AlbumDocument extends mongoose.Document {
   description: string;
   coverImage: string;
   paletee: HexPaletee;
-  artist: mongoose.Types.ObjectId;
+  artists: mongoose.Types.ObjectId[];
   songs: mongoose.Types.ObjectId[];
   users: mongoose.Types.ObjectId[];
   totalDuration: number;
@@ -17,11 +18,7 @@ const albumSchema = new mongoose.Schema<AlbumDocument>(
   {
     title: { type: String, required: true },
     description: { type: String },
-    coverImage: {
-      type: String,
-      default:
-        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-album-image.png",
-    },
+    coverImage: { type: String, default: S3_DEFAULT_IMAGES.ALBUM },
     paletee: {
       vibrant: { type: String },
       darkVibrant: { type: String },
@@ -30,11 +27,7 @@ const albumSchema = new mongoose.Schema<AlbumDocument>(
       darkMuted: { type: String },
       lightMuted: { type: String },
     },
-    artist: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Musician",
-      index: true,
-    },
+    artists: { type: [mongoose.Schema.Types.ObjectId], ref: "Musician", index: true },
     songs: { type: [mongoose.Schema.Types.ObjectId], ref: "Song", index: true },
     users: { type: [mongoose.Schema.Types.ObjectId], ref: "User", index: true },
     totalDuration: { type: Number, default: 0 },
@@ -64,7 +57,10 @@ albumSchema.post("updateMany", async function (doc) {
   }
 
   // delete albums with no users and songs
-  await deleteDocWhileFieldsArrayEmpty({ model: AlbumModel, arrayFields: ["users", "songs"] });
+  await deleteDocWhileFieldsArrayEmpty({
+    model: AlbumModel,
+    arrayFields: ["artists", "users", "songs"],
+  });
 });
 
 const AlbumModel = mongoose.model<AlbumDocument>("Album", albumSchema);

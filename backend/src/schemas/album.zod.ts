@@ -5,7 +5,7 @@ export const albumZodSchema = z.object({
   title: stringZodSchema.min(1),
   description: stringZodSchema.optional(),
   coverImage: stringZodSchema.optional(),
-  artist: objectIdZodSchema.optional(),
+  artists: z.array(objectIdZodSchema).optional(),
 });
 
 export type AlbumZodSchemaType = z.infer<typeof albumZodSchema>;

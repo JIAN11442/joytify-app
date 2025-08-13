@@ -32,7 +32,7 @@ const SidebarCategoryList: React.FC<SidebarCategoryListProps> = ({ categories, c
         flex
         flex-col
         h-full
-        pt-8
+        pt-6
         pb-0
         ${isCollapsed ? "px-1" : "px-5"}
         ${isCollapsed ? "justify-start items-center" : "justify-between"}

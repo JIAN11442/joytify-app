@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useRef } from "react";
 
+import usePlaybackControl from "../hooks/playback-control.hook";
+import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
+import { SearchFilterOptions } from "@joytify/shared-types/constants";
 import useUserState from "../states/user.state";
 import useNavbarState from "../states/navbar.state";
 import useLibraryState from "../states/library.state";
 import useSidebarState from "../states/sidebar.state";
 import usePlaylistState from "../states/playlist.state";
-import usePlaybackControl from "../hooks/playback-control.hook";
+import useUploadModalState from "../states/upload-modal.state";
 import usePlaybackControlState from "../states/playback-control.state";
-import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { timeoutForEventListener } from "../lib/timeout.lib";
 import { isEditableElement } from "../lib/element.lib";
 import { navigate } from "../lib/navigate.lib";
@@ -17,12 +19,13 @@ type ShortcutKeysProps = {
 };
 
 const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
-  const { mutate: updateUserPreferencesFn } = useUpdateUserPreferencesMutation();
   const { togglePlayback } = usePlaybackControl();
+  const { mutate: updateUserPreferencesFn } = useUpdateUserPreferencesMutation();
 
   // Debounce for rapid key presses
   const lastKeyPressRef = useRef<{ key: string; time: number }>({ key: "", time: 0 });
   const DEBOUNCE_DELAY = 200;
+  const { ALL } = SearchFilterOptions;
 
   const toggleSidebar = useCallback(() => {
     const { isCollapsed } = useSidebarState.getState().collapseSideBarState;
@@ -54,10 +57,11 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
 
       // Get latest state from stores
       const { authUser } = useUserState.getState();
-      const { activeNavSearchBar, setActiveNavSearchBar } = useNavbarState.getState();
       const { audioSong } = usePlaybackControlState.getState();
+      const { activeNavSearchBar, setActiveNavSearchBar } = useNavbarState.getState();
       const { setActiveAddingOptions, setActiveLibrarySearchBar } = useLibraryState.getState();
       const { setActivePlaylistEditOptionsMenu } = usePlaylistState.getState();
+      const { openUploadModal } = useUploadModalState.getState();
 
       // handle modifier key combinations
       if (ekey.metaKey || ekey.ctrlKey) {
@@ -66,6 +70,13 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
             // toggle sidebar
             ekey.preventDefault();
             toggleSidebar();
+            break;
+          case "u":
+            // active upload modal
+            if (authUser) {
+              ekey.preventDefault();
+              openUploadModal();
+            }
             break;
         }
       } else if (ekey.shiftKey && !isEditing) {
@@ -82,7 +93,7 @@ const ShortcutKeysProvider: React.FC<ShortcutKeysProps> = ({ children }) => {
             if (!activeNavSearchBar) {
               ekey.preventDefault();
               setActiveNavSearchBar(true);
-              navigate("/search");
+              navigate(`/search/${ALL}`);
             }
             break;
           case "P":

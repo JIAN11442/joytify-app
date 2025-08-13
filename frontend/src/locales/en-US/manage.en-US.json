@@ -54,8 +54,6 @@
   "manage.notification.controlPanel.artistUpdates": "Artist Updates",
   "manage.notification.controlPanel.systemAnnouncements": "System Announcements",
 
-  "manage.notification.list.loadMore": "Load more",
-  "manage.notification.list.loadLess": "Load less",
   "manage.notification.card.unread": "Unread",
   "manage.notification.card.monthlyStats.title": "{month} Monthly Stats Report",
   "manage.notification.card.artistUpdate.title": "{artist} just got updated with {additionalInfo}",
@@ -69,6 +67,7 @@
   "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "added a new song <span>{song}</span>",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "added a new song <span>{song}</span> to the album <span>{album}</span>",
   "manage.notification.card.systemAnnouncement.description": "The platform will undergo system maintenance on <span>{date}</span> from <span>{startTime}</span> to <span>{endTime}</span>",
+  "manage.notification.list.somethingWentWrong": "Something went wrong, please try again later",
   "manage.notification.list.noNotifications": "No notifications found",
 
   "manage.notification.card.menu.markAsRead": "Mark as read",

@@ -9,11 +9,12 @@ import userJSON from "./user.en-US.json";
 import songJSON from "./song.en-US.json";
 import manageJSON from "./manage.en-US.json";
 import settingsJSON from "./settings.en-US.json";
-import dashboardJSON from "./dashboard.en-US.json";
+import searchJSON from "./search.en-US.json";
 import musicianJSON from "./musician.en-US.json";
 import albumJSON from "./album.en-US.json";
 import profileJSON from "./profile.en-US.json";
 import statsJSON from "./stats.en-US.json";
+import labelJSON from "./label.en-US.json";
 
 const modules = [
   authJSON,
@@ -27,11 +28,12 @@ const modules = [
   songJSON,
   manageJSON,
   settingsJSON,
-  dashboardJSON,
+  searchJSON,
   musicianJSON,
   albumJSON,
   profileJSON,
   statsJSON,
+  labelJSON,
 ];
 
 export default Object.assign({}, ...modules);

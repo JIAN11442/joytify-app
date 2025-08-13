@@ -13,9 +13,8 @@
   "manage.songs.overview.totalPlaybackCount": "総再生回数",
   "manage.songs.overview.totalWeightedPlaybackDuration": "平均再生時間(加重)",
   "manage.songs.overview.averageRating": "平均評価",
-
   "manage.songs.list.noSongs": "楽曲がありません",
-  "manage.songs.list.noFound": "楽曲が見つかりません",
+  "manage.songs.list.noFound": "<strong>「{searchQuery}」</strong> に一致する曲が見つかりませんでした",
 
   "manage.playlists.title": "プレイリスト管理",
   "manage.playlists.description": "あなたのプレイリストを管理",
@@ -55,8 +54,6 @@
   "manage.notification.controlPanel.artistUpdates": "アーティストの更新",
   "manage.notification.controlPanel.systemAnnouncements": "システムのお知らせ",
 
-  "manage.notification.list.loadMore": "もっと見る",
-  "manage.notification.list.loadLess": "閉じる",
   "manage.notification.card.unread": "未読",
   "manage.notification.card.monthlyStats.title": "{month} の月間統計レポート",
   "manage.notification.card.artistUpdate.title": "{artist} が {additionalInfo} に更新されました",
@@ -70,6 +67,7 @@
   "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "新しい曲 <span>{song}</span> を追加しました",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "アルバム <span>{album}</span> に新しい曲 <span>{song}</span> を追加しました",
   "manage.notification.card.systemAnnouncement.description": "<span>{date}</span> の <span>{startTime}</span> から <span>{endTime}</span> までシステムメンテナンスを実施します",
+  "manage.notification.list.somethingWentWrong": "エラーが発生しました。しばらくしてからもう一度お試しください",
   "manage.notification.list.noNotifications": "通知はありません",
 
   "manage.notification.card.menu.markAsRead": "既読にする",

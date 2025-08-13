@@ -27,6 +27,8 @@ import {
   divider,
 } from "./template-styles";
 
+import { S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
+
 interface ResetPasswordProps {
   username: string;
 }
@@ -35,8 +37,7 @@ interface ResetPasswordProps {
 //   ? `https://${import.meta.env.VERCEL_URL}`
 //   : "";
 
-const JoytifyLogoRegistered =
-  "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/joytify-logo-registered.png";
+const registeredLogoSrc = S3_DEFAULT_IMAGES.REGISTERED_LOGO;
 
 export const JoytifyPasswordChangedEmail = (data: ResetPasswordProps) => {
   const { username } = data;
@@ -57,7 +58,7 @@ export const JoytifyPasswordChangedEmail = (data: ResetPasswordProps) => {
             >
               <tr>
                 <td align="center">
-                  <Img src={JoytifyLogoRegistered} width="150" />
+                  <Img src={registeredLogoSrc} width="150" />
                 </td>
               </tr>
             </table>

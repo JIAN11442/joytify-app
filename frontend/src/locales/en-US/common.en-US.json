@@ -5,6 +5,18 @@
   "musician.role.composer": "Composer",
   "musician.role.lyricist": "Lyricist",
 
+  "label.type.language": "Language",
+  "label.type.tag": "Tag",
+  "label.type.genre": "Genre",
+  "label.type.theme": "Theme",
+  "label.type.feature": "Feature",
+  "label.type.region": "Region",
+  "label.type.country": "Country",
+  "label.type.gender": "Gender",
+
+  "pagination.loadMore": "Load More",
+  "pagination.loadLess": "Load Less",
+
   "gender.male": "Male",
   "gender.female": "Female",
   "gender.nonBinary": "Non-binary",

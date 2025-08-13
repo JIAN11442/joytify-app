@@ -1,3 +1,5 @@
+import { S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
+
 export const defaultSongData = {
   title: "",
   artist: "",
@@ -88,8 +90,7 @@ export const defaultSongRateData = {
 };
 
 export const defaultPlaylistAdvancedCreatData = {
-  coverImage:
-    "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-playlist-image.png",
+  coverImage: S3_DEFAULT_IMAGES.DEFAULT_PLAYLIST,
   title: "",
   description: "",
   addedSongs: [] as string[],

@@ -74,7 +74,7 @@ const ManageNotificationCardMenu: React.FC<ManageNotificationCardMenuProps> = ({
           text-grey-custom/50
           hover:text-white
           outline-none
-          transition
+          transition-all
         `}
       >
         <Icon name={BsThreeDotsVertical} opts={{ size: 16 }} />

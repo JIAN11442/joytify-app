@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getLabels } from "../fetchs/label.fetch";
+import { getLabelById, getLabels } from "../fetchs/label.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
 import { LabelOptionsType } from "@joytify/shared-types/types";
 import useUserState from "../states/user.state";
@@ -34,4 +34,28 @@ export const useGetLabelsQuery = (
   });
 
   return { labels, ...rest };
+};
+
+export const useGetLabelByIdQuery = (labelId: string, opts: object = {}) => {
+  const [isQueryError, setIsQueryError] = useState(false);
+
+  const { data: label, ...rest } = useQuery({
+    queryKey: [QueryKey.GET_TARGET_LABEL, labelId],
+    queryFn: async () => {
+      try {
+        const labels = await getLabelById(labelId);
+
+        return labels;
+      } catch (error) {
+        if (error) {
+          setIsQueryError(true);
+        }
+      }
+    },
+    staleTime: Infinity,
+    enabled: !isQueryError,
+    ...opts,
+  });
+
+  return { label, ...rest };
 };

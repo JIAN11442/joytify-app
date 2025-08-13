@@ -5,14 +5,14 @@ import { TbPlaylist } from "react-icons/tb";
 import SearchBarInput from "../components/searchbar-input.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import PageSectionTitle from "../components/page-section-title.component";
-import ManagePlaylistsList from "../components/manage-playlists-list.component";
 import ManagePlaylistsControlPanel from "../components/manage-playlists-control-panel.component";
+import ManagePlaylistsCardList from "../components/manage-playlists-card-list.component";
 import { OnChangeProps } from "../components/manage-playlists-control-panel.component";
 import { useGetPlaylistsQuery } from "../hooks/playlist-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { PlaylistResponse } from "@joytify/shared-types/types";
-import { ManagePlaylistsArrangementType } from "../types/manage.type";
 import { ManagePlaylistsArrangement } from "../constants/manage.constant";
+import { ManagePlaylistsArrangementType } from "../types/manage.type";
+import { PlaylistResponse } from "@joytify/shared-types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const ManagePlaylistsPage = () => {
@@ -52,7 +52,7 @@ const ManagePlaylistsPage = () => {
   }, [filteredPlaylists, searchQuery]);
 
   return (
-    <div className={`settings-page-container`}>
+    <div className={`page-container`}>
       {/* title & searchbar */}
       <AnimationWrapper initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         {/* title */}
@@ -85,7 +85,7 @@ const ManagePlaylistsPage = () => {
 
       {/* playlists display */}
       <AnimationWrapper initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <ManagePlaylistsList
+        <ManagePlaylistsCardList
           fm={fm}
           playlists={finalPlaylists}
           arrangement={arrangement}

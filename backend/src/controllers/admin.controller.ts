@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import { objectIdZodSchema } from "../schemas/util.zod";
+import { collectionPaleteeZodSchema } from "../schemas/admin.zod";
 import { createSystemAnnouncementZodSchema } from "../schemas/notification.zod";
 
 import {
@@ -8,7 +9,7 @@ import {
   initializeUserNotifications,
   recalculatePlaylistStats,
   removePlaylistStats,
-  updateSongsPaletee,
+  updateCollectionPaletee,
 } from "../services/admin.service";
 import { HttpCode } from "@joytify/shared-types/constants";
 
@@ -52,17 +53,6 @@ export const createSystemAnnouncementHandler: RequestHandler = async (req, res, 
   }
 };
 
-// Songs
-export const updateSongsPaleteeHandler: RequestHandler = async (req, res, next) => {
-  try {
-    const { modifiedCount } = await updateSongsPaletee();
-
-    return res.status(OK).json({ message: `${modifiedCount} songs updated and paletee updated` });
-  } catch (error) {
-    next(error);
-  }
-};
-
 // Playlists
 export const recalculatePlaylistStatsHandler: RequestHandler = async (req, res, next) => {
   try {
@@ -80,6 +70,21 @@ export const initializePlaylistStatsHandler: RequestHandler = async (req, res, n
     const { modifiedCount } = await removePlaylistStats();
 
     return res.status(OK).json({ message: `${modifiedCount} playlists updated and stats removed` });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Utils
+export const updateCollectionPaleteeHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const model = collectionPaleteeZodSchema.parse(req.params.model);
+
+    const { modifiedCount } = await updateCollectionPaletee(model);
+
+    return res
+      .status(OK)
+      .json({ message: `${model} collection paletee updated: ${modifiedCount}` });
   } catch (error) {
     next(error);
   }

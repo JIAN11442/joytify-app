@@ -1,6 +1,6 @@
 {
   "profile.hero.section.type": "个人资料",
-  "profile.hero.section.description": "{totalPlaylists} 个播放列表 · {totalSongs} 首歌曲",
+  "profile.hero.section.description": "{playlistCount} 个播放列表 · {albumCount} 张专辑 · 关注 {followingCount} · {songCount} 首歌曲",
 
   "profile.action.panel.editDetails": "编辑资料",
 

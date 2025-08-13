@@ -1,6 +1,12 @@
 import { RequestHandler } from "express";
 
-import { createLabel, getLabelId, getLabels, removeLabel } from "../services/label.service";
+import {
+  createLabel,
+  getLabelById,
+  getLabelId,
+  getLabels,
+  removeLabel,
+} from "../services/label.service";
 import {
   createLabelZodSchema,
   getLabelsZodSchema,
@@ -38,6 +44,19 @@ export const getLabelIdHandler: RequestHandler = async (req, res, next) => {
     const { id } = await getLabelId(params);
 
     return res.status(OK).json(id);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// get label by id handler
+export const getLabelByIdHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const labelId = objectIdZodSchema.parse(req.params.labelId);
+
+    const { label } = await getLabelById(labelId);
+
+    return res.status(OK).json(label);
   } catch (error) {
     next(error);
   }

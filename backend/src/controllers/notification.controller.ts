@@ -14,7 +14,7 @@ import {
   triggerNotificationSocket,
 } from "../services/notification.service";
 import { HttpCode } from "@joytify/shared-types/constants";
-import { NotificationType } from "@joytify/shared-types/types";
+import { NotificationFilterType } from "@joytify/shared-types/types";
 
 const { OK } = HttpCode;
 
@@ -22,7 +22,7 @@ export const getUserNotificationsByTypeHandler: RequestHandler = async (req, res
   try {
     const userId = objectIdZodSchema.parse(req.userId);
     const page = pageZodSchema.parse(req.query.page);
-    const type = req.params.type as NotificationType;
+    const type = req.params.type as NotificationFilterType;
 
     const { docs } = await getUserNotificationsByType(userId, page, type);
 

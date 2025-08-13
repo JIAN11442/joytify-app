@@ -1,28 +1,28 @@
 import { useCallback } from "react";
+import { twMerge } from "tailwind-merge";
 import ImageLabel from "./image-label.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useUpdateSongInfoMutation } from "../hooks/song-mutate.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
-import useSidebarState from "../states/sidebar.state";
 import useSongState from "../states/song.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type SongHeroSectionProps = {
   song: RefactorSongResponse;
   editable: boolean;
+  className?: string;
 };
 
-const SongHeroSection: React.FC<SongHeroSectionProps> = ({ song, editable }) => {
+const SongHeroSection: React.FC<SongHeroSectionProps> = ({ song, editable, className }) => {
   const { fm } = useScopedIntl();
   const songHeroSectionFm = fm("song.hero.section");
 
-  const { collapseSideBarState } = useSidebarState();
-  const { setActiveSongEditModal } = useSongState();
-  const { mutate: updateSongInfoFn, isPending } = useUpdateSongInfoMutation(song._id);
+  const { _id: songId, title, imageUrl, artist } = song;
+  const { name: artistName } = artist;
 
-  const { isCollapsed } = collapseSideBarState;
-  const { title, imageUrl, artist } = song;
+  const { setActiveSongEditModal } = useSongState();
+  const { mutate: updateSongInfoFn, isPending } = useUpdateSongInfoMutation(songId);
 
   const handleActiveEditModal = useCallback(() => {
     timeoutForDelay(() => {
@@ -32,13 +32,15 @@ const SongHeroSection: React.FC<SongHeroSectionProps> = ({ song, editable }) => 
 
   return (
     <div
-      className={`
-        relative
-        flex
-        px-6
-        gap-x-5
-        w-full
-      `}
+      className={twMerge(
+        `
+          flex
+          w-full
+          px-6
+          gap-x-5
+        `,
+        className
+      )}
     >
       {/* cover image */}
       <ImageLabel
@@ -55,15 +57,14 @@ const SongHeroSection: React.FC<SongHeroSectionProps> = ({ song, editable }) => 
       <div
         className={`
           flex
+          flex-1
           flex-col
-          w-full
-          lg:py-0
           items-start
-          justify-between
+          justify-evenly
         `}
       >
         {/* type */}
-        <p>{songHeroSectionFm("type")}</p>
+        <p className={`hero-section--type`}>{songHeroSectionFm("type")}</p>
 
         {/* title */}
         <button
@@ -71,19 +72,11 @@ const SongHeroSection: React.FC<SongHeroSectionProps> = ({ song, editable }) => 
           onClick={handleActiveEditModal}
           className={`${!editable && "pointer-events-none select-none"}`}
         >
-          <h1
-            style={{ lineHeight: "1.15" }}
-            className={`
-              info-title
-              ${isCollapsed ? "lg:text-[7rem]" : "lg:text-[6.5rem]"}
-            `}
-          >
-            {title}
-          </h1>
+          <h1 className={`info-title`}>{title}</h1>
         </button>
 
         {/* other */}
-        <p className={`text-grey-custom/50 line-clamp-1`}>{artist}</p>
+        <p className={`hero-section--description`}>{artistName}</p>
       </div>
     </div>
   );

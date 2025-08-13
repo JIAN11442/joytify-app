@@ -7,25 +7,25 @@ import Menu from "./menu.component";
 import Icon from "./react-icons.component";
 import MenuItem from "./menu-item.component";
 import QueuePlayButton from "./queue-play-button.component";
-import SongListArrangementMenu from "./song-list-arrangement-menu.component";
+import SongTableListArrangementMenu from "./song-table-list-arrangement-menu.component";
 import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
-import { useScopedIntl } from "../hooks/intl.hook";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { PrivacyOptions } from "@joytify/shared-types/constants";
 import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type PlaylistActionPanelProps = {
+  fm: ScopedFormatMessage;
   playlist: RefactorPlaylistResponse;
 };
 
-const PlaylistActionPanel: React.FC<PlaylistActionPanelProps> = ({ playlist }) => {
-  const { fm } = useScopedIntl();
+const PlaylistActionPanel: React.FC<PlaylistActionPanelProps> = ({ fm, playlist }) => {
   const playlistMenuFm = fm("playlist.menu");
 
-  const [activeArrangementMenu, setActiveArrangementMenu] = useState(false);
-
   const { _id: playlistId, songs, default: isDefault, privacy } = playlist;
+
+  const [activeArrangementMenu, setActiveArrangementMenu] = useState(false);
 
   const {
     activePlaylistEditOptionsMenu,
@@ -147,7 +147,8 @@ const PlaylistActionPanel: React.FC<PlaylistActionPanelProps> = ({ playlist }) =
       </div>
 
       {/* right side */}
-      <SongListArrangementMenu
+      <SongTableListArrangementMenu
+        fm={fm}
         menuActiveState={{
           visible: activeArrangementMenu,
           setVisible: setActiveArrangementMenu,

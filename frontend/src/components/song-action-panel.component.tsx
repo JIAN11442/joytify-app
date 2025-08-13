@@ -6,6 +6,7 @@ import { FaStar } from "react-icons/fa";
 
 import Menu from "./menu.component";
 import Icon from "./react-icons.component";
+import MenuItem from "./menu-item.component";
 import QueuePlayButton from "./queue-play-button.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
@@ -92,42 +93,27 @@ const SongActionPanel: React.FC<SongActionPanelProps> = ({ fm, song, editable })
           className={`absolute top-0 right-10 w-[210px]`}
         >
           {/* rate song */}
-          <button
-            type="button"
+          <MenuItem
+            label={songActionPanelFm("menu.rate")}
+            icon={{ name: FaStar, opts: { size: 18 } }}
             onClick={handleActiveSongRateModal}
-            className={`menu-btn normal-case`}
-          >
-            <Icon name={FaStar} opts={{ size: 18 }} />
-            <p>{songActionPanelFm("menu.rate")}</p>
-          </button>
+          />
 
           {/* edit details */}
           {editable && (
-            <button
-              type="button"
+            <MenuItem
+              label={songActionPanelFm("menu.editDetails")}
+              icon={{ name: AiFillEdit, opts: { size: 18 } }}
               onClick={handleActiveSongEditModal}
-              className={`
-                menu-btn
-                normal-case 
-              `}
-            >
-              <Icon name={AiFillEdit} opts={{ size: 18 }} />
-              <p>{songActionPanelFm("menu.editDetails")}</p>
-            </button>
+            />
           )}
 
           {/* assignment playlist */}
-          <button
-            type="button"
+          <MenuItem
+            label={songActionPanelFm("menu.assignmentPlaylist")}
+            icon={{ name: PiPlaylist, opts: { size: 18 } }}
             onClick={handleActiveSongAssignmentModal}
-            className={`
-              menu-btn 
-              normal-case
-            `}
-          >
-            <Icon name={PiPlaylist} opts={{ size: 18 }} />
-            <p>{songActionPanelFm("menu.assignmentPlaylist")}</p>
-          </button>
+          />
         </Menu>
       </div>
     </div>

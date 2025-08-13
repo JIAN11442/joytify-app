@@ -1,6 +1,6 @@
 {
   "profile.hero.section.type": "Profil",
-  "profile.hero.section.description": "{totalPlaylists} senarai main · {totalSongs} lagu",
+  "profile.hero.section.description": "{playlistCount} senarai main · {albumCount} album · Mengikuti {followingCount} · {songCount} lagu",
 
   "profile.action.panel.editDetails": "Edit butiran",
 

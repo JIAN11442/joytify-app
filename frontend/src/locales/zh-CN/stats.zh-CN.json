@@ -12,7 +12,6 @@
   "stats.monthlyStats.dashboard.24HourListeningPattern.description": "你一天中的聆听活动",
   "stats.monthlyStats.dashboard.24HourListeningPattern.xAxis.label": "时间",
   "stats.monthlyStats.dashboard.24HourListeningPattern.yAxis.label": "聆听时间（分钟）",
-
   "stats.monthlyStats.dashboard.topTracksBreakdown.title": "前五首歌曲分布",
   "stats.monthlyStats.dashboard.topTracksBreakdown.description": "你的前五首歌曲分布",
 

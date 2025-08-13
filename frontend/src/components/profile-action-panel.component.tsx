@@ -3,10 +3,11 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 
 import Menu from "./menu.component";
 import Icon from "./react-icons.component";
+import MenuItem from "./menu-item.component";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import { ScopedFormatMessage } from "../hooks/intl.hook";
 
 type ProfileActionPanelProps = {
   fm: ScopedFormatMessage;
@@ -56,15 +57,12 @@ const ProfileActionPanel: React.FC<ProfileActionPanelProps> = ({ fm, profileUser
         wrapper={{ transformOrigin: "top left" }}
         className={`absolute top-0 left-10 w-[210px]`}
       >
-        {/* Edit details */}
-        <button
-          type="button"
+        {/* edit details */}
+        <MenuItem
+          icon={{ name: AiFillEdit, opts: { size: 18 } }}
+          label={profileActionPaneFm("editDetails")}
           onClick={handleActiveEditProfileModal}
-          className={`menu-btn normal-case`}
-        >
-          <Icon name={AiFillEdit} opts={{ size: 18 }} />
-          <p>{profileActionPaneFm("editDetails")}</p>
-        </button>
+        />
       </Menu>
     </div>
   );

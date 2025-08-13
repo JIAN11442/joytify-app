@@ -1,13 +1,16 @@
 import UserModel from "../models/user.model";
 import SongModel from "../models/song.model";
+import AlbumModel from "../models/album.model";
+import LabelModel from "../models/label.model";
+import MusicianModel from "../models/musician.model";
 import PlaylistModel from "../models/playlist.model";
 import NotificationModel from "../models/notification.model";
-import { HttpCode, NotificationTypeOptions } from "@joytify/shared-types/constants";
+import { HttpCode, NotificationFilterOptions } from "@joytify/shared-types/constants";
 import { CreateSystemAnnouncementRequest } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 import usePalette from "../hooks/paletee.hook";
 
-const { SYSTEM_ANNOUNCEMENT } = NotificationTypeOptions;
+const { SYSTEM_ANNOUNCEMENT } = NotificationFilterOptions;
 const { INTERNAL_SERVER_ERROR } = HttpCode;
 
 // Notifications
@@ -51,23 +54,9 @@ export const createSystemAnnouncement = async (params: CreateSystemAnnouncementR
   return notification;
 };
 
-// Songs
-export const updateSongsPaletee = async () => {
-  const songs = await SongModel.find({
-    imageUrl: { $exists: true },
-  });
-
-  for (const song of songs) {
-    const paletee = await usePalette(song.imageUrl);
-    await SongModel.findByIdAndUpdate(song._id, { paletee });
-  }
-
-  return { modifiedCount: songs.length };
-};
-
 // Playlists
 export const recalculatePlaylistStats = async () => {
-  const playlists = await PlaylistModel.find({}).populate({
+  const playlists = await PlaylistModel.find().populate({
     path: "songs",
     select: "duration",
   });
@@ -105,4 +94,54 @@ export const removePlaylistStats = async () => {
   );
 
   return { modifiedCount: updatedPlaylists.modifiedCount };
+};
+
+// Utils
+export const updateCollectionPaletee = async (
+  modelName: "user" | "song" | "musician" | "playlist" | "album" | "label"
+) => {
+  // Map model names to actual models
+  const modelMap = {
+    user: UserModel,
+    song: SongModel,
+    musician: MusicianModel,
+    playlist: PlaylistModel,
+    album: AlbumModel,
+    label: LabelModel,
+  } as const;
+
+  // Map model names to their corresponding image field names
+  const imageFieldMap = {
+    song: "imageUrl",
+    user: "profileImage",
+    musician: "coverImage",
+    playlist: "coverImage",
+    album: "coverImage",
+    label: "coverImage",
+  } as const;
+
+  const Model: any = modelMap[modelName];
+  const imageFieldName = imageFieldMap[modelName];
+
+  if (!Model) {
+    throw new Error(`Unsupported model: ${modelName}`);
+  }
+
+  // Find documents that have the specified image field
+  const documents = await Model.find({
+    [imageFieldName]: { $exists: true },
+  });
+
+  let modifiedCount = 0;
+
+  for (const doc of documents) {
+    const imageUrl = doc[imageFieldName];
+    if (imageUrl) {
+      const paletee = await usePalette(imageUrl);
+      await Model.findByIdAndUpdate(doc._id, { paletee });
+      modifiedCount++;
+    }
+  }
+
+  return { modifiedCount };
 };

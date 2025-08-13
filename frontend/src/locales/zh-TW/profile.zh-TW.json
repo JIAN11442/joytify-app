@@ -1,6 +1,6 @@
 {
   "profile.hero.section.type": "個人檔案",
-  "profile.hero.section.description": "{totalPlaylists} 個播放清單 · {totalSongs} 首歌曲",
+  "profile.hero.section.description": "{playlistCount} 個播放清單 · {albumCount} 張專輯 · 追蹤 {followingCount} · {songCount} 首歌曲",
 
   "profile.action.panel.editDetails": "編輯資料",
 

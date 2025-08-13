@@ -1,13 +1,14 @@
 import { useParams } from "react-router-dom";
-
 import Loader from "../components/loader.component";
-import SongList from "../components/song-list.component";
+import SongTableList from "../components/song-table-list.component";
 import PlaylistHeroSection from "../components/playlist-hero-section.component";
 import PlaylistActionPanel from "../components/playlist-action-panel.component";
 import { useGetPlaylistByIdQuery } from "../hooks/playlist-query.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
 
 const PlaylistPage = () => {
   const { id } = useParams();
+  const { fm } = useScopedIntl();
   const { playlist } = useGetPlaylistByIdQuery(String(id));
 
   if (!playlist) {
@@ -26,15 +27,10 @@ const PlaylistPage = () => {
           #171717 70%
         )`,
       }}
-      className={`
-        h-full
-        pt-10
-        rounded-b-none
-        overflow-x-hidden
-      `}
+      className={`h-full pt-10 overflow-x-hidden rounded-b-none`}
     >
       {/* hero section */}
-      <PlaylistHeroSection playlist={playlist} />
+      <PlaylistHeroSection fm={fm} playlist={playlist} />
 
       {/* content section */}
       <div
@@ -53,10 +49,10 @@ const PlaylistPage = () => {
         `}
       >
         {/* action panel */}
-        <PlaylistActionPanel playlist={playlist} />
+        <PlaylistActionPanel fm={fm} playlist={playlist} />
 
         {/* song list */}
-        <SongList songs={songs} paletee={paletee} />
+        <SongTableList fm={fm} songs={songs} paletee={paletee} />
       </div>
     </div>
   );

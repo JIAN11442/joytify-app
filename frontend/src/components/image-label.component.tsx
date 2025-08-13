@@ -124,6 +124,8 @@ const ImageLabel = forwardRef<HTMLImageElement, ImageLabelProps>(
                 group
                 w-[165px]
                 h-[165px]
+                max-sm:w-[140px]
+                max-sm:h-[140px]
               `,
               tw?.label
             )}

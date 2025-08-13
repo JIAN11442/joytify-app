@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
 import { IoIosMenu } from "react-icons/io";
 import { BiSearch } from "react-icons/bi";
@@ -10,6 +11,7 @@ import UserEntryPoint from "./user-entry-point.component";
 import NavbarSearchBar from "./navbar-searchbar.component";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { useGetUserUnviewedNotificationCountQuery } from "../hooks/notification-query.hook";
+import { SearchFilterOptions } from "@joytify/shared-types/constants";
 import useProviderState from "../states/provider.state";
 import useSidebarState from "../states/sidebar.state";
 import useNavbarState from "../states/navbar.state";
@@ -17,7 +19,9 @@ import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const Navbar = () => {
-  const [searchBarVal, setSearchBarVal] = useState("");
+  const location = useLocation();
+  const { type } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { authUser } = useUserState();
   const { screenWidth } = useProviderState();
@@ -47,16 +51,28 @@ const Navbar = () => {
 
   const handleSearchBarOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
+    const trimVal = val.trim();
+    const newSearchParams = new URLSearchParams(searchParams);
 
-    setSearchBarVal(val);
+    if (trimVal) {
+      newSearchParams.set("q", trimVal);
+    } else {
+      newSearchParams.delete("q");
+    }
+
+    setSearchParams(newSearchParams);
   };
 
+  const isSearchPage = location.pathname.includes("/search");
+
   const autoCloseSearchBarFn = {
-    active: true,
+    active: isSearchPage ? false : true,
     closeFn: () => {
       setActiveNavSearchBar(false);
     },
   };
+
+  const { ALL } = SearchFilterOptions;
 
   // adjust navbar searchbar position
   useEffect(() => {
@@ -143,7 +159,7 @@ const Navbar = () => {
               `}
             >
               <NavbarLink
-                to="/search"
+                to={`/search/${type ?? ALL}`}
                 icon={{ name: BiSearch }}
                 onClick={handleActiveNavbarSearchBar}
               />
@@ -159,7 +175,6 @@ const Navbar = () => {
               >
                 <NavbarSearchBar
                   visible={activeNavSearchBar && !adjustNavSearchBarPosition}
-                  value={searchBarVal}
                   autoCloseFn={autoCloseSearchBarFn}
                   onChange={handleSearchBarOnChange}
                 />
@@ -214,7 +229,6 @@ const Navbar = () => {
       {/* search bar (screen-width less then 500px) */}
       <NavbarSearchBar
         visible={activeNavSearchBar && adjustNavSearchBarPosition}
-        value={searchBarVal}
         autoCloseFn={autoCloseSearchBarFn}
         onChange={handleSearchBarOnChange}
         className={`rounded-lg`}

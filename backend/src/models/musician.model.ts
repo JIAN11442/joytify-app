@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
-import { HexPaletee } from "@joytify/shared-types/types";
-import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
 import usePalette from "../hooks/paletee.hook";
+import { HexPaletee } from "@joytify/shared-types/types";
+import { S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
+import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
 
 export interface MusicianDocument extends mongoose.Document {
   name: string;
@@ -19,11 +20,7 @@ const musicianSchema = new mongoose.Schema<MusicianDocument>(
     name: { type: String, required: true },
     roles: { type: [String], required: true },
     bio: { type: String },
-    coverImage: {
-      type: String,
-      default:
-        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-album-image.png",
-    },
+    coverImage: { type: String, default: S3_DEFAULT_IMAGES.MUSICIAN },
     paletee: {
       vibrant: { type: String },
       darkVibrant: { type: String },

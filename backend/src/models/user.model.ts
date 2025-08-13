@@ -19,6 +19,7 @@ import {
   SupportedLocale,
   AudioVolume,
   LoopMode,
+  S3_DEFAULT_IMAGES,
 } from "@joytify/shared-types/constants";
 import {
   HexPaletee,
@@ -219,17 +220,16 @@ userSchema.post("save", async function (doc) {
     // only create default playlist if it doesn't exist
     // cause this.save() will trigger this post middleware again -> infinite loop
     if (!existDefaultPlaylist) {
-      const defaultCoverImg =
-        "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/liked-song.png";
+      const defaultLikedPlaylistImg = S3_DEFAULT_IMAGES.LIKED_PLAYLIST;
 
-      const paletee = await usePalette(defaultCoverImg);
+      const paletee = await usePalette(defaultLikedPlaylistImg);
 
       // create default playlist
       const defaultPlaylist = await PlaylistModel.create({
         user: id,
         title: "Liked Songs",
         description: "All your liked songs will be here",
-        coverImage: defaultCoverImg,
+        coverImage: defaultLikedPlaylistImg,
         paletee: paletee,
         default: true,
         privacy: PrivacyOptions.PRIVATE,

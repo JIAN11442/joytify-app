@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { NotificationControlPanelSkeleton } from "./skeleton-loading.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
+import { NotificationControlPanelSkeleton } from "./skeleton-loading.component";
 import { getManageNotificationControlPanelContent } from "../contents/manage-notification-control-panel.content";
-import { NotificationTypeOptions } from "@joytify/shared-types/constants";
-import { NotificationCountsResponse } from "@joytify/shared-types/types";
+import { NotificationFilterOptions } from "@joytify/shared-types/constants";
+import { NotificationCountsResponse, NotificationFilterType } from "@joytify/shared-types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type ManageNotificationControlPanelProps = {
   fm: ScopedFormatMessage;
   counts: NotificationCountsResponse | undefined;
-  onTypeChange?: (type: NotificationTypeOptions) => void;
+  onTypeChange?: (type: NotificationFilterType) => void;
   className?: string;
   tw?: { item?: string };
 };
@@ -22,10 +22,10 @@ const ManageNotificationControlPanel = ({
   className,
   tw,
 }: ManageNotificationControlPanelProps) => {
-  const { ALL } = NotificationTypeOptions;
-  const [selectedType, setSelectedType] = useState<NotificationTypeOptions>(ALL);
+  const { ALL } = NotificationFilterOptions;
+  const [selectedType, setSelectedType] = useState<NotificationFilterType>(ALL);
 
-  const handleSelectType = (type: NotificationTypeOptions) => {
+  const handleSelectType = (type: NotificationFilterType) => {
     timeoutForDelay(() => {
       setSelectedType(type);
       onTypeChange?.(type);

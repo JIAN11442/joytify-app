@@ -4,11 +4,11 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Modal from "./modal.component";
 import Icon from "./react-icons.component";
 import SongCommentList from "./song-comment-list.component";
-import ManageSongCardImage from "./manage-song-card-image.component";
-import ManageSongCardDetails from "./manage-song-card-details.component";
+import ManageSongsCardDetails from "./manage-songs-card-details.component";
+import ManageSongsCardImage from "./manage-songs-card-image.component";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { timeoutForDelay } from "../lib/timeout.lib";
 import useSongState from "../states/song.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 const SongCardDetailModal = () => {
   const { fm } = useScopedIntl();
@@ -71,7 +71,7 @@ const SongCardDetailModal = () => {
         >
           <div className={`flex flex-col gap-2 items-center`}>
             {/* image */}
-            <ManageSongCardImage
+            <ManageSongsCardImage
               songs={songs}
               currentIndex={currentIndex}
               hasPlayButton={false}
@@ -111,7 +111,7 @@ const SongCardDetailModal = () => {
                   </button>
                 </div>
               )}
-            </ManageSongCardImage>
+            </ManageSongsCardImage>
 
             {/* pagination */}
             {songs.length > 1 && (
@@ -131,7 +131,7 @@ const SongCardDetailModal = () => {
           </div>
 
           {/* details */}
-          <ManageSongCardDetails song={song} />
+          <ManageSongsCardDetails song={song} />
         </div>
 
         {/* ratings & comments */}

@@ -13,8 +13,8 @@
   "settings.account.dateOfBirth.title": "出生日期",
   "settings.account.country.title": "國家",
   "settings.account.country.placeholder": "選擇你所屬國家",
-  "settings.account.profile.card.button.edit": "編輯",
-  "settings.account.profile.card.button.save": "儲存",
+  "settings.account.infoSection.edit": "編輯",
+  "settings.account.infoSection.save": "儲存",
   "settings.account.form.button.submit": "提交",
   "settings.account.changePassword.title": "密碼與驗證",
   "settings.account.changePassword.description": "修改密碼以確保帳號安全",
@@ -45,6 +45,7 @@
   "settings.languages.description": "選擇你偏好的介面語言",
   "settings.languages.search.placeholder": "搜尋介面語言",
   "settings.languages.currentlySelected": "當前使用語言",
+  "settings.languages.noFound": "找不到符合 <strong>「{searchQuery}」</strong> 的語言",
   "settings.languages.button.save": "儲存更改",
   "settings.languages.button.cancel": "取消",
 

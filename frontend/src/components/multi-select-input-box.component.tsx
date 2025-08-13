@@ -7,7 +7,7 @@ import AnimationWrapper from "./animation-wrapper.component";
 import OptionCheckboxItem from "./option-checkbox-item.component";
 
 import { FormMethods } from "../types/form.type";
-import { Label, LabelOptionsType, RefactorLabelResponse } from "@joytify/shared-types/types";
+import { Label, LabelOptionsType, RefactorInputLabelResponse } from "@joytify/shared-types/types";
 import useUploadModalState, { RefetchType } from "../states/upload-modal.state";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import mergeRefs from "../lib/merge-refs.lib";
@@ -24,7 +24,7 @@ interface MultiSelectInputProps<T extends FieldValues = any>
   formMethods: FormMethods<T>;
   autoCloseMenu?: boolean;
   deleteOptFn?: (id: string) => void;
-  queryRefetch: RefetchType<RefactorLabelResponse>;
+  queryRefetch: RefetchType<RefactorInputLabelResponse>;
 }
 
 const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
@@ -58,12 +58,12 @@ const MultiSelectInputBox = forwardRef<HTMLInputElement, MultiSelectInputProps>(
 
     // handle option menu onchange
     const handleOptMenuOnChange = (opt: Label, e: React.ChangeEvent<HTMLInputElement>) => {
-      const checked = e.target.checked;
+      const { checked } = e.target;
 
       if (checked) {
         setSelectedOpts((prev) => [...prev, opt]);
       } else {
-        setSelectedOpts((prev) => prev.filter((existedOpt) => existedOpt !== opt));
+        setSelectedOpts((prev) => prev.filter((item) => item.id !== opt.id));
       }
     };
 

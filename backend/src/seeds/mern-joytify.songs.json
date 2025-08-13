@@ -1,0 +1,589 @@
+[
+  {
+    "_id": {
+      "$oid": "67d439319e1e897be0e0f8a0"
+    },
+    "title": "鮮花",
+    "creator": {
+      "$oid": "67d4360f1f3111de4dbfbb0e"
+    },
+    "artist": {
+      "$oid": "67b09e447023b8ce93f54c35"
+    },
+    "lyricists": [
+      {
+        "$oid": "67d2a160187db64ed27910a6"
+      }
+    ],
+    "composers": [
+      {
+        "$oid": "67d2a160187db64ed27910a6"
+      }
+    ],
+    "songUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/mp3/Vfk83xjQ4cORNTsZWKmLR-1741961509703.mp3",
+    "imageUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/image/Vfk83xjQ4cORNTsZWKmLR-1741961520540.png",
+    "duration": 341.496,
+    "playlistFor": [],
+    "languages": [],
+    "genres": [],
+    "tags": [],
+    "lyrics": [],
+    "paletee": {
+      "vibrant": "#867878",
+      "darkVibrant": "#463e3e",
+      "lightVibrant": "#c0b8b8",
+      "muted": "#86848c",
+      "darkMuted": "#444444",
+      "lightMuted": "#bcb4b4"
+    },
+    "favorites": [],
+    "ratings": [],
+    "activities": {
+      "averageRating": 0,
+      "totalRatingCount": 0,
+      "totalPlaybackCount": 9,
+      "totalPlaybackDuration": 3072.9,
+      "weightedAveragePlaybackDuration": 341.43
+    },
+    "ownership": {
+      "isPlatformOwned": false
+    },
+    "createdAt": {
+      "$date": "2025-03-14T14:12:01.697Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-31T07:23:47.256Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67e8daaad8a735b80d4ec218"
+    },
+    "title": "Christmas Tree",
+    "creator": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "artist": {
+      "$oid": "67e8daa8d8a735b80d4ec208"
+    },
+    "lyricists": [
+      {
+        "$oid": "67e8daa9d8a735b80d4ec20c"
+      },
+      {
+        "$oid": "67e8daa9d8a735b80d4ec210"
+      }
+    ],
+    "composers": [
+      {
+        "$oid": "67e8daa9d8a735b80d4ec20c"
+      },
+      {
+        "$oid": "67e8daa9d8a735b80d4ec210"
+      }
+    ],
+    "songUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/mp3/I54lp91ERLjZX9GUi9LaE-1743313573126.mp3",
+    "imageUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/image/D5vpVNLzXHaMo7dVO24oB-1751261756057.png",
+    "duration": 221.074286,
+    "playlistFor": [
+      {
+        "$oid": "67d6eeb73f16a433b9daeb12"
+      }
+    ],
+    "languages": [
+      {
+        "$oid": "6739d0593dc1bb25c61934c9"
+      },
+      {
+        "$oid": "6739d0593dc1bb25c61934cc"
+      }
+    ],
+    "genres": [
+      {
+        "$oid": "6739d0593dc1bb25c61934d9"
+      }
+    ],
+    "tags": [
+      {
+        "$oid": "6739d0593dc1bb25c61934e8"
+      }
+    ],
+    "lyrics": [],
+    "releaseDate": {
+      "$date": "2021-12-24T00:00:00.000Z"
+    },
+    "paletee": {
+      "vibrant": "#5191ad",
+      "darkVibrant": "#2a4b5a",
+      "lightVibrant": "#a2c4d3",
+      "muted": "#91946b",
+      "darkMuted": "#606c43",
+      "lightMuted": "#b0cbd4"
+    },
+    "favorites": [],
+    "ratings": [],
+    "activities": {
+      "averageRating": 5,
+      "totalRatingCount": 1,
+      "totalPlaybackCount": 12,
+      "totalPlaybackDuration": 2538.59,
+      "weightedAveragePlaybackDuration": 216.09
+    },
+    "ownership": {
+      "isPlatformOwned": false
+    },
+    "createdAt": {
+      "$date": "2025-03-30T05:46:18.591Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-02T10:52:14.477Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67d45c3a8383ed54b1051276"
+    },
+    "title": "風のゆくえ",
+    "creator": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "artist": {
+      "$oid": "67d45c398383ed54b105126c"
+    },
+    "lyricists": [
+      {
+        "$oid": "67d45c398383ed54b1051270"
+      }
+    ],
+    "composers": [
+      {
+        "$oid": "67d45c398383ed54b1051270"
+      }
+    ],
+    "songUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/mp3/cgVfy6OPJtGN6p-VQbE3Y-1741970484718.mp3",
+    "imageUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/image/cgVfy6OPJtGN6p-VQbE3Y-1741970487520.png",
+    "duration": 286.850612,
+    "playlistFor": [
+      {
+        "$oid": "67d45a428383ed54b1051253"
+      },
+      {
+        "$oid": "67d4563a8383ed54b1051242"
+      },
+      {
+        "$oid": "6803caa88298bd83e106a98c"
+      }
+    ],
+    "languages": [
+      {
+        "$oid": "6739d0593dc1bb25c61934cb"
+      }
+    ],
+    "genres": [],
+    "tags": [],
+    "album": {
+      "$oid": "67d45b6c8383ed54b1051268"
+    },
+    "lyrics": [],
+    "releaseDate": {
+      "$date": "2022-08-10T00:00:00.000Z"
+    },
+    "paletee": {
+      "vibrant": "#3cc4bc",
+      "darkVibrant": "#0c483d",
+      "lightVibrant": "#88d6f3",
+      "muted": "#609c98",
+      "darkMuted": "#415a64",
+      "lightMuted": "#72aabc"
+    },
+    "favorites": [
+      {
+        "$oid": "67d456398383ed54b105123f"
+      },
+      {
+        "$oid": "6803caa78298bd83e106a989"
+      }
+    ],
+    "ratings": [
+      {
+        "$oid": "688cb62505beefa7ffa7eb90"
+      },
+      {
+        "$oid": "688d5d9c6ac86373dd74af28"
+      }
+    ],
+    "activities": {
+      "averageRating": 0,
+      "totalRatingCount": 0,
+      "totalPlaybackCount": 8,
+      "totalPlaybackDuration": 2154.43,
+      "weightedAveragePlaybackDuration": 277.17
+    },
+    "ownership": {
+      "isPlatformOwned": false
+    },
+    "createdAt": {
+      "$date": "2025-03-14T16:41:30.241Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-02T05:09:03.357Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6805208d7fa3469c9cb850f1"
+    },
+    "title": "Here With Me",
+    "creator": {
+      "$oid": "6803caa78298bd83e106a989"
+    },
+    "artist": {
+      "$oid": "6805208d7fa3469c9cb850ed"
+    },
+    "lyricists": [],
+    "composers": [],
+    "songUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/mp3/65fvd-vVk8oXNc_wFOu-i-1745166464451.mp3",
+    "imageUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/image/65fvd-vVk8oXNc_wFOu-i-1745166476986.png",
+    "duration": 221.256,
+    "playlistFor": [
+      {
+        "$oid": "6803caa88298bd83e106a98c"
+      },
+      {
+        "$oid": "681706caa5b1c9e41b32f826"
+      }
+    ],
+    "languages": [],
+    "genres": [],
+    "tags": [],
+    "lyrics": [],
+    "paletee": {
+      "vibrant": "#bc8f71",
+      "darkVibrant": "#041212",
+      "lightVibrant": "#d4b7a4",
+      "muted": "#ac8874",
+      "darkMuted": "#483733",
+      "lightMuted": "#b4896e"
+    },
+    "favorites": [
+      {
+        "$oid": "681706c9a5b1c9e41b32f823"
+      }
+    ],
+    "ratings": [
+      {
+        "$oid": "688deb28e25e890c450e8dcb"
+      }
+    ],
+    "activities": {
+      "averageRating": 0,
+      "totalRatingCount": 0,
+      "totalPlaybackCount": 11,
+      "totalPlaybackDuration": 2433.54,
+      "weightedAveragePlaybackDuration": 221.23
+    },
+    "ownership": {
+      "isPlatformOwned": false
+    },
+    "createdAt": {
+      "$date": "2025-04-20T16:27:57.642Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-02T10:50:23.865Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67d438c79e1e897be0e0f870"
+    },
+    "title": "唯一",
+    "creator": {
+      "$oid": "67d4360f1f3111de4dbfbb0e"
+    },
+    "artist": {
+      "$oid": "67d12bee1f0397076676b686"
+    },
+    "lyricists": [
+      {
+        "$oid": "67d12bef1f0397076676b68a"
+      }
+    ],
+    "composers": [
+      {
+        "$oid": "67d12bef1f0397076676b68a"
+      }
+    ],
+    "songUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/mp3/4AfyU8cZzasHmwM0QY8ku-1741961405699.mp3",
+    "imageUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/image/4AfyU8cZzasHmwM0QY8ku-1741961414302.png",
+    "duration": 271.176,
+    "playlistFor": [],
+    "languages": [
+      {
+        "$oid": "6739d0593dc1bb25c61934ca"
+      }
+    ],
+    "genres": [
+      {
+        "$oid": "6739d0593dc1bb25c61934d9"
+      }
+    ],
+    "tags": [
+      {
+        "$oid": "6739d0593dc1bb25c61934e8"
+      }
+    ],
+    "album": {
+      "$oid": "67d12afc1f0397076676b682"
+    },
+    "lyrics": [],
+    "releaseDate": {
+      "$date": "2020-12-31T00:00:00.000Z"
+    },
+    "paletee": {
+      "vibrant": "#cbb576",
+      "darkVibrant": "#042434",
+      "lightVibrant": "#dacb9e",
+      "muted": "#ac9d6f",
+      "darkMuted": "#34544f",
+      "lightMuted": "#b4ac74"
+    },
+    "favorites": [],
+    "ratings": [],
+    "activities": {
+      "averageRating": 0,
+      "totalRatingCount": 0,
+      "totalPlaybackCount": 11,
+      "totalPlaybackDuration": 2906.86,
+      "weightedAveragePlaybackDuration": 265.14
+    },
+    "ownership": {
+      "isPlatformOwned": false
+    },
+    "createdAt": {
+      "$date": "2025-03-14T14:10:15.633Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-02T10:57:07.466Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67d8ec93d8f69a01d8512bb7"
+    },
+    "title": "世界のつづき",
+    "creator": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "artist": {
+      "$oid": "67d45c398383ed54b105126c"
+    },
+    "lyricists": [
+      {
+        "$oid": "67d8e0b78f980d5683c80cfb"
+      }
+    ],
+    "composers": [
+      {
+        "$oid": "67d8e0b78f980d5683c80cfb"
+      }
+    ],
+    "songUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/mp3/S8HDoB8dQ0IPI4WGnYuoL-1742269577392.mp3",
+    "imageUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/image/S8HDoB8dQ0IPI4WGnYuoL-1742269586146.png",
+    "duration": 295.056,
+    "playlistFor": [
+      {
+        "$oid": "67d45a428383ed54b1051253"
+      }
+    ],
+    "languages": [
+      {
+        "$oid": "6739d0593dc1bb25c61934cb"
+      }
+    ],
+    "genres": [
+      {
+        "$oid": "6739d0593dc1bb25c61934d9"
+      }
+    ],
+    "tags": [],
+    "album": {
+      "$oid": "67d45b6c8383ed54b1051268"
+    },
+    "lyrics": [],
+    "releaseDate": {
+      "$date": "2022-08-10T00:00:00.000Z"
+    },
+    "paletee": {
+      "vibrant": "#fbab3a",
+      "darkVibrant": "#2c0c24",
+      "lightVibrant": "#fbdb5a",
+      "muted": "#745c3c",
+      "darkMuted": "#653832",
+      "lightMuted": "#957803"
+    },
+    "favorites": [
+      {
+        "$oid": "67d456398383ed54b105123f"
+      }
+    ],
+    "ratings": [],
+    "activities": {
+      "averageRating": 0,
+      "totalRatingCount": 0,
+      "totalPlaybackCount": 9,
+      "totalPlaybackDuration": 2654.51,
+      "weightedAveragePlaybackDuration": 294.95
+    },
+    "ownership": {
+      "isPlatformOwned": false
+    },
+    "createdAt": {
+      "$date": "2025-03-18T03:46:27.866Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-31T07:48:39.944Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "685bedc0b6b998276c9a0e32"
+    },
+    "title": "等我們老了，就定居在重慶",
+    "creator": {
+      "$oid": "6803caa78298bd83e106a989"
+    },
+    "artist": {
+      "$oid": "68554c55be2eee5ff61f0712"
+    },
+    "lyricists": [],
+    "composers": [],
+    "songUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/mp3/-ob5BFLnTAxbS7r-YRE4w-1750855094941.mp3",
+    "imageUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/image/-ob5BFLnTAxbS7r-YRE4w-1750855103659.png",
+    "duration": 258.024,
+    "playlistFor": [
+      {
+        "$oid": "68551529858871a2b8ed53a7"
+      }
+    ],
+    "languages": [],
+    "genres": [],
+    "tags": [],
+    "lyrics": [],
+    "paletee": {
+      "vibrant": "#e0ba7d",
+      "darkVibrant": "#6b4b19",
+      "lightVibrant": "#acd3db",
+      "muted": "#ac946c",
+      "darkMuted": "#7b571d",
+      "lightMuted": "#b4d3d9"
+    },
+    "favorites": [],
+    "activities": {
+      "averageRating": 0,
+      "totalRatingCount": 0,
+      "totalPlaybackCount": 6,
+      "totalPlaybackDuration": 1547.84,
+      "weightedAveragePlaybackDuration": 257.97
+    },
+    "ownership": {
+      "isPlatformOwned": false
+    },
+    "ratings": [],
+    "createdAt": {
+      "$date": "2025-06-25T12:38:24.247Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-31T07:28:26.674Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6887505f9f0bcad3a0812da6"
+    },
+    "title": "Tot Musica",
+    "creator": {
+      "$oid": "68555873fb654775d8de8490"
+    },
+    "artist": {
+      "$oid": "67d45c398383ed54b105126c"
+    },
+    "lyricists": [
+      {
+        "$oid": "6887505e9f0bcad3a0812d9e"
+      }
+    ],
+    "composers": [
+      {
+        "$oid": "6887505f9f0bcad3a0812da2"
+      }
+    ],
+    "songUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/mp3/mI2VpWOG8qFpSjIRmOMxp-1753698389339.mp3",
+    "imageUrl": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/songs/image/mI2VpWOG8qFpSjIRmOMxp-1753698397249.png",
+    "duration": 201.43020408163267,
+    "playlistFor": [
+      {
+        "$oid": "68555874fb654775d8de8493"
+      }
+    ],
+    "languages": [
+      {
+        "$oid": "6739d0593dc1bb25c61934cb"
+      }
+    ],
+    "genres": [
+      {
+        "$oid": "6739d0593dc1bb25c61934d9"
+      }
+    ],
+    "tags": [
+      {
+        "$oid": "6739d0593dc1bb25c61934e6"
+      }
+    ],
+    "album": {
+      "$oid": "67d45b6c8383ed54b1051268"
+    },
+    "lyrics": [],
+    "releaseDate": {
+      "$date": "2022-08-10T00:00:00.000Z"
+    },
+    "paletee": {
+      "vibrant": "#da0e12",
+      "darkVibrant": "#750606",
+      "lightVibrant": "#f573c2",
+      "muted": "#a8607c",
+      "darkMuted": "#342039",
+      "lightMuted": "#b376b2"
+    },
+    "favorites": [
+      {
+        "$oid": "68555873fb654775d8de8490"
+      }
+    ],
+    "activities": {
+      "averageRating": 0,
+      "totalRatingCount": 0,
+      "totalPlaybackCount": 9,
+      "totalPlaybackDuration": 1621.32,
+      "weightedAveragePlaybackDuration": 199.92
+    },
+    "ownership": {
+      "isPlatformOwned": false
+    },
+    "ratings": [],
+    "createdAt": {
+      "$date": "2025-07-28T10:26:39.761Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-06T09:27:55.975Z"
+    },
+    "__v": 0
+  }
+]

@@ -3,7 +3,7 @@
   "playlist.item.songs.count": "{count} songs",
   "playlist.item.description": "{type} · {count}",
 
-  "playlist.hero.section.type": "{type}{separator}{description}",
+  "playlist.hero.section.type": "{type} · {songCount} · {duration}",
 
   "playlist.menu.action.editDetails": "Edit details",
   "playlist.menu.action.deletePlaylist": "Delete playlist",
@@ -20,7 +20,6 @@
   "playlist.advanced.edit.modal.all.songs.removed": "All songs are marked for removal from this playlist. Actual removal will occur after you submit the changes.",
   "playlist.advanced.edit.modal.button.submit": "Save changes",
   "playlist.advanced.edit.modal.button.cancel": "Cancel",
-
   "playlist.advanced.create.modal.title": "Create playlist",
   "playlist.advanced.create.modal.input.title.placeholder": "Title",
   "playlist.advanced.create.modal.input.description.placeholder": "Description",

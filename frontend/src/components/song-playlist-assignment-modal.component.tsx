@@ -112,6 +112,7 @@ const SongPlaylistAssignmentModal = () => {
   if (!song) return null;
 
   const { title, artist, imageUrl, paletee } = song;
+  const { name: artistName } = artist;
   const showPlaylistList = addedPlaylists.length > 0 || notAddedPlaylists.length > 0;
 
   const isUserSong = authUser?._id === song.creator;
@@ -139,7 +140,7 @@ const SongPlaylistAssignmentModal = () => {
         {/* preview */}
         <SongTitleItem
           title={title}
-          artist={artist}
+          artist={artistName}
           imageUrl={imageUrl}
           style={{
             backgroundImage: `linear-gradient(
@@ -206,7 +207,7 @@ const SongPlaylistAssignmentModal = () => {
             )}
           </div>
         ) : (
-          <p className={`text-center text-neutral-500`}>
+          <p className={`py-10 text-center text-neutral-500`}>
             {`${songAssignmentModalFm("nofound")}: `}
             <span className={`text-neutral-300`}>{` "${searchQuery}"`}</span>
           </p>

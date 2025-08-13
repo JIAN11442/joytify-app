@@ -3,10 +3,10 @@ import { BiSearch } from "react-icons/bi";
 import { CiMusicNote1 } from "react-icons/ci";
 
 import SearchBarInput from "../components/searchbar-input.component";
-import ManageSongsList from "../components/manage-songs-list.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import PageSectionTitle from "../components/page-section-title.component";
 import ManageSongsOverview from "../components/manage-songs-overview.component";
+import ManageSongsCardList from "../components/manage-songs-card-list.component";
 import { useGetUserSongsQuery, useGetUserSongStatsQuery } from "../hooks/song-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { timeoutForDelay } from "../lib/timeout.lib";
@@ -34,14 +34,14 @@ const ManageSongsPage = () => {
       songs.filter(
         (song) =>
           song.title.toLowerCase().includes(lowerSearchQuery) ||
-          song.artist.toLowerCase().includes(lowerSearchQuery)
+          song.artist.name.toLowerCase().includes(lowerSearchQuery)
       ) || songs;
 
     return filteredSongs;
   }, [songs, searchQuery]);
 
   return (
-    <div className={`settings-page-container`}>
+    <div className={`page-container`}>
       {/* title & searchbar */}
       <AnimationWrapper initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         {/* title */}
@@ -69,7 +69,7 @@ const ManageSongsPage = () => {
 
       {/* songs card */}
       <AnimationWrapper initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <ManageSongsList
+        <ManageSongsCardList
           fm={fm}
           songs={songs}
           filteredSongs={filteredSongs}

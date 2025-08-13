@@ -1,6 +1,6 @@
 {
   "profile.hero.section.type": "プロフィール",
-  "profile.hero.section.description": "{totalPlaylists} 件のプレイリスト · {totalSongs} 曲",
+  "profile.hero.section.description": "プレイリスト {playlistCount}件 · アルバム {albumCount}枚 · フォロー {followingCount}件 · {songCount}曲",
 
   "profile.action.panel.editDetails": "詳細を編集",
 

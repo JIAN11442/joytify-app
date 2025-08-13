@@ -9,11 +9,12 @@ import userJSON from "./user.zh-CN.json";
 import songJSON from "./song.zh-CN.json";
 import manageJSON from "./manage.zh-CN.json";
 import settingsJSON from "./settings.zh-CN.json";
-import dashboardJSON from "./dashboard.zh-CN.json";
+import searchJSON from "./search.zh-CN.json";
 import musicianJSON from "./musician.zh-CN.json";
 import albumJSON from "./album.zh-CN.json";
 import profileJSON from "./profile.zh-CN.json";
 import statsJSON from "./stats.zh-CN.json";
+import labelJSON from "./label.zh-CN.json";
 
 const modules = [
   authJSON,
@@ -27,11 +28,12 @@ const modules = [
   songJSON,
   manageJSON,
   settingsJSON,
-  dashboardJSON,
+  searchJSON,
   musicianJSON,
   albumJSON,
   profileJSON,
   statsJSON,
+  labelJSON,
 ];
 
 export default Object.assign({}, ...modules);
