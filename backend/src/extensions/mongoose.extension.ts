@@ -83,7 +83,7 @@ export const applyMongooseExtensions = async () => {
     transformNestedSongs?: boolean;
   };
 
-  Query.prototype.refactorSongData = function <TInput>({
+  Query.prototype.refactorSongFields = function <TInput>({
     transformNestedSongs = false,
   }: RefactorSongDataOptions = {}) {
     // transform a single song

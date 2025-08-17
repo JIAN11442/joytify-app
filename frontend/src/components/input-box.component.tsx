@@ -5,10 +5,8 @@ import { twMerge } from "tailwind-merge";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { LuUpload } from "react-icons/lu";
 import { IconBaseProps } from "react-icons";
-
 import Icon, { IconName } from "./react-icons.component";
 import AnimationWrapper from "./animation-wrapper.component";
-
 import { FormMethods } from "../types/form.type";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import mergeRefs from "../lib/merge-refs.lib";

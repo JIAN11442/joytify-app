@@ -1,5 +1,8 @@
 {
   "musician.hero.section.description": "{songCount} lagu · {albumCount} album · {duration}",
   "musician.actionPanel.menu.follow": "Ikuti artis",
-  "musician.actionPanel.menu.unfollow": "Berhenti ikuti"
+  "musician.actionPanel.menu.unfollow": "Berhenti ikuti",
+
+  "musician.recommendation.section.title": "Artis Disyorkan",
+  "musician.recommendation.section.description": "Disyorkan berdasarkan profil artis ini"
 }

@@ -5,6 +5,7 @@ import {
   getLabelById,
   getLabelId,
   getLabels,
+  getRecommendedLabels,
   removeLabel,
 } from "../services/label.service";
 import {
@@ -17,6 +18,19 @@ import { HttpCode } from "@joytify/shared-types/constants";
 import { CreateLabelRequest, GetLabelIdRequest } from "@joytify/shared-types/types";
 
 const { OK, CREATED } = HttpCode;
+
+// get label id handler
+export const getLabelIdHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const params: GetLabelIdRequest = getLabelIdZodSchema.parse(req.query);
+
+    const { id } = await getLabelId(params);
+
+    return res.status(OK).json(id);
+  } catch (error) {
+    next(error);
+  }
+};
 
 // get all labels handler
 export const getLabelsHandler: RequestHandler = async (req, res, next) => {
@@ -36,19 +50,6 @@ export const getLabelsHandler: RequestHandler = async (req, res, next) => {
   }
 };
 
-// get label id handler
-export const getLabelIdHandler: RequestHandler = async (req, res, next) => {
-  try {
-    const params: GetLabelIdRequest = getLabelIdZodSchema.parse(req.query);
-
-    const { id } = await getLabelId(params);
-
-    return res.status(OK).json(id);
-  } catch (error) {
-    next(error);
-  }
-};
-
 // get label by id handler
 export const getLabelByIdHandler: RequestHandler = async (req, res, next) => {
   try {
@@ -57,6 +58,19 @@ export const getLabelByIdHandler: RequestHandler = async (req, res, next) => {
     const { label } = await getLabelById(labelId);
 
     return res.status(OK).json(label);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// get recommended labels handler
+export const getRecommendedLabelsHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const labelId = objectIdZodSchema.parse(req.params.labelId);
+
+    const recommendedLabels = await getRecommendedLabels(labelId);
+
+    return res.status(OK).json(recommendedLabels);
   } catch (error) {
     next(error);
   }

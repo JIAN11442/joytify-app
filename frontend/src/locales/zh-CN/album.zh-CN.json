@@ -1,4 +1,7 @@
 {
   "album.hero.section.type": "专辑",
-  "album.hero.section.description": "{count} 首歌曲 · {duration}"
+  "album.hero.section.description": "{count} 首歌曲 · {duration}",
+
+  "album.recommendation.section.title": "推荐专辑",
+  "album.recommendation.section.description": "基于此专辑中的内容推荐"
 }

@@ -1,4 +1,7 @@
 {
   "album.hero.section.type": "專輯",
-  "album.hero.section.description": "{count} 首歌曲 · {duration}"
+  "album.hero.section.description": "{count} 首歌曲 · {duration}",
+
+  "album.recommendation.section.title": "推薦專輯",
+  "album.recommendation.section.description": "基於此專輯中的內容推薦"
 }

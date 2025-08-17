@@ -11,6 +11,10 @@ import {
 
 const { LABELS } = API_ENDPOINTS;
 
+// get label id
+export const getLabelId = async (params: GetLabelIdRequest): Promise<string> =>
+  await API.get(`${LABELS}/getId`, { params });
+
 // get user all labels
 export const getLabels = async (
   types?: LabelOptionsType[],
@@ -30,13 +34,14 @@ export const getLabels = async (
 export const createLabel = async (params: CreateLabelRequest): Promise<LabelResponse> =>
   API.post(`${LABELS}/create`, params);
 
-// get label id
-export const getLabelId = async (params: GetLabelIdRequest): Promise<string> =>
-  await API.get(`${LABELS}/getId`, { params });
-
 // get label by id
 export const getLabelById = async (labelId: string): Promise<RefactorSearchLabelResponse> =>
   API.get(`${LABELS}/${labelId}`);
+
+// get recommended labels
+export const getRecommendedLabels = async (
+  labelId: string
+): Promise<RefactorSearchLabelResponse[]> => API.get(`${LABELS}/recommendations/${labelId}`);
 
 // remove label
 export const removeLabel = async (labelId: string): Promise<LabelResponse> =>

@@ -16,6 +16,7 @@ import {
   DeleteSongRequest,
   UpdateSongPlaylistsRequest,
   UpdateSongInfoRequest,
+  GetSongsByQueryRequest,
 } from "@joytify/shared-types/types";
 import { DefaultSongForm } from "../types/form.type";
 import getAudioDuration from "../utils/get-audio-duration.util";
@@ -107,12 +108,20 @@ export const createSongData = async (params: DefaultSongForm): Promise<SongRespo
 // get all songs
 export const getAllSongs = (): Promise<RefactorSongResponse[]> => API.get(`${SONGS}/all`);
 
+// get user's songs
+export const getUserSongs = (): Promise<RefactorSongResponse[]> => API.get(`${SONGS}`);
+
 // get song by id
 export const getSongById = (songId: string): Promise<RefactorSongResponse> =>
   API.get(`${SONGS}/${songId}`);
 
-// get user's songs
-export const getUserSongs = (): Promise<RefactorSongResponse[]> => API.get(`${SONGS}`);
+// get songs by query
+export const getSongsByQuery = (params: GetSongsByQueryRequest): Promise<RefactorSongResponse[]> =>
+  API.get(`${SONGS}/search`, { params });
+
+// get recommended songs
+export const getRecommendedSongs = (playlistId: string): Promise<RefactorSongResponse[]> =>
+  API.get(`${SONGS}/recommendations/${playlistId}`);
 
 // get user's songs stats
 export const getUserSongsStats = (): Promise<SongStatsResponse> => API.get(`${SONGS}/stats`);

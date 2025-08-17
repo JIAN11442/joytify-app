@@ -110,7 +110,7 @@ const findSongsByQuery = async (params: FindItemsByQuery) => {
     page,
   })
     .populateSongDetails()
-    .refactorSongData()
+    .refactorSongFields()
     .lean<RefactorSongResponse[]>();
 
   const songs = pagination ? await queryBuilder.forPagination(page) : await queryBuilder;
@@ -175,7 +175,7 @@ const findMusiciansByQuery = async (params: FindItemsByQuery) => {
     page,
   })
     .populateNestedSongDetails()
-    .refactorSongData<PopulatedMusicianResponse>({ transformNestedSongs: true })
+    .refactorSongFields<PopulatedMusicianResponse>({ transformNestedSongs: true })
     .lean<RefactorMusicianResponse>();
 
   const artists = pagination ? await queryBuilder.forPagination(page) : await queryBuilder;
@@ -241,7 +241,7 @@ const findAlbumsByQuery = async (params: FindItemsByQuery) => {
   })
     .populate({ path: "artists", select: "name", transform: (doc: Musician) => doc.name })
     .populateNestedSongDetails()
-    .refactorSongData<PopulatedAlbumResponse>({ transformNestedSongs: true })
+    .refactorSongFields<PopulatedAlbumResponse>({ transformNestedSongs: true })
     .lean<RefactorAlbumResponse>();
 
   const albums = pagination ? await queryBuilder.forPagination(page) : await queryBuilder;
@@ -315,7 +315,7 @@ const findLabelsByTypeAndQuery = async (params: FindItemsByTypeAndQuery) => {
     page,
   })
     .populateNestedSongDetails()
-    .refactorSongData<PopulatedSearchLabelResponse>({ transformNestedSongs: true })
+    .refactorSongFields<PopulatedSearchLabelResponse>({ transformNestedSongs: true })
     .sort({ label: 1, createdAt: -1 })
     .lean<RefactorSearchLabelResponse>();
 

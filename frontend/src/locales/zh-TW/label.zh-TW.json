@@ -1,3 +1,6 @@
 {
-  "label.hero.section.description": "{count} 首歌 · {duration}"
+  "label.hero.section.description": "{count} 首歌 · {duration}",
+
+  "label.recommendation.section.title": "推薦標籤",
+  "label.recommendation.section.description": "基於此標籤的內容"
 }

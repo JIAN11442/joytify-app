@@ -5,6 +5,14 @@
 
   "playlist.hero.section.type": "{type} · {songCount} · {duration}",
 
+  "playlist.recommendation.section.title": "推薦歌曲",
+  "playlist.recommendation.section.description": "根據此播放清單推薦歌曲",
+
+  "playlist.toggleButton.show": "發現更多歌曲…",
+  "playlist.songSearch.section.title": "為播放清單找些新歌吧",
+  "playlist.songSearch.section.searchbar.placeholder": "按歌名、歌手、專輯、流派或語言搜尋歌曲…",
+  "playlist.songSearch.section.noFound": "未找到與 <strong>\"{searchQuery}\"</strong> 匹配的歌曲",
+
   "playlist.menu.action.editDetails": "編輯資訊",
   "playlist.menu.action.deletePlaylist": "刪除播放清單",
   "playlist.menu.action.makePrivate": "設為私人",

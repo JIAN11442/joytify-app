@@ -8,7 +8,7 @@ type MusicianCardListProps = {
   musicians: RefactorMusicianResponse[];
   children?: React.ReactNode;
   className?: string;
-  tw?: { wrapper?: string; card?: string };
+  tw?: { wrapper?: string; cardWrapper?: string; cardTw?: { img?: string } };
 };
 
 const MusicianCardList: React.FC<MusicianCardListProps> = ({
@@ -36,7 +36,7 @@ const MusicianCardList: React.FC<MusicianCardListProps> = ({
             transition={{ delay: index * 0.1 }}
             className={tw?.wrapper}
           >
-            <MusicianCard musician={musician} className={tw?.card} />
+            <MusicianCard musician={musician} className={tw?.cardWrapper} tw={tw?.cardTw} />
           </AnimationWrapper>
         );
       })}

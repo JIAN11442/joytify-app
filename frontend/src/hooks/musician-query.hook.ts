@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKey } from "../constants/query-client-key.constant";
-import { getFollowingMusicians, getMusicianById } from "../fetchs/musician.fetch";
+import {
+  getFollowingMusicians,
+  getMusicianById,
+  getRecommendedMusicians,
+} from "../fetchs/musician.fetch";
 
 export const useGetMusicianByIdQuery = (id: string, opts: object = {}) => {
   const [isQueryError, setIsQueryError] = useState(false);
@@ -49,4 +53,28 @@ export const useGetFollowingMusiciansQuery = (opts: object = {}) => {
   });
 
   return { musicians, ...rest };
+};
+
+export const useGetRecommendedMusiciansQuery = (musicianId: string, opts: object = {}) => {
+  const [isQueryError, setIsQueryError] = useState(false);
+
+  const { data: recommendedMusicians, ...rest } = useQuery({
+    queryKey: [QueryKey.GET_RECOMMENDED_MUSICIANS, musicianId],
+    queryFn: async () => {
+      try {
+        const musician = await getRecommendedMusicians(musicianId);
+
+        return musician;
+      } catch (error) {
+        if (error) {
+          setIsQueryError(true);
+        }
+      }
+    },
+    staleTime: Infinity,
+    enabled: !isQueryError,
+    ...opts,
+  });
+
+  return { recommendedMusicians, ...rest };
 };

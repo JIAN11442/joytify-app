@@ -4,17 +4,20 @@ import {
   getLabelByIdHandler,
   getLabelIdHandler,
   getLabelsHandler,
+  getRecommendedLabelsHandler,
   removeLabelHandler,
 } from "../controllers/label.controller";
+import authenticate from "../middlewares/authenticate.middleware";
 
 const labelRoute = Router();
 
 // prefix: labels
-labelRoute.get("/getId", getLabelIdHandler);
-labelRoute.get("/:labelId", getLabelByIdHandler);
-labelRoute.get("/", getLabelsHandler);
+labelRoute.get("/getId", authenticate, getLabelIdHandler);
+labelRoute.get("/recommendations/:labelId", getRecommendedLabelsHandler);
+labelRoute.get("/:labelId", authenticate, getLabelByIdHandler);
+labelRoute.get("/", authenticate, getLabelsHandler);
 
-labelRoute.post("/", createLabelHandler);
-labelRoute.patch("/remove/:labelId", removeLabelHandler);
+labelRoute.post("/", authenticate, createLabelHandler);
+labelRoute.patch("/remove/:labelId", authenticate, removeLabelHandler);
 
 export default labelRoute;

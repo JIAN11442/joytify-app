@@ -3,7 +3,9 @@ import {
   createSongHandler,
   deleteSongByIdHandler,
   getAllSongsHandler,
+  getRecommendedSongsHandler,
   getSongByIdHandler,
+  getSongsByQueryHandler,
   getUserSongsHandler,
   getUserSongsStatsHandler,
   updateSongInfoHandler,
@@ -16,6 +18,8 @@ const songRoute = Router();
 // prefix: /songs
 songRoute.get("/all", getAllSongsHandler);
 songRoute.get("/stats", authenticate, getUserSongsStatsHandler);
+songRoute.get("/recommendations/:playlistId", getRecommendedSongsHandler);
+songRoute.get("/search/", getSongsByQueryHandler);
 songRoute.get("/", authenticate, getUserSongsHandler);
 songRoute.get("/:songId", authenticate, getSongByIdHandler);
 

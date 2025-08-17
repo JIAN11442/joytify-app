@@ -15,6 +15,10 @@ export const getUserAlbums = async (): Promise<AlbumResponse[]> => API.get(ALBUM
 export const getAlbumById = async (albumId: string): Promise<RefactorAlbumResponse> =>
   API.get(`${ALBUMS}/${albumId}`);
 
+// get recommended albums
+export const getRecommendedAlbums = async (albumId: string): Promise<RefactorAlbumResponse[]> =>
+  API.get(`${ALBUMS}/recommendations/${albumId}`);
+
 // create album
 export const createAlbum = async (params: CreateAlbumRequest): Promise<AlbumResponse> =>
   API.post(ALBUMS, params);

@@ -1,7 +1,10 @@
 import { FilterQuery } from "mongoose";
 
 import UserModel from "../models/user.model";
+import SongModel from "../models/song.model";
 import MusicianModel, { MusicianDocument } from "../models/musician.model";
+import { collectDocumentAttributes } from "./util.service";
+import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
 import { HttpCode } from "@joytify/shared-types/constants";
 import {
   GetMusicianIdRequest,
@@ -54,7 +57,7 @@ export const getMusicianId = async (params: GetMusicianIdRequest) => {
 export const getMusicianById = async (id: string) => {
   const musician = await MusicianModel.findById(id)
     .populateNestedSongDetails()
-    .refactorSongData<PopulatedMusicianResponse>({ transformNestedSongs: true })
+    .refactorSongFields<PopulatedMusicianResponse>({ transformNestedSongs: true })
     .lean<RefactorMusicianResponse>();
 
   return { musician };
@@ -65,6 +68,69 @@ export const getFollowingMusicians = async (userId: string) => {
   const musicians = await MusicianModel.find({ followers: userId });
 
   return musicians;
+};
+
+// get recommended musicians
+export const getRecommendedMusicians = async (musicianId: string) => {
+  const musician = await MusicianModel.findById(musicianId);
+
+  appAssert(musician, NOT_FOUND, "Musician not found");
+
+  const features = await collectDocumentAttributes({
+    model: SongModel,
+    ids: musician.songs,
+    fields: ["artist", "composers", "lyricists", "genres", "tags", "languages"],
+  });
+
+  const [result] = await SongModel.aggregate([
+    { $match: { _id: { $nin: musician.songs } } },
+    { $match: { artist: { $ne: musician._id } } },
+    {
+      $match: {
+        $or: [
+          { artist: { $in: features.artist } },
+          { composers: { $in: features.composers } },
+          { lyricists: { $in: features.lyricists } },
+          { genres: { $in: features.genres } },
+          { tags: { $in: features.tags } },
+          { languages: { $in: features.languages } },
+        ],
+      },
+    },
+    { $limit: PROFILE_FETCH_LIMIT },
+    {
+      $group: {
+        _id: null,
+        musicianIds: {
+          $addToSet: {
+            $concatArrays: [["$artist"], "$composers", "$lyricists"],
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        musicianIds: {
+          $reduce: {
+            input: "$musicianIds",
+            initialValue: [],
+            in: { $concatArrays: ["$$value", "$$this"] },
+          },
+        },
+      },
+    },
+  ]);
+
+  const recommendedMusicians = await MusicianModel.find({
+    _id: { $in: result?.musicianIds || [] },
+  })
+    .limit(PROFILE_FETCH_LIMIT)
+    .populateNestedSongDetails()
+    .refactorSongFields<PopulatedMusicianResponse>({ transformNestedSongs: true })
+    .lean<RefactorMusicianResponse>();
+
+  return recommendedMusicians;
 };
 
 // follow target musician

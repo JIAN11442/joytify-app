@@ -1,4 +1,7 @@
 {
   "album.hero.section.type": "Album",
-  "album.hero.section.description": "{count} songs · {duration}"
+  "album.hero.section.description": "{count} songs · {duration}",
+
+  "album.recommendation.section.title": "Recommended",
+  "album.recommendation.section.description": "Based on what's in this album"
 }

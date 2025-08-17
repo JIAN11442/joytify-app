@@ -23,6 +23,6 @@ declare module "mongoose" {
     remapFields(fields: Record<keyof T, string>): this;
     populateSongDetails(): this;
     populateNestedSongDetails(): this;
-    refactorSongData<TInput>(options?: { transformNestedSongs?: boolean }): this;
+    refactorSongFields<TInput>(options?: { transformNestedSongs?: boolean }): this;
   }
 }

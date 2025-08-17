@@ -93,7 +93,11 @@ export const useUpdateSongInfoMutation = (
 };
 
 // assign song to playlists mutation
-export const useAssignSongToPlaylistsMutation = (closeModalFn: () => void, opts: object = {}) => {
+export const useAssignSongToPlaylistsMutation = (
+  closeModalFn?: () => void,
+  shouldToast: boolean = true,
+  opts: object = {}
+) => {
   const mutation = useMutation({
     mutationKey: [MutationKey.ASSIGN_SONG_TO_PLAYLISTS],
     mutationFn: updateSongPlaylistsAssignment,
@@ -106,14 +110,18 @@ export const useAssignSongToPlaylistsMutation = (closeModalFn: () => void, opts:
             queryKey === QueryKey.GET_USER_SONGS ||
             queryKey === QueryKey.GET_TARGET_SONG ||
             queryKey === QueryKey.GET_USER_SONG_RATING ||
-            queryKey === QueryKey.GET_USER_PLAYLISTS
+            queryKey === QueryKey.GET_USER_PLAYLISTS ||
+            queryKey === QueryKey.GET_TARGET_PLAYLIST ||
+            queryKey === QueryKey.GET_RECOMMENDED_SONGS
           );
         },
       });
 
-      closeModalFn();
+      closeModalFn?.();
 
-      toast.success(`“${data.title}” has been assigned to playlists successfully`);
+      if (shouldToast) {
+        toast.success(`“${data.title}” has been assigned to playlists successfully`);
+      }
     },
     onError: (error) => {
       console.log(error.message);

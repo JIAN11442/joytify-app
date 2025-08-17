@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { getAllSongs, getSongById, getUserSongs, getUserSongsStats } from "../fetchs/song.fetch";
+import {
+  getAllSongs,
+  getRecommendedSongs,
+  getSongById,
+  getSongsByQuery,
+  getUserSongs,
+  getUserSongsStats,
+} from "../fetchs/song.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
 import useSongState from "../states/song.state";
 import useUserState from "../states/user.state";
@@ -66,6 +73,56 @@ export const useGetUserSongsQuery = (opts: object = {}) => {
   });
 
   return { songs, ...rest };
+};
+
+// get query songs query
+export const useGetQuerySongsQuery = (query: string, playlistId?: string, opts: object = {}) => {
+  const [isQueryError, setIsQueryError] = useState(false);
+
+  const { data: songs, ...rest } = useQuery({
+    queryKey: [QueryKey.GET_QUERY_SONGS, query, playlistId],
+    queryFn: async () => {
+      try {
+        const songs = await getSongsByQuery({ query, playlistId });
+
+        return songs;
+      } catch (error) {
+        if (error) {
+          setIsQueryError(true);
+        }
+      }
+    },
+    staleTime: Infinity,
+    enabled: query.length > 0 && !isQueryError,
+    ...opts,
+  });
+
+  return { songs, ...rest };
+};
+
+// get recommended songs query
+export const useGetRecommendedSongsQuery = (playlistId: string, opts: object = {}) => {
+  const [isQueryError, setIsQueryError] = useState(false);
+
+  const { data: recommendedSongs, ...rest } = useQuery({
+    queryKey: [QueryKey.GET_RECOMMENDED_SONGS, playlistId],
+    queryFn: async () => {
+      try {
+        const songs = await getRecommendedSongs(playlistId);
+
+        return songs;
+      } catch (error) {
+        if (error) {
+          setIsQueryError(true);
+        }
+      }
+    },
+    staleTime: Infinity,
+    enabled: !isQueryError,
+    ...opts,
+  });
+
+  return { recommendedSongs, ...rest };
 };
 
 // get song stats query

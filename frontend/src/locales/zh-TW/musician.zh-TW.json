@@ -1,5 +1,8 @@
 {
   "musician.hero.section.description": "{songCount} 首歌曲 · {albumCount} 張專輯 · {duration}",
   "musician.actionPanel.menu.follow": "追蹤歌手",
-  "musician.actionPanel.menu.unfollow": "取消追蹤"
+  "musician.actionPanel.menu.unfollow": "取消追蹤",
+
+  "musician.recommendation.section.title": "推薦音樂人",
+  "musician.recommendation.section.description": "依據該音樂人檔案內容推薦"
 }

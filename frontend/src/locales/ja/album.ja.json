@@ -1,4 +1,7 @@
 {
   "album.hero.section.type": "アルバム",
-  "album.hero.section.description": "{count}曲収録 · {duration}"
+  "album.hero.section.description": "{count}曲収録 · {duration}",
+
+  "album.recommendation.section.title": "おすすめアルバム",
+  "album.recommendation.section.description": "このアルバムの内容に基づいておすすめ"
 }

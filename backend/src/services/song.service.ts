@@ -14,6 +14,7 @@ import {
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 import { parseToFloat } from "../utils/parse-float.util";
+import { collectDocumentAttributes } from "./util.service";
 
 type CreateSongServiceRequest = { userId: string; songInfo: CreateSongRequest };
 
@@ -28,6 +29,11 @@ interface UpdateSongInfoServiceRequest extends UpdateSongInfoRequest {
 interface UpdateSongPlaylistsServiceRequest extends UpdateSongPlaylistsRequest {
   userId: string;
 }
+
+type GetSongsByQueryServiceRequest = {
+  query: string;
+  playlistId?: string;
+};
 
 type AppAssert = [errorCode?: ErrorCode, firebaseUID?: string | null, awsUrl?: string[] | null];
 
@@ -70,7 +76,17 @@ export const createNewSong = async (params: CreateSongServiceRequest) => {
 export const getAllSongs = async () => {
   const songs = await SongModel.find()
     .populateSongDetails()
-    .refactorSongData<PopulatedSongResponse>()
+    .refactorSongFields<PopulatedSongResponse>()
+    .lean<RefactorSongResponse[]>();
+
+  return { songs };
+};
+
+// get user's songs
+export const getUserSongs = async (userId: string) => {
+  const songs = await SongModel.find({ creator: userId, "ownership.isPlatformOwned": false })
+    .populateSongDetails()
+    .refactorSongFields<PopulatedSongResponse>()
     .lean<RefactorSongResponse[]>();
 
   return { songs };
@@ -80,20 +96,100 @@ export const getAllSongs = async () => {
 export const getSongById = async (id: string) => {
   const song = await SongModel.findOne({ _id: id })
     .populateSongDetails()
-    .refactorSongData<PopulatedSongResponse>()
+    .refactorSongFields<PopulatedSongResponse>()
     .lean<RefactorSongResponse>();
 
   return { song };
 };
 
-// get user's songs
-export const getUserSongs = async (userId: string) => {
-  const songs = await SongModel.find({ creator: userId, "ownership.isPlatformOwned": false })
+// get songs by query
+export const getSongsByQuery = async (params: GetSongsByQueryServiceRequest) => {
+  const { query, playlistId } = params;
+
+  const matchQuery: FilterQuery<SongDocument> = {
+    $regex: query,
+    $options: "i",
+  };
+
+  const filteredIds = await SongModel.aggregate([
+    {
+      $lookup: {
+        from: "musicians",
+        localField: "artist",
+        foreignField: "_id",
+        as: "artistDoc",
+        pipeline: [{ $project: { name: 1 } }],
+      },
+    },
+    {
+      $lookup: {
+        from: "albums",
+        localField: "album",
+        foreignField: "_id",
+        as: "albumDoc",
+        pipeline: [{ $project: { title: 1 } }],
+      },
+    },
+    {
+      $lookup: {
+        from: "labels",
+        let: { labelIds: { $setUnion: ["$genres", "$tags", "$languages"] } },
+        pipeline: [
+          { $match: { $expr: { $in: ["$_id", "$$labelIds"] } } },
+          { $project: { label: 1 } },
+        ],
+        as: "labelDocs",
+      },
+    },
+    {
+      $match: {
+        ...(playlistId ? { playlistFor: { $nin: [new mongoose.Types.ObjectId(playlistId)] } } : {}),
+        $or: [
+          { title: matchQuery },
+          { "artistDoc.name": matchQuery },
+          { "albumDoc.title": matchQuery },
+          { "labelDocs.label": matchQuery },
+        ],
+      },
+    },
+    { $project: { _id: 1 } },
+  ]);
+
+  const songs = await SongModel.find({ _id: { $in: filteredIds } })
     .populateSongDetails()
-    .refactorSongData<PopulatedSongResponse>()
+    .refactorSongFields<PopulatedSongResponse>()
     .lean<RefactorSongResponse[]>();
 
-  return { songs };
+  return songs;
+};
+
+// get recommended songs
+export const getRecommendedSongs = async (playlistId: string) => {
+  const playlist = await PlaylistModel.findById(playlistId);
+
+  appAssert(playlist, NOT_FOUND, "playlist not found");
+
+  const features = await collectDocumentAttributes({
+    model: SongModel,
+    ids: playlist.songs,
+    fields: ["genres", "tags", "languages", "artists", "albums"],
+  });
+
+  const recommendedSongs = await SongModel.find({
+    _id: { $nin: playlist.songs },
+    $or: [
+      { genres: { $in: features.genres } },
+      { tags: { $in: features.tags } },
+      { languages: { $in: features.languages } },
+      { artists: { $in: features.artists } },
+      { albums: { $in: features.albums } },
+    ],
+  })
+    .populateSongDetails()
+    .refactorSongFields<PopulatedSongResponse>()
+    .lean<RefactorSongResponse[]>();
+
+  return recommendedSongs;
 };
 
 // re-calculate target song's total duration, total count and average duration

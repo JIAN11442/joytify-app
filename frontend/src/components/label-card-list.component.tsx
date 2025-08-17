@@ -8,7 +8,7 @@ type LabelCardListProps = {
   labels: RefactorSearchLabelResponse[];
   children?: React.ReactNode;
   className?: string;
-  tw?: { wrapper?: string; card?: string };
+  tw?: { wrapper?: string; cardWrapper?: string; cardTw?: { img?: string } };
 };
 
 const LabelCardList: React.FC<LabelCardListProps> = ({ labels, children, className, tw }) => {
@@ -31,7 +31,7 @@ const LabelCardList: React.FC<LabelCardListProps> = ({ labels, children, classNa
             transition={{ delay: index * 0.1 }}
             className={tw?.wrapper}
           >
-            <LabelCard label={label} className={tw?.card} />
+            <LabelCard label={label} className={tw?.cardWrapper} tw={tw?.cardTw} />
           </AnimationWrapper>
         );
       })}

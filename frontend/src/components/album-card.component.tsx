@@ -7,9 +7,10 @@ import { RefactorAlbumResponse } from "@joytify/shared-types/types";
 type AlbumCardProps = {
   album: RefactorAlbumResponse;
   className?: string;
+  tw?: { img?: string };
 };
 
-const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
+const AlbumCard: React.FC<AlbumCardProps> = ({ album, className, tw }) => {
   const { _id: albumId, title, coverImage, artists, songs } = album;
 
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -33,13 +34,16 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
           alt={title}
           src={coverImage}
           onLoad={() => setImageLoaded(true)}
-          className={`
-            object-cover 
-            aspect-square
-            brightness-[1.2]
-            rounded-md
-            transition-all
-          `}
+          className={twMerge(
+            `
+              object-cover 
+              aspect-square
+              brightness-[1.2]
+              rounded-md
+              transition-all
+            `,
+            tw?.img
+          )}
         />
 
         <QueuePlayButton songs={songs} showOnHover={true} className={`p-3`} />

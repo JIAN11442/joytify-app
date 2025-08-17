@@ -4,14 +4,19 @@ import {
   removeUserAlbumHandler,
   getUserAlbumsHandler,
   getAlbumByIdHandler,
+  getRecommendedAlbumsHandler,
 } from "../controllers/album.controller";
+import authenticate from "../middlewares/authenticate.middleware";
 
 const albumRoute = Router();
 
 // prefix: albums
-albumRoute.get("/", getUserAlbumsHandler);
-albumRoute.get("/:albumId", getAlbumByIdHandler);
-albumRoute.post("/", createAlbumHandler);
-albumRoute.patch("/remove/:albumId", removeUserAlbumHandler);
+albumRoute.get("/recommendations/:albumId", getRecommendedAlbumsHandler);
+albumRoute.get("/", authenticate, getUserAlbumsHandler);
+albumRoute.get("/:albumId", authenticate, getAlbumByIdHandler);
+
+albumRoute.post("/", authenticate, createAlbumHandler);
+
+albumRoute.patch("/remove/:albumId", authenticate, removeUserAlbumHandler);
 
 export default albumRoute;
