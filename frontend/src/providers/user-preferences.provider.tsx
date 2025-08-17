@@ -53,7 +53,7 @@ const UserPreferencesProvider: React.FC<UserPreferencesProps> = ({ children }) =
     // if login, initialize theme locale with user preferences cookie
     // if not login or logout, initialize theme locale with EN_US
     setThemeLocale(authUser ? locale ?? EN_US : EN_US);
-  }, [authUser]);
+  }, [authUser, locale, sidebarCollapsed]);
 
   // initialize player state
   useEffect(() => {

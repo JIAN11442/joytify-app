@@ -5,6 +5,18 @@
   "musician.role.composer": "作曲家",
   "musician.role.lyricist": "作词家",
 
+  "label.type.language": "语言",
+  "label.type.tag": "标签",
+  "label.type.genre": "曲风",
+  "label.type.theme": "主题",
+  "label.type.feature": "特色",
+  "label.type.region": "地区",
+  "label.type.country": "国家",
+  "label.type.gender": "性别",
+
+  "pagination.loadMore": "加载更多",
+  "pagination.loadLess": "收起",
+
   "gender.male": "男性",
   "gender.female": "女性",
   "gender.nonBinary": "非二元性别",

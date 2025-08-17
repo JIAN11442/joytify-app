@@ -91,18 +91,23 @@
   "song.playlist.assignment.modal.button.cancel": "取消",
   "song.playlist.assignment.modal.button.submit": "提交",
 
-  "song.list.header.title": "标题",
-  "song.list.header.artist": "艺人",
-  "song.list.header.album": "专辑",
-  "song.list.header.date": "创建日期",
-
-  "song.list.arrangement.menu.layout.title": "视图方式",
-  "song.list.arrangement.menu.layout.grid": "网格",
-  "song.list.arrangement.menu.layout.list": "列表",
-  "song.list.arrangement.menu.layout.compact": "简洁",
+  "song.tableList.header.title": "标题",
+  "song.tableList.header.artist": "艺人",
+  "song.tableList.header.album": "专辑",
+  "song.tableList.header.date": "创建日期",
+  "song.tableList.arrangement.menu.layout.title": "视图方式",
+  "song.tableList.arrangement.menu.layout.grid": "网格",
+  "song.tableList.arrangement.menu.layout.list": "列表",
+  "song.tableList.arrangement.menu.layout.compact": "简洁",
+  "song.tableList.actions.navigateToMain": "前往歌曲主页",
+  "song.tableList.actions.addToPlaylist": "添加到播放列表",
+  "song.tableList.actions.rate": "为此歌曲评分",
+  "song.tableList.noSongs.1": "暂无歌曲",
+  "song.tableList.noSongs.2": "你可以通过侧边栏的 <strong>+</strong> 按钮上传音乐",
 
   "song.hero.section.type": "歌曲",
   "song.action.panel.menu.editDetails": "编辑歌曲信息",
   "song.action.panel.menu.assignmentPlaylist": "添加到播放列表",
+  "song.action.panel.menu.rate": "为此歌曲评分",
   "song.comment.list.title": "其他用户评价 ({count})"
 }

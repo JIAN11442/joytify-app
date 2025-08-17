@@ -39,8 +39,7 @@ export interface AuthWithThirdPartyServiceRequest {
   sessionInfo: SessionInfo;
 }
 
-const { INTERNAL_SERVER_ERROR, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, CONFLICT, BAD_REQUEST } =
-  HttpCode;
+const { UNAUTHORIZED, FORBIDDEN, NOT_FOUND, CONFLICT, BAD_REQUEST } = HttpCode;
 const { INVALID_FIREBASE_CREDENTIAL } = ErrorCode;
 
 // create account service

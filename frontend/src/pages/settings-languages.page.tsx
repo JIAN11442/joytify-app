@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { BiSearch } from "react-icons/bi";
 import { HiOutlineTranslate } from "react-icons/hi";
-import { FaArrowRightArrowLeft } from "react-icons/fa6";
 
 import Loader from "../components/loader.component";
 import Icon from "../components/react-icons.component";
@@ -10,25 +9,24 @@ import LocaleCard from "../components/locale-card.component";
 import SearchBarInput from "../components/searchbar-input.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import PageSectionTitle from "../components/page-section-title.component";
+import LocaleCardList from "../components/locale-card-list.component";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { LocaleMap, localeMap } from "../contents/locale.content";
 import { SupportedLocaleType } from "@joytify/shared-types/types";
-import useSidebarState from "../states/sidebar.state";
 import useLocaleState from "../states/locale.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const SettingsLanguagesPage = () => {
+  const { fm } = useScopedIntl();
+  const settingsLanguagesFm = fm("settings.languages");
+
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [filterLocales, setFilterLocales] = useState<LocaleMap | null>(null);
   const [selectedLocale, setSelectedLocale] = useState<SupportedLocaleType | null>(null);
 
-  const { fm } = useScopedIntl();
-  const { collapseSideBarState } = useSidebarState();
   const { themeLocale, setThemeLocale } = useLocaleState();
-
   const { mutate: updateUserPreferencesFn, isPending } = useUpdateUserPreferencesMutation();
-
-  const settingsLanguagesFm = fm("settings.languages");
 
   const [currentLocaleInfo, selectableLocales] = useMemo(() => {
     const currentLocaleInfo = localeMap[themeLocale];
@@ -63,6 +61,7 @@ const SettingsLanguagesPage = () => {
       ) as LocaleMap;
 
       timeoutForDelay(() => {
+        setSearchQuery(value);
         setFilterLocales(filterOpts);
       });
     },
@@ -99,7 +98,7 @@ const SettingsLanguagesPage = () => {
   }, [themeLocale]);
 
   return (
-    <div className={`settings-page-container`}>
+    <div className={`page-container`}>
       {/* title */}
       <AnimationWrapper
         initial={{ opacity: 0, y: -10 }}
@@ -174,89 +173,43 @@ const SettingsLanguagesPage = () => {
           gap-5
         `}
       >
-        {hasFilterLocales ? (
-          <div
-            className={`
-              grid
-              grid-cols-1
-              ${
-                collapseSideBarState?.isCollapsed
-                  ? "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                  : "max-lg:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
-              }
-              gap-4
-            `}
-          >
-            {Object.entries(filterLocales as LocaleMap).map(([localeKey, localeInfo]) => {
-              const isCurrentLocale = localeKey === themeLocale;
-              const isSelectedLocale = selectedLocale === localeKey;
-
-              return (
-                <LocaleCard
-                  key={`settings-languages-${localeKey}`}
-                  localeInfo={localeInfo}
-                  onClick={() => setSelectedLocale(localeKey as SupportedLocaleType)}
-                  className={`
-                    hover:shadow-green-500
-                    hover:bg-green-300/5
-                    ${
-                      isSelectedLocale
-                        ? "bg-green-500/5 border-green-500 shadow-green-500/50 no-hover"
-                        : "border-neutral-800"
-                    }
-                  `}
-                >
-                  <AnimationWrapper
-                    visible={isCurrentLocale || isSelectedLocale}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.2 }}
-                    className={`flex p-2 bg-green-500 rounded-full`}
-                  >
-                    <Icon
-                      name={FaArrowRightArrowLeft}
-                      opts={{ size: 10 }}
-                      className={`text-neutral-900`}
-                    />
-                  </AnimationWrapper>
-                </LocaleCard>
-              );
-            })}
-          </div>
-        ) : (
-          <p className={`text-neutral-500`}>No locales found</p>
-        )}
+        <LocaleCardList
+          locales={filterLocales}
+          searchQuery={searchQuery}
+          onSelectedLocaleChange={(locale) => setSelectedLocale(locale)}
+        />
 
         {/* submit buttons */}
-        <div
-          className={`
-            flex
-            justify-end
-            gap-4
-            mt-5
-          `}
-        >
-          {/* cancel */}
-          <button
-            type="button"
-            disabled={!hasPendingLocaleChange}
-            onClick={handleCancelSelected}
+        {hasFilterLocales && (
+          <div
             className={`
-              locale-submit-btn
-              bg-neutral-900
-              border-neutral-700
-              hover:bg-neutral-800
+              flex
+              justify-end
+              gap-4
+              mt-5
             `}
           >
-            {settingsLanguagesFm("button.cancel")}
-          </button>
+            {/* cancel */}
+            <button
+              type="button"
+              disabled={!hasPendingLocaleChange}
+              onClick={handleCancelSelected}
+              className={`
+                locale-submit-btn
+                bg-neutral-900
+                border-neutral-700
+                hover:bg-neutral-800
+              `}
+            >
+              {settingsLanguagesFm("button.cancel")}
+            </button>
 
-          {/* save changes */}
-          <button
-            type="submit"
-            disabled={!hasPendingLocaleChange}
-            onClick={handleSwitchLocale}
-            className={`
+            {/* save changes */}
+            <button
+              type="submit"
+              disabled={!hasPendingLocaleChange}
+              onClick={handleSwitchLocale}
+              className={`
               locale-submit-btn
               ${
                 hasPendingLocaleChange &&
@@ -267,10 +220,11 @@ const SettingsLanguagesPage = () => {
                 `
               }
             `}
-          >
-            {isPending ? <Loader loader={{ size: 20 }} /> : settingsLanguagesFm("button.save")}
-          </button>
-        </div>
+            >
+              {isPending ? <Loader loader={{ size: 20 }} /> : settingsLanguagesFm("button.save")}
+            </button>
+          </div>
+        )}
       </AnimationWrapper>
     </div>
   );

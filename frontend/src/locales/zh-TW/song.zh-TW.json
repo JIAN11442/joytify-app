@@ -91,18 +91,23 @@
   "song.playlist.assignment.modal.button.cancel": "取消",
   "song.playlist.assignment.modal.button.submit": "提交",
 
-  "song.list.header.title": "標題",
-  "song.list.header.artist": "藝人",
-  "song.list.header.album": "專輯",
-  "song.list.header.date": "建立日期",
-
-  "song.list.arrangement.menu.layout.title": "檢視方式",
-  "song.list.arrangement.menu.layout.grid": "網格",
-  "song.list.arrangement.menu.layout.list": "列表",
-  "song.list.arrangement.menu.layout.compact": "簡潔",
+  "song.tableList.header.title": "標題",
+  "song.tableList.header.artist": "藝人",
+  "song.tableList.header.album": "專輯",
+  "song.tableList.header.date": "建立日期",
+  "song.tableList.arrangement.menu.layout.title": "檢視方式",
+  "song.tableList.arrangement.menu.layout.grid": "網格",
+  "song.tableList.arrangement.menu.layout.list": "列表",
+  "song.tableList.arrangement.menu.layout.compact": "簡潔",
+  "song.tableList.actions.navigateToMain": "前往歌曲主頁",
+  "song.tableList.actions.addToPlaylist": "加入播放清單",
+  "song.tableList.actions.rate": "為此歌曲評分",
+  "song.tableList.noSongs.1": "尚無歌曲",
+  "song.tableList.noSongs.2": "你可以透過側邊欄的 <strong>+</strong> 按鈕上傳音樂",
 
   "song.hero.section.type": "歌曲",
   "song.action.panel.menu.editDetails": "編輯歌曲信息",
   "song.action.panel.menu.assignmentPlaylist": "加入播放清單",
+  "song.action.panel.menu.rate": "為此歌曲評分",
   "song.comment.list.title": "其他用戶評價 ({count})"
 }

@@ -162,7 +162,7 @@ const PlaylistAdvancedEditModal = () => {
       songs.filter(
         (song) =>
           song.title.toLowerCase().includes(lowerSearchQuery) ||
-          song.artist.toLowerCase().includes(lowerSearchQuery)
+          song.artist.name.toLowerCase().includes(lowerSearchQuery)
       ) || songs;
 
     setFilteredSongs(filteredSongs);
@@ -273,6 +273,7 @@ const PlaylistAdvancedEditModal = () => {
               >
                 {filteredSongs.map((song, index) => {
                   const { _id: songId, title, artist, imageUrl } = song;
+                  const { name: artistName } = artist;
                   const isRemoved = removedSongs?.includes(songId) ?? false;
 
                   return (
@@ -318,7 +319,7 @@ const PlaylistAdvancedEditModal = () => {
                               ${isRemoved ? "text-neutral-400" : "text-neutral-500"}
                             `}
                           >
-                            {artist}
+                            {artistName}
                           </span>
                         </p>
 

@@ -1,4 +1,4 @@
 {
   "album.hero.section.type": "Album",
-  "album.hero.section.description": "{count} lagu"
+  "album.hero.section.description": "{count} lagu · {duration}"
 }

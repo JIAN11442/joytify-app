@@ -9,25 +9,26 @@ import MenuItem from "../components/menu-item.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import PageSectionTitle from "../components/page-section-title.component";
 import ManageNotificationControlPanel from "../components/manage-notification-control-panel.component";
-import ManageNotificationList from "../components/manage-notification-list.component";
+import ManageNotificationCardList from "../components/manage-notification-card-list.component";
 import { useMarkNotificationsAsReadMutation } from "../hooks/notification-mutate.hook";
 import {
   useGetUserNotificationTypeCountsQuery,
   useGetUserNotificationsByTypeQuery,
 } from "../hooks/notification-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { NotificationTypeOptions } from "@joytify/shared-types/constants";
-import { NotificationType } from "@joytify/shared-types/types";
+import { NotificationFilterOptions } from "@joytify/shared-types/constants";
+import { NotificationFilterType } from "@joytify/shared-types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const ManageNotificationPage = () => {
   const { fm, intl } = useScopedIntl();
   const manageNotificationFm = fm("manage.notification");
 
-  const { ALL } = NotificationTypeOptions;
+  const { ALL } = NotificationFilterOptions;
 
   const [activeMenu, setActiveMenu] = useState(false);
-  const [selectedNotificationType, setSelectedNotificationType] = useState<NotificationType>(ALL);
+  const [selectedNotificationType, setSelectedNotificationType] =
+    useState<NotificationFilterType>(ALL);
 
   const { counts } = useGetUserNotificationTypeCountsQuery();
   const { notifications, page, setPage, isPending } =
@@ -41,7 +42,7 @@ const ManageNotificationPage = () => {
     });
   }, [activeMenu]);
 
-  const handleSelectNotificationType = useCallback((type: NotificationType) => {
+  const handleSelectNotificationType = useCallback((type: NotificationFilterType) => {
     timeoutForDelay(() => {
       setSelectedNotificationType(type);
     });
@@ -57,7 +58,7 @@ const ManageNotificationPage = () => {
   }, [notifications, markNotificationsAsRead]);
 
   return (
-    <div className={`settings-page-container`}>
+    <div className={`page-container`}>
       {/* header */}
       <AnimationWrapper
         initial={{ opacity: 0, y: -10 }}
@@ -115,7 +116,7 @@ const ManageNotificationPage = () => {
         animate={{ opacity: 1, y: 0 }}
         className={`mt-3`}
       >
-        <ManageNotificationList
+        <ManageNotificationCardList
           fm={fm}
           intl={intl}
           notifications={notifications}

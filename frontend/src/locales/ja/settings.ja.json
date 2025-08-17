@@ -13,8 +13,8 @@
   "settings.account.dateOfBirth.title": "生年月日",
   "settings.account.country.title": "国",
   "settings.account.country.placeholder": "国を選択してください",
-  "settings.account.profile.card.button.edit": "編集",
-  "settings.account.profile.card.button.save": "保存",
+  "settings.account.infoSection.edit": "編集",
+  "settings.account.infoSection.save": "保存",
   "settings.account.form.button.submit": "送信",
   "settings.account.changePassword.title": "パスワードと認証",
   "settings.account.changePassword.description": "アカウントの安全を保つためにパスワードを変更してください。",
@@ -45,6 +45,7 @@
   "settings.languages.description": "インターフェースの表示言語を選択してください",
   "settings.languages.search.placeholder": "表示言語を検索",
   "settings.languages.currentlySelected": "現在の表示言語",
+  "settings.languages.noFound": "<strong>「{searchQuery}」</strong> に一致する言語が見つかりません",
   "settings.languages.button.save": "変更を保存",
   "settings.languages.button.cancel": "キャンセル",
 

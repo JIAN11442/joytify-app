@@ -58,6 +58,8 @@ docker-compose.yaml
 .dockerignore
 nginx
 
+# TypeScript build info
+*.tsbuildinfo
 
 # Shared Types Folder
 share

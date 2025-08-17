@@ -1,3 +1,5 @@
 {
-  "musician.hero.section.description": "{songCount} song · {albumCount} album"
+  "musician.hero.section.description": "{songCount} song · {albumCount} album · {duration}",
+  "musician.actionPanel.menu.follow": "Follow artist",
+  "musician.actionPanel.menu.unfollow": "Unfollow artist"
 }

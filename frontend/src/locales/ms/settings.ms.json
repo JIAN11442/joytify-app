@@ -13,8 +13,8 @@
   "settings.account.dateOfBirth.title": "Tarikh lahir",
   "settings.account.country.title": "Negara",
   "settings.account.country.placeholder": "Klik untuk pilih negara anda",
-  "settings.account.profile.card.button.edit": "Edit",
-  "settings.account.profile.card.button.save": "Simpan",
+  "settings.account.infoSection.edit": "Edit",
+  "settings.account.infoSection.save": "Simpan",
   "settings.account.form.button.submit": "Hantar",
   "settings.account.changePassword.title": "Kata Laluan & Pengesahan",
   "settings.account.changePassword.description": "Tukar kata laluan untuk memastikan akaun anda selamat.",
@@ -45,6 +45,7 @@
   "settings.languages.description": "Pilih bahasa antara muka pilihan anda",
   "settings.languages.search.placeholder": "Cari bahasa antara muka",
   "settings.languages.currentlySelected": "Bahasa yang sedang digunakan",
+  "settings.languages.noFound": "Tiada bahasa ditemui untuk <strong>\"{searchQuery}\"</strong>",
   "settings.languages.button.save": "Simpan Perubahan",
   "settings.languages.button.cancel": "Batal",
 

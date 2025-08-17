@@ -3,7 +3,7 @@
   "playlist.item.songs.count": "{count} 곡",
   "playlist.item.description": "{type} · {count}",
 
-  "playlist.hero.section.type": "{type}{separator}{description}",
+  "playlist.hero.section.type": "{type} · {songCount} · {duration}",
 
   "playlist.menu.action.editDetails": "세부 정보 편집",
   "playlist.menu.action.deletePlaylist": "재생목록 삭제",
@@ -20,7 +20,6 @@
   "playlist.advanced.edit.modal.all.songs.removed": "이 재생목록의 모든 노래가 삭제 대상으로 표시되었습니다. 변경 사항은 저장 후 적용됩니다.",
   "playlist.advanced.edit.modal.button.submit": "변경사항 저장",
   "playlist.advanced.edit.modal.button.cancel": "취소",
-
   "playlist.advanced.create.modal.title": "재생목록 만들기",
   "playlist.advanced.create.modal.input.title.placeholder": "제목",
   "playlist.advanced.create.modal.input.description.placeholder": "설명",

@@ -1,10 +1,9 @@
 import { pick } from "lodash";
 import { useParams } from "react-router-dom";
-import ItemCard from "./item-card.component";
-import ItemCardList from "./item-card-list.component";
+import ProfileCollectionCardList from "./profile-collection-card-list.component";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { ProfileCollections } from "@joytify/shared-types/constants";
 import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
-import { ScopedFormatMessage } from "../hooks/intl.hook";
 
 type ProfileCollectionsSectionProps = {
   fm: ScopedFormatMessage;
@@ -32,72 +31,36 @@ const ProfileCollectionsSection: React.FC<ProfileCollectionsSectionProps> = ({
         return { toProfile: "album", toSection: ALBUMS };
       case "following":
         return { toProfile: "musician", toSection: FOLLOWING };
+      default:
+        return { toProfile: "", toSection: "" };
     }
   };
 
   return (
-    <div
-      className={`
-        flex
-        flex-col
-        gap-4
-      `}
-    >
+    <div className={`flex flex-col gap-4`}>
       {Object.entries(profileSection).map(([key, value]) => {
         const { docs, totalDocs } = value;
+        const { toProfile, toSection } = getProfileSection(key);
+
         return (
-          <ItemCardList
+          <ProfileCollectionCardList
             key={key}
             title={{
               content: profileCollectionsSectionFm(key),
               progress: true,
             }}
+            collectionKey={key}
+            collectionDocs={docs}
+            collectionRoute={toProfile}
             pagination={{
-              to: `/profile/${id}/${getProfileSection(key)?.toSection}`,
+              to: `/profile/${id}/${toSection}`,
               count: docs.length,
               total: totalDocs,
               label: profileCollectionsSectionFm("more"),
             }}
             className={`mt-10`}
             tw={{ title: "capitalize", list: `gap-2 p-1` }}
-          >
-            {docs.map((doc) => {
-              const { _id, title, imageUrl } = doc;
-              const description = Array.isArray(doc.description)
-                ? doc.description[0]
-                : doc.description;
-
-              return (
-                <ItemCard
-                  to={`/${getProfileSection(key)?.toProfile}/${_id}`}
-                  key={_id}
-                  title={title}
-                  imageUrl={imageUrl}
-                  description={description}
-                  className={`
-                    w-[200px]
-                    hover:bg-neutral-500/10
-                    transition
-                  `}
-                  tw={{
-                    img: `
-                      ${key === "following" ? "rounded-full" : "rounded-md"} 
-                      aspect-square
-                      object-cover
-                      w-[200px]
-                    `,
-                    title: `
-                      font-medium 
-                      text-[14px]
-                      text-neutral-400
-                      ${key === "following" && "text-center"}
-                    `,
-                    description: `${key === "following" && "text-center"}`,
-                  }}
-                />
-              );
-            })}
-          </ItemCardList>
+          />
         );
       })}
     </div>

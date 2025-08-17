@@ -13,7 +13,7 @@ const SettingsConnectedDevicesPage = () => {
   const { userSessions, deviceStats } = useGetUserSessionsQuery();
 
   return (
-    <div className={`settings-page-container`}>
+    <div className={`page-container`}>
       {/* title */}
       <AnimationWrapper initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <PageSectionTitle

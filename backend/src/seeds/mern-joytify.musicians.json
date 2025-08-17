@@ -1,0 +1,466 @@
+[
+  {
+    "_id": {
+      "$oid": "67d12bef1f0397076676b68a"
+    },
+    "name": "潘雲安",
+    "roles": ["lyricist", "composer"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "67d438c79e1e897be0e0f870"
+      }
+    ],
+    "albums": [
+      {
+        "$oid": "67d12afc1f0397076676b682"
+      }
+    ],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-03-12T06:38:39.066Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-27T07:53:53.534Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67d2a160187db64ed27910a6"
+    },
+    "name": "劉西蒙",
+    "roles": ["lyricist", "composer"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "67d439319e1e897be0e0f8a0"
+      }
+    ],
+    "albums": [],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-03-13T09:12:00.284Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-27T07:53:53.923Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67d45c398383ed54b105126c"
+    },
+    "name": "Ado",
+    "roles": ["artist"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "67d45c3a8383ed54b1051276"
+      },
+      {
+        "$oid": "67d8ec93d8f69a01d8512bb7"
+      },
+      {
+        "$oid": "6887505f9f0bcad3a0812da6"
+      }
+    ],
+    "albums": [
+      {
+        "$oid": "67d45b6c8383ed54b1051268"
+      }
+    ],
+    "followers": [
+      {
+        "$oid": "6803caa78298bd83e106a989"
+      },
+      {
+        "$oid": "67d456398383ed54b105123f"
+      },
+      {
+        "$oid": "68555873fb654775d8de8490"
+      }
+    ],
+    "createdAt": {
+      "$date": "2025-03-14T16:41:29.262Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T10:26:41.832Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67d45c398383ed54b1051270"
+    },
+    "name": "Hata Motohiro",
+    "roles": ["lyricist", "composer"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "67d45c3a8383ed54b1051276"
+      }
+    ],
+    "albums": [
+      {
+        "$oid": "67d45b6c8383ed54b1051268"
+      }
+    ],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-03-14T16:41:29.611Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-27T07:53:54.699Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67e8daa9d8a735b80d4ec210"
+    },
+    "name": "Kim Kyung-hee",
+    "roles": ["lyricist", "composer"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "67e8daaad8a735b80d4ec218"
+      }
+    ],
+    "albums": [],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-03-30T05:46:17.641Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-27T07:53:56.228Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "68554c55be2eee5ff61f0712"
+    },
+    "name": "房東的貓",
+    "roles": ["artist"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "685bedc0b6b998276c9a0e32"
+      }
+    ],
+    "albums": [],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-06-20T11:56:05.549Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-27T07:53:56.984Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67b09e447023b8ce93f54c35"
+    },
+    "name": "回春丹",
+    "roles": ["artist"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "67d439319e1e897be0e0f8a0"
+      }
+    ],
+    "albums": [],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-02-15T14:01:40.822Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-27T07:53:52.657Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67d12bee1f0397076676b686"
+    },
+    "name": "吿五人",
+    "roles": ["artist"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "67d438c79e1e897be0e0f870"
+      }
+    ],
+    "albums": [
+      {
+        "$oid": "67d12afc1f0397076676b682"
+      }
+    ],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-03-12T06:38:38.746Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-27T07:53:53.135Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67e8daa9d8a735b80d4ec20c"
+    },
+    "name": "Nam Hye-seung",
+    "roles": ["lyricist", "composer"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "67e8daaad8a735b80d4ec218"
+      }
+    ],
+    "albums": [],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-03-30T05:46:17.177Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-27T07:53:55.849Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6805208d7fa3469c9cb850ed"
+    },
+    "name": "D4vd",
+    "roles": ["artist"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "6805208d7fa3469c9cb850f1"
+      }
+    ],
+    "albums": [],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-04-20T16:27:57.376Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-27T07:53:56.601Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67d8e0b78f980d5683c80cfb"
+    },
+    "name": "Yuuta Orisaka",
+    "roles": ["lyricist", "composer"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "67d8ec93d8f69a01d8512bb7"
+      }
+    ],
+    "albums": [
+      {
+        "$oid": "67d45b6c8383ed54b1051268"
+      }
+    ],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-03-18T02:55:51.472Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-27T07:53:55.082Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67e8daa8d8a735b80d4ec208"
+    },
+    "name": "V(BTS)",
+    "roles": ["artist"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "67e8daaad8a735b80d4ec218"
+      }
+    ],
+    "albums": [],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-03-30T05:46:16.746Z"
+    },
+    "updatedAt": {
+      "$date": "2025-06-27T07:53:55.462Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6887505e9f0bcad3a0812d9e"
+    },
+    "name": "cAnON.",
+    "roles": ["lyricist"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "6887505f9f0bcad3a0812da6"
+      }
+    ],
+    "albums": [
+      {
+        "$oid": "67d45b6c8383ed54b1051268"
+      }
+    ],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-07-28T10:26:38.176Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T10:26:41.832Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6887505f9f0bcad3a0812da2"
+    },
+    "name": "澤野弘之",
+    "roles": ["composer"],
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-musician.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "songs": [
+      {
+        "$oid": "6887505f9f0bcad3a0812da6"
+      }
+    ],
+    "albums": [
+      {
+        "$oid": "67d45b6c8383ed54b1051268"
+      }
+    ],
+    "followers": [],
+    "createdAt": {
+      "$date": "2025-07-28T10:26:39.123Z"
+    },
+    "updatedAt": {
+      "$date": "2025-07-28T10:26:41.832Z"
+    },
+    "__v": 0
+  }
+]

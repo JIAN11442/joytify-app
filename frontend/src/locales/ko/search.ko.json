@@ -1,0 +1,10 @@
+{
+  "search.filterType.all": "전체",
+  "search.filterType.songs": "노래",
+  "search.filterType.albums": "앨범",
+  "search.filterType.musicians": "뮤지션",
+  "search.filterType.genresAndTags": "장르 및 태그",
+  "search.filterType.languages": "언어",
+
+  "search.filterItem.noFound": "<strong>\"{searchQuery}\"</strong>에 해당하는 {type}이(가) 없습니다"
+}

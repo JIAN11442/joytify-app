@@ -12,7 +12,6 @@
   "stats.monthlyStats.dashboard.24HourListeningPattern.description": "Your listening activity throughout the day",
   "stats.monthlyStats.dashboard.24HourListeningPattern.xAxis.label": "Time",
   "stats.monthlyStats.dashboard.24HourListeningPattern.yAxis.label": "Listening Time (minutes)",
-
   "stats.monthlyStats.dashboard.topTracksBreakdown.title": "Top 5 Tracks Breakdown",
   "stats.monthlyStats.dashboard.topTracksBreakdown.description": "Your top 5 tracks breakdown",
 

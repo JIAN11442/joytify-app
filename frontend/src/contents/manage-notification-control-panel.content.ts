@@ -1,10 +1,10 @@
-import { NotificationTypeOptions } from "@joytify/shared-types/constants";
-import { NotificationCountsResponse, NotificationType } from "@joytify/shared-types/types";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
+import { NotificationFilterOptions } from "@joytify/shared-types/constants";
+import { NotificationCountsResponse, NotificationFilterType } from "@joytify/shared-types/types";
 
 type ControlPanelItem = {
   id: string;
-  key: NotificationType;
+  key: NotificationFilterType;
   title: string;
   count: number;
 };
@@ -14,8 +14,9 @@ export const getManageNotificationControlPanelContent = (
   notificationCounts: NotificationCountsResponse
 ): ControlPanelItem[] => {
   const manageNotificationControlPanelFm = fm("manage.notification.controlPanel");
+
   const { ALL, MONTHLY_STATISTIC, FOLLOWING_ARTIST_UPDATE, SYSTEM_ANNOUNCEMENT } =
-    NotificationTypeOptions;
+    NotificationFilterOptions;
 
   return [
     {

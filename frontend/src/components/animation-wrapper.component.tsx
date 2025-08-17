@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 import { AnimatePresence, AnimatePresenceProps, motion, MotionProps } from "framer-motion";
 
 export type DefaultAnimationWrapperProps = {
+  id?: string;
   initial?: MotionProps["initial"];
   animate?: MotionProps["animate"];
   transition?: MotionProps["transition"];
@@ -22,6 +23,7 @@ interface AnimationWrapperProps extends DefaultAnimationWrapperProps {
 const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
   (
     {
+      id,
       children,
       initial = { opacity: 0 },
       animate = { opacity: 1 },
@@ -44,6 +46,7 @@ const AnimationWrapper = forwardRef<HTMLDivElement, AnimationWrapperProps>(
       <AnimatePresence mode={mode} initial={initialState}>
         {visible && (
           <motion.div
+            id={id}
             ref={ref}
             initial={initial}
             animate={animate}

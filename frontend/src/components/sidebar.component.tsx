@@ -124,12 +124,7 @@ const Sidebar = () => {
         </AnimationWrapper>
 
         {/* content */}
-        <ContentBox
-          className={`
-            h-full
-            overflow-y-auto
-          `}
-        >
+        <ContentBox className={`h-full overflow-y-auto`}>
           <Outlet />
         </ContentBox>
       </div>

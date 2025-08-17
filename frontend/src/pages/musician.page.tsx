@@ -1,13 +1,27 @@
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../components/loader.component";
-import SongList from "../components/song-list.component";
+import SongTableList from "../components/song-table-list.component";
 import MusicianHeroSection from "../components/musician-hero-section.component";
 import MusicianActionPanel from "../components/musician-action-panel.component";
 import { useGetMusicianByIdQuery } from "../hooks/musician-query.hook";
+import { useScopedIntl } from "../hooks/intl.hook";
+import useUserState from "../states/user.state";
 
 const MusicianPage = () => {
   const { id } = useParams();
+  const { fm } = useScopedIntl();
+
+  const { authUser } = useUserState();
   const { musician } = useGetMusicianByIdQuery(String(id));
+
+  const followed = useMemo(() => {
+    if (!musician) return false;
+
+    const { followers } = musician;
+
+    return followers.some((follower) => follower === authUser?._id);
+  }, [musician, authUser]);
 
   if (!musician) {
     return <Loader className={{ container: "h-full" }} />;
@@ -25,15 +39,10 @@ const MusicianPage = () => {
           #171717 70%
         )`,
       }}
-      className={`
-        h-full
-        pt-10
-        rounded-b-none
-        overflow-x-hidden
-      `}
+      className={`h-full pt-10 overflow-x-hidden rounded-b-none`}
     >
       {/* hero section */}
-      <MusicianHeroSection musician={musician} />
+      <MusicianHeroSection fm={fm} followed={followed} musician={musician} />
 
       <div
         className={`
@@ -51,10 +60,10 @@ const MusicianPage = () => {
         `}
       >
         {/* action panel */}
-        <MusicianActionPanel musician={musician} />
+        <MusicianActionPanel fm={fm} followed={followed} musician={musician} />
 
         {/* song list */}
-        <SongList songs={songs} paletee={paletee} />
+        <SongTableList fm={fm} songs={songs} paletee={paletee} />
       </div>
     </div>
   );

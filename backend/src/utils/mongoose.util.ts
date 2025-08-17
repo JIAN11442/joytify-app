@@ -123,6 +123,7 @@ type PaginationQueryParams<T> = {
   filter: FilterQuery<T>;
   limit: { initial: number; load: number };
   page: number;
+  sort?: Record<string, 1 | -1> | null | false;
 };
 
 export const getPaginatedDocs = <T extends Document>({
@@ -130,14 +131,25 @@ export const getPaginatedDocs = <T extends Document>({
   filter,
   limit,
   page,
+  sort,
 }: PaginationQueryParams<T>) => {
   const { initial, load } = limit;
   const fetchLimit = page === 1 ? initial : initial + (page - 1) * load;
-  // const limitNum = page === 1 ? initial : load;
-  // const skipNum = page === 1 ? 0 : initial + (page - 2) * load;
 
-  // return model.find(filter).skip(skipNum).limit(limitNum).sort({ createdAt: -1 });
-  return model.find(filter).limit(fetchLimit).sort({ createdAt: -1 });
+  const query = model.find(filter).limit(fetchLimit);
+
+  // if sort is null or false, do not use any sort
+  if (sort === null || sort === false) {
+    return query;
+  }
+
+  // if custom sort object is provided, use it
+  if (sort && typeof sort === "object") {
+    return query.sort(sort);
+  }
+
+  // default sort by createdAt
+  return query.sort({ createdAt: -1 });
 };
 
 /**

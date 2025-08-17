@@ -1,3 +1,5 @@
 {
-  "musician.hero.section.description": "{songCount} 首歌曲 · {albumCount} 張專輯"
+  "musician.hero.section.description": "{songCount} 首歌曲 · {albumCount} 張專輯 · {duration}",
+  "musician.actionPanel.menu.follow": "追蹤歌手",
+  "musician.actionPanel.menu.unfollow": "取消追蹤"
 }

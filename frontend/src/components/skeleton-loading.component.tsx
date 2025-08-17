@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import Skeleton, { SkeletonProps } from "react-loading-skeleton";
 import useSidebarState from "../states/sidebar.state";
@@ -34,10 +35,11 @@ interface SquareDualLineSkeleton extends SkeletonProps {
 
 type CardSkeleton = {
   className?: string;
-  tw?: { image?: string };
+  tw?: { image?: string; container?: string; text?: string };
+  children?: React.ReactNode;
 };
 
-type GridCardListSkeleton = Omit<CardSkeleton, "tw"> & {
+type CardListSkeleton = Omit<CardSkeleton, "tw"> & {
   count?: number;
   tw?: {
     container?: string;
@@ -45,14 +47,33 @@ type GridCardListSkeleton = Omit<CardSkeleton, "tw"> & {
   };
 };
 
+type CardListSectionSkeleton = {
+  sectionCount?: number;
+  listCount?: number;
+  className?: string;
+};
+
 const useSkeletonCommon = () => {
   const { screenWidth } = useProviderState();
   const { collapseSideBarState } = useSidebarState();
   const { isCollapsed } = collapseSideBarState;
 
+  const defaultColumnCount = useMemo(() => {
+    if (screenWidth < 640) {
+      return 4;
+    } else if (screenWidth > 640 && screenWidth < 1024) {
+      return isCollapsed ? 5 : 4;
+    } else if (screenWidth > 1024 && screenWidth < 1280) {
+      return isCollapsed ? 6 : 5;
+    }
+
+    return 2;
+  }, [screenWidth, isCollapsed]);
+
   return {
     screenWidth,
     isCollapsed,
+    defaultColumnCount,
   };
 };
 
@@ -302,27 +323,37 @@ export const PlaylistCheckboxListSkeleton = ({ count = 1 }: { count: number }) =
 };
 
 // card skeleton
-export const CardSkeleton: React.FC<CardSkeleton> = ({ className, tw }) => {
+export const CardSkeleton: React.FC<CardSkeleton> = ({ children, className, tw }) => {
   return (
     <div
       className={twMerge(
         `
-        flex
-        flex-col
-        p-3
-        gap-3
-        w-full
-        bg-gradient-to-t
-        from-neutral-700/10
-        to-neutral-700
-        border-[0.1px]
-        border-neutral-700
-        rounded-md
-      `,
+          flex
+          flex-col
+          p-2.5
+          gap-3
+          w-full
+          bg-gradient-to-t
+          from-neutral-700/10
+          to-neutral-700
+          border-[0.1px]
+          border-neutral-700
+          rounded-md
+        `,
         className
       )}
     >
-      <ImageSkeleton className={twMerge(`w-full h-[250px]`, tw?.image)} />
+      <ImageSkeleton className={twMerge(`w-full`, tw?.image)} />
+
+      {children ? children : <TextSkeleton />}
+    </div>
+  );
+};
+
+// manage card skeleton
+export const ManageCardSkeleton: React.FC<CardSkeleton> = ({ className, tw }) => {
+  return (
+    <CardSkeleton className={className} tw={{ ...tw, image: "h-[250px]" }}>
       <div className={`grid grid-cols-2 gap-3`}>
         <TextSkeleton />
         <div className={`flex gap-2 justify-end`}>
@@ -331,12 +362,80 @@ export const CardSkeleton: React.FC<CardSkeleton> = ({ className, tw }) => {
           <Skeleton className={`w-5 h-5 rounded-full`} />
         </div>
       </div>
+    </CardSkeleton>
+  );
+};
+
+// circle card skeleton
+export const CircleCardSkeleton: React.FC<CardSkeleton> = ({ className, tw }) => {
+  return (
+    <div className={twMerge(`grid-card-wrapper p-3 gap-3 no-hover`, className)}>
+      <ImageSkeleton className={twMerge(`h-full w-full aspect-square rounded-full`, tw?.image)} />
+
+      <div className={`flex flex-col pl-5`}>
+        <TextSkeleton className={`w-[60%]`} />
+        <TextSkeleton className={`w-[40%]`} />
+      </div>
     </div>
   );
 };
 
+// grid card skeleton
+export const GridCardSkeleton: React.FC<Pick<CardSkeleton, "tw">> = ({ tw }) => {
+  return (
+    <CardSkeleton
+      className={twMerge(`from-transparent to-transparent border-none`, tw?.container)}
+      tw={{ ...tw, image: "aspect-square h-full" }}
+    >
+      <div className={`flex flex-col pl-2 gap-2`}>
+        <TextSkeleton className={`w-[60%]`} />
+        <TextSkeleton className={`w-[40%]`} />
+      </div>
+    </CardSkeleton>
+  );
+};
+
 // grid card list skeleton
-export const GridCardListSkeleton: React.FC<GridCardListSkeleton> = ({
+export const GridCardListSkeleton: React.FC<CardListSkeleton> = ({ count = 1, className, tw }) => {
+  const { isCollapsed } = useSkeletonCommon();
+  return (
+    <div
+      className={twMerge(
+        `${isCollapsed ? "card-list-arrange--collapsed" : "card-list-arrange--expanded"}`,
+        className
+      )}
+    >
+      {Array.from({ length: count }).map((_, index) => {
+        return <GridCardSkeleton key={`card-list-skeleton-${index}`} tw={tw} />;
+      })}
+    </div>
+  );
+};
+
+// card list section skeleton
+export const GridCardListSectionSkeleton: React.FC<CardListSectionSkeleton> = ({
+  sectionCount = 1,
+  listCount = 4,
+  className,
+}) => {
+  return Array.from({ length: sectionCount }).map((_, index) => {
+    return (
+      <div key={`card-list-section-skeleton-${index}`} className={className}>
+        <TextSkeleton className={`w-[10%] pl-3`} />
+
+        <GridCardListSkeleton
+          key={`card-list-section-skeleton-${index}`}
+          count={listCount}
+          className={`flex overflow-x-auto hidden-scrollbar`}
+          tw={{ container: "w-[200px] shrink-0", image: "h-[180px]" }}
+        />
+      </div>
+    );
+  });
+};
+
+// manage grid card list skeleton
+export const ManageGridCardListSkeleton: React.FC<CardListSkeleton> = ({
   count = 1,
   className,
   tw,
@@ -346,22 +445,43 @@ export const GridCardListSkeleton: React.FC<GridCardListSkeleton> = ({
   return (
     <div
       className={twMerge(
-        `
-          grid
-          ${
-            isCollapsed
-              ? "max-sm:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-              : "max-lg:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
-          }
-          gap-5
-          `,
+        `${
+          isCollapsed ? "manage-card-list-arrange--collapsed" : "manage-card-list-arrange--expanded"
+        }`,
         className
       )}
     >
       {Array.from({ length: count }).map((_, index) => {
         const { container, ...rest } = tw ?? {};
 
-        return <CardSkeleton key={`card-list-skeleton-${index}`} className={container} tw={rest} />;
+        return (
+          <ManageCardSkeleton key={`card-list-skeleton-${index}`} className={container} tw={rest} />
+        );
+      })}
+    </div>
+  );
+};
+
+// circle card list skeleton
+export const CircleCardListSkeleton: React.FC<CardListSkeleton> = ({
+  count = 1,
+  className,
+  tw,
+}) => {
+  const { isCollapsed } = useSkeletonCommon();
+
+  return (
+    <div
+      className={twMerge(
+        `${isCollapsed ? "card-list-arrange--collapsed" : "card-list-arrange--expanded"}`,
+        className
+      )}
+    >
+      {Array.from({ length: count }).map((_, index) => {
+        const { container, ...rest } = tw ?? {};
+        return (
+          <CircleCardSkeleton key={`card-list-skeleton-${index}`} className={container} tw={rest} />
+        );
       })}
     </div>
   );
@@ -468,5 +588,71 @@ export const NotificationCardListSkeleton = ({ count = 1 }: { count?: number }) 
         );
       })}
     </div>
+  );
+};
+
+// song table list skeleton
+export const SongTableListSkeleton = ({ listCount = 5 }: { listCount?: number }) => {
+  const { defaultColumnCount } = useSkeletonCommon();
+
+  return (
+    <table className={`w-full`}>
+      <thead>
+        <tr className={`border-b border-grey-custom/5`}>
+          {/* index */}
+          <th className={`w-3`}>
+            <Skeleton className={`w-3 h-3 rounded-md`} />
+          </th>
+
+          {/* other */}
+          {Array.from({ length: defaultColumnCount - 1 }).map((_, index) => {
+            return (
+              <th key={`song-list-skeleton-th-${index}`}>
+                <TextSkeleton />
+              </th>
+            );
+          })}
+        </tr>
+      </thead>
+
+      <tbody>
+        {Array.from({ length: listCount }).map((_, index) => {
+          return (
+            <SongTableTrSkeleton
+              key={`song-list-skeleton-tr-${index}`}
+              columnCount={defaultColumnCount}
+            />
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};
+
+// song table tr skeleton
+export const SongTableTrSkeleton = ({ columnCount }: { columnCount?: number }) => {
+  const { defaultColumnCount } = useSkeletonCommon();
+
+  return (
+    <tr>
+      {/* index */}
+      <td className={`w-3`}>
+        <Skeleton className={`w-3 h-3 rounded-md`} />
+      </td>
+
+      {/*  title */}
+      <td>
+        <SquareDualLineSkeleton tw={{ square: "w-[3.3rem] h-[3.3rem]" }} />
+      </td>
+
+      {/* other */}
+      {Array.from({ length: (columnCount ?? defaultColumnCount) - 2 }).map((_, index) => {
+        return (
+          <td key={`song-list-skeleton-td-${index}`}>
+            <TextSkeleton />
+          </td>
+        );
+      })}
+    </tr>
   );
 };

@@ -13,8 +13,8 @@
   "settings.account.dateOfBirth.title": "Date of birth",
   "settings.account.country.title": "Country",
   "settings.account.country.placeholder": "Click to choose your country",
-  "settings.account.profile.card.button.edit": "Edit",
-  "settings.account.profile.card.button.save": "Save",
+  "settings.account.infoSection.edit": "Edit",
+  "settings.account.infoSection.save": "Save",
   "settings.account.form.button.submit": "Submit",
   "settings.account.changePassword.title": "Password and Authentication",
   "settings.account.changePassword.description": "Change your password to keep your account secure.",
@@ -45,6 +45,7 @@
   "settings.languages.description": "Select your preferred interface language",
   "settings.languages.search.placeholder": "Search interface language",
   "settings.languages.currentlySelected": "Currently Selected",
+  "settings.languages.noFound": "No language found for <strong>\"{searchQuery}\"</strong>",
   "settings.languages.button.save": "Save Changes",
   "settings.languages.button.cancel": "Cancel",
 

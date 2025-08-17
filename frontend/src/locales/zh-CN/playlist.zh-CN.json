@@ -3,7 +3,7 @@
   "playlist.item.songs.count": "{count} 首歌曲",
   "playlist.item.description": "{type} · {count}",
 
-  "playlist.hero.section.type": "{type}{separator}{description}",
+  "playlist.hero.section.type": "{type} · {songCount} · {duration}",
 
   "playlist.menu.action.editDetails": "编辑信息",
   "playlist.menu.action.deletePlaylist": "删除播放列表",
@@ -20,7 +20,6 @@
   "playlist.advanced.edit.modal.all.songs.removed": "此播放列表中的所有歌曲已被标记为移除。更改将在保存后生效。",
   "playlist.advanced.edit.modal.button.submit": "保存更改",
   "playlist.advanced.edit.modal.button.cancel": "取消",
-
   "playlist.advanced.create.modal.title": "创建播放列表",
   "playlist.advanced.create.modal.input.title.placeholder": "标题",
   "playlist.advanced.create.modal.input.description.placeholder": "描述",

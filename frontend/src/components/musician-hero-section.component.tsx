@@ -1,71 +1,43 @@
-import { useCallback, useEffect, useState } from "react";
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { CiCirclePlus } from "react-icons/ci";
+import { twMerge } from "tailwind-merge";
+import { BsCheckAll } from "react-icons/bs";
 import Icon from "./react-icons.component";
 import ImageLabel from "./image-label.component";
-import { useScopedIntl } from "../hooks/intl.hook";
-import {
-  useFollowMusicianMutation,
-  useUnfollowMusicianMutation,
-} from "../hooks/musician-mutate.hook";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
 import { RefactorMusicianResponse } from "@joytify/shared-types/types";
-import useSidebarState from "../states/sidebar.state";
-import useUserState from "../states/user.state";
-import { timeoutForDelay } from "../lib/timeout.lib";
+import { formatPlaybackDuration } from "../utils/unit-format.util";
 
 type MusicianHeroSectionProps = {
+  fm: ScopedFormatMessage;
+  followed: boolean;
   musician: RefactorMusicianResponse;
+  className?: string;
 };
 
-const MusicianHeroSection: React.FC<MusicianHeroSectionProps> = ({ musician }) => {
-  const { fm } = useScopedIntl();
+const MusicianHeroSection: React.FC<MusicianHeroSectionProps> = ({
+  fm,
+  followed,
+  musician,
+  className,
+}) => {
   const musicianRoleFm = fm("musician.role");
   const musicianHeroSectionFm = fm("musician.hero.section");
 
-  const [isFollowing, setIsFollowing] = useState(false);
+  const { name, roles, coverImage, songs, albums } = musician;
 
-  const { authUser } = useUserState();
-  const { collapseSideBarState } = useSidebarState();
-
-  const { mutate: followMusicianFn } = useFollowMusicianMutation();
-  const { mutate: unfollowMusicianFn } = useUnfollowMusicianMutation();
-
-  const handleToggleFollowMusician = useCallback(() => {
-    timeoutForDelay(() => {
-      const musicianId = musician._id;
-
-      if (isFollowing) {
-        unfollowMusicianFn(musicianId);
-        setIsFollowing(false);
-      } else {
-        followMusicianFn(musicianId);
-        setIsFollowing(true);
-      }
-    });
-  }, [isFollowing, musician, followMusicianFn, unfollowMusicianFn]);
-
-  const { isCollapsed } = collapseSideBarState;
-  const { name, roles, coverImage, songs, albums, followers } = musician;
-
-  // check follow status
-  useEffect(() => {
-    if (!authUser) return;
-
-    const followStatus = followers.includes(authUser?._id ?? "");
-
-    setIsFollowing(followStatus);
-  }, [followers, authUser]);
+  const totalDuration = songs.reduce((acc, song) => acc + song.duration, 0);
 
   return (
     <div
-      className={`
-        relative
-        flex
-        px-6
-        gap-x-5
-        w-full
-      `}
+      className={twMerge(
+        `
+          flex
+          w-full
+          px-6
+          gap-x-5
+        `,
+        className
+      )}
     >
       {/* cover image */}
       <ImageLabel
@@ -79,70 +51,43 @@ const MusicianHeroSection: React.FC<MusicianHeroSectionProps> = ({ musician }) =
       <div
         className={`
           flex
+          flex-1
           flex-col
-          w-full
-          lg:py-0
           items-start
-          justify-between
+          justify-evenly
         `}
       >
-        {/* roles */}
-        <p>
-          {roles.map((role, index) => (
-            <span key={`artist-hero-section-${role}`}>
-              {musicianRoleFm(role)}
-              {index < roles.length - 1 && <span className="mx-2">·</span>}
-            </span>
-          ))}
-        </p>
+        {/* type */}
+        <div className={`flex gap-2 items-center`}>
+          {followed && <Icon name={BsCheckAll} opts={{ size: 30 }} className={`text-green-400`} />}
+
+          <p className={`hero-section--type`}>
+            {roles.map((role, index) => (
+              <span key={`artist-hero-section-${role}`}>
+                {musicianRoleFm(role)}
+                {index < roles.length - 1 && <span className="mx-2">·</span>}
+              </span>
+            ))}
+          </p>
+        </div>
 
         {/* name */}
-        <h1
-          style={{ lineHeight: "1.15" }}
-          className={`
-            info-title
-            ${isCollapsed ? "lg:text-[7rem]" : "lg:text-[6.5rem]"}
-          `}
-        >
-          {name}
-        </h1>
+        <h1 className={`info-title`}>{name}</h1>
 
-        {/* other - songs and albums count */}
-        <p className={`text-grey-custom/50 line-clamp-1`}>
+        {/* description */}
+        <p className={`hero-section--description`}>
           {musicianHeroSectionFm("description", {
             songCount: songs.length,
             albumCount: albums.length,
+            duration: formatPlaybackDuration({
+              fm,
+              duration: totalDuration,
+              precise: true,
+              format: "text",
+            }),
           })}
         </p>
       </div>
-
-      {/* following */}
-      <button
-        type="button"
-        onClick={handleToggleFollowMusician}
-        className={`
-          absolute
-          right-10
-          bottom-2
-          flex
-          gap-2
-          p-3
-          border-[0.1px]
-          border-green-500
-          text-sm
-          items-center
-          rounded-md
-          transition-all
-          ${
-            isFollowing
-              ? "bg-green-500 hover:bg-green-500/80 font-light"
-              : "text-green-500 animate-bounce"
-          }
-        `}
-      >
-        <Icon name={isFollowing ? IoMdCheckmarkCircleOutline : CiCirclePlus} opts={{ size: 20 }} />
-        <p>{isFollowing ? "Following" : "Follow"}</p>
-      </button>
     </div>
   );
 };

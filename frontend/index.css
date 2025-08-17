@@ -15,7 +15,8 @@ body,
   height: 100%;
 
   font-size: 15px;
-  letter-spacing: 0.025em;
+  /* letter-spacing: 0.025em; */
+  letter-spacing: 0.05em;
   font-family: "Poppins", sans-serif;
 
   transition-duration: 100ms;
@@ -82,15 +83,22 @@ body,
 
   .info-title {
     @apply text-left
-    max-sm:text-[3.5rem]
-    sm:text-[5rem]
-    md:text-[6rem]
+    text-[clamp(2rem,8vw,6rem)]
+    leading-[1.15]
+    tracking-normal
     font-montserrat
     font-extrabold
-    tracking-normal
-    sm:line-clamp-1
+    line-clamp-1
     sm:break-all
     max-sm:line-clamp-2;
+  }
+
+  .hero-section--type {
+    @apply text-[clamp(0.857rem,2vw,1rem)] text-white;
+  }
+
+  .hero-section--description {
+    @apply text-[clamp(0.857rem,2vw,1rem)] text-white line-clamp-1;
   }
 
   .navbar-link {
@@ -253,14 +261,13 @@ body,
     border-grey-custom/5;
   }
 
-  .settings-page-container {
+  .page-container {
     @apply flex
     flex-col
     min-w-[400px]
-    h-full
-    my-8
-    px-8
-    gap-4;
+    min-h-full
+    p-6
+    gap-5;
   }
 
   .tag-label {
@@ -323,14 +330,59 @@ body,
   }
 
   .stats-card-wrapper {
+    @apply flex flex-col w-full p-8 gap-5 bg-black/30 shadow-lg rounded-md;
+  }
+
+  .manage-card-list-arrange--expanded {
+    @apply grid max-lg:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5;
+  }
+
+  .manage-card-list-arrange--collapsed {
+    @apply grid max-sm:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5;
+  }
+
+  .card-list-arrange--expanded {
+    @apply grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3;
+  }
+
+  .card-list-arrange--collapsed {
+    @apply grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3;
+  }
+
+  .grid-card-wrapper {
     @apply flex
-    flex-col
-    w-full
-    p-8
-    gap-5
-    bg-black/30
-    shadow-lg
-    rounded-md;
+      flex-col
+      h-fit
+      p-2
+      gap-2
+      shrink-0
+      text-left
+      hover:bg-neutral-400/10
+      hover:shadow-[0px_0px_5px_rgba(0,0,0,0.5)]
+      hover:shadow-neutral-900/50
+      rounded-md
+      cursor-pointer
+      transition-all;
+  }
+
+  .grid-card-wrapper--background {
+    @apply grid-card-wrapper bg-neutral-500/10 hover:bg-neutral-200/10 duration-200;
+  }
+
+  .matching-card-highlight {
+    @apply border-2 border-purple-400/10 shadow-[0_0_10px_rgba(0,0,0,0.5)] shadow-purple-400/50 hover:shadow-purple-400/50;
+  }
+
+  .queue-playbtn--base {
+    @apply absolute bottom-2 right-2 hover:scale-105 shadow-[0_0_10px_rgba(0,0,0,0.5)] shadow-neutral-900;
+  }
+
+  .queue-playbtn--active {
+    @apply translate-y-0 opacity-100;
+  }
+
+  .queue-playbtn--floating {
+    @apply translate-y-1/2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100;
   }
 
   .song-card-details {
@@ -406,11 +458,11 @@ body,
   }
 
   th {
-    @apply py-3 px-8 font-light text-[14px] text-grey-custom/50 whitespace-nowrap;
+    @apply py-3 px-5 font-light text-sm text-grey-custom/50 whitespace-nowrap;
   }
 
   td {
-    @apply py-3 px-8 max-w-[200px] overflow-hidden;
+    @apply py-3 px-5 max-w-[200px] overflow-hidden;
   }
 
   /* Input slider*/

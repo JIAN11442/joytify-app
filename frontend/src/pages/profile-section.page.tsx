@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import Loader from "../components/loader.component";
-import ItemCard from "../components/item-card.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
+import PaginationControl from "../components/pagination-control.component";
+import ProfileCollectionCard from "../components/profile-collection-card.component";
 import { useGetProfileCollectionInfoQuery } from "../hooks/user-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { ProfileCollectionsType } from "@joytify/shared-types/types";
@@ -11,8 +12,8 @@ const ProfileSectionPage = () => {
   const { fm } = useScopedIntl();
   const { section } = useParams();
 
-  const profileCollectionsSectionFm = fm("profile.collections.section");
   const profileSectionPageFm = fm("profile.section.page");
+  const profileCollectionsSectionFm = fm("profile.collections.section");
   const collection = section as ProfileCollectionsType;
 
   const { collapseSideBarState } = useSidebarState();
@@ -23,15 +24,7 @@ const ProfileSectionPage = () => {
   const { docs, totalDocs } = profileCollectionDocs ?? {};
 
   return (
-    <div
-      className={`
-        flex
-        flex-col
-        gap-5
-        py-10
-        px-6
-    `}
-    >
+    <div className={`page-container`}>
       {/* Title */}
       <h1 className={`text-3xl font-bold`}>{profileCollectionsSectionFm(collection)}</h1>
 
@@ -48,26 +41,9 @@ const ProfileSectionPage = () => {
         >
           {/* content */}
           <div
-            className={`
-              grid
-              ${
-                isCollapsed
-                  ? `
-                    max-xs:grid-cols-1
-                    xs:grid-cols-2
-                    sm:grid-cols-3
-                    md:grid-cols-4
-                    lg:grid-cols-5
-                  `
-                  : `
-                    max-xs:grid-cols-1
-                    xs:grid-cols-2
-                    md:grid-cols-3
-                    lg:grid-cols-4
-                  `
-              }
-              gap-5
-            `}
+            className={`${
+              isCollapsed ? "card-list-arrange--collapsed" : "card-list-arrange--expanded"
+            }`}
           >
             {docs.map((doc, index) => {
               const { _id, title, imageUrl } = doc;
@@ -82,69 +58,33 @@ const ProfileSectionPage = () => {
 
               return (
                 <AnimationWrapper key={_id} transition={{ duration: 0.5, delay: 0.1 * index }}>
-                  <ItemCard
+                  <ProfileCollectionCard
                     to={toProfile}
                     title={title}
                     imageUrl={imageUrl}
                     description={description}
-                    className={`
-                      bg-neutral-500/15
-                      hover:bg-neutral-500/30
-                      transition
-                    `}
-                    tw={{
-                      img: `
-                        w-full
-                        max-xs:min-w-[180px]
-                        xs:min-w-[140px]
-                        sm:min-w-[120px]
-                      `,
-                      title: "truncate line-clamp-1 text-ellipsis",
-                    }}
+                    className={`grid-card-wrapper--background`}
+                    tw={{ title: "truncate line-clamp-1 text-ellipsis" }}
                   />
                 </AnimationWrapper>
               );
             })}
           </div>
 
-          {/* load loading */}
-          <div className={`mt-5`}>
-            {isFetching && <Loader loader={{ name: "BeatLoader", size: 12 }} />}
-          </div>
-
-          {/* load status */}
-          <div
-            className={`
-              flex
-              items-center
-              justify-center
-              gap-10
-            `}
+          {/* pagination */}
+          <PaginationControl
+            fm={fm}
+            totalDocs={totalDocs || 0}
+            currentPage={page}
+            currentDocsLength={docs.length}
+            pageControl={{ page, setPage }}
+            className={`mt-5`}
           >
-            {/* load more */}
-            {totalDocs && totalDocs > docs.length && (
-              <button className={`load-btn`} onClick={() => setPage(page + 1)}>
-                {profileSectionPageFm("loadMore")}
-              </button>
-            )}
-
-            {/* load less */}
-            {page > 1 && docs.length > 0 && (
-              <button className={`load-btn`} onClick={() => setPage(1)}>
-                {profileSectionPageFm("loadLess")}
-              </button>
-            )}
-          </div>
+            {isFetching && <Loader loader={{ name: "BeatLoader", size: 12 }} />}
+          </PaginationControl>
         </div>
       ) : (
-        <p
-          className={`
-            text-center
-            text-neutral-100/30
-          `}
-        >
-          {profileSectionPageFm("noData")}
-        </p>
+        <p className={`text-center text-neutral-100/30`}>{profileSectionPageFm("noData")}</p>
       )}
     </div>
   );

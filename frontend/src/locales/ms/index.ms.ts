@@ -9,11 +9,12 @@ import userJSON from "./user.ms.json";
 import songJSON from "./song.ms.json";
 import manageJSON from "./manage.ms.json";
 import settingsJSON from "./settings.ms.json";
-import dashboardJSON from "./dashboard.ms.json";
+import searchJSON from "./search.ms.json";
 import musicianJSON from "./musician.ms.json";
 import albumJSON from "./album.ms.json";
 import profileJSON from "./profile.ms.json";
 import statsJSON from "./stats.ms.json";
+import labelJSON from "./label.ms.json";
 
 const modules = [
   authJSON,
@@ -27,11 +28,12 @@ const modules = [
   songJSON,
   manageJSON,
   settingsJSON,
-  dashboardJSON,
+  searchJSON,
   musicianJSON,
   albumJSON,
   profileJSON,
   statsJSON,
+  labelJSON,
 ];
 
 export default Object.assign({}, ...modules);

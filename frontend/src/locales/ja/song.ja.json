@@ -91,18 +91,23 @@
   "song.playlist.assignment.modal.button.cancel": "キャンセル",
   "song.playlist.assignment.modal.button.submit": "送信",
 
-  "song.list.header.title": "タイトル",
-  "song.list.header.artist": "アーティスト",
-  "song.list.header.album": "アルバム",
-  "song.list.header.date": "作成日",
-
-  "song.list.arrangement.menu.layout.title": "表示方式",
-  "song.list.arrangement.menu.layout.grid": "グリッド",
-  "song.list.arrangement.menu.layout.list": "リスト",
-  "song.list.arrangement.menu.layout.compact": "コンパクト",
+  "song.tableList.header.title": "タイトル",
+  "song.tableList.header.artist": "アーティスト",
+  "song.tableList.header.album": "アルバム",
+  "song.tableList.header.date": "作成日",
+  "song.tableList.arrangement.menu.layout.title": "表示方式",
+  "song.tableList.arrangement.menu.layout.grid": "グリッド",
+  "song.tableList.arrangement.menu.layout.list": "リスト",
+  "song.tableList.arrangement.menu.layout.compact": "コンパクト",
+  "song.tableList.actions.navigateToMain": "楽曲ページへ移動",
+  "song.tableList.actions.addToPlaylist": "プレイリストに追加",
+  "song.tableList.actions.rate": "この楽曲を評価",
+  "song.tableList.noSongs.1": "まだ楽曲がありません",
+  "song.tableList.noSongs.2": "サイドバーの <strong>+</strong> ボタンから音楽をアップロードできます",
 
   "song.hero.section.type": "楽曲",
   "song.action.panel.menu.editDetails": "楽曲情報を編集",
   "song.action.panel.menu.assignmentPlaylist": "プレイリストに追加",
+  "song.action.panel.menu.rate": "この楽曲を評価",
   "song.comment.list.title": "他のユーザーの評価 ({count})"
 }

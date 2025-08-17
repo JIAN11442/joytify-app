@@ -1,4 +1,4 @@
 {
   "album.hero.section.type": "アルバム",
-  "album.hero.section.description": "{count}曲収録"
+  "album.hero.section.description": "{count}曲収録 · {duration}"
 }

@@ -77,6 +77,7 @@ const SongRateModal = () => {
   if (!song) return null;
 
   const { title, artist, imageUrl, paletee, favorites } = song;
+  const { name: artistName } = artist;
 
   const isLikedByUser = authUser && favorites?.includes(authUser._id);
   const isDirty =
@@ -96,7 +97,7 @@ const SongRateModal = () => {
         {/* song item */}
         <SongTitleItem
           title={title}
-          artist={artist}
+          artist={artistName}
           imageUrl={imageUrl}
           style={{
             backgroundImage: `linear-gradient(

@@ -13,9 +13,8 @@
   "manage.songs.overview.totalPlaybackCount": "Jumlah Main Balik",
   "manage.songs.overview.totalWeightedPlaybackDuration": "Jumlah Tempoh Main Balik Berwajaran",
   "manage.songs.overview.averageRating": "Penilaian Purata",
-
   "manage.songs.list.noSongs": "Belum ada lagu",
-  "manage.songs.list.noFound": "Tiada lagu dijumpai",
+  "manage.songs.list.noFound": "Tiada lagu dijumpai untuk <strong>\"{searchQuery}\"</strong>",
 
   "manage.playlists.title": "Pengurusan Senarai Main",
   "manage.playlists.description": "Urus senarai main anda",
@@ -55,8 +54,6 @@
   "manage.notification.controlPanel.artistUpdates": "Kemas Kini Artis",
   "manage.notification.controlPanel.systemAnnouncements": "Pengumuman Sistem",
 
-  "manage.notification.list.loadMore": "Muatkan lebih banyak",
-  "manage.notification.list.loadLess": "Tutup",
   "manage.notification.card.unread": "Belum dibaca",
   "manage.notification.card.monthlyStats.title": "Laporan Statistik Bulanan {month}",
   "manage.notification.card.artistUpdate.title": "{artist} baru sahaja dikemas kini dengan {additionalInfo}",
@@ -70,6 +67,7 @@
   "manage.notification.card.artistUpdate.description.additionalInfo.newSong": "menambah lagu baharu <span>{song}</span>",
   "manage.notification.card.artistUpdate.description.additionalInfo.newSongToAlbum": "menambah lagu baharu <span>{song}</span> ke dalam album <span>{album}</span>",
   "manage.notification.card.systemAnnouncement.description": "Platform akan menjalankan penyelenggaraan sistem pada <span>{date}</span> dari <span>{startTime}</span> hingga <span>{endTime}</span>",
+  "manage.notification.list.somethingWentWrong": "Terjadi kesalahan, sila cuba lagi nanti",
   "manage.notification.list.noNotifications": "Tiada notifikasi",
 
   "manage.notification.card.menu.markAsRead": "Tanda sebagai telah dibaca",

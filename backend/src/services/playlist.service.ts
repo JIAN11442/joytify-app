@@ -9,13 +9,8 @@ import {
   UpdatePlaylistRequest,
   PopulatedPlaylistResponse,
   RefactorPlaylistResponse,
-  SongResponse,
-  Musician,
-  Label,
-  Album,
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
-import { joinLabels } from "../utils/join-labels.util";
 
 interface CreatePlaylistServiceRequest extends CreatePlaylistRequest {
   userId: string;
@@ -51,7 +46,6 @@ export const getUserPlaylists = async (userId: string, query: string) => {
   }
 
   const defaultPlaylist = await PlaylistModel.findOne(defaultQueryParams);
-
   const userPlaylists = await PlaylistModel.find(userQueryParams).sort({ createdAt: -1 });
 
   const playlists = [...(defaultPlaylist ? [defaultPlaylist] : []), ...userPlaylists].filter(
@@ -63,38 +57,15 @@ export const getUserPlaylists = async (userId: string, query: string) => {
 
 // get playlist by id service
 export const getUserPlaylistById = async (playlistId: string, userId: string) => {
-  // get playlist info
   const playlist = await PlaylistModel.findOne({
     _id: playlistId,
     user: userId,
   })
-    .populate({
-      path: "songs",
-      populate: [
-        { path: "artist", select: "name", transform: (doc: Musician) => doc.name },
-        { path: "composers", select: "name", transform: (doc: Musician) => doc.name },
-        { path: "lyricists", select: "name", transform: (doc: Musician) => doc.name },
-        { path: "languages", select: "label", transform: (doc: Label) => doc.label },
-        { path: "album", select: "title", transform: (doc: Album) => doc.title },
-      ],
-    })
-    .lean<PopulatedPlaylistResponse>();
+    .populateNestedSongDetails()
+    .refactorSongData<PopulatedPlaylistResponse>({ transformNestedSongs: true })
+    .lean<RefactorPlaylistResponse>();
 
-  appAssert(playlist, NOT_FOUND, "Playlist not found");
-
-  // refactor playlist songs's params from array to string
-  const refactorPlaylist: RefactorPlaylistResponse = {
-    ...playlist,
-    songs: playlist.songs.map((song: SongResponse) => ({
-      ...song,
-      lyricists: joinLabels(song.lyricists),
-      composers: joinLabels(song.composers),
-      languages: joinLabels(song.languages),
-      album: song.album || "",
-    })),
-  };
-
-  return { playlist: refactorPlaylist };
+  return { playlist };
 };
 
 // create new playlist service

@@ -27,28 +27,31 @@ const ProfilePage = () => {
           #171717 70%
         )`,
       }}
-      className={`
-        min-h-screen
-        pt-10
-        rounded-b-none
-      `}
+      className={`min-h-screen rounded-b-none overflow-x-hidden pt-10`}
     >
+      {/* hero section */}
       <ProfileHeroSection fm={fm} profileUser={profileUser} />
 
+      {/* content section */}
       <div
         className={`
           flex
           flex-col
           mt-10
+          p-6
+          gap-5
           w-full
           h-full
-          p-6
           bg-gradient-to-b
           from-neutral-900/20
           to-neutral-900
+          overflow-y-auto
         `}
       >
+        {/* action panel */}
         <ProfileActionPanel fm={fm} profileUser={profileUser} />
+
+        {/* collections section */}
         <ProfileCollectionsSection fm={fm} profileUser={profileUser} />
       </div>
     </div>

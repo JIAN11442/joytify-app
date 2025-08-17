@@ -1,16 +1,12 @@
 import AlbumModel from "../models/album.model";
 import { HttpCode } from "@joytify/shared-types/constants";
 import {
-  Album,
   CreateAlbumRequest,
-  Label,
   Musician,
   PopulatedAlbumResponse,
   RefactorAlbumResponse,
-  SongResponse,
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
-import { joinLabels } from "../utils/join-labels.util";
 
 interface CreateAlbumServiceRequest extends CreateAlbumRequest {
   userId: string;
@@ -33,40 +29,20 @@ export const getUserAlbums = async (userId: string) => {
 // get album by id service
 export const getAlbumById = async (id: string) => {
   const album = await AlbumModel.findById(id)
-    .populate({
-      path: "songs",
-      populate: [
-        { path: "artist", select: "name", transform: (doc: Musician) => doc.name },
-        { path: "composers", select: "name", transform: (doc: Musician) => doc.name },
-        { path: "lyricists", select: "name", transform: (doc: Musician) => doc.name },
-        { path: "languages", select: "label", transform: (doc: Label) => doc.label },
-        { path: "album", select: "title", transform: (doc: Album) => doc.title },
-      ],
-    })
-    .lean<PopulatedAlbumResponse>();
+    .populate({ path: "artists", select: "name", transform: (doc: Musician) => doc.name })
+    .populateNestedSongDetails()
+    .refactorSongData<PopulatedAlbumResponse>({ transformNestedSongs: true })
+    .lean<RefactorAlbumResponse>();
 
-  appAssert(album, NOT_FOUND, "Album not found");
-
-  const refactorAlbum: RefactorAlbumResponse = {
-    ...album,
-    songs: album.songs.map((song: SongResponse) => ({
-      ...song,
-      lyricists: joinLabels(song.lyricists),
-      composers: joinLabels(song.composers),
-      languages: joinLabels(song.languages),
-      album: song.album || "",
-    })),
-  };
-
-  return { album: refactorAlbum };
+  return { album };
 };
 
 // create album service
 export const createAlbum = async (params: CreateAlbumServiceRequest) => {
-  const { userId, title, artist, ...rest } = params;
+  const { userId, title, artists, ...rest } = params;
 
   let album = await AlbumModel.findOneAndUpdate(
-    { title, artist },
+    { title, artists },
     { $addToSet: { users: userId } },
     { new: true }
   );
@@ -75,7 +51,7 @@ export const createAlbum = async (params: CreateAlbumServiceRequest) => {
   if (!album) {
     album = await AlbumModel.create({
       title,
-      artist,
+      artists,
       users: [userId],
       ...rest,
     });

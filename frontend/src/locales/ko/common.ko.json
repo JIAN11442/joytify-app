@@ -5,6 +5,18 @@
   "musician.role.composer": "작곡가",
   "musician.role.lyricist": "작사가",
 
+  "label.type.language": "언어",
+  "label.type.tag": "태그",
+  "label.type.genre": "장르",
+  "label.type.theme": "테마",
+  "label.type.feature": "특징",
+  "label.type.region": "지역",
+  "label.type.country": "국가",
+  "label.type.gender": "성별",
+
+  "pagination.loadMore": "더 보기",
+  "pagination.loadLess": "접기",
+
   "gender.male": "남성",
   "gender.female": "여성",
   "gender.nonBinary": "논바이너리",

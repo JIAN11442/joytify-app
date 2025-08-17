@@ -1,6 +1,6 @@
 {
   "profile.hero.section.type": "Profile",
-  "profile.hero.section.description": "{totalPlaylists} playlists · {totalSongs} songs",
+  "profile.hero.section.description": "{playlistCount} playlists · {albumCount} albums · {followingCount} following · {songCount} songs",
 
   "profile.action.panel.editDetails": "Edit details",
 

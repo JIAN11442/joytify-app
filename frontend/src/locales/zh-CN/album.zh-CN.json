@@ -1,4 +1,4 @@
 {
   "album.hero.section.type": "专辑",
-  "album.hero.section.description": "{count} 首歌曲"
+  "album.hero.section.description": "{count} 首歌曲 · {duration}"
 }

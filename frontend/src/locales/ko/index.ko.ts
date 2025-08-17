@@ -9,11 +9,12 @@ import userJSON from "./user.ko.json";
 import songJSON from "./song.ko.json";
 import manageJSON from "./manage.ko.json";
 import settingsJSON from "./settings.ko.json";
-import dashboardJSON from "./dashboard.ko.json";
+import searchJSON from "./search.ko.json";
 import musicianJSON from "./musician.ko.json";
 import albumJSON from "./album.ko.json";
 import profileJSON from "./profile.ko.json";
 import statsJSON from "./stats.ko.json";
+import labelJSON from "./label.ko.json";
 
 const modules = [
   authJSON,
@@ -27,11 +28,12 @@ const modules = [
   songJSON,
   manageJSON,
   settingsJSON,
-  dashboardJSON,
+  searchJSON,
   musicianJSON,
   albumJSON,
   profileJSON,
   statsJSON,
+  labelJSON,
 ];
 
 export default Object.assign({}, ...modules);

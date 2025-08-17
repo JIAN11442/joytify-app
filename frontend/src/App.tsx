@@ -21,6 +21,7 @@ import ManageFollowingPage from "./pages/manage-following.page";
 import MusicianPage from "./pages/musician.page";
 import AlbumPage from "./pages/album.page";
 import SongPage from "./pages/song.page";
+import LabelPage from "./pages/label.page";
 import MonthlyStatsPage from "./pages/monthly-stats.page";
 import ManageNotificationPage from "./pages/manage-notification.page";
 import { setNavigate } from "./lib/navigate.lib";
@@ -35,7 +36,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Sidebar />}>
         <Route index element={<HomePage />} />
-        <Route path="search" element={<SearchPage />} />
+        <Route path="search/:type" element={<SearchPage />} />
 
         {/* Private pages(need login) */}
         <Route element={<AuthGuardContainerPage />}>
@@ -43,6 +44,7 @@ function App() {
           <Route path="/musician/:id" element={<MusicianPage />} />
           <Route path="/album/:id" element={<AlbumPage />} />
           <Route path="/song/:id" element={<SongPage />} />
+          <Route path="/:labelType/:id" element={<LabelPage />} />
 
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/profile/:id/:section" element={<ProfileSectionPage />} />

@@ -5,6 +5,18 @@
   "musician.role.composer": "Komposer",
   "musician.role.lyricist": "Penulis Lirik",
 
+  "label.type.language": "Bahasa",
+  "label.type.tag": "Tag",
+  "label.type.genre": "Genre",
+  "label.type.theme": "Tema",
+  "label.type.feature": "Ciri",
+  "label.type.region": "Wilayah",
+  "label.type.country": "Negara",
+  "label.type.gender": "Jantina",
+
+  "pagination.loadMore": "Lihat Lagi",
+  "pagination.loadLess": "Tutup",
+
   "gender.male": "Lelaki",
   "gender.female": "Perempuan",
   "gender.nonBinary": "Bukan binari",

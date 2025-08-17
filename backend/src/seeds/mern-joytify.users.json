@@ -1,0 +1,471 @@
+[{
+  "_id": {
+    "$oid": "6803caa78298bd83e106a989"
+  },
+  "email": "test36@gmail.com",
+  "password": "$2b$10$fLIrxRXEjCRecR0Lr6.uM.LiApxb6t4u97g9weGxY0Dk/UO76eqdi",
+  "username": "test36?nanoid=V44qw?nanoid=-2xO6?nanoid=pJSTJ",
+  "profileImage": "https://api.dicebear.com/6.x/adventurer-neutral/svg?seed=Garfield",
+  "verified": true,
+  "authForThirdParty": false,
+  "paletee": {
+    "vibrant": "#de8020",
+    "darkVibrant": "#734310",
+    "lightVibrant": "#f4d4b3",
+    "muted": "#998673",
+    "darkMuted": "#444444",
+    "lightMuted": "#c4af9a"
+  },
+  "playlists": [
+    {
+      "$oid": "6803caa88298bd83e106a98c"
+    },
+    {
+      "$oid": "68551529858871a2b8ed53a7"
+    }
+  ],
+  "songs": [
+    {
+      "$oid": "6805208d7fa3469c9cb850f1"
+    },
+    {
+      "$oid": "685bedc0b6b998276c9a0e32"
+    }
+  ],
+  "albums": [],
+  "following": [
+    {
+      "$oid": "67d45c398383ed54b105126c"
+    }
+  ],
+  "notifications": [
+    {
+      "id": {
+        "$oid": "68872f936a00def6b38ca9ea"
+      },
+      "viewed": false,
+      "read": false
+    },
+    {
+      "id": {
+        "$oid": "688750629f0bcad3a0812db8"
+      },
+      "viewed": false,
+      "read": false
+    },
+    {
+      "id": {
+        "$oid": "688b4221d5f52e55e715944a"
+      },
+      "viewed": false,
+      "read": false
+    }
+  ],
+  "accountInfo": {
+    "totalPlaylists": 2,
+    "totalSongs": 2,
+    "totalAlbums": 0,
+    "totalFollowing": 8
+  },
+  "personalInfo": {
+    "gender": null,
+    "country": null,
+    "dateOfBirth": null
+  },
+  "userPreferences": {
+    "sidebarCollapsed": true,
+    "locale": "en-US",
+    "player": {
+      "shuffle": false,
+      "loop": "none",
+      "volume": 0.5,
+      "playlistSongs": [],
+      "playbackQueue": {
+        "queue": [],
+        "currentIndex": 0
+      }
+    },
+    "notifications": {
+      "monthlyStatistic": true,
+      "followingArtistUpdate": true,
+      "systemAnnouncement": true
+    }
+  },
+  "createdAt": {
+    "$date": "2025-04-19T16:09:11.742Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-06T09:01:15.489Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "681706c9a5b1c9e41b32f823"
+  },
+  "email": "yikjian11442@gmail.com",
+  "password": "$2b$10$EEoIeupw2YrcdGeCCtda4uE7KenBPR9lj/HiUqe1pCVeMTvo7P5x.",
+  "username": "jian11442?nanoid=9SSOh",
+  "profileImage": "https://lh3.googleusercontent.com/a/ACg8ocKUVFA-F2x2U9x1nHZnGmdyDCFamCtRNj4lBymWnKr1vPu5GeP7=s384-c",
+  "verified": true,
+  "authForThirdParty": true,
+  "paletee": {
+    "vibrant": "#30fbfb",
+    "darkVibrant": "#1c0c44",
+    "lightVibrant": "#6ae8ec",
+    "muted": "#68aca4",
+    "darkMuted": "#3c305c",
+    "lightMuted": "#d0e7e7"
+  },
+  "playlists": [
+    {
+      "$oid": "681706caa5b1c9e41b32f826"
+    }
+  ],
+  "songs": [],
+  "albums": [],
+  "following": [],
+  "notifications": [
+    {
+      "id": {
+        "$oid": "68872f936a00def6b38ca9ea"
+      },
+      "viewed": false,
+      "read": false
+    }
+  ],
+  "accountInfo": {
+    "totalPlaylists": 1,
+    "totalSongs": 0,
+    "totalAlbums": 0,
+    "totalFollowing": 0
+  },
+  "personalInfo": {
+    "gender": {
+      "$oid": "67f479dc8e69de6d5e0ceebe"
+    },
+    "country": {
+      "$oid": "67ff051ba5776f9034c79e4f"
+    },
+    "dateOfBirth": {
+      "$date": "1998-01-05T00:00:00.000Z"
+    }
+  },
+  "userPreferences": {
+    "sidebarCollapsed": true,
+    "locale": "ja",
+    "player": {
+      "shuffle": false,
+      "loop": "playlist",
+      "volume": 0.5,
+      "playlistSongs": [
+        {
+          "$oid": "6805208d7fa3469c9cb850f1"
+        },
+        {
+          "$oid": "67e8daaad8a735b80d4ec218"
+        },
+        {
+          "$oid": "67d438c79e1e897be0e0f870"
+        },
+        {
+          "$oid": "67d8ec93d8f69a01d8512bb7"
+        },
+        {
+          "$oid": "67d45c3a8383ed54b1051276"
+        },
+        {
+          "$oid": "67d439319e1e897be0e0f8a0"
+        },
+        {
+          "$oid": "685bedc0b6b998276c9a0e32"
+        },
+        {
+          "$oid": "6887505f9f0bcad3a0812da6"
+        }
+      ],
+      "playbackQueue": {
+        "queue": [
+          {
+            "$oid": "6805208d7fa3469c9cb850f1"
+          },
+          {
+            "$oid": "67e8daaad8a735b80d4ec218"
+          },
+          {
+            "$oid": "67d438c79e1e897be0e0f870"
+          },
+          {
+            "$oid": "67d8ec93d8f69a01d8512bb7"
+          },
+          {
+            "$oid": "67d45c3a8383ed54b1051276"
+          },
+          {
+            "$oid": "67d439319e1e897be0e0f8a0"
+          },
+          {
+            "$oid": "685bedc0b6b998276c9a0e32"
+          },
+          {
+            "$oid": "6887505f9f0bcad3a0812da6"
+          }
+        ],
+        "currentIndex": 3
+      }
+    },
+    "notifications": {
+      "monthlyStatistic": true,
+      "followingArtistUpdate": true,
+      "systemAnnouncement": true
+    }
+  },
+  "createdAt": {
+    "$date": "2025-05-04T06:18:49.099Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-06T09:01:15.489Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68555873fb654775d8de8490"
+  },
+  "email": "test37@gmail.com",
+  "password": "$2b$10$rJq/3C1qhSV4fyCoLjTyJegVZimgeA6c8rbBEiBUa9g8F4D6b9s8i",
+  "username": "test37?nanoid=gOlJC",
+  "profileImage": "https://api.dicebear.com/6.x/adventurer-neutral/svg?seed=Abby",
+  "verified": true,
+  "authForThirdParty": false,
+  "paletee": {
+    "vibrant": "#8b2c44",
+    "darkVibrant": "#641f31",
+    "lightVibrant": "#f4d4b4",
+    "muted": "#9d8a75",
+    "darkMuted": "#403e3c",
+    "lightMuted": "#c4aa8f"
+  },
+  "playlists": [
+    {
+      "$oid": "68555874fb654775d8de8493"
+    }
+  ],
+  "songs": [
+    {
+      "$oid": "6887505f9f0bcad3a0812da6"
+    }
+  ],
+  "albums": [
+    {
+      "$oid": "67d45b6c8383ed54b1051268"
+    }
+  ],
+  "following": [
+    {
+      "$oid": "67d45c398383ed54b105126c"
+    }
+  ],
+  "notifications": [
+    {
+      "id": {
+        "$oid": "68872f936a00def6b38ca9ea"
+      },
+      "viewed": false,
+      "read": false
+    },
+    {
+      "id": {
+        "$oid": "688b4221d5f52e55e715944a"
+      },
+      "viewed": false,
+      "read": false
+    }
+  ],
+  "accountInfo": {
+    "totalPlaylists": 1,
+    "totalSongs": 1,
+    "totalAlbums": 1,
+    "totalFollowing": 36
+  },
+  "personalInfo": {
+    "gender": null,
+    "country": null,
+    "dateOfBirth": null
+  },
+  "userPreferences": {
+    "notifications": {
+      "monthlyStatistic": true,
+      "followingArtistUpdate": true,
+      "systemAnnouncement": true
+    },
+    "player": {
+      "shuffle": false,
+      "loop": "none",
+      "volume": 0.5,
+      "playlistSongs": [],
+      "playbackQueue": {
+        "queue": [],
+        "currentIndex": 0
+      }
+    },
+    "sidebarCollapsed": true,
+    "locale": "en-US"
+  },
+  "createdAt": {
+    "$date": "2025-06-20T12:47:47.468Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-06T09:01:15.489Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67d456398383ed54b105123f"
+  },
+  "email": "test35@gmail.com",
+  "password": "$2b$10$RT9rFFuqazVsQN/nrjXnsO/lIRmbTv6D.wwTnuiWD2zfeXYcW9S5S",
+  "username": "JIAN?nanoid=Eaef3?nanoid=w4ULV?nanoid=cHI9V",
+  "profileImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/users/image/vARdgbqmAY8EKwbDB_5YW-1743992117797.png",
+  "verified": true,
+  "authForThirdParty": false,
+  "paletee": {
+    "vibrant": "#982f1e",
+    "darkVibrant": "#734030",
+    "lightVibrant": "#e99c90",
+    "muted": "#9c786c",
+    "darkMuted": "#594a3e",
+    "lightMuted": "#bcc4c4"
+  },
+  "playlists": [
+    {
+      "$oid": "67d4563a8383ed54b1051242"
+    },
+    {
+      "$oid": "67d45a428383ed54b1051253"
+    },
+    {
+      "$oid": "67d6eeb73f16a433b9daeb12"
+    },
+    {
+      "$oid": "67e136dc3715a7fd61adf063"
+    },
+    {
+      "$oid": "67e136e03715a7fd61adf074"
+    },
+    {
+      "$oid": "67e136e23715a7fd61adf084"
+    },
+    {
+      "$oid": "67e136e53715a7fd61adf0a4"
+    },
+    {
+      "$oid": "67e136e73715a7fd61adf0b4"
+    },
+    {
+      "$oid": "67eb765ebd240d1938814ab6"
+    },
+    {
+      "$oid": "685bd117a661ac54cd5fd2be"
+    },
+    {
+      "$oid": "6860b686f69687e6e4d659fa"
+    }
+  ],
+  "songs": [
+    {
+      "$oid": "67d45c3a8383ed54b1051276"
+    },
+    {
+      "$oid": "67d8ec93d8f69a01d8512bb7"
+    },
+    {
+      "$oid": "67e8daaad8a735b80d4ec218"
+    }
+  ],
+  "albums": [
+    {
+      "$oid": "67d45b6c8383ed54b1051268"
+    }
+  ],
+  "following": [
+    {
+      "$oid": "67d45c398383ed54b105126c"
+    }
+  ],
+  "notifications": [
+    {
+      "id": {
+        "$oid": "68872f936a00def6b38ca9ea"
+      },
+      "viewed": false,
+      "read": false
+    },
+    {
+      "id": {
+        "$oid": "688750629f0bcad3a0812db8"
+      },
+      "viewed": false,
+      "read": false
+    },
+    {
+      "id": {
+        "$oid": "688b4221d5f52e55e715944a"
+      },
+      "viewed": true,
+      "read": true
+    }
+  ],
+  "accountInfo": {
+    "totalPlaylists": 11,
+    "totalSongs": 3,
+    "totalAlbums": 1,
+    "totalFollowing": 1
+  },
+  "personalInfo": {
+    "dateOfBirth": {
+      "$date": "1998-03-05T00:00:00.000Z"
+    },
+    "country": {
+      "$oid": "6801230f3b2175de8899a604"
+    },
+    "gender": {
+      "$oid": "67f479dc8e69de6d5e0ceebe"
+    }
+  },
+  "userPreferences": {
+    "sidebarCollapsed": true,
+    "locale": "en-US",
+    "player": {
+      "shuffle": false,
+      "loop": "none",
+      "volume": 0.5,
+      "playlistSongs": [
+        {
+          "$oid": "67d438c79e1e897be0e0f870"
+        }
+      ],
+      "playbackQueue": {
+        "queue": [
+          {
+            "$oid": "67d438c79e1e897be0e0f870"
+          }
+        ],
+        "currentIndex": 0
+      }
+    },
+    "notifications": {
+      "monthlyStatistic": true,
+      "followingArtistUpdate": true,
+      "systemAnnouncement": true
+    }
+  },
+  "createdAt": {
+    "$date": "2025-03-14T16:15:53.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:08:21.435Z"
+  },
+  "__v": 0
+}]

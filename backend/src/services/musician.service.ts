@@ -1,19 +1,14 @@
 import { FilterQuery } from "mongoose";
 
+import UserModel from "../models/user.model";
 import MusicianModel, { MusicianDocument } from "../models/musician.model";
 import { HttpCode } from "@joytify/shared-types/constants";
 import {
-  Album,
-  Label,
-  Musician,
   GetMusicianIdRequest,
   PopulatedMusicianResponse,
   RefactorMusicianResponse,
-  SongResponse,
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
-import { joinLabels } from "../utils/join-labels.util";
-import UserModel from "../models/user.model";
 
 const { INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;
 
@@ -58,32 +53,11 @@ export const getMusicianId = async (params: GetMusicianIdRequest) => {
 // get musician by id
 export const getMusicianById = async (id: string) => {
   const musician = await MusicianModel.findById(id)
-    .populate({
-      path: "songs",
-      populate: [
-        { path: "artist", select: "name", transform: (doc: Musician) => doc.name },
-        { path: "composers", select: "name", transform: (doc: Musician) => doc.name },
-        { path: "lyricists", select: "name", transform: (doc: Musician) => doc.name },
-        { path: "languages", select: "label", transform: (doc: Label) => doc.label },
-        { path: "album", select: "title", transform: (doc: Album) => doc.title },
-      ],
-    })
-    .lean<PopulatedMusicianResponse>();
+    .populateNestedSongDetails()
+    .refactorSongData<PopulatedMusicianResponse>({ transformNestedSongs: true })
+    .lean<RefactorMusicianResponse>();
 
-  appAssert(musician, NOT_FOUND, "Musician not found");
-
-  const refactorMusician: RefactorMusicianResponse = {
-    ...musician,
-    songs: musician.songs.map((song: SongResponse) => ({
-      ...song,
-      lyricists: joinLabels(song.lyricists),
-      composers: joinLabels(song.composers),
-      languages: joinLabels(song.languages),
-      album: song.album || "",
-    })),
-  };
-
-  return { musician: refactorMusician };
+  return { musician };
 };
 
 // get user following musicians

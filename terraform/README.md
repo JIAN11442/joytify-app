@@ -1,4 +1,4 @@
-# <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/joytify-logo.svg" alt="Joytify" width="26" height="26"> Joytify Terraform Infrastructure
+# <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/logo.svg" alt="Joytify" width="26" height="26"> Joytify Terraform Infrastructure
 
 > Infrastructure as Code for Joytify's serverless data processing pipeline with automated statistics and intelligent cleanup
 

@@ -6,9 +6,9 @@ import {
   getUserUnviewedNotificationCount,
 } from "../fetchs/notification.fetch";
 import { useMarkNotificationsAsViewedMutation } from "./notification-mutate.hook";
-import { NotificationTypeOptions } from "@joytify/shared-types/constants";
+import { NotificationFilterOptions } from "@joytify/shared-types/constants";
 import { QueryKey } from "../constants/query-client-key.constant";
-import { NotificationType } from "@joytify/shared-types/types";
+import { NotificationFilterType } from "@joytify/shared-types/types";
 import useNotificationState from "../states/notification.state";
 import useUserState from "../states/user.state";
 import { playNotificationSound } from "../lib/notification-audio.lib";
@@ -20,8 +20,11 @@ const useNotificationCommon = () => {
   return { userId };
 };
 
-export const useGetUserNotificationsByTypeQuery = (type: NotificationType, opts: object = {}) => {
-  const { ALL } = NotificationTypeOptions;
+export const useGetUserNotificationsByTypeQuery = (
+  type: NotificationFilterType,
+  opts: object = {}
+) => {
+  const { ALL } = NotificationFilterOptions;
 
   const [page, setPage] = useState(1);
   const [isQueryError, setIsQueryError] = useState(false);

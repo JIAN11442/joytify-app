@@ -6,6 +6,8 @@ import {
   CreateLabelRequest,
   GetLabelIdRequest,
   LabelOptionsType,
+  PopulatedSearchLabelResponse,
+  RefactorSearchLabelResponse,
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 
@@ -118,6 +120,16 @@ export const getLabelId = async (params: GetLabelIdRequest) => {
   appAssert(label, NOT_FOUND, "Label is not found");
 
   return { id: label._id };
+};
+
+// get label by id service
+export const getLabelById = async (id: string) => {
+  const label = await LabelModel.findById(id)
+    .populateNestedSongDetails()
+    .refactorSongData<PopulatedSearchLabelResponse>({ transformNestedSongs: true })
+    .lean<RefactorSearchLabelResponse>();
+
+  return { label };
 };
 
 // create label service

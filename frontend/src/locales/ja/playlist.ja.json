@@ -3,7 +3,7 @@
   "playlist.item.songs.count": "{count} 曲",
   "playlist.item.description": "{type} · {count}",
 
-  "playlist.hero.section.type": "{type}{separator}{description}",
+  "playlist.hero.section.type": "{type} · {songCount} · {duration}",
 
   "playlist.menu.action.editDetails": "詳細を編集",
   "playlist.menu.action.deletePlaylist": "プレイリストを削除",
@@ -20,7 +20,6 @@
   "playlist.advanced.edit.modal.all.songs.removed": "このプレイリスト内のすべての曲が削除対象に設定されました。変更は保存後に反映されます。",
   "playlist.advanced.edit.modal.button.submit": "変更を保存",
   "playlist.advanced.edit.modal.button.cancel": "キャンセル",
-
   "playlist.advanced.create.modal.title": "プレイリストを作成",
   "playlist.advanced.create.modal.input.title.placeholder": "タイトル",
   "playlist.advanced.create.modal.input.description.placeholder": "説明",

@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 import MusicianModel from "./musician.model";
 import UserModel, { UserDocument } from "./user.model";
 import { broadcastNotificationToUsers } from "../services/notification.service";
-import { NotificationTypeOptions } from "@joytify/shared-types/constants";
-import { NotificationType } from "@joytify/shared-types/types";
+import { NotificationFilterOptions } from "@joytify/shared-types/constants";
+import { NotificationFilterType } from "@joytify/shared-types/types";
 
 export interface NotificationDocument extends mongoose.Document {
-  type: NotificationType;
+  type: NotificationFilterType;
   followingArtistUpdate: {
     uploaderId?: mongoose.Types.ObjectId;
     artistId: mongoose.Types.ObjectId;
@@ -21,11 +21,11 @@ export interface NotificationDocument extends mongoose.Document {
   };
 }
 
-const { FOLLOWING_ARTIST_UPDATE, SYSTEM_ANNOUNCEMENT } = NotificationTypeOptions;
+const { FOLLOWING_ARTIST_UPDATE, SYSTEM_ANNOUNCEMENT } = NotificationFilterOptions;
 
 const notificationSchema = new mongoose.Schema<NotificationDocument>(
   {
-    type: { type: String, enum: Object.values(NotificationTypeOptions), required: true },
+    type: { type: String, enum: Object.values(NotificationFilterOptions), required: true },
     followingArtistUpdate: {
       uploaderId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       artistId: { type: mongoose.Schema.Types.ObjectId, ref: "Musician", index: true },

@@ -1,4 +1,8 @@
-# <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/joytify-logo.svg" alt="Joytify" width="26" height="26"> Joytify - Full-Stack Music Platform
+<!-- 有刪除帳號協議頁面 -->
+<!-- 有音樂權轉讓協議 -->
+<!-- 手刻組件，包括 input，menu 等 -->
+
+# <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/logo.svg" alt="Joytify" width="26" height="26"> Joytify - Full-Stack Music Platform
 
 > A Spotify-inspired music streaming platform built with modern web technologies, featuring user authentication, music upload/playback, playlist management, song rating system, and automated data processing.
 
@@ -40,23 +44,25 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 
 ### Core Music Features
 
-- **🎧 Audio Player** - Full-featured streaming with loop modes, shuffle, queue management
-- **📋 Playlist Management** - Create playlists and assign songs with statistics tracking
 - **🎤 Music Upload** - Upload with comprehensive metadata (lyrics, tags, languages, genres)
-- **🔍 Artist System** - Artist profiles with follow functionality
+- **🎧 Audio Player** - Full-featured streaming with loop modes, shuffle, queue management
+- **🎨 Following System** - Follow musicians and get real-time notifications for their updates
 - **⭐ Song Rating** - 5-star rating with comments and intelligent prompting
-- **📅 Album Management** - Album creation and organization
+- **🔍 Advanced Search** - Cross-collection search for songs, musicians, albums, and labels with intelligent filtering, pagination, and multi-type content display
+- **📋 Playlist Management** - Create playlists and assign songs with statistics tracking
 - **📊 Playback Analytics** - Detailed listening statistics and monthly insights
 
 ### User Experience
 
-- **🔐 Authentication** - Firebase Auth + JWT with session management
-- **🌐 Multi-language Support** - Modular i18n system supporting 6 languages (en-US, zh-CN, zh-TW, ja, ko, ms) with easy expansion capability
-- **🎨 Dynamic Theming** - Auto color palette extraction from album artwork
+- **🔐 Authentication** - Custom registration/login system with JWT + Firebase Auth for third-party login (Google, GitHub), featuring automatic token refresh and seamless session management
+- **📱 Multi-device Sessions** - Cross-device session tracking and automated heartbeat for online status management with 30-day session validity
+- **🍪 User Preferences** – Stores playback state, interface state, and personal settings in cookies for cross-session persistence (retains same state after re-login)
+- **🌐 Multi-language Support** - Static i18n system supporting 6 languages (en-US, zh-CN, zh-TW, ja, ko, ms) with easy expansion capability
+- **🎨 Dynamic Theming** - Auto color palette extraction from images (songs, albums, playlists, musicians, users) with gradient hero sections
+- **⌨️ Keyboard Shortcuts** - Debounced key processing with user preference persistence
 - **🔔 Real-time Notifications** - Live updates via Socket.io for uploads and announcements
-- **📊 Analytics Dashboard** - Monthly listening insights with animated visualizations
-- **📱 Multi-device Sessions** - Cross-device session tracking with automated heartbeat and online status management
 - **📧 Email System** - Professional React Email templates for verification and notifications
+- **📊 Analytics Dashboard** - Monthly listening insights with animated visualizations
 
 <!--
 <div align="center">
@@ -97,6 +103,10 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 - **React Email** + **Resend** – Component-based email templates and delivery
 - **Socket.IO** – Real-time notifications with authentication middleware
 
+### Type Sharing & Architecture
+
+- **Monorepo Type Sharing** – Shared TypeScript interfaces between frontend and backend with ESM/CJS dual builds for cross-environment compatibility
+
 ### DevOps & Infrastructure
 
 - **Terraform** – Infrastructure as Code (IaC)
@@ -105,14 +115,6 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 - **AWS CloudWatch** – Scheduled tasks, metrics, and log management
 - **Discord Webhook** – Real-time alert and execution summaries
 
-### Development & Architecture
-
-- **Monorepo Architecture** – Shared TypeScript interfaces between frontend and backend
-- **Private NPM Package** – ESM/CJS dual builds for cross-environment compatibility
-- **Database Seeding** – Multi-language label system and development data tools
-- **Keyboard Shortcuts Provider** – Debounced key processing with user preference persistence
-- **Component Composition** – 138 React components (PlaybackControls, RatingModal, AuthButton) with reusable patterns
-
 ---
 
 ## 🏗️ System Architecture
@@ -120,8 +122,8 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 ```mermaid
 graph TB
     subgraph "🎵 Application Layer"
-        FE[React Frontend<br/>138 Components]
-        BE[Node.js Backend<br/>17 Controllers]
+        FE[React Frontend<br/>157 Components<br/>15 Services]
+        BE[Node.js Backend<br/>18 Controllers<br/>13 Models]
         ST[Shared Types<br/>NPM Package]
     end
 
@@ -168,7 +170,7 @@ graph TB
 
 Joytify follows a modern three-layer architecture:
 
-- **🎵 Application Layer**: React frontend (138 components) with Node.js backend (17 controllers), sharing types via NPM package
+- **🎵 Application Layer**: React frontend (157 components, 15 services) with Node.js backend (18 controllers, 13 models), sharing types via NPM package
 - **🏗️ Processing Layer**: Scheduled AWS Lambda functions for statistics generation and data cleanup
 - **☁️ Infrastructure**: Serverless architecture with CloudWatch schedules, SNS messaging, and MongoDB Atlas
 

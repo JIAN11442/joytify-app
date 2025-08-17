@@ -18,6 +18,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
   if (!song || !authUser) return null;
 
   const { title, imageUrl, artist, ownership } = song;
+  const { name: artistName } = artist;
   const isUserOwned = song.creator === authUser._id && !ownership.isPlatformOwned;
 
   const handleNavigateToPlaylist = () => {
@@ -60,7 +61,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
         <SongTitleItem
           title={title}
           imageUrl={imageUrl}
-          artist={artist}
+          artist={artistName}
           switchFunc={false}
           onClick={handleNavigateToPlaylist}
           className={{

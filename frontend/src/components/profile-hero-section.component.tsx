@@ -1,27 +1,25 @@
+import { twMerge } from "tailwind-merge";
 import ImageLabel from "./image-label.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { useUpdateUserMutation } from "../hooks/user-mutate.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
 import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
-import useSidebarState from "../states/sidebar.state";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type ProfileHeroSectionProps = {
   fm: ScopedFormatMessage;
   profileUser: RefactorProfileUserResponse;
+  className?: string;
 };
 
-const ProfileHeroSection: React.FC<ProfileHeroSectionProps> = ({ fm, profileUser }) => {
+const ProfileHeroSection: React.FC<ProfileHeroSectionProps> = ({ fm, profileUser, className }) => {
   const profileHeroSectionFm = fm("profile.hero.section");
 
   const { username, profileImage, accountInfo } = profileUser;
-  const { totalPlaylists, totalSongs } = accountInfo;
+  const { totalPlaylists, totalAlbums, totalFollowing, totalSongs } = accountInfo;
 
   const { setActiveProfileEditModal } = useUserState();
-  const { collapseSideBarState } = useSidebarState();
-  const { isCollapsed } = collapseSideBarState;
-
   const { mutate: updateUserInfoFn, isPending } = useUpdateUserMutation();
 
   const handleActiveProfileEditModal = () => {
@@ -32,12 +30,15 @@ const ProfileHeroSection: React.FC<ProfileHeroSectionProps> = ({ fm, profileUser
 
   return (
     <div
-      className={`
-        flex
-        px-6
-        gap-x-5
-        w-full
-      `}
+      className={twMerge(
+        `
+          flex
+          w-full
+          px-6
+          gap-x-5
+        `,
+        className
+      )}
     >
       {/* profile image */}
       <ImageLabel
@@ -54,37 +55,28 @@ const ProfileHeroSection: React.FC<ProfileHeroSectionProps> = ({ fm, profileUser
       <div
         className={`
           flex
+          flex-1
           flex-col
-          w-full
-          lg:py-0
           items-start
-          justify-between
+          justify-evenly
         `}
       >
         {/* type */}
-        <p>{profileHeroSectionFm("type")}</p>
+        <p className={`hero-section--type`}>{profileHeroSectionFm("type")}</p>
 
         {/* title */}
-        <h1
-          onClick={handleActiveProfileEditModal}
-          style={{ lineHeight: "1.15" }}
-          className={`
-            info-title
-            cursor-pointer
-            ${isCollapsed ? "lg:text-[7rem]" : "lg:text-[6.5rem]"}
-          `}
-        >
+        <h1 onClick={handleActiveProfileEditModal} className={`info-title cursor-pointer`}>
           {username.split("?nanoid")[0]}
         </h1>
 
         {/* other */}
-        <p
-          className={`
-            text-grey-custom/50
-            line-clamp-1
-          `}
-        >
-          {profileHeroSectionFm("description", { totalPlaylists, totalSongs })}
+        <p className={`hero-section--description`}>
+          {profileHeroSectionFm("description", {
+            playlistCount: totalPlaylists - 1, // exclude default playlist
+            albumCount: totalAlbums,
+            followingCount: totalFollowing,
+            songCount: totalSongs,
+          })}
         </p>
       </div>
     </div>
