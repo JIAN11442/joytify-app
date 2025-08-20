@@ -84,4 +84,10 @@ export enum QueryKey {
   GET_GENRE_LABELS = "get-genre-labels",
   GET_UPLOAD_SONG_LABELS = "get-upload-song-labels",
   GET_RECOMMENDED_LABELS = "get-recommended-labels",
+
+  GET_POPULAR_MUSICIANS = "get-popular-musicians",
+  GET_RECENTLY_PLAYED_SONGS = "get-recently-played-songs",
+  GET_HOMEPAGE_RECOMMENDED_SONGS = "get-homepage-recommended-songs",
+  GET_HOMEPAGE_RECOMMENDED_ALBUMS = "get-homepage-recommended-albums",
+  GET_HOMEPAGE_RECOMMENDED_LABELS = "get-homepage-recommended-labels",
 }

@@ -30,6 +30,7 @@ import { API_ENDPOINTS } from "@joytify/shared-types/constants";
 import { NODE_ENV, ORIGIN_APP } from "./constants/env-validate.constant";
 import { adminApiKeyValidate } from "./middlewares/api-key.middleware";
 import searchRoute from "./routes/search.route";
+import homepageRoute from "./routes/homepage.route";
 
 const {
   AUTH,
@@ -49,6 +50,7 @@ const {
   SESSIONS,
   RATINGS,
   SEARCHES,
+  HOMEPAGE,
   ADMIN,
 } = API_ENDPOINTS;
 
@@ -86,6 +88,7 @@ app.use(NOTIFICATIONS, notificationRoute);
 app.use(SESSIONS, authenticate, sessionRoute);
 app.use(RATINGS, authenticate, ratingRoute);
 app.use(SEARCHES, searchRoute);
+app.use(HOMEPAGE, homepageRoute);
 
 app.use(ADMIN, adminApiKeyValidate, adminRoute);
 

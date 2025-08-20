@@ -1,0 +1,23 @@
+{
+  "homepage.section.popularMusicians.title": "人気アーティスト",
+  "homepage.section.popularMusicians.description": "今最も注目されるアーティストの集まり",
+
+  "homepage.section.recentlyPlayedSongs.title": "最近再生した楽曲",
+  "homepage.section.recentlyPlayedSongs.description": "あなたが最近聴いた楽曲を振り返る",
+
+  "homepage.section.recommendedSongs.title": "あなたへのおすすめ",
+  "homepage.section.recommendedSongs.description": "あなたのライブラリーに基づいた楽曲",
+  "homepage.section.recommendedSongs.guest.title": "新しい音楽と出会う",
+  "homepage.section.recommendedSongs.guest.description": "あなたの音楽の旅を彩る厳選された楽曲",
+
+  "homepage.section.recommendedAlbums.title": "人気アルバム",
+  "homepage.section.recommendedAlbums.description": "最も愛されるアルバムの厳選コレクション",
+
+  "homepage.section.recommendedTags.title": "トレンドの雰囲気",
+  "homepage.section.recommendedTags.description": "今この瞬間を彩る音の世界を探索",
+
+  "homepage.section.recommendedGenres.title": "ジャンル探求",
+  "homepage.section.recommendedGenres.description": "多彩なサウンドの領域を巡る旅",
+
+  "homepage.section.more": "もっと見る..."
+}

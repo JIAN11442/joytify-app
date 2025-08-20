@@ -1,0 +1,23 @@
+{
+  "homepage.section.popularMusicians.title": "인기 아티스트",
+  "homepage.section.popularMusicians.description": "지금 가장 주목받는 아티스트들의 모임",
+
+  "homepage.section.recentlyPlayedSongs.title": "최근 재생 음악",
+  "homepage.section.recentlyPlayedSongs.description": "최근에 들었던 음악을 되돌아보기",
+
+  "homepage.section.recommendedSongs.title": "맞춤 추천",
+  "homepage.section.recommendedSongs.description": "당신의 음악 라이브러리 기반 추천",
+  "homepage.section.recommendedSongs.guest.title": "새로운 음악 탐험",
+  "homepage.section.recommendedSongs.guest.description": "당신의 음악 여정을 풍성하게 할 엄선된 곡들",
+
+  "homepage.section.recommendedAlbums.title": "인기 앨범",
+  "homepage.section.recommendedAlbums.description": "가장 사랑받는 앨범 엄선집",
+
+  "homepage.section.recommendedTags.title": "트렌드 분위기",
+  "homepage.section.recommendedTags.description": "이 순간을 정의하는 음악적 흐름 탐색",
+
+  "homepage.section.recommendedGenres.title": "장르 탐구",
+  "homepage.section.recommendedGenres.description": "다채로운 사운드 영역을 여행하는 길",
+
+  "homepage.section.more": "더보기..."
+}

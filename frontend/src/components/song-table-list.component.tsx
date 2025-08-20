@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useCallback, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { twMerge } from "tailwind-merge";
@@ -7,6 +6,7 @@ import { IoTimeOutline } from "react-icons/io5";
 import Icon from "./react-icons.component";
 import SoundWave from "./sound-wave.component";
 import SongTitleItem from "./song-title-item.component";
+import AuthGuardLink from "./auth-guard-link.component";
 import SongTableListActions from "./song-table-list-actions.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import usePlaybackControl from "../hooks/playback-control.hook";
@@ -185,13 +185,13 @@ const SongTableList: React.FC<SongTableListProps> = ({
                   {/* artist */}
                   <td style={{ filter: "brightness(1.5)" }} className={artistClassName}>
                     {artistId && artistName ? (
-                      <Link
+                      <AuthGuardLink
                         to={`/musician/${artistId}`}
                         onClick={(e) => e.stopPropagation()}
                         className={`underline hover:text-[var(--hover-color)] transition-all`}
                       >
                         {artistName}
-                      </Link>
+                      </AuthGuardLink>
                     ) : (
                       "--"
                     )}
@@ -200,13 +200,13 @@ const SongTableList: React.FC<SongTableListProps> = ({
                   {/* album */}
                   <td style={{ filter: "brightness(1.5)" }} className={albumClassName}>
                     {albumTitle && albumId ? (
-                      <Link
+                      <AuthGuardLink
                         to={`/album/${albumId}`}
                         onClick={(e) => e.stopPropagation()}
                         className={`underline hover:text-[var(--hover-color)] transition-all`}
                       >
                         {albumTitle}
-                      </Link>
+                      </AuthGuardLink>
                     ) : (
                       "--"
                     )}

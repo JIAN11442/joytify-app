@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
+import AuthGuardLink from "./auth-guard-link.component";
 import QueuePlayButton from "./queue-play-button.component";
 import { RefactorAlbumResponse } from "@joytify/shared-types/types";
 
@@ -16,7 +16,7 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ album, className, tw }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <Link
+    <AuthGuardLink
       to={`/album/${albumId}`}
       className={twMerge(
         `
@@ -56,7 +56,7 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ album, className, tw }) => {
           <p className={`text-sm text-neutral-500 truncate capitalize`}>{artists?.join(", ")}</p>
         </div>
       )}
-    </Link>
+    </AuthGuardLink>
   );
 };
 

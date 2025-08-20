@@ -1,0 +1,23 @@
+{
+  "homepage.section.popularMusicians.title": "熱門藝人",
+  "homepage.section.popularMusicians.description": "當下最火熱的藝人匯聚地",
+
+  "homepage.section.recentlyPlayedSongs.title": "最近播放",
+  "homepage.section.recentlyPlayedSongs.description": "回顧你最近聆聽的音樂",
+
+  "homepage.section.recommendedSongs.title": "為你推薦",
+  "homepage.section.recommendedSongs.description": "基於你的音樂庫精選",
+  "homepage.section.recommendedSongs.guest.title": "探索新音樂",
+  "homepage.section.recommendedSongs.guest.description": "精心挑選的曲目，開啟你的音樂之旅",
+
+  "homepage.section.recommendedAlbums.title": "熱門專輯",
+  "homepage.section.recommendedAlbums.description": "最受歡迎的專輯精選",
+
+  "homepage.section.recommendedTags.title": "流行氛圍",
+  "homepage.section.recommendedTags.description": "探索定義當下的音樂風潮",
+
+  "homepage.section.recommendedGenres.title": "風格探索",
+  "homepage.section.recommendedGenres.description": "穿越多元的聲音世界",
+
+  "homepage.section.more": "查看更多..."
+}

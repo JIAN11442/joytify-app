@@ -50,6 +50,7 @@ type CardListSkeleton = Omit<CardSkeleton, "tw"> & {
 type CardListSectionSkeleton = {
   sectionCount?: number;
   listCount?: number;
+  showDescription?: boolean;
   className?: string;
 };
 
@@ -416,18 +417,20 @@ export const GridCardListSkeleton: React.FC<CardListSkeleton> = ({ count = 1, cl
 export const GridCardListSectionSkeleton: React.FC<CardListSectionSkeleton> = ({
   sectionCount = 1,
   listCount = 4,
+  showDescription = false,
   className,
 }) => {
   return Array.from({ length: sectionCount }).map((_, index) => {
     return (
       <div key={`card-list-section-skeleton-${index}`} className={className}>
-        <TextSkeleton className={`w-[10%] pl-3`} />
+        <TextSkeleton className={`w-[20%] pl-3`} />
+        {showDescription && <TextSkeleton className={`w-[40%] pl-3`} />}
 
         <GridCardListSkeleton
           key={`card-list-section-skeleton-${index}`}
           count={listCount}
           className={`flex overflow-x-auto hidden-scrollbar`}
-          tw={{ container: "w-[200px] shrink-0", image: "h-[180px]" }}
+          tw={{ container: "w-[180px] shrink-0", image: "h-[180px]" }}
         />
       </div>
     );

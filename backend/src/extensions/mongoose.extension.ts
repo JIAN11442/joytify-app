@@ -74,6 +74,20 @@ export const applyMongooseExtensions = async () => {
   };
 
   /**
+   * sorts documents by provided ID order
+   */
+  Query.prototype.sortByIds = function (ids: any[]) {
+    return this.transform((docs: any[]) => {
+      const idOrder = ids.map(id => id.toString());
+      return docs.sort((a, b) => {
+        const indexA = idOrder.indexOf(a._id.toString());
+        const indexB = idOrder.indexOf(b._id.toString());
+        return indexA - indexB;
+      });
+    });
+  };
+
+  /**
    * refactors data by converting arrays to strings and formatting ratings
    * @param {RefactorSongDataOptions} options - Configuration options for the transformation
    * @param {boolean} options.transformNestedSongs - Whether to transform nested songs in albums (default: false)

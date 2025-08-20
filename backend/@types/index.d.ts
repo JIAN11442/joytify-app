@@ -24,5 +24,6 @@ declare module "mongoose" {
     populateSongDetails(): this;
     populateNestedSongDetails(): this;
     refactorSongFields<TInput>(options?: { transformNestedSongs?: boolean }): this;
+    sortByIds(ids: any[]): this;
   }
 }

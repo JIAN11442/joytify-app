@@ -1,0 +1,34 @@
+import AlbumCardList from "./album-card-list.component";
+import HomepageSectionList from "./homepage-section-list.component";
+import { ScopedFormatMessage } from "../hooks/intl.hook";
+import { HomepageSection } from "@joytify/shared-types/constants";
+import { PaginatedAlbumResponse } from "@joytify/shared-types/types";
+
+type HomepageRecommendedAlbumsProps = {
+  fm: ScopedFormatMessage;
+  albums: PaginatedAlbumResponse;
+};
+
+const HomepageRecommendedAlbums: React.FC<HomepageRecommendedAlbumsProps> = ({ fm, albums }) => {
+  const { docs, totalDocs } = albums;
+  const { RECOMMENDED_ALBUMS } = HomepageSection;
+
+  const recommendedAlbumsFm = fm(`homepage.section.recommendedAlbums`);
+
+  return (
+    <HomepageSectionList
+      fm={fm}
+      title={recommendedAlbumsFm("title")}
+      description={recommendedAlbumsFm("description")}
+      pagination={{
+        to: `/section/${RECOMMENDED_ALBUMS}`,
+        count: docs.length,
+        total: totalDocs,
+      }}
+    >
+      <AlbumCardList albums={docs} />
+    </HomepageSectionList>
+  );
+};
+
+export default HomepageRecommendedAlbums;

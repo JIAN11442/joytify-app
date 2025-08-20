@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
+import AuthGuardLink from "./auth-guard-link.component";
 import QueuePlayButton from "./queue-play-button.component";
 import { RefactorSongResponse } from "@joytify/shared-types/types";
 
@@ -16,7 +16,7 @@ const SongCard: React.FC<SongCardProps> = ({ song, className }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <Link
+    <AuthGuardLink
       to={`/song/${songId}`}
       className={twMerge(
         `
@@ -51,7 +51,7 @@ const SongCard: React.FC<SongCardProps> = ({ song, className }) => {
           <p className={`text-sm text-neutral-500 truncate capitalize`}>{artistName}</p>
         </div>
       )}
-    </Link>
+    </AuthGuardLink>
   );
 };
 

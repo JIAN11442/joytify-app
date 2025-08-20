@@ -15,6 +15,7 @@ import albumJSON from "./album.ms.json";
 import profileJSON from "./profile.ms.json";
 import statsJSON from "./stats.ms.json";
 import labelJSON from "./label.ms.json";
+import homepageJSON from "./homepage.ms.json";
 
 const modules = [
   authJSON,
@@ -34,6 +35,7 @@ const modules = [
   profileJSON,
   statsJSON,
   labelJSON,
+  homepageJSON,
 ];
 
 export default Object.assign({}, ...modules);

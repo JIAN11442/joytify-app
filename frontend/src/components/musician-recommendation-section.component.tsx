@@ -50,7 +50,7 @@ const MusicianRecommendationSection: React.FC<MusicianRecommendationSectionProps
       <MusicianCardList
         musicians={musicians}
         className={`flex overflow-x-auto hidden-scrollbar`}
-        tw={{ cardWrapper: "w-[160px] max-sm:w-[140px]" }}
+        tw={{ cardWrapper: "card-size--recommendation" }}
       />
     </AnimationWrapper>
   );

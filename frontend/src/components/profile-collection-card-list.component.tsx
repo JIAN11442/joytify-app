@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
-import { ProfileDocs } from "@joytify/shared-types/types";
+import AuthGuardLink from "./auth-guard-link.component";
 import ProfileCollectionCard from "./profile-collection-card.component";
+import { ProfileDocs } from "@joytify/shared-types/types";
 
 type CollectionCardListProps = {
   title?: { content: string; progress: boolean };
@@ -76,7 +76,7 @@ const ProfileCollectionCardList: React.FC<CollectionCardListProps> = ({
 
         {/* see more */}
         {isPaginationEnabled && (
-          <Link
+          <AuthGuardLink
             to={to}
             className={`
               text-sm
@@ -87,7 +87,7 @@ const ProfileCollectionCardList: React.FC<CollectionCardListProps> = ({
             `}
           >
             <span>{label}</span>
-          </Link>
+          </AuthGuardLink>
         )}
       </div>
 
@@ -120,7 +120,8 @@ const ProfileCollectionCardList: React.FC<CollectionCardListProps> = ({
               description={description}
               tw={{
                 img: `
-                  w-[200px] 
+                  w-[180px]
+                  max-sm:w-[150px]
                   ${
                     collectionKey === "following"
                       ? "border-2 border-neutral-500/20 rounded-full"

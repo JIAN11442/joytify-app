@@ -1,9 +1,9 @@
 import { useCallback } from "react";
-import { Link } from "react-router-dom";
 import { TbPlaylistAdd } from "react-icons/tb";
 import Loader from "./loader.component";
 import Icon from "./react-icons.component";
 import SongTitleItem from "./song-title-item.component";
+import AuthGuardLink from "./auth-guard-link.component";
 import { useAssignSongToPlaylistsMutation } from "../hooks/song-mutate.hook";
 import { RefactorPlaylistResponse, RefactorSongResponse } from "@joytify/shared-types/types";
 import useSidebarState from "../states/sidebar.state";
@@ -97,13 +97,13 @@ const SongRecommendationTableList: React.FC<SongRecommendationTableListProps> = 
                 `}
               >
                 {albumTitle && albumId ? (
-                  <Link
+                  <AuthGuardLink
                     to={`/album/${albumId}`}
                     onClick={(e) => e.stopPropagation()}
                     className={`underline hover:text-[var(--hover-color)] transition-all`}
                   >
                     {albumTitle}
-                  </Link>
+                  </AuthGuardLink>
                 ) : (
                   "--"
                 )}

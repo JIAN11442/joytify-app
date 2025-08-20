@@ -1,6 +1,5 @@
 import { twMerge } from "tailwind-merge";
 import { FormattedMessage } from "react-intl";
-
 import Loader from "./loader.component";
 import {
   GridCardSkeleton,

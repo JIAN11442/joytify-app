@@ -3,8 +3,12 @@ import { twMerge } from "tailwind-merge";
 import { useCallback, useEffect, useMemo } from "react";
 import PlayButton from "./play-button.component";
 import usePlaybackControl from "../hooks/playback-control.hook";
+import { AuthForOptions } from "@joytify/shared-types/constants";
 import { Queue, RefactorSongResponse } from "@joytify/shared-types/types";
 import usePlaybackControlState from "../states/playback-control.state";
+import useAuthModalState from "../states/auth-modal.state";
+import useUserState from "../states/user.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 type QueuePlayButtonProps = {
   songs: RefactorSongResponse[];
@@ -19,13 +23,25 @@ const QueuePlayButton: React.FC<QueuePlayButtonProps> = ({
   onQueueMatchingChange,
   className,
 }) => {
+  const { authUser } = useUserState();
+  const { openAuthModal } = useAuthModalState();
   const { playbackQueue, isPlaying } = usePlaybackControlState();
   const { audioSong, playSong } = usePlaybackControl();
+
+  const { SIGN_IN } = AuthForOptions;
 
   const handlePlayQueueSongs = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
       e.preventDefault();
+
+      if (!authUser) {
+        timeoutForDelay(() => {
+          openAuthModal(SIGN_IN);
+        });
+
+        return;
+      }
 
       const idx = songs.findIndex((s) => s._id === audioSong?._id);
       const currentIndex = idx !== -1 ? idx : 0;
