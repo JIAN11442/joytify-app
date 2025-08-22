@@ -329,6 +329,14 @@ body,
     transition-all;
   }
 
+  .card-size--base {
+    @apply w-[180px];
+  }
+
+  .card-size--recommendation {
+    @apply w-[160px] max-sm:w-[140px];
+  }
+
   .stats-card-wrapper {
     @apply flex flex-col w-full p-8 gap-5 bg-black/30 shadow-lg rounded-md;
   }

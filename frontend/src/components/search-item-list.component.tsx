@@ -59,7 +59,7 @@ const SearchItemList: React.FC<SearchItemListProps> = ({ fm, type, items, search
         <SongCardList
           songs={songs}
           className={`flex overflow-x-auto hidden-scrollbar`}
-          tw={{ card: "w-[200px] max-sm:w-[180px]" }}
+          tw={{ card: "card-size--base" }}
         />
       );
     }
@@ -70,7 +70,7 @@ const SearchItemList: React.FC<SearchItemListProps> = ({ fm, type, items, search
         <MusicianCardList
           musicians={musicians}
           className={`flex overflow-x-auto hidden-scrollbar`}
-          tw={{ cardWrapper: "w-[200px] max-sm:w-[180px]" }}
+          tw={{ cardWrapper: "card-size--base" }}
         />
       );
     }
@@ -81,7 +81,7 @@ const SearchItemList: React.FC<SearchItemListProps> = ({ fm, type, items, search
         <AlbumCardList
           albums={albums}
           className={`flex overflow-x-auto hidden-scrollbar`}
-          tw={{ cardWrapper: "w-[200px] max-sm:w-[180px]" }}
+          tw={{ cardWrapper: "card-size--base" }}
         />
       );
     }
@@ -92,7 +92,7 @@ const SearchItemList: React.FC<SearchItemListProps> = ({ fm, type, items, search
         <LabelCardList
           labels={genresAndTags}
           className={`flex overflow-x-auto hidden-scrollbar`}
-          tw={{ cardWrapper: "w-[200px] max-sm:w-[180px]" }}
+          tw={{ cardWrapper: "card-size--base" }}
         />
       );
     }
@@ -103,7 +103,7 @@ const SearchItemList: React.FC<SearchItemListProps> = ({ fm, type, items, search
         <LabelCardList
           labels={languages}
           className={`flex overflow-x-auto hidden-scrollbar`}
-          tw={{ cardWrapper: "w-[200px] max-sm:w-[180px]" }}
+          tw={{ cardWrapper: "card-size--base" }}
         />
       );
     }

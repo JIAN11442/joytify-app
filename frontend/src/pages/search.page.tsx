@@ -17,7 +17,16 @@ const SearchPage = () => {
   const { ALL } = SearchFilterOptions;
 
   return (
-    <div className={`page-container`}>
+    <div
+      style={{
+        backgroundImage: `linear-gradient(
+          to bottom,
+          rgb(243 244 246 / 0.05) 0%,
+          #171717 25%
+        )`,
+      }}
+      className={`page-container`}
+    >
       {/* filter panel */}
       <SearchFilterPanel
         urlSearchFilter={searchFilter}

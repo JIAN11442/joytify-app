@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
+import AuthGuardLink from "./auth-guard-link.component";
 import QueuePlayButton from "./queue-play-button.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { RefactorMusicianResponse } from "@joytify/shared-types/types";
@@ -20,7 +20,7 @@ const MusicianCard: React.FC<MusicianCardProps> = ({ musician, className, tw }) 
   const musicianRoleFm = fm("musician.role");
 
   return (
-    <Link
+    <AuthGuardLink
       to={`/musician/${musicianId}`}
       className={twMerge(
         `
@@ -29,7 +29,6 @@ const MusicianCard: React.FC<MusicianCardProps> = ({ musician, className, tw }) 
           hover:bg-neutral-200/5
           p-3
           gap-3
-          w-fit
         `,
         className
       )}
@@ -71,7 +70,7 @@ const MusicianCard: React.FC<MusicianCardProps> = ({ musician, className, tw }) 
           </p>
         </div>
       )}
-    </Link>
+    </AuthGuardLink>
   );
 };
 

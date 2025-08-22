@@ -15,6 +15,7 @@ import albumJSON from "./album.ja.json";
 import profileJSON from "./profile.ja.json";
 import statsJSON from "./stats.ja.json";
 import labelJSON from "./label.ja.json";
+import homepageJSON from "./homepage.ja.json";
 
 const modules = [
   authJSON,
@@ -34,6 +35,7 @@ const modules = [
   profileJSON,
   statsJSON,
   labelJSON,
+  homepageJSON,
 ];
 
 export default Object.assign({}, ...modules);

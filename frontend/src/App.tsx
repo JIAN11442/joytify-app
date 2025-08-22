@@ -24,6 +24,7 @@ import SongPage from "./pages/song.page";
 import LabelPage from "./pages/label.page";
 import MonthlyStatsPage from "./pages/monthly-stats.page";
 import ManageNotificationPage from "./pages/manage-notification.page";
+import HomeSectionPage from "./pages/home-section.page";
 import { setNavigate } from "./lib/navigate.lib";
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Sidebar />}>
         <Route index element={<HomePage />} />
+        <Route path="section/:type" element={<HomeSectionPage />} />
         <Route path="search/:type" element={<SearchPage />} />
 
         {/* Private pages(need login) */}

@@ -2,8 +2,10 @@ import { z } from "zod";
 import { LabelOptions } from "@joytify/shared-types/constants";
 import { stringZodSchema } from "./util.zod";
 
+export const labelZodSchema = z.nativeEnum(LabelOptions);
+
 export const defaultLabelZodSchema = z.object({
-  type: z.nativeEnum(LabelOptions),
+  type: labelZodSchema,
   createIfAbsent: z.coerce.boolean().optional(),
 });
 

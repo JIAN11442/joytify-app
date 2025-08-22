@@ -61,7 +61,7 @@ const SearchFilterPanel: React.FC<FilterPanelProps> = ({
                 ${
                   urlSearchFilter === key
                     ? "control-panel-selected"
-                    : `bg-neutral-800 hover:bg-neutral-700`
+                    : `bg-neutral-200/10 hover:bg-neutral-100/20`
                 }
                 rounded-full
                 transition-all

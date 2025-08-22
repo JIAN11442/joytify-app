@@ -1,0 +1,23 @@
+{
+  "homepage.section.popularMusicians.title": "Popular artists",
+  "homepage.section.popularMusicians.description": "Discover the most trending artists right now",
+
+  "homepage.section.recentlyPlayedSongs.title": "Recently played",
+  "homepage.section.recentlyPlayedSongs.description": "Discover the most recently played songs",
+
+  "homepage.section.recommendedSongs.title": "Recommended for you",
+  "homepage.section.recommendedSongs.description": "Based on what's in your library",
+  "homepage.section.recommendedSongs.guest.title": "Discover new music",
+  "homepage.section.recommendedSongs.guest.description": "Curated tracks to spark your musical journey",
+
+  "homepage.section.recommendedAlbums.title": "Popular albums",
+  "homepage.section.recommendedAlbums.description": "Discover the most popular albums",
+
+  "homepage.section.recommendedTags.title": "Trending vibes",
+  "homepage.section.recommendedTags.description": "Explore the sounds that define this moment",
+
+  "homepage.section.recommendedGenres.title": "Musical landscapes",
+  "homepage.section.recommendedGenres.description": "Journey through diverse sonic territories",
+
+  "homepage.section.more": "More..."
+}

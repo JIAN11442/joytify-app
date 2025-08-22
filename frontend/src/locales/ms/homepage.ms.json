@@ -1,0 +1,23 @@
+{
+  "homepage.section.popularMusicians.title": "Artis Popular",
+  "homepage.section.popularMusicians.description": "Kumpulan artis yang paling mendapat perhatian masa kini",
+
+  "homepage.section.recentlyPlayedSongs.title": "Dimainkan Baru-baru Ini",
+  "homepage.section.recentlyPlayedSongs.description": "Meninjau kembali muzik yang baru anda dengar",
+
+  "homepage.section.recommendedSongs.title": "Disyorkan untuk Anda",
+  "homepage.section.recommendedSongs.description": "Berdasarkan koleksi muzik anda",
+  "homepage.section.recommendedSongs.guest.title": "Terokai Muzik Baru",
+  "homepage.section.recommendedSongs.guest.description": "Lagu-lagu pilihan untuk memulakan perjalanan muzik anda",
+
+  "homepage.section.recommendedAlbums.title": "Album Popular",
+  "homepage.section.recommendedAlbums.description": "Koleksi album yang paling digemari",
+
+  "homepage.section.recommendedTags.title": "Suasana Trending",
+  "homepage.section.recommendedTags.description": "Jelajahi aliran muzik yang mentakrifkan masa ini",
+
+  "homepage.section.recommendedGenres.title": "Penjelajahan Genre",
+  "homepage.section.recommendedGenres.description": "Perjalanan melalui pelbagai wilayah bunyi",
+
+  "homepage.section.more": "Lihat Lebih..."
+}

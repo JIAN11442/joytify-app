@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { LuLanguages } from "react-icons/lu";
 import { FaMusic, FaTags } from "react-icons/fa";
 import { FaHeadphonesSimple } from "react-icons/fa6";
 import Icon, { IconName } from "./react-icons.component";
 import QueuePlayButton from "./queue-play-button.component";
+import AuthGuardLink from "./auth-guard-link.component";
 import { LabelOptions } from "@joytify/shared-types/constants";
 import { RefactorSearchLabelResponse } from "@joytify/shared-types/types";
 import { useScopedIntl } from "../hooks/intl.hook";
@@ -42,7 +42,7 @@ const LabelCard: React.FC<LabelCardProps> = ({ label, className, tw }) => {
   const isEmpty = songs.length === 0;
 
   return (
-    <Link
+    <AuthGuardLink
       to={`/${type}/${labelId}`}
       className={twMerge(
         `
@@ -51,7 +51,6 @@ const LabelCard: React.FC<LabelCardProps> = ({ label, className, tw }) => {
           hover:bg-neutral-200/5
           p-3
           gap-3
-          w-fit
           ${isEmpty && "no-hover"}
         `,
         className
@@ -99,7 +98,7 @@ const LabelCard: React.FC<LabelCardProps> = ({ label, className, tw }) => {
           <p className={`text-sm text-neutral-500 truncate capitalize`}>{labelTypeFm(`${type}`)}</p>
         </div>
       )}
-    </Link>
+    </AuthGuardLink>
   );
 };
 

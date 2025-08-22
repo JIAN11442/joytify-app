@@ -1,0 +1,23 @@
+{
+  "homepage.section.popularMusicians.title": "热门艺人",
+  "homepage.section.popularMusicians.description": "当下最火热的艺人汇聚地",
+
+  "homepage.section.recentlyPlayedSongs.title": "最近播放",
+  "homepage.section.recentlyPlayedSongs.description": "回顾你最近聆听的音乐",
+
+  "homepage.section.recommendedSongs.title": "为你推荐",
+  "homepage.section.recommendedSongs.description": "基于你的音乐库精选",
+  "homepage.section.recommendedSongs.guest.title": "探索新音乐",
+  "homepage.section.recommendedSongs.guest.description": "精心挑选的曲目，开启你的音乐之旅",
+
+  "homepage.section.recommendedAlbums.title": "热门专辑",
+  "homepage.section.recommendedAlbums.description": "最受欢迎的专辑精选",
+
+  "homepage.section.recommendedTags.title": "流行氛围",
+  "homepage.section.recommendedTags.description": "探索定义当下的音乐风潮",
+
+  "homepage.section.recommendedGenres.title": "风格探索",
+  "homepage.section.recommendedGenres.description": "穿越多元的声音世界",
+
+  "homepage.section.more": "查看更多..."
+}

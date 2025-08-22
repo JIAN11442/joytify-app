@@ -50,7 +50,7 @@ const AlbumRecommendationSection: React.FC<AlbumRecommendationSectionProps> = ({
       <AlbumCardList
         albums={albums}
         className={`flex overflow-x-auto hidden-scrollbar`}
-        tw={{ cardWrapper: "w-[160px] max-sm:w-[140px]" }}
+        tw={{ cardWrapper: "card-size--recommendation" }}
       />
     </AnimationWrapper>
   );
