@@ -5,6 +5,14 @@
 
   "playlist.hero.section.type": "{type} · {songCount} · {duration}",
 
+  "playlist.recommendation.section.title": "Recommended",
+  "playlist.recommendation.section.description": "Based on what's in this playlist",
+
+  "playlist.toggleButton.show": "Find more tracks...",
+  "playlist.songSearch.section.title": "Let's find some new tracks for your playlist",
+  "playlist.songSearch.section.searchbar.placeholder": "Search song by name, artist, album, genre, language...",
+  "playlist.songSearch.section.noFound": "No songs found for <strong>\"{searchQuery}\"</strong>",
+
   "playlist.menu.action.editDetails": "Edit details",
   "playlist.menu.action.deletePlaylist": "Delete playlist",
   "playlist.menu.action.makePrivate": "Make private",

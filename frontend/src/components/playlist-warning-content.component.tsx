@@ -1,4 +1,5 @@
 import { useScopedIntl } from "../hooks/intl.hook";
+import { formatPlaybackDuration } from "../utils/unit-format.util";
 import Loader from "./loader.component";
 import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
 
@@ -34,6 +35,7 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
   }
 
   const { title, coverImage, description, songs, paletee } = playlist;
+  const totalDuration = songs.reduce((acc, song) => acc + song.duration, 0);
 
   return (
     <form
@@ -90,10 +92,13 @@ const PlaylistWarningContent: React.FC<PlaylistWarningContentProps> = ({
           <p className={`text-sm`}>
             {playlistHeroSectionFm("type", {
               type: playlistItemFm("type"),
-              separator: description ? " · " : "",
-              description: description
-                ? playlistItemFm("songs.count", { count: songs.length })
-                : "",
+              songCount: playlistItemFm("songs.count", { count: songs.length }),
+              duration: formatPlaybackDuration({
+                fm,
+                duration: totalDuration,
+                precise: true,
+                format: "text",
+              }),
             })}
           </p>
 

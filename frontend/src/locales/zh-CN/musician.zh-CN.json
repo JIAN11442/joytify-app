@@ -1,5 +1,8 @@
 {
   "musician.hero.section.description": "{songCount} 首歌曲 · {albumCount} 张专辑 · {duration}",
   "musician.actionPanel.menu.follow": "关注歌手",
-  "musician.actionPanel.menu.unfollow": "取消关注"
+  "musician.actionPanel.menu.unfollow": "取消关注",
+
+  "musician.recommendation.section.title": "推荐艺人",
+  "musician.recommendation.section.description": "根据该艺人主页的内容推荐"
 }

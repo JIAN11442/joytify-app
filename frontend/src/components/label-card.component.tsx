@@ -13,9 +13,10 @@ import { useScopedIntl } from "../hooks/intl.hook";
 type LabelCardProps = {
   label: RefactorSearchLabelResponse;
   className?: string;
+  tw?: { img?: string };
 };
 
-const LabelCard: React.FC<LabelCardProps> = ({ label, className }) => {
+const LabelCard: React.FC<LabelCardProps> = ({ label, className, tw }) => {
   const { GENRE, TAG, LANGUAGE } = LabelOptions;
   const { _id: labelId, type, label: title, coverImage, songs } = label;
 
@@ -61,13 +62,16 @@ const LabelCard: React.FC<LabelCardProps> = ({ label, className }) => {
           alt={title}
           src={coverImage}
           onLoad={() => setImageLoaded(true)}
-          className={`
-            aspect-square
-            object-cover
-            rounded-md
-            transition-all
-            ${isEmpty && "brightness-50"}
-          `}
+          className={twMerge(
+            `
+              aspect-square
+              object-cover
+              rounded-md
+              transition-all
+              ${isEmpty && "brightness-50"}
+            `,
+            tw?.img
+          )}
         />
 
         {imageLoaded && (

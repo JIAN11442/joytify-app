@@ -1,5 +1,8 @@
 {
   "musician.hero.section.description": "{songCount} 曲 · {albumCount} アルバム · {duration}",
   "musician.actionPanel.menu.follow": "アーティストをフォロー",
-  "musician.actionPanel.menu.unfollow": "フォロー解除"
+  "musician.actionPanel.menu.unfollow": "フォロー解除",
+
+  "musician.recommendation.section.title": "おすすめのアーティスト",
+  "musician.recommendation.section.description": "このアーティストのプロフィールに基づいておすすめ"
 }

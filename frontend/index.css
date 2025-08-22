@@ -462,7 +462,7 @@ body,
   }
 
   td {
-    @apply py-3 px-5 max-w-[200px] overflow-hidden;
+    @apply py-2.5 px-5 max-w-[200px] overflow-hidden;
   }
 
   /* Input slider*/

@@ -1,4 +1,7 @@
 {
   "album.hero.section.type": "Album",
-  "album.hero.section.description": "{count} lagu · {duration}"
+  "album.hero.section.description": "{count} lagu · {duration}",
+
+  "album.recommendation.section.title": "Album Disyorkan",
+  "album.recommendation.section.description": "Disyorkan berdasarkan album ini"
 }

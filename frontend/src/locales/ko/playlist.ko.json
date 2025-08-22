@@ -5,6 +5,14 @@
 
   "playlist.hero.section.type": "{type} · {songCount} · {duration}",
 
+  "playlist.recommendation.section.title": "추천 곡",
+  "playlist.recommendation.section.description": "이 플레이리스트에 따라 추천 곡을 표시합니다",
+
+  "playlist.toggleButton.show": "더 많은 곡 찾기...",
+  "playlist.songSearch.section.title": "플레이리스트에 새로운 곡을 찾아보세요",
+  "playlist.songSearch.section.searchbar.placeholder": "곡 이름, 아티스트, 앨범, 장르, 언어로 검색...",
+  "playlist.songSearch.section.noFound": "<strong>\"{searchQuery}\"</strong>에 해당하는 곡을 찾을 수 없습니다",
+
   "playlist.menu.action.editDetails": "세부 정보 편집",
   "playlist.menu.action.deletePlaylist": "재생목록 삭제",
   "playlist.menu.action.makePrivate": "비공개로 설정",

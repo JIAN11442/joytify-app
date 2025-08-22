@@ -1,3 +1,6 @@
 {
-  "label.hero.section.description": "{count} lagu · {duration}"
+  "label.hero.section.description": "{count} lagu · {duration}",
+
+  "label.recommendation.section.title": "Label Disyorkan",
+  "label.recommendation.section.description": "Disyorkan berdasarkan label ini"
 }

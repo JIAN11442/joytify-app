@@ -32,4 +32,9 @@ export const updateSongPlaylistsZodSchema = z.object({
   playlistsToRemove: z.array(objectIdZodSchema),
 });
 
+export const getSongsByQueryZodSchema = z.object({
+  query: stringZodSchema,
+  playlistId: objectIdZodSchema.optional(),
+});
+
 export type SongZodSchemaType = z.infer<typeof songZodSchema>;

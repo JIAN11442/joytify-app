@@ -1,5 +1,8 @@
 {
   "musician.hero.section.description": "곡 {songCount}개 · 앨범 {albumCount}개 · {duration}",
   "musician.actionPanel.menu.follow": "아티스트 팔로우",
-  "musician.actionPanel.menu.unfollow": "팔로우 취소"
+  "musician.actionPanel.menu.unfollow": "팔로우 취소",
+
+  "musician.recommendation.section.title": "추천 아티스트",
+  "musician.recommendation.section.description": "이 아티스트 프로필을 기반으로 추천"
 }

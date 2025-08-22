@@ -5,6 +5,14 @@
 
   "playlist.hero.section.type": "{type} · {songCount} · {duration}",
 
+  "playlist.recommendation.section.title": "Rekomendasi",
+  "playlist.recommendation.section.description": "Berdasarkan apa yang ada dalam senarai main ini",
+
+  "playlist.toggleButton.show": "Temukan lebih banyak lagu...",
+  "playlist.songSearch.section.title": "Mari temukan beberapa lagu baru untuk senarai main Anda",
+  "playlist.songSearch.section.searchbar.placeholder": "Cari lagu dengan nama, artis, album, genre, bahasa...",
+  "playlist.songSearch.section.noFound": "Tidak ada lagu yang ditemukan untuk <strong>\"{searchQuery}\"</strong>",
+
   "playlist.menu.action.editDetails": "Edit butiran",
   "playlist.menu.action.deletePlaylist": "Padam senarai main",
   "playlist.menu.action.makePrivate": "Jadikan peribadi",

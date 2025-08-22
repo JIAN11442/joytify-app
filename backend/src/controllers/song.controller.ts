@@ -9,10 +9,13 @@ import {
   statsUserSongs,
   assignSongToPlaylists,
   updateSongInfoById,
+  getRecommendedSongs,
+  getSongsByQuery,
 } from "../services/song.service";
 
 import {
   deleteSongZodSchema,
+  getSongsByQueryZodSchema,
   songZodSchema,
   updateSongInfoZodSchema,
   updateSongPlaylistsZodSchema,
@@ -48,6 +51,18 @@ export const getAllSongsHandler: RequestHandler = async (req, res, next) => {
   }
 };
 
+// get user's songs handler
+export const getUserSongsHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = objectIdZodSchema.parse(req.userId);
+    const { songs } = await getUserSongs(userId);
+
+    return res.status(OK).json(songs);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // get song by id handler
 export const getSongByIdHandler: RequestHandler = async (req, res, next) => {
   try {
@@ -61,13 +76,27 @@ export const getSongByIdHandler: RequestHandler = async (req, res, next) => {
   }
 };
 
-// get user's songs handler
-export const getUserSongsHandler: RequestHandler = async (req, res, next) => {
+// get songs by query handler
+export const getSongsByQueryHandler: RequestHandler = async (req, res, next) => {
   try {
-    const userId = objectIdZodSchema.parse(req.userId);
-    const { songs } = await getUserSongs(userId);
+    const { query, playlistId } = getSongsByQueryZodSchema.parse(req.query);
+
+    const songs = await getSongsByQuery({ query, playlistId });
 
     return res.status(OK).json(songs);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// get recommended songs handler
+export const getRecommendedSongsHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const playlistId = objectIdZodSchema.parse(req.params.playlistId);
+
+    const recommendedSongs = await getRecommendedSongs(playlistId);
+
+    return res.status(OK).json(recommendedSongs);
   } catch (error) {
     next(error);
   }

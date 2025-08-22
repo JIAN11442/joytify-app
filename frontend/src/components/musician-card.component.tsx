@@ -8,9 +8,10 @@ import { RefactorMusicianResponse } from "@joytify/shared-types/types";
 type MusicianCardProps = {
   musician: RefactorMusicianResponse;
   className?: string;
+  tw?: { img?: string };
 };
 
-const MusicianCard: React.FC<MusicianCardProps> = ({ musician, className }) => {
+const MusicianCard: React.FC<MusicianCardProps> = ({ musician, className, tw }) => {
   const { _id: musicianId, name, coverImage, paletee, songs, roles } = musician;
 
   const { fm } = useScopedIntl();
@@ -44,15 +45,18 @@ const MusicianCard: React.FC<MusicianCardProps> = ({ musician, className }) => {
             } as React.CSSProperties
           }
           onLoad={() => setImageLoaded(true)}
-          className={`
-            aspect-square
-            object-cover
-            brightness-[1.2]
-            shadow-[0_0_2px_rgba(0,0,0,0.5)]
-            shadow-[var(--image-border-color)]
-            rounded-full
-            transition-all
-          `}
+          className={twMerge(
+            `
+              aspect-square
+              object-cover
+              brightness-[1.2]
+              shadow-[0_0_2px_rgba(0,0,0,0.5)]
+              shadow-[var(--image-border-color)]
+              rounded-full
+              transition-all
+            `,
+            tw?.img
+          )}
         />
 
         <QueuePlayButton songs={songs} showOnHover={true} className={`p-3`} />

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAlbumById, getUserAlbums } from "../fetchs/album.fetch";
+import { getAlbumById, getRecommendedAlbums, getUserAlbums } from "../fetchs/album.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
 import useUserState from "../states/user.state";
 
@@ -54,4 +54,29 @@ export const useGetAlbumByIdQuery = (id: string, opts: object = {}) => {
   });
 
   return { album, ...rest };
+};
+
+// get recommended albums hook
+export const useGetRecommendedAlbumsQuery = (albumId: string, opts: object = {}) => {
+  const [isQueryError, setIsQueryError] = useState(false);
+
+  const { data: recommendedAlbums, ...rest } = useQuery({
+    queryKey: [QueryKey.GET_RECOMMENDED_ALBUMS, albumId],
+    queryFn: async () => {
+      try {
+        const albums = await getRecommendedAlbums(albumId);
+
+        return albums;
+      } catch (error) {
+        if (error) {
+          setIsQueryError(true);
+        }
+      }
+    },
+    staleTime: Infinity,
+    enabled: !isQueryError,
+    ...opts,
+  });
+
+  return { recommendedAlbums, ...rest };
 };

@@ -4,17 +4,20 @@ import {
   getFollowingMusiciansHandler,
   getMusicianByIdHandler,
   getMusicianIdHandler,
+  getRecommendedMusiciansHandler,
   unfollowMusicianHandler,
 } from "../controllers/musician.controller";
+import authenticate from "../middlewares/authenticate.middleware";
 
 const musicianRoute = Router();
 
 // prefix: /musicians
-musicianRoute.get("/following", getFollowingMusiciansHandler);
-musicianRoute.get("/getId", getMusicianIdHandler);
-musicianRoute.get("/:musicianId", getMusicianByIdHandler);
+musicianRoute.get("/getId", authenticate, getMusicianIdHandler);
+musicianRoute.get("/following", authenticate, getFollowingMusiciansHandler);
+musicianRoute.get("/recommendations/:musicianId", getRecommendedMusiciansHandler);
+musicianRoute.get("/:musicianId", authenticate, getMusicianByIdHandler);
 
-musicianRoute.patch("/follow/:musicianId", followMusicianHandler);
-musicianRoute.patch("/unfollow/:musicianId", unfollowMusicianHandler);
+musicianRoute.patch("/follow/:musicianId", authenticate, followMusicianHandler);
+musicianRoute.patch("/unfollow/:musicianId", authenticate, unfollowMusicianHandler);
 
 export default musicianRoute;

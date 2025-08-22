@@ -8,7 +8,7 @@ type AlbumCardListProps = {
   albums: RefactorAlbumResponse[];
   children?: React.ReactNode;
   className?: string;
-  tw?: { wrapper?: string; card?: string };
+  tw?: { wrapper?: string; cardWrapper?: string; cardTw?: { img?: string } };
 };
 
 const AlbumCardList: React.FC<AlbumCardListProps> = ({ albums, children, className, tw }) => {
@@ -31,7 +31,7 @@ const AlbumCardList: React.FC<AlbumCardListProps> = ({ albums, children, classNa
             transition={{ delay: index * 0.1 }}
             className={tw?.wrapper}
           >
-            <AlbumCard album={album} className={tw?.card} />
+            <AlbumCard album={album} className={tw?.cardWrapper} tw={{ img: tw?.cardTw?.img }} />
           </AnimationWrapper>
         );
       })}

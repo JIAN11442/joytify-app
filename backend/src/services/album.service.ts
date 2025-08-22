@@ -7,6 +7,9 @@ import {
   RefactorAlbumResponse,
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
+import { collectDocumentAttributes } from "./util.service";
+import SongModel from "../models/song.model";
+import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
 
 interface CreateAlbumServiceRequest extends CreateAlbumRequest {
   userId: string;
@@ -31,10 +34,54 @@ export const getAlbumById = async (id: string) => {
   const album = await AlbumModel.findById(id)
     .populate({ path: "artists", select: "name", transform: (doc: Musician) => doc.name })
     .populateNestedSongDetails()
-    .refactorSongData<PopulatedAlbumResponse>({ transformNestedSongs: true })
+    .refactorSongFields<PopulatedAlbumResponse>({ transformNestedSongs: true })
     .lean<RefactorAlbumResponse>();
 
   return { album };
+};
+
+// get recommended albums service
+export const getRecommendedAlbums = async (albumId: string) => {
+  const album = await AlbumModel.findById(albumId);
+
+  appAssert(album, NOT_FOUND, "Album not found");
+
+  const features = await collectDocumentAttributes({
+    model: SongModel,
+    ids: album.songs,
+    fields: ["genres", "tags", "languages"],
+  });
+
+  const [result] = await SongModel.aggregate([
+    { $match: { _id: { $nin: album.songs } } },
+    { $match: { album: { $ne: album._id } } },
+    {
+      $match: {
+        $or: [
+          { genres: { $in: features.genres } },
+          { tags: { $in: features.tags } },
+          { languages: { $in: features.languages } },
+        ],
+      },
+    },
+    { $limit: PROFILE_FETCH_LIMIT },
+    {
+      $group: {
+        _id: null,
+        albumIds: { $addToSet: "$album" },
+      },
+    },
+  ]);
+
+  const recommendedAlbums = await AlbumModel.find({
+    _id: { $in: result?.albumIds || [] },
+  })
+    .populate({ path: "artists", select: "name", transform: (doc: Musician) => doc.name })
+    .populateNestedSongDetails()
+    .refactorSongFields<PopulatedAlbumResponse>({ transformNestedSongs: true })
+    .lean<RefactorAlbumResponse>();
+
+  return recommendedAlbums;
 };
 
 // create album service

@@ -1,5 +1,11 @@
 import { RequestHandler } from "express";
-import { createAlbum, getAlbumById, getUserAlbums, removeAlbum } from "../services/album.service";
+import {
+  createAlbum,
+  getAlbumById,
+  getRecommendedAlbums,
+  getUserAlbums,
+  removeAlbum,
+} from "../services/album.service";
 import { albumZodSchema } from "../schemas/album.zod";
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
@@ -28,6 +34,19 @@ export const getAlbumByIdHandler: RequestHandler = async (req, res, next) => {
     const { album } = await getAlbumById(albumId);
 
     return res.status(OK).json(album);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// get recommended albums handler
+export const getRecommendedAlbumsHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const albumId = objectIdZodSchema.parse(req.params.albumId);
+
+    const recommendedAlbums = await getRecommendedAlbums(albumId);
+
+    return res.status(OK).json(recommendedAlbums);
   } catch (error) {
     next(error);
   }

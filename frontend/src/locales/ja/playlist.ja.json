@@ -5,6 +5,14 @@
 
   "playlist.hero.section.type": "{type} · {songCount} · {duration}",
 
+  "playlist.recommendation.section.title": "おすすめ曲",
+  "playlist.recommendation.section.description": "このプレイリストに基づいておすすめ曲を表示します",
+
+  "playlist.toggleButton.show": "さらに曲を表示...",
+  "playlist.songSearch.section.title": "プレイリストに新しい曲を追加しましょう",
+  "playlist.songSearch.section.searchbar.placeholder": "曲名、アーティスト、アルバム、ジャンル、言語で検索...",
+  "playlist.songSearch.section.noFound": "<strong>「{searchQuery}」</strong> に一致する曲が見つかりませんでした",
+
   "playlist.menu.action.editDetails": "詳細を編集",
   "playlist.menu.action.deletePlaylist": "プレイリストを削除",
   "playlist.menu.action.makePrivate": "非公開にする",

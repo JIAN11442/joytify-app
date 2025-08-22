@@ -1,3 +1,6 @@
 {
-  "label.hero.section.description": "{count} song · {duration}"
+  "label.hero.section.description": "{count} song · {duration}",
+
+  "label.recommendation.section.title": "Recommended",
+  "label.recommendation.section.description": "Based on what's in this label"
 }

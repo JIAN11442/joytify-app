@@ -10,6 +10,7 @@ import {
   RefactorSearchLabelResponse,
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
+import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
 
 type GetLabelsServiceRequest = {
   userId: string;
@@ -27,6 +28,32 @@ type RemoveLabelRequest = {
 };
 
 const { INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;
+
+// get label ID service
+export const getLabelId = async (params: GetLabelIdRequest) => {
+  const { label: doc, type, default: isDefault, createIfAbsent } = params;
+
+  const findQuery: FilterQuery<LabelDocument> = {
+    type,
+    label: doc,
+    default: isDefault,
+  };
+
+  // find label if exist
+  let label = await LabelModel.findOne(findQuery);
+
+  // if not found, create and replace label
+  if (!label && createIfAbsent) {
+    label = await LabelModel.create({ ...findQuery });
+
+    appAssert(label, INTERNAL_SERVER_ERROR, "Failed to create label");
+  }
+
+  // if label still not found, return error
+  appAssert(label, NOT_FOUND, "Label is not found");
+
+  return { id: label._id };
+};
 
 // get all labels service
 export const getLabels = async (params: GetLabelsServiceRequest) => {
@@ -96,40 +123,33 @@ export const getLabels = async (params: GetLabelsServiceRequest) => {
   return { labels: labels[0] || {} };
 };
 
-// get label ID service
-export const getLabelId = async (params: GetLabelIdRequest) => {
-  const { label: doc, type, default: isDefault, createIfAbsent } = params;
-
-  const findQuery: FilterQuery<LabelDocument> = {
-    type,
-    label: doc,
-    default: isDefault,
-  };
-
-  // find label if exist
-  let label = await LabelModel.findOne(findQuery);
-
-  // if not found, create and replace label
-  if (!label && createIfAbsent) {
-    label = await LabelModel.create({ ...findQuery });
-
-    appAssert(label, INTERNAL_SERVER_ERROR, "Failed to create label");
-  }
-
-  // if label still not found, return error
-  appAssert(label, NOT_FOUND, "Label is not found");
-
-  return { id: label._id };
-};
-
 // get label by id service
 export const getLabelById = async (id: string) => {
   const label = await LabelModel.findById(id)
     .populateNestedSongDetails()
-    .refactorSongData<PopulatedSearchLabelResponse>({ transformNestedSongs: true })
+    .refactorSongFields<PopulatedSearchLabelResponse>({ transformNestedSongs: true })
     .lean<RefactorSearchLabelResponse>();
 
   return { label };
+};
+
+// get recommended labels service
+export const getRecommendedLabels = async (labelId: string) => {
+  const label = await LabelModel.findById(labelId);
+
+  appAssert(label, NOT_FOUND, "Label is not found");
+
+  const recommendedLabels = await LabelModel.find({
+    _id: { $ne: labelId },
+    type: label.type,
+    songs: { $ne: [] },
+  })
+    .limit(PROFILE_FETCH_LIMIT)
+    .populateNestedSongDetails()
+    .refactorSongFields<PopulatedSearchLabelResponse>({ transformNestedSongs: true })
+    .lean<RefactorSearchLabelResponse>();
+
+  return recommendedLabels;
 };
 
 // create label service

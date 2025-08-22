@@ -1,3 +1,6 @@
 {
-  "label.hero.section.description": "{count}曲 · {duration}"
+  "label.hero.section.description": "{count}曲 · {duration}",
+
+  "label.recommendation.section.title": "推薦ラベル",
+  "label.recommendation.section.description": "このラベルに基づいたコンテンツ"
 }

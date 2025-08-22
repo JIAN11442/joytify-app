@@ -5,6 +5,7 @@ import {
   getFollowingMusicians,
   getMusicianById,
   getMusicianId,
+  getRecommendedMusicians,
   unfollowTargetMusician,
 } from "../services/musician.service";
 import { musicianZodSchema } from "../schemas/musician.zod";
@@ -47,6 +48,18 @@ export const getFollowingMusiciansHandler: RequestHandler = async (req, res, nex
     const followingMusicians = await getFollowingMusicians(userId);
 
     return res.status(OK).json(followingMusicians);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// get recommended musicians handler
+export const getRecommendedMusiciansHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const musicianId = objectIdZodSchema.parse(req.params.musicianId);
+    const recommendedMusicians = await getRecommendedMusicians(musicianId);
+
+    return res.status(OK).json(recommendedMusicians);
   } catch (error) {
     next(error);
   }

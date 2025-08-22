@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useCallback, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
+import { twMerge } from "tailwind-merge";
 import { FaPlay } from "react-icons/fa";
 import { IoTimeOutline } from "react-icons/io5";
 import Icon from "./react-icons.component";
@@ -25,6 +26,7 @@ type SongTableListProps = {
   switchFunc?: boolean;
   noFoundMessage?: string | React.ReactNode;
   children?: React.ReactNode;
+  className?: string;
 };
 
 const SongTableList: React.FC<SongTableListProps> = ({
@@ -34,6 +36,7 @@ const SongTableList: React.FC<SongTableListProps> = ({
   switchFunc = true,
   noFoundMessage,
   children,
+  className,
 }) => {
   const songTablePrefix = "song.tableList";
   const songTableListFm = fm(songTablePrefix);
@@ -60,8 +63,8 @@ const SongTableList: React.FC<SongTableListProps> = ({
   );
 
   const getColorStyle = useCallback(
-    (cssVar: string, color?: string) => {
-      return createColorStyle(cssVar, color || paletee?.vibrant);
+    (cssVar: string, opacity?: number) => {
+      return createColorStyle(cssVar, paletee?.vibrant, opacity);
     },
     [paletee]
   );
@@ -72,14 +75,15 @@ const SongTableList: React.FC<SongTableListProps> = ({
   const arrangementType = switchFunc ? songListArrangementType : LIST;
   const isCompact = arrangementType === COMPACT;
 
-  const indexClassName = `px-0 pl-5 max-w-[30px]`;
+  const indexClassName = `px-0 pl-5 max-w-[30px] rounded-l-md`;
   const artistClassName = `${isCompact ? "block" : "hidden"}`;
   const albumClassName = `max-w-[180px] ${isCollapsed ? "max-sm:hidden" : "max-lg:hidden"}`;
   const dateClassName = `${isCollapsed ? "max-lg:hidden" : "max-xl:hidden"}`;
   const durationClassName = `px-3`;
+  const actionsClassName = `rounded-r-md`;
 
   return (
-    <div ref={containerRef} className={`overflow-x-auto hidden-scrollbar`}>
+    <div ref={containerRef} className={twMerge(`overflow-x-auto hidden-scrollbar`, className)}>
       <table className={`min-w-full text-sm text-left`}>
         {/* header */}
         <thead>
@@ -123,11 +127,13 @@ const SongTableList: React.FC<SongTableListProps> = ({
                   key={index}
                   style={
                     {
+                      ...getColorStyle("--bg-hover-color", 0.2),
+                      ...getColorStyle("--hover-color"),
                       backgroundImage: isPlayedSong
                         ? `linear-gradient(
                             45deg, 
                             transparent 0%,
-                            ${paletee?.vibrant || "#818cf8"}80 50%,
+                            ${paletee?.vibrant || "#818cf8"} 50%,
                             transparent 100%
                           )`
                         : "none",
@@ -138,21 +144,20 @@ const SongTableList: React.FC<SongTableListProps> = ({
                   className={`
                     group
                     w-full
-                    ${isPlayingSong ? "" : "hover:bg-neutral-700/40"}
                     font-light
                     text-grey-custom/60
+                    ${!isPlayedSong && "hover:bg-[var(--bg-hover-color)]"}
                     whitespace-nowrap
                     gradient-animation
                     transition
                   `}
                 >
                   {/* index */}
-                  <td className={indexClassName}>
+                  <td style={{ filter: "brightness(1.5)" }} className={indexClassName}>
                     {isPlayingSong ? (
                       <SoundWave
                         color={paletee?.vibrant || "#818cf8"}
                         barWidth={3}
-                        style={{ filter: "brightness(1.5)" }}
                         isPlaying={isPlaying}
                       />
                     ) : (
@@ -160,8 +165,7 @@ const SongTableList: React.FC<SongTableListProps> = ({
                         <p className={`group-hover:hidden`}>{index + 1}</p>
                         <Icon
                           name={FaPlay}
-                          style={getColorStyle("--index-icon-color")}
-                          className={`hidden group-hover:block text-[var(--index-icon-color)]`}
+                          className={`hidden group-hover:block text-[var(--hover-color)]`}
                         />
                       </div>
                     )}
@@ -179,13 +183,12 @@ const SongTableList: React.FC<SongTableListProps> = ({
                   </td>
 
                   {/* artist */}
-                  <td className={artistClassName}>
+                  <td style={{ filter: "brightness(1.5)" }} className={artistClassName}>
                     {artistId && artistName ? (
                       <Link
                         to={`/musician/${artistId}`}
                         onClick={(e) => e.stopPropagation()}
-                        style={getColorStyle("--link-color")}
-                        className={`underline hover:text-[var(--link-color)] transition-all`}
+                        className={`underline hover:text-[var(--hover-color)] transition-all`}
                       >
                         {artistName}
                       </Link>
@@ -195,13 +198,12 @@ const SongTableList: React.FC<SongTableListProps> = ({
                   </td>
 
                   {/* album */}
-                  <td className={albumClassName}>
+                  <td style={{ filter: "brightness(1.5)" }} className={albumClassName}>
                     {albumTitle && albumId ? (
                       <Link
                         to={`/album/${albumId}`}
                         onClick={(e) => e.stopPropagation()}
-                        style={getColorStyle("--link-color")}
-                        className={`underline hover:text-[var(--link-color)] transition-all`}
+                        className={`underline hover:text-[var(--hover-color)] transition-all`}
                       >
                         {albumTitle}
                       </Link>
@@ -222,7 +224,8 @@ const SongTableList: React.FC<SongTableListProps> = ({
                     <p className={`line-clamp-1`}>{getDuration(duration)}</p>
                   </td>
 
-                  <td>
+                  {/* actions */}
+                  <td className={actionsClassName}>
                     <SongTableListActions
                       fm={fm}
                       song={song}

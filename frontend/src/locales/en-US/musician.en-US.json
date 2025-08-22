@@ -1,5 +1,8 @@
 {
   "musician.hero.section.description": "{songCount} song · {albumCount} album · {duration}",
   "musician.actionPanel.menu.follow": "Follow artist",
-  "musician.actionPanel.menu.unfollow": "Unfollow artist"
+  "musician.actionPanel.menu.unfollow": "Unfollow artist",
+
+  "musician.recommendation.section.title": "Recommended",
+  "musician.recommendation.section.description": "Based on what's in this musician"
 }

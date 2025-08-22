@@ -62,7 +62,7 @@ export const getUserPlaylistById = async (playlistId: string, userId: string) =>
     user: userId,
   })
     .populateNestedSongDetails()
-    .refactorSongData<PopulatedPlaylistResponse>({ transformNestedSongs: true })
+    .refactorSongFields<PopulatedPlaylistResponse>({ transformNestedSongs: true })
     .lean<RefactorPlaylistResponse>();
 
   return { playlist };

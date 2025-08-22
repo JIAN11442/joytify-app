@@ -18,6 +18,10 @@ export const getMusicianById = async (musicianId: string): Promise<RefactorMusic
 export const getFollowingMusicians = async (): Promise<MusicianResponse[]> =>
   API.get(`${MUSICIANS}/following`);
 
+export const getRecommendedMusicians = async (
+  musicianId: string
+): Promise<RefactorMusicianResponse[]> => API.get(`${MUSICIANS}/recommendations/${musicianId}`);
+
 export const followMusician = async (musicianId: string): Promise<MusicianResponse> =>
   API.patch(`${MUSICIANS}/follow/${musicianId}`);
 

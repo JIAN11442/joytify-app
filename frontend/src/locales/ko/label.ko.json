@@ -1,3 +1,6 @@
 {
-  "label.hero.section.description": "노래 {count}곡 · {duration}"
+  "label.hero.section.description": "노래 {count}곡 · {duration}",
+
+  "label.recommendation.section.title": "추천 라벨",
+  "label.recommendation.section.description": "이 라벨에 따른 콘텐츠"
 }

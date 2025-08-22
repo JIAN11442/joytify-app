@@ -1,4 +1,7 @@
 {
   "album.hero.section.type": "앨범",
-  "album.hero.section.description": "총 {count}곡 · {duration}"
+  "album.hero.section.description": "총 {count}곡 · {duration}",
+
+  "album.recommendation.section.title": "추천 앨범",
+  "album.recommendation.section.description": "이 앨범의 내용에 따라 추천"
 }
