@@ -110,7 +110,8 @@ body,
     hover:scale-105
     items-center
     justify-center
-    rounded-full;
+    rounded-full
+    transition-all;
   }
 
   .navbar-link.active {

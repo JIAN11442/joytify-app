@@ -1,17 +1,20 @@
 import { useEffect } from "react";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
-import { IoIosMenu } from "react-icons/io";
 import { BiSearch } from "react-icons/bi";
+import { IoIosMenu } from "react-icons/io";
+import { CgShortcut } from "react-icons/cg";
 import { IoNotificationsOutline } from "react-icons/io5";
 import JoytifyLogo from "../../public/logos/joytify-logo.svg";
 
+import Icon from "./react-icons.component";
 import NavbarLink from "./navbar-link.component";
 import UserEntryPoint from "./user-entry-point.component";
 import NavbarSearchBar from "./navbar-searchbar.component";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { useGetUserUnviewedNotificationCountQuery } from "../hooks/notification-query.hook";
 import { SearchFilterOptions } from "@joytify/shared-types/constants";
+import useKeyboardShortcutModalState from "../states/keyboard-shortcut-modal.state";
 import useProviderState from "../states/provider.state";
 import useSidebarState from "../states/sidebar.state";
 import useNavbarState from "../states/navbar.state";
@@ -27,6 +30,7 @@ const Navbar = () => {
   const { screenWidth } = useProviderState();
   const { activeFloatingSidebar, setActiveFloatingSidebar, setCollapseSideBarState } =
     useSidebarState();
+  const { openKeyboardShortcutModal } = useKeyboardShortcutModalState();
   const {
     activeNavSearchBar,
     adjustNavSearchBarPosition,
@@ -61,6 +65,12 @@ const Navbar = () => {
     }
 
     setSearchParams(newSearchParams);
+  };
+
+  const handleOpenKeyboardShortcutModal = () => {
+    timeoutForDelay(() => {
+      openKeyboardShortcutModal();
+    });
   };
 
   const isSearchPage = location.pathname.includes("/search");
@@ -219,6 +229,17 @@ const Navbar = () => {
               )}
               <NavbarLink to="/manage/notifications" icon={{ name: IoNotificationsOutline }} />
             </div>
+          )}
+
+          {/* shortcut */}
+          {authUser && (
+            <button
+              type="button"
+              onClick={handleOpenKeyboardShortcutModal}
+              className={`navbar-link max-sm:hidden`}
+            >
+              <Icon name={CgShortcut} opts={{ size: 22 }} />
+            </button>
           )}
 
           {/* user entry point */}

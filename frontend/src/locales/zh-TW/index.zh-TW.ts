@@ -16,6 +16,7 @@ import profileJSON from "./profile.zh-TW.json";
 import statsJSON from "./stats.zh-TW.json";
 import labelJSON from "./label.zh-TW.json";
 import homepageJSON from "./homepage.zh-TW.json";
+import shortcutJSON from "./shortcut.zh-TW.json";
 
 const modules = [
   authJSON,
@@ -36,6 +37,7 @@ const modules = [
   statsJSON,
   labelJSON,
   homepageJSON,
+  shortcutJSON,
 ];
 
 export default Object.assign({}, ...modules);

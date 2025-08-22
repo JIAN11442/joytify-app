@@ -1,0 +1,40 @@
+{
+  "keyboard.shortcut.modal.title": "Pintasan Papan Kekunci",
+  "keyboard.shortcut.modal.description": "Tekan <strong>{macKey}</strong> atau <strong>{windowsKey}</strong> untuk menukar modal ini",
+
+  "keyboard.shortcut.section.general": "Umum",
+  "keyboard.shortcut.section.navigation": "Navigasi",
+  "keyboard.shortcut.section.playback": "Kawalan Main",
+  "keyboard.shortcut.section.upload": "Muat Naik",
+
+  "keyboard.shortcut.action.toggleSidebar": "Tukar bar sisi",
+  "keyboard.shortcut.action.toggleUploadModal": "Tukar modal muat naik",
+  "keyboard.shortcut.action.toggleKeyboardShortcutModal": "Tukar modal pintasan",
+  "keyboard.shortcut.action.exitInputFocus": "Keluar fokus input",
+
+  "keyboard.shortcut.action.navigate.homepage": "Laman Utama",
+  "keyboard.shortcut.action.navigate.searchpage": "Halaman Carian",
+  "keyboard.shortcut.action.navigate.profilepage": "Halaman Profil",
+
+  "keyboard.shortcut.action.navigate.manage.songs": "Pengurusan Lagu Anda",
+  "keyboard.shortcut.action.navigate.manage.playlists": "Pengurusan Senarai Main Anda",
+  "keyboard.shortcut.action.navigate.manage.following": "Pengurusan Ikutan Anda",
+  "keyboard.shortcut.action.navigate.manage.notifications": "Pengurusan Pemberitahuan Anda",
+
+  "keyboard.shortcut.action.navigate.settings.account": "Tetapan Akaun Anda",
+  "keyboard.shortcut.action.navigate.settings.notifications": "Tetapan Pemberitahuan Anda",
+  "keyboard.shortcut.action.navigate.settings.language": "Tetapan Bahasa Anda",
+  "keyboard.shortcut.action.navigate.settings.connectedDevices": "Tetapan Peranti Bersambung Anda",
+
+  "keyboard.shortcut.action.togglePlayback": "Main/Jeda",
+  "keyboard.shortcut.action.toggleShuffle": "Kacau",
+  "keyboard.shortcut.action.cycleRepeat": "Tukar mod ulang",
+  "keyboard.shortcut.action.next": "Lagu seterusnya",
+  "keyboard.shortcut.action.previous": "Lagu sebelumnya",
+  "keyboard.shortcut.action.seekForward": "Maju pantas",
+  "keyboard.shortcut.action.seekBackward": "Undur pantas",
+  "keyboard.shortcut.action.raiseVolume": "Tingkatkan kelantangan",
+  "keyboard.shortcut.action.lowerVolume": "Kurangkan kelantangan",
+  "keyboard.shortcut.action.toggleMute": "Senyap/Buka senyap",
+  "keyboard.shortcut.action.stopAudio": "Henti main dan set semula"
+}

@@ -3,12 +3,12 @@ import Loader from "../components/loader.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import PageSectionTitle from "../components/page-section-title.component";
 import AccountDetailsForm from "../components/account-details-form.component";
+import AccountInfoSection from "../components/account-info-section.component";
 import { useScopedIntl } from "../hooks/intl.hook";
+import useUserState from "../states/user.state";
 import useSettingsState from "../states/settings.state";
 import useSidebarState from "../states/sidebar.state";
-import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
-import AccountInfoSection from "../components/account-info-section.component";
 
 const SettingsAccountPage = () => {
   const { fm } = useScopedIntl();

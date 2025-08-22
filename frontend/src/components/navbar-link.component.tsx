@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
-import { IconBaseProps } from "react-icons";
 import { LinkProps, NavLink } from "react-router-dom";
+import { IconBaseProps } from "react-icons";
 
 import Icon, { IconName } from "./react-icons.component";
 
@@ -33,11 +33,7 @@ const NavbarLink = forwardRef<HTMLAnchorElement, NavbarLinkProps>(
         {...props}
       >
         {icon ? (
-          <Icon
-            name={icon.name}
-            opts={{ size: 22, ...icon?.opts }}
-            className={tw?.icon}
-          />
+          <Icon name={icon.name} opts={{ size: 22, ...icon?.opts }} className={tw?.icon} />
         ) : (
           <>{children}</>
         )}

@@ -51,15 +51,15 @@ const HomePage = () => {
         backgroundImage: `linear-gradient(
           to bottom,
           rgb(243 244 246 / 0.05) 0%,
-          #171717 25%
+          #171717 20%
         )`,
       }}
       className={`page-container`}
     >
       {isLoading ? (
-        <GridCardListSectionSkeleton sectionCount={4} listCount={5} showDescription />
+        <GridCardListSectionSkeleton sectionCount={4} listCount={6} showDescription />
       ) : (
-        <>
+        <div className={`flex flex-col gap-10`}>
           {/* guest recommended songs */}
           {recommendedSongs && isGuest && (
             <HomepageRecommendedSongs fm={fm} songs={recommendedSongs} isGuest={isGuest} />
@@ -76,7 +76,7 @@ const HomePage = () => {
           {recommendedAlbums && <HomepageRecommendedAlbums fm={fm} albums={recommendedAlbums} />}
           {recommendedTags && <HomepageRecommendedTags fm={fm} tags={recommendedTags} />}
           {recommendedGenres && <HomepageRecommendedGenres fm={fm} genres={recommendedGenres} />}
-        </>
+        </div>
       )}
     </div>
   );

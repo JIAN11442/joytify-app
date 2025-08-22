@@ -1,0 +1,40 @@
+{
+  "keyboard.shortcut.modal.title": "Keyboard Shortcuts",
+  "keyboard.shortcut.modal.description": "Press <strong>{macKey}</strong> or <strong>{windowsKey}</strong> to toggle this modal",
+
+  "keyboard.shortcut.section.general": "General",
+  "keyboard.shortcut.section.navigation": "Navigation",
+  "keyboard.shortcut.section.playback": "Playback",
+  "keyboard.shortcut.section.upload": "Upload",
+
+  "keyboard.shortcut.action.toggleSidebar": "Toggle sidebar",
+  "keyboard.shortcut.action.toggleUploadModal": "Toggle upload modal",
+  "keyboard.shortcut.action.toggleKeyboardShortcutModal": "Toggle keyboard shortcut modal",
+  "keyboard.shortcut.action.exitInputFocus": "Exit input focus",
+
+  "keyboard.shortcut.action.navigate.homepage": "Homepage",
+  "keyboard.shortcut.action.navigate.searchpage": "Search page",
+  "keyboard.shortcut.action.navigate.profilepage": "Profile page",
+
+  "keyboard.shortcut.action.navigate.manage.songs": "Your Song Management",
+  "keyboard.shortcut.action.navigate.manage.playlists": "Your Playlist Management",
+  "keyboard.shortcut.action.navigate.manage.following": "Your Following Management",
+  "keyboard.shortcut.action.navigate.manage.notifications": "Your Notification Management",
+
+  "keyboard.shortcut.action.navigate.settings.account": "Your Account Settings",
+  "keyboard.shortcut.action.navigate.settings.notifications": "Your Notification Settings",
+  "keyboard.shortcut.action.navigate.settings.language": "Your Language Settings",
+  "keyboard.shortcut.action.navigate.settings.connectedDevices": "Your Connected Devices Settings",
+
+  "keyboard.shortcut.action.togglePlayback": "Play/Pause",
+  "keyboard.shortcut.action.toggleShuffle": "Shuffle",
+  "keyboard.shortcut.action.cycleRepeat": "Cycle repeat mode",
+  "keyboard.shortcut.action.next": "Skip to next",
+  "keyboard.shortcut.action.previous": "Skip to previous",
+  "keyboard.shortcut.action.seekForward": "Seek forward",
+  "keyboard.shortcut.action.seekBackward": "Seek backward",
+  "keyboard.shortcut.action.raiseVolume": "Raise volume",
+  "keyboard.shortcut.action.lowerVolume": "Lower volume",
+  "keyboard.shortcut.action.toggleMute": "Mute/Unmute",
+  "keyboard.shortcut.action.stopAudio": "Stop and reset playback"
+}

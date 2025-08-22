@@ -9,12 +9,12 @@ import ModalProvider from "./providers/modal.provider.tsx";
 import ToasterProvider from "./providers/toaster.provider.tsx";
 import ScreenMonitorProvider from "./providers/screen.provider.tsx";
 import ThemeIntlProvider from "./providers/theme-intl.provider.tsx";
-import ShortcutKeysProvider from "./providers/shortcut-keys.provider.tsx";
 import SkeletonThemeProvider from "./providers/skeleton-theme.provider.tsx";
 import UserPreferencesProvider from "./providers/user-preferences.provider.tsx";
 import PlaybackControlProvider from "./providers/playback-control.provider.tsx";
 import SessionHeartBeatProvider from "./providers/session-heartbeat.provider.tsx";
 import SocketClientProvider from "./providers/socket-client.provider.tsx";
+import { KeyboardShortcutKeysProvider } from "./providers/keyboard-shortcut-keys.provider.tsx";
 import queryClient from "./config/query-client.config.ts";
 import "../index.css";
 
@@ -27,7 +27,7 @@ createRoot(document.getElementById("root")!).render(
             <UserPreferencesProvider>
               <SessionHeartBeatProvider>
                 <ScreenMonitorProvider>
-                  <ShortcutKeysProvider>
+                  <KeyboardShortcutKeysProvider>
                     <SkeletonThemeProvider>
                       <PlaybackControlProvider>
                         <SocketClientProvider>
@@ -38,7 +38,7 @@ createRoot(document.getElementById("root")!).render(
                         </SocketClientProvider>
                       </PlaybackControlProvider>
                     </SkeletonThemeProvider>
-                  </ShortcutKeysProvider>
+                  </KeyboardShortcutKeysProvider>
                 </ScreenMonitorProvider>
               </SessionHeartBeatProvider>
             </UserPreferencesProvider>

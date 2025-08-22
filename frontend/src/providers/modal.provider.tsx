@@ -2,13 +2,14 @@
 
 import { lazy, Suspense } from "react";
 import useUserState from "../states/user.state";
+import useSongState from "../states/song.state";
+import useManagesState from "../states/manages.state";
 import usePlaylistState from "../states/playlist.state";
 import useSettingsState from "../states/settings.state";
 import useAuthModalState from "../states/auth-modal.state";
 import useUploadModalState from "../states/upload-modal.state";
 import useVerificationModalState from "../states/verification.state";
-import useManagesState from "../states/manages.state";
-import useSongState from "../states/song.state";
+import useKeyboardShortcutModalState from "../states/keyboard-shortcut-modal.state";
 
 // import all components
 const components = import.meta.glob("../components/*.component.tsx");
@@ -44,6 +45,7 @@ const Modal = {
   playlistAdvancedEditModal: lazy(() => path("playlist-advanced-edit-modal")),
   playlistAdvancedCreateModal: lazy(() => path("playlist-advanced-create-modal")),
   musicianUnfollowModal: lazy(() => path("musician-unfollow-modal")),
+  keyboardShortcutModal: lazy(() => path("keyboard-shortcut-modal")),
 };
 
 const ModalProvider = () => {
@@ -71,6 +73,7 @@ const ModalProvider = () => {
     activeSongAssignmentModal,
   } = useSongState();
   const { activeSongDeleteModal, activeMusicianUnFollowModal } = useManagesState();
+  const { activeKeyboardShortcutModal } = useKeyboardShortcutModalState();
 
   return (
     <Suspense fallback={null}>
@@ -94,6 +97,7 @@ const ModalProvider = () => {
       {activePlaylistAdvancedEditModal.active && <Modal.playlistAdvancedEditModal />}
       {activePlaylistAdvancedCreateModal && <Modal.playlistAdvancedCreateModal />}
       {activeMusicianUnFollowModal.active && <Modal.musicianUnfollowModal />}
+      {activeKeyboardShortcutModal && <Modal.keyboardShortcutModal />}
     </Suspense>
   );
 };

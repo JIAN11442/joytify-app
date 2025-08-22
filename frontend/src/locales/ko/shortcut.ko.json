@@ -1,0 +1,40 @@
+{
+  "keyboard.shortcut.modal.title": "키보드 단축키",
+  "keyboard.shortcut.modal.description": "<strong>{macKey}</strong> 또는 <strong>{windowsKey}</strong>를 눌러 이 모달을 전환",
+
+  "keyboard.shortcut.section.general": "일반",
+  "keyboard.shortcut.section.navigation": "네비게이션",
+  "keyboard.shortcut.section.playback": "재생 제어",
+  "keyboard.shortcut.section.upload": "업로드",
+
+  "keyboard.shortcut.action.toggleSidebar": "사이드바 전환",
+  "keyboard.shortcut.action.toggleUploadModal": "업로드 모달 전환",
+  "keyboard.shortcut.action.toggleKeyboardShortcutModal": "단축키 모달 전환",
+  "keyboard.shortcut.action.exitInputFocus": "입력 포커스 종료",
+
+  "keyboard.shortcut.action.navigate.homepage": "홈페이지",
+  "keyboard.shortcut.action.navigate.searchpage": "검색 페이지",
+  "keyboard.shortcut.action.navigate.profilepage": "프로필 페이지",
+
+  "keyboard.shortcut.action.navigate.manage.songs": "내 곡 관리",
+  "keyboard.shortcut.action.navigate.manage.playlists": "내 재생목록 관리",
+  "keyboard.shortcut.action.navigate.manage.following": "내 팔로우 관리",
+  "keyboard.shortcut.action.navigate.manage.notifications": "내 알림 관리",
+
+  "keyboard.shortcut.action.navigate.settings.account": "내 계정 설정",
+  "keyboard.shortcut.action.navigate.settings.notifications": "내 알림 설정",
+  "keyboard.shortcut.action.navigate.settings.language": "내 언어 설정",
+  "keyboard.shortcut.action.navigate.settings.connectedDevices": "내 연결된 기기 설정",
+
+  "keyboard.shortcut.action.togglePlayback": "재생/일시정지",
+  "keyboard.shortcut.action.toggleShuffle": "셔플",
+  "keyboard.shortcut.action.cycleRepeat": "반복 모드 전환",
+  "keyboard.shortcut.action.next": "다음 곡",
+  "keyboard.shortcut.action.previous": "이전 곡",
+  "keyboard.shortcut.action.seekForward": "빨리감기",
+  "keyboard.shortcut.action.seekBackward": "되감기",
+  "keyboard.shortcut.action.raiseVolume": "볼륨 높이기",
+  "keyboard.shortcut.action.lowerVolume": "볼륨 낮추기",
+  "keyboard.shortcut.action.toggleMute": "음소거/음소거 해제",
+  "keyboard.shortcut.action.stopAudio": "재생 중지 및 초기화"
+}
