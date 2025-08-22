@@ -13,7 +13,9 @@ export const useRecordPlaybackLogMutation = (opts: object = {}) => {
   const mutation = useMutation({
     mutationKey: [MutationKey.RECORD_PLAYBACK_LOG],
     mutationFn: createPlaybackLog,
-    onSuccess: (data: PlaybackLogResponse) => {
+    onSuccess: (data: PlaybackLogResponse | null) => {
+      if (!data) return;
+
       const { shouldPrompt, song } = data;
 
       // refetch related queries

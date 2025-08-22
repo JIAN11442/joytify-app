@@ -12,7 +12,7 @@ import mergeRefs from "../lib/merge-refs.lib";
 
 type ModalProps = {
   title?: string;
-  description?: string;
+  description?: string | React.ReactNode;
   activeState: boolean;
   children: React.ReactNode;
   activeOnChange?: () => void;

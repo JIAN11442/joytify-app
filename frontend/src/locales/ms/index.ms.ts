@@ -16,6 +16,7 @@ import profileJSON from "./profile.ms.json";
 import statsJSON from "./stats.ms.json";
 import labelJSON from "./label.ms.json";
 import homepageJSON from "./homepage.ms.json";
+import shortcutJSON from "./shortcut.ms.json";
 
 const modules = [
   authJSON,
@@ -36,6 +37,7 @@ const modules = [
   statsJSON,
   labelJSON,
   homepageJSON,
+  shortcutJSON,
 ];
 
 export default Object.assign({}, ...modules);

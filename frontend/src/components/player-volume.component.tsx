@@ -69,6 +69,7 @@ const PlayerVolume: React.FC<PlayerVolumeProps> = ({ className }) => {
         className
       )}
     >
+
       {/* volume icon */}
       <button
         onClick={handleToggleVolumeBtn}

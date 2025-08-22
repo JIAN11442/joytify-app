@@ -423,8 +423,8 @@ export const GridCardListSectionSkeleton: React.FC<CardListSectionSkeleton> = ({
   return Array.from({ length: sectionCount }).map((_, index) => {
     return (
       <div key={`card-list-section-skeleton-${index}`} className={className}>
-        <TextSkeleton className={`w-[20%] pl-3`} />
-        {showDescription && <TextSkeleton className={`w-[40%] pl-3`} />}
+        <TextSkeleton className={`w-[10%] pl-3`} />
+        {showDescription && <TextSkeleton className={`w-[15%] pl-3`} />}
 
         <GridCardListSkeleton
           key={`card-list-section-skeleton-${index}`}

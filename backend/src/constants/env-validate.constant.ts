@@ -32,6 +32,7 @@ const env = cleanEnv(process.env, {
   SESSION_THRESHOLD: num(),
   MIN_RATING_PROMPT_THRESHOLD: num(),
   MAX_RATING_PROMPT_THRESHOLD: num(),
+  MIN_PLAYBACK_DURATION_SECONDS: num(),
 });
 
 export const {
@@ -66,4 +67,5 @@ export const {
   SESSION_THRESHOLD,
   MIN_RATING_PROMPT_THRESHOLD,
   MAX_RATING_PROMPT_THRESHOLD,
+  MIN_PLAYBACK_DURATION_SECONDS,
 } = env;

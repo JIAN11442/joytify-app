@@ -16,6 +16,7 @@ import profileJSON from "./profile.ko.json";
 import statsJSON from "./stats.ko.json";
 import labelJSON from "./label.ko.json";
 import homepageJSON from "./homepage.ko.json";
+import shortcutJSON from "./shortcut.ko.json";
 
 const modules = [
   authJSON,
@@ -36,6 +37,7 @@ const modules = [
   statsJSON,
   labelJSON,
   homepageJSON,
+  shortcutJSON,
 ];
 
 export default Object.assign({}, ...modules);

@@ -22,19 +22,29 @@ export const getMusicAudioInstance = () => {
 };
 
 export const resetMusicAudioInstance = () => {
-  const { setPlaybackQueue, setPlaylistSongs, setIsShuffle, setLoopMode } =
-    usePlaybackControlState.getState();
+  const {
+    setPlaybackQueue,
+    setPlaylistSongs,
+    setIsShuffle,
+    setLoopMode,
+    setIsPlaying,
+    setProgressTime,
+    setPlaybackTime,
+  } = usePlaybackControlState.getState();
 
   if (musicAudio) {
     musicAudio.pause();
     musicAudio.src = "";
     musicAudio.currentTime = 0;
     musicAudio.load();
-    musicAudio = null;
 
+    // Reset all playback states
     setPlaybackQueue({ queue: [] as unknown as Queue, currentIndex: 0 });
     setPlaylistSongs([]);
     setIsShuffle(false);
     setLoopMode(LoopMode.NONE);
+    setIsPlaying(false);
+    setProgressTime(0);
+    setPlaybackTime(0);
   }
 };

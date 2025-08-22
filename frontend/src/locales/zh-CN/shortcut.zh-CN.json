@@ -1,0 +1,40 @@
+{
+  "keyboard.shortcut.modal.title": "键盘快捷键",
+  "keyboard.shortcut.modal.description": "按 <strong>{macKey}</strong> 或 <strong>{windowsKey}</strong> 切换此模态框",
+
+  "keyboard.shortcut.section.general": "一般",
+  "keyboard.shortcut.section.navigation": "导航",
+  "keyboard.shortcut.section.playback": "播放控制",
+  "keyboard.shortcut.section.upload": "上传",
+
+  "keyboard.shortcut.action.toggleSidebar": "切换侧边栏",
+  "keyboard.shortcut.action.toggleUploadModal": "切换上传模态框",
+  "keyboard.shortcut.action.toggleKeyboardShortcutModal": "切换快捷键模态框",
+  "keyboard.shortcut.action.exitInputFocus": "退出输入焦点",
+
+  "keyboard.shortcut.action.navigate.homepage": "首页",
+  "keyboard.shortcut.action.navigate.searchpage": "搜索页面",
+  "keyboard.shortcut.action.navigate.profilepage": "个人资料页面",
+
+  "keyboard.shortcut.action.navigate.manage.songs": "你的歌曲管理",
+  "keyboard.shortcut.action.navigate.manage.playlists": "你的播放列表管理",
+  "keyboard.shortcut.action.navigate.manage.following": "你的关注管理",
+  "keyboard.shortcut.action.navigate.manage.notifications": "你的通知管理",
+
+  "keyboard.shortcut.action.navigate.settings.account": "你的账户设置",
+  "keyboard.shortcut.action.navigate.settings.notifications": "你的通知设置",
+  "keyboard.shortcut.action.navigate.settings.language": "你的语言设置",
+  "keyboard.shortcut.action.navigate.settings.connectedDevices": "你的已连接设备设置",
+
+  "keyboard.shortcut.action.togglePlayback": "播放/暂停",
+  "keyboard.shortcut.action.toggleShuffle": "随机播放",
+  "keyboard.shortcut.action.cycleRepeat": "切换循环模式",
+  "keyboard.shortcut.action.next": "下一首",
+  "keyboard.shortcut.action.previous": "上一首",
+  "keyboard.shortcut.action.seekForward": "快进",
+  "keyboard.shortcut.action.seekBackward": "快退",
+  "keyboard.shortcut.action.raiseVolume": "提高音量",
+  "keyboard.shortcut.action.lowerVolume": "降低音量",
+  "keyboard.shortcut.action.toggleMute": "静音/取消静音",
+  "keyboard.shortcut.action.stopAudio": "停止播放并重置"
+}

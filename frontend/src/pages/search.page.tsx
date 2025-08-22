@@ -1,9 +1,9 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import SearchFilterPanel from "../components/search-filter-panel.component";
 import SearchFilterContent from "../components/search-filter-content.component";
+import { useScopedIntl } from "../hooks/intl.hook";
 import { SearchFilterOptions } from "@joytify/shared-types/constants";
 import { SearchFilterType } from "@joytify/shared-types/types";
-import { useScopedIntl } from "../hooks/intl.hook";
 
 const SearchPage = () => {
   const { fm } = useScopedIntl();
@@ -22,7 +22,7 @@ const SearchPage = () => {
         backgroundImage: `linear-gradient(
           to bottom,
           rgb(243 244 246 / 0.05) 0%,
-          #171717 25%
+          #171717 20%
         )`,
       }}
       className={`page-container`}

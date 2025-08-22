@@ -26,7 +26,11 @@ const HomepageRecommendedAlbums: React.FC<HomepageRecommendedAlbumsProps> = ({ f
         total: totalDocs,
       }}
     >
-      <AlbumCardList albums={docs} />
+      <AlbumCardList
+        albums={docs}
+        className={`flex overflow-x-auto hidden-scrollbar`}
+        tw={{ cardWrapper: "card-size--base" }}
+      />
     </HomepageSectionList>
   );
 };

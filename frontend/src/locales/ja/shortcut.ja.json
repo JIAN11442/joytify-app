@@ -1,0 +1,40 @@
+{
+  "keyboard.shortcut.modal.title": "キーボードショートカット",
+  "keyboard.shortcut.modal.description": "<strong>{macKey}</strong> または <strong>{windowsKey}</strong> を押してこのモーダルを切り替え",
+
+  "keyboard.shortcut.section.general": "一般",
+  "keyboard.shortcut.section.navigation": "ナビゲーション",
+  "keyboard.shortcut.section.playback": "再生制御",
+  "keyboard.shortcut.section.upload": "アップロード",
+
+  "keyboard.shortcut.action.toggleSidebar": "サイドバーの切り替え",
+  "keyboard.shortcut.action.toggleUploadModal": "アップロードモーダルの切り替え",
+  "keyboard.shortcut.action.toggleKeyboardShortcutModal": "ショートカットモーダルの切り替え",
+  "keyboard.shortcut.action.exitInputFocus": "入力フォーカスを終了",
+
+  "keyboard.shortcut.action.navigate.homepage": "ホームページ",
+  "keyboard.shortcut.action.navigate.searchpage": "検索ページ",
+  "keyboard.shortcut.action.navigate.profilepage": "プロフィールページ",
+
+  "keyboard.shortcut.action.navigate.manage.songs": "あなたの楽曲管理",
+  "keyboard.shortcut.action.navigate.manage.playlists": "あなたのプレイリスト管理",
+  "keyboard.shortcut.action.navigate.manage.following": "あなたのフォロー管理",
+  "keyboard.shortcut.action.navigate.manage.notifications": "あなたの通知管理",
+
+  "keyboard.shortcut.action.navigate.settings.account": "あなたのアカウント設定",
+  "keyboard.shortcut.action.navigate.settings.notifications": "あなたの通知設定",
+  "keyboard.shortcut.action.navigate.settings.language": "あなたの言語設定",
+  "keyboard.shortcut.action.navigate.settings.connectedDevices": "あなたの接続デバイス設定",
+
+  "keyboard.shortcut.action.togglePlayback": "再生/一時停止",
+  "keyboard.shortcut.action.toggleShuffle": "シャッフル",
+  "keyboard.shortcut.action.cycleRepeat": "リピートモードを切り替え",
+  "keyboard.shortcut.action.next": "次の曲",
+  "keyboard.shortcut.action.previous": "前の曲",
+  "keyboard.shortcut.action.seekForward": "早送り",
+  "keyboard.shortcut.action.seekBackward": "巻き戻し",
+  "keyboard.shortcut.action.raiseVolume": "音量上げ",
+  "keyboard.shortcut.action.lowerVolume": "音量下げ",
+  "keyboard.shortcut.action.toggleMute": "ミュート/ミュート解除",
+  "keyboard.shortcut.action.stopAudio": "再生を停止してリセット"
+}
