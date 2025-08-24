@@ -359,41 +359,51 @@ export const getMonthlyStats = async (params: GetMonthlyStatsRequest) => {
         as: "populatedArtists",
       },
     },
-    // reorder populated data to match original order
+    // reorder populated data to match original order and filter out null values
     {
       $addFields: {
         "stats.songs": {
-          $map: {
-            input: "$stats.songs",
-            as: "songItem",
-            in: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: "$populatedSongs",
-                    cond: { $eq: ["$$this._id", "$$songItem.song"] },
-                  },
+          $filter: {
+            input: {
+              $map: {
+                input: "$stats.songs",
+                as: "songItem",
+                in: {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: "$populatedSongs",
+                        cond: { $eq: ["$$this._id", "$$songItem.song"] },
+                      },
+                    },
+                    0,
+                  ],
                 },
-                0,
-              ],
+              },
             },
+            cond: { $ne: ["$$this", null] },
           },
         },
         "stats.artists": {
-          $map: {
-            input: "$stats.artists",
-            as: "artistItem",
-            in: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: "$populatedArtists",
-                    cond: { $eq: ["$$this._id", "$$artistItem.artist"] },
-                  },
+          $filter: {
+            input: {
+              $map: {
+                input: "$stats.artists",
+                as: "artistItem",
+                in: {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: "$populatedArtists",
+                        cond: { $eq: ["$$this._id", "$$artistItem.artist"] },
+                      },
+                    },
+                    0,
+                  ],
                 },
-                0,
-              ],
+              },
             },
+            cond: { $ne: ["$$this", null] },
           },
         },
       },

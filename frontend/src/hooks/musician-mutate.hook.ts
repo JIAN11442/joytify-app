@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
-import { followMusician, unfollowMusician } from "../fetchs/musician.fetch";
+import { followMusician, unfollowMusician, updateMusicianInfo } from "../fetchs/musician.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
 import queryClient from "../config/query-client.config";
 
@@ -20,6 +20,30 @@ const useMusicianCommon = () => {
   };
 
   return { refetchQueriesData };
+};
+
+export const useUpdateMusicianMutation = (opts: object = {}) => {
+  const { refetchQueriesData } = useMusicianCommon();
+
+  const mutation = useMutation({
+    mutationKey: [MutationKey.UPDATE_TARGET_MUSICIAN_INFO],
+    mutationFn: updateMusicianInfo,
+    onSuccess: (data) => {
+      const { name } = data;
+
+      // refetch related queries
+      refetchQueriesData();
+
+      // display success message
+      toast.success(`"${name}" musician is updated`);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    ...opts,
+  });
+
+  return mutation;
 };
 
 export const useFollowMusicianMutation = (opts: object = {}) => {

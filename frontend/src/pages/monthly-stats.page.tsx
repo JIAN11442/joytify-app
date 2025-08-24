@@ -22,7 +22,9 @@ const MonthlyStatsPage = () => {
 
   if (!monthlyStats) return null;
 
-  const paletee = monthlyStats.songs[0]?.paletee;
+  // get paletee from first valid song
+  const validSongs = monthlyStats.songs?.filter((song) => song && song.paletee) || [];
+  const paletee = validSongs[0]?.paletee;
 
   return (
     <div

@@ -11,7 +11,7 @@ import appAssert from "../utils/app-assert.util";
 import usePalette from "../hooks/paletee.hook";
 
 const { SYSTEM_ANNOUNCEMENT } = NotificationFilterOptions;
-const { INTERNAL_SERVER_ERROR } = HttpCode;
+const { INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;
 
 // Notifications
 export const deleteTargetNotification = async (notificationId: string) => {
@@ -94,6 +94,15 @@ export const removePlaylistStats = async () => {
   );
 
   return { modifiedCount: updatedPlaylists.modifiedCount };
+};
+
+// Songs
+export const deleteSongById = async (songId: string) => {
+  const deletedSong = await SongModel.findByIdAndDelete(songId);
+
+  appAssert(deletedSong, NOT_FOUND, "Song not found or access denied");
+
+  return { deletedSong };
 };
 
 // Utils

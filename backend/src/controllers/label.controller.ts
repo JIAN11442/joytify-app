@@ -82,6 +82,8 @@ export const createLabelHandler: RequestHandler = async (req, res, next) => {
     const userId = objectIdZodSchema.parse(req.userId);
     const params: CreateLabelRequest = createLabelZodSchema.parse(req.body);
 
+    console.log(params);
+
     const { label } = await createLabel({ userId, ...params });
 
     return res.status(CREATED).json(label);

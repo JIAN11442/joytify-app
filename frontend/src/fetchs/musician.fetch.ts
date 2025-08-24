@@ -4,6 +4,7 @@ import {
   GetMusicianIdRequest,
   MusicianResponse,
   RefactorMusicianResponse,
+  UpdateMusicianRequest,
 } from "@joytify/shared-types/types";
 
 const { MUSICIANS } = API_ENDPOINTS;
@@ -21,6 +22,14 @@ export const getFollowingMusicians = async (): Promise<MusicianResponse[]> =>
 export const getRecommendedMusicians = async (
   musicianId: string
 ): Promise<RefactorMusicianResponse[]> => API.get(`${MUSICIANS}/recommendations/${musicianId}`);
+
+export const updateMusicianInfo = async (
+  params: UpdateMusicianRequest
+): Promise<MusicianResponse> => {
+  const { musicianId, ...rest } = params;
+
+  return API.patch(`${MUSICIANS}/${musicianId}`, rest);
+};
 
 export const followMusician = async (musicianId: string): Promise<MusicianResponse> =>
   API.patch(`${MUSICIANS}/follow/${musicianId}`);

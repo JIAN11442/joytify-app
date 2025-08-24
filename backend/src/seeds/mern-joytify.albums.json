@@ -1,0 +1,130 @@
+[
+  {
+    "_id": {
+      "$oid": "67d12afc1f0397076676b682"
+    },
+    "creator": {
+      "$oid": "67d4360f1f3111de4dbfbb0e"
+    },
+    "title": "運氣來得若有似無",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-album.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "artists": [
+      {
+        "$oid": "67d12bee1f0397076676b686"
+      }
+    ],
+    "songs": [
+      {
+        "$oid": "67d438c79e1e897be0e0f870"
+      }
+    ],
+    "users": [],
+    "totalDuration": 271.176,
+    "createdAt": {
+      "$date": "2025-03-12T06:34:36.658Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-22T11:33:56.489Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "67d45b6c8383ed54b1051268"
+    },
+    "creator": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "ウタの歌 ONE PIECE FILM RED",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-album.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "artists": [
+      {
+        "$oid": "67d45c398383ed54b105126c"
+      }
+    ],
+    "songs": [
+      {
+        "$oid": "67d45c3a8383ed54b1051276"
+      },
+      {
+        "$oid": "67d8ec93d8f69a01d8512bb7"
+      },
+      {
+        "$oid": "6887505f9f0bcad3a0812da6"
+      }
+    ],
+    "users": [
+      {
+        "$oid": "67d456398383ed54b105123f"
+      },
+      {
+        "$oid": "68555873fb654775d8de8490"
+      }
+    ],
+    "totalDuration": 783.3368160816326,
+    "createdAt": {
+      "$date": "2025-03-14T16:38:04.892Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-22T11:33:57.008Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "68a8519aaab7fcd0c6e7d91d"
+    },
+    "creator": {
+      "$oid": "67d456398383ed54b105123f"
+    },
+    "title": "夜長夢少",
+    "coverImage": "https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/default-album.png",
+    "paletee": {
+      "vibrant": "#3a7b99",
+      "darkVibrant": "#04506b",
+      "lightVibrant": "#ea989f",
+      "muted": "#728e9f",
+      "darkMuted": "#34586d",
+      "lightMuted": "#7f1922"
+    },
+    "artists": [
+      {
+        "$oid": "68a85545b7b77d78acb69091"
+      }
+    ],
+    "songs": [
+      {
+        "$oid": "68a85549b7b77d78acb69099"
+      }
+    ],
+    "users": [
+      {
+        "$oid": "67d456398383ed54b105123f"
+      }
+    ],
+    "totalDuration": 395.203628,
+    "createdAt": {
+      "$date": "2025-08-22T11:16:42.403Z"
+    },
+    "updatedAt": {
+      "$date": "2025-08-22T11:33:58.380Z"
+    },
+    "__v": 0
+  }
+]

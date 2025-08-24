@@ -6,6 +6,7 @@ import {
   getMusicianIdHandler,
   getRecommendedMusiciansHandler,
   unfollowMusicianHandler,
+  updateMusicianHandler,
 } from "../controllers/musician.controller";
 import authenticate from "../middlewares/authenticate.middleware";
 
@@ -19,5 +20,6 @@ musicianRoute.get("/:musicianId", authenticate, getMusicianByIdHandler);
 
 musicianRoute.patch("/follow/:musicianId", authenticate, followMusicianHandler);
 musicianRoute.patch("/unfollow/:musicianId", authenticate, unfollowMusicianHandler);
+musicianRoute.patch("/:musicianId", authenticate, updateMusicianHandler);
 
 export default musicianRoute;

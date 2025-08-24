@@ -8,4 +8,9 @@ export const albumZodSchema = z.object({
   artists: z.array(objectIdZodSchema).optional(),
 });
 
+export const updateAlbumZodSchema = z.object({
+  title: stringZodSchema.min(1).optional(),
+  coverImage: stringZodSchema.optional(),
+});
+
 export type AlbumZodSchemaType = z.infer<typeof albumZodSchema>;

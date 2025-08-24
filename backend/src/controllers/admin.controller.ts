@@ -5,6 +5,7 @@ import { createSystemAnnouncementZodSchema } from "../schemas/notification.zod";
 
 import {
   createSystemAnnouncement,
+  deleteSongById,
   deleteTargetNotification,
   initializeUserNotifications,
   recalculatePlaylistStats,
@@ -70,6 +71,19 @@ export const initializePlaylistStatsHandler: RequestHandler = async (req, res, n
     const { modifiedCount } = await removePlaylistStats();
 
     return res.status(OK).json({ message: `${modifiedCount} playlists updated and stats removed` });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Songs
+export const deleteTargetSongHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const songId = objectIdZodSchema.parse(req.params.songId);
+
+    const { deletedSong } = await deleteSongById(songId);
+
+    return res.status(OK).json({ deletedSong });
   } catch (error) {
     next(error);
   }

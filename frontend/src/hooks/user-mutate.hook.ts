@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import {
   changeUserPassword,
@@ -16,6 +17,7 @@ import {
 import useUserState from "../states/user.state";
 import useSettingsState from "../states/settings.state";
 import queryClient from "../config/query-client.config";
+import { navigate } from "../lib/navigate.lib";
 import toast from "../lib/toast.lib";
 
 const { SUCCESS, FAILURE } = PasswordUpdateStatus;
@@ -122,12 +124,18 @@ export const useChangePasswordMutation = (opts: object = {}) => {
 
 // deregister user mutation
 export const useDeregisterMutation = (closeModalFn: () => void, opts: object = {}) => {
+  const location = useLocation();
+
   const mutation = useMutation({
     mutationKey: [MutationKey.DEREGISTER_USER],
     mutationFn: async (params: DeregisterUserAccountRequest) => {
       try {
         await deregisterUserAccount(params);
         await logout();
+
+        if (location.pathname !== "/") {
+          navigate("/", { replace: true });
+        }
       } catch (error) {
         console.log(error);
       }

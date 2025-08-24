@@ -6,10 +6,11 @@ import {
   recalculatePlaylistStatsHandler,
   resetUserNotificationsStatusHandler,
   updateCollectionPaleteeHandler,
+  deleteTargetSongHandler,
 } from "../controllers/admin.controller";
 import { API_ENDPOINTS } from "@joytify/shared-types/constants";
 
-const { NOTIFICATIONS, PLAYLISTS } = API_ENDPOINTS;
+const { NOTIFICATIONS, PLAYLISTS, SONGS } = API_ENDPOINTS;
 
 const adminRoute = Router();
 
@@ -23,6 +24,9 @@ adminRoute.patch(`${PLAYLISTS}/initialize-stats`, initializePlaylistStatsHandler
 adminRoute.post(`${NOTIFICATIONS}/system-announcement`, createSystemAnnouncementHandler);
 adminRoute.patch(`${NOTIFICATIONS}/reset-status`, resetUserNotificationsStatusHandler);
 adminRoute.delete(`${NOTIFICATIONS}/:notificationId`, deleteNotificationHandler);
+
+// songs
+adminRoute.delete(`${SONGS}/:songId`, deleteTargetSongHandler);
 
 // utils
 adminRoute.patch(`/paletee/:model`, updateCollectionPaleteeHandler);

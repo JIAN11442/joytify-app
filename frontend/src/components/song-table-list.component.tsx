@@ -79,7 +79,7 @@ const SongTableList: React.FC<SongTableListProps> = ({
   const artistClassName = `${isCompact ? "block" : "hidden"}`;
   const albumClassName = `max-w-[180px] ${isCollapsed ? "max-sm:hidden" : "max-lg:hidden"}`;
   const dateClassName = `${isCollapsed ? "max-lg:hidden" : "max-xl:hidden"}`;
-  const durationClassName = `px-3`;
+  const durationClassName = `px-8`;
   const actionsClassName = `rounded-r-md`;
 
   return (

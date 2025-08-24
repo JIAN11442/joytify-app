@@ -2,9 +2,12 @@ import { twMerge } from "tailwind-merge";
 import { BsCheckAll } from "react-icons/bs";
 import Icon from "./react-icons.component";
 import ImageLabel from "./image-label.component";
+import { AutoFitTitle } from "./info-title.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
+import { useUpdateMusicianMutation } from "../hooks/musician-mutate.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
 import { RefactorMusicianResponse } from "@joytify/shared-types/types";
+import useUserState from "../states/user.state";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
 
 type MusicianHeroSectionProps = {
@@ -23,8 +26,14 @@ const MusicianHeroSection: React.FC<MusicianHeroSectionProps> = ({
   const musicianRoleFm = fm("musician.role");
   const musicianHeroSectionFm = fm("musician.hero.section");
 
-  const { name, roles, coverImage, songs, albums } = musician;
+  const { _id: musicianId, creator, name, roles, coverImage, songs, albums } = musician;
 
+  const { authUser } = useUserState();
+  const { _id: userId } = authUser ?? {};
+
+  const { mutate: updateMusicianFn, isPending } = useUpdateMusicianMutation();
+
+  const isCreator = creator.toString() === userId;
   const totalDuration = songs.reduce((acc, song) => acc + song.duration, 0);
 
   return (
@@ -43,7 +52,11 @@ const MusicianHeroSection: React.FC<MusicianHeroSectionProps> = ({
       <ImageLabel
         src={coverImage}
         subfolder={UploadFolder.MUSICIANS_IMAGE}
-        isDefault={true}
+        isDefault={!isCreator}
+        updateConfig={{
+          updateImgFn: (coverImage) => updateMusicianFn({ musicianId, coverImage }),
+          isPending,
+        }}
         tw={{ mask: "rounded-full" }}
       />
 
@@ -72,7 +85,7 @@ const MusicianHeroSection: React.FC<MusicianHeroSectionProps> = ({
         </div>
 
         {/* name */}
-        <h1 className={`info-title`}>{name}</h1>
+        <AutoFitTitle>{name}</AutoFitTitle>
 
         {/* description */}
         <p className={`hero-section--description`}>

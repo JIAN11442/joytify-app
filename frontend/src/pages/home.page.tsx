@@ -45,6 +45,13 @@ const HomePage = () => {
     tagsLoading ||
     genresLoading;
 
+  const showRecentlyPlayed = recentlyPlayedSongs && recentlyPlayedSongs.docs.length > 0;
+  const showPopularMusicians = popularMusicians && popularMusicians.docs.length > 0;
+  const showRecommendedSongs = recommendedSongs && recommendedSongs.docs.length > 0;
+  const showRecommendedAlbums = recommendedAlbums && recommendedAlbums.docs.length > 0;
+  const showRecommendedTags = recommendedTags && recommendedTags.docs.length > 0;
+  const showRecommendedGenres = recommendedGenres && recommendedGenres.docs.length > 0;
+
   return (
     <div
       style={{
@@ -61,21 +68,27 @@ const HomePage = () => {
       ) : (
         <div className={`flex flex-col gap-10`}>
           {/* guest recommended songs */}
-          {recommendedSongs && isGuest && (
+          {showRecommendedSongs && isGuest && (
             <HomepageRecommendedSongs fm={fm} songs={recommendedSongs} isGuest={isGuest} />
           )}
 
-          {recentlyPlayedSongs && <HomepageRecentlyPlayed fm={fm} songs={recentlyPlayedSongs} />}
-          {popularMusicians && <HomepagePopularMusicians fm={fm} musicians={popularMusicians} />}
+          {showRecentlyPlayed && <HomepageRecentlyPlayed fm={fm} songs={recentlyPlayedSongs} />}
+          {showPopularMusicians && (
+            <HomepagePopularMusicians fm={fm} musicians={popularMusicians} />
+          )}
 
           {/* user recommended songs */}
-          {recommendedSongs && !isGuest && (
+          {showRecommendedSongs && !isGuest && (
             <HomepageRecommendedSongs fm={fm} songs={recommendedSongs} />
           )}
 
-          {recommendedAlbums && <HomepageRecommendedAlbums fm={fm} albums={recommendedAlbums} />}
-          {recommendedTags && <HomepageRecommendedTags fm={fm} tags={recommendedTags} />}
-          {recommendedGenres && <HomepageRecommendedGenres fm={fm} genres={recommendedGenres} />}
+          {showRecommendedAlbums && (
+            <HomepageRecommendedAlbums fm={fm} albums={recommendedAlbums} />
+          )}
+          {showRecommendedTags && <HomepageRecommendedTags fm={fm} tags={recommendedTags} />}
+          {showRecommendedGenres && (
+            <HomepageRecommendedGenres fm={fm} genres={recommendedGenres} />
+          )}
         </div>
       )}
     </div>

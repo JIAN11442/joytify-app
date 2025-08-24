@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import ImageLabel from "./image-label.component";
+import { AutoFitTitle } from "./info-title.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { useUpdateUserMutation } from "../hooks/user-mutate.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
@@ -65,9 +66,9 @@ const ProfileHeroSection: React.FC<ProfileHeroSectionProps> = ({ fm, profileUser
         <p className={`hero-section--type`}>{profileHeroSectionFm("type")}</p>
 
         {/* title */}
-        <h1 onClick={handleActiveProfileEditModal} className={`info-title cursor-pointer`}>
+        <AutoFitTitle onClick={handleActiveProfileEditModal} className={`cursor-pointer`}>
           {username.split("?nanoid")[0]}
-        </h1>
+        </AutoFitTitle>
 
         {/* other */}
         <p className={`hero-section--description`}>

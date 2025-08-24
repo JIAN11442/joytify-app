@@ -639,7 +639,7 @@ export const SongTableTrSkeleton = ({ columnCount }: { columnCount?: number }) =
   return (
     <tr>
       {/* index */}
-      <td className={`w-3`}>
+      <td className={`px-0 pl-5 max-w-[30px]`}>
         <Skeleton className={`w-3 h-3 rounded-md`} />
       </td>
 

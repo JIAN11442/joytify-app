@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { LabelOptions, S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
 import { HexPaletee } from "@joytify/shared-types/types";
 import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
+import usePalette from "../hooks/paletee.hook";
 
 export interface LabelDocument extends mongoose.Document {
   label: string;
@@ -64,6 +65,17 @@ labelSchema.pre("save", async function (next) {
         this.coverImage = S3_DEFAULT_IMAGES.LABEL_OTHER;
         break;
     }
+  }
+
+  next();
+});
+
+// before created album,...
+labelSchema.pre("save", async function (next) {
+  // update paletee
+  if (this.coverImage) {
+    const paletee = await usePalette(this.coverImage);
+    this.paletee = paletee;
   }
 
   next();

@@ -1,17 +1,22 @@
+import SongModel from "../models/song.model";
 import AlbumModel from "../models/album.model";
+import { collectDocumentAttributes } from "./util.service";
+import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
 import { HttpCode } from "@joytify/shared-types/constants";
 import {
   CreateAlbumRequest,
   Musician,
   PopulatedAlbumResponse,
   RefactorAlbumResponse,
+  UpdateAlbumRequest,
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
-import { collectDocumentAttributes } from "./util.service";
-import SongModel from "../models/song.model";
-import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
 
 interface CreateAlbumServiceRequest extends CreateAlbumRequest {
+  userId: string;
+}
+
+interface UpdateAlbumServiceRequest extends UpdateAlbumRequest {
   userId: string;
 }
 
@@ -97,6 +102,7 @@ export const createAlbum = async (params: CreateAlbumServiceRequest) => {
   // if target album is not exist, create it
   if (!album) {
     album = await AlbumModel.create({
+      creator: userId,
       title,
       artists,
       users: [userId],
@@ -107,6 +113,21 @@ export const createAlbum = async (params: CreateAlbumServiceRequest) => {
   }
 
   return { album };
+};
+
+// update album service
+export const updateAlbumById = async (params: UpdateAlbumServiceRequest) => {
+  const { userId, albumId, title, coverImage } = params;
+
+  const updatedAlbum = await AlbumModel.findOneAndUpdate(
+    { _id: albumId, creator: userId },
+    { $set: { title, coverImage } },
+    { new: true }
+  );
+
+  appAssert(updatedAlbum, NOT_FOUND, "Album not found");
+
+  return updatedAlbum;
 };
 
 // remove user ID from album service

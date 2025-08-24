@@ -89,7 +89,6 @@ body,
     font-montserrat
     font-extrabold
     line-clamp-1
-    sm:break-all
     max-sm:line-clamp-2;
   }
 
@@ -467,11 +466,11 @@ body,
   }
 
   th {
-    @apply py-3 px-5 font-light text-sm text-grey-custom/50 whitespace-nowrap;
+    @apply py-3 px-8 font-light text-sm text-grey-custom/50 whitespace-nowrap;
   }
 
   td {
-    @apply py-2.5 px-5 max-w-[200px] overflow-hidden;
+    @apply py-2.5 px-8 max-w-[200px] overflow-hidden;
   }
 
   /* Input slider*/

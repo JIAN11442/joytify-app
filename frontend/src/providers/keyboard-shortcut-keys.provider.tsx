@@ -74,7 +74,7 @@ const normalizeKey = (e: KeyboardEvent) => {
     ArrowRight: "→",
   };
 
-  const keyName = e.code.startsWith("Key")
+  const keyName = e.code?.startsWith("Key")
     ? e.code.replace("Key", "").toLowerCase()
     : specialKeyMap[e.key]?.toLowerCase() || e.key.toLowerCase();
 

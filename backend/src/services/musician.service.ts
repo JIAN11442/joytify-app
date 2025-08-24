@@ -10,6 +10,7 @@ import {
   GetMusicianIdRequest,
   PopulatedMusicianResponse,
   RefactorMusicianResponse,
+  UpdateMusicianRequest,
 } from "@joytify/shared-types/types";
 import appAssert from "../utils/app-assert.util";
 
@@ -20,9 +21,17 @@ type MusicianFollowService = {
   musicianId: string;
 };
 
+interface GetMusicianIdRequestService extends GetMusicianIdRequest {
+  userId: string;
+}
+
+interface UpdateMusicianRequestService extends UpdateMusicianRequest {
+  userId: string;
+}
+
 // get musician ID service
-export const getMusicianId = async (params: GetMusicianIdRequest) => {
-  const { musician: name, type, createIfAbsent } = params;
+export const getMusicianId = async (params: GetMusicianIdRequestService) => {
+  const { userId, musician: name, type, createIfAbsent } = params;
 
   let findQuery: FilterQuery<MusicianDocument> = { name };
 
@@ -31,7 +40,7 @@ export const getMusicianId = async (params: GetMusicianIdRequest) => {
 
   // if not found, create it
   if (!musician && createIfAbsent) {
-    musician = await MusicianModel.create({ ...findQuery, roles: type });
+    musician = await MusicianModel.create({ ...findQuery, creator: userId, roles: type });
 
     appAssert(musician, INTERNAL_SERVER_ERROR, "Failed to create musician");
   }
@@ -131,6 +140,21 @@ export const getRecommendedMusicians = async (musicianId: string) => {
     .lean<RefactorMusicianResponse>();
 
   return recommendedMusicians;
+};
+
+// update musician
+export const updateMusicianById = async (params: UpdateMusicianRequestService) => {
+  const { userId, musicianId, name, coverImage } = params;
+
+  const updatedMusician = await MusicianModel.findOneAndUpdate(
+    { _id: musicianId, creator: userId },
+    { $set: { name, coverImage } },
+    { new: true }
+  );
+
+  appAssert(updatedMusician, NOT_FOUND, "Musician not found");
+
+  return updatedMusician;
 };
 
 // follow target musician

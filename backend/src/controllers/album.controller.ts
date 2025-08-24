@@ -5,9 +5,10 @@ import {
   getRecommendedAlbums,
   getUserAlbums,
   removeAlbum,
+  updateAlbumById,
 } from "../services/album.service";
-import { albumZodSchema } from "../schemas/album.zod";
 import { objectIdZodSchema } from "../schemas/util.zod";
+import { albumZodSchema, updateAlbumZodSchema } from "../schemas/album.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
 import { CreateAlbumRequest } from "@joytify/shared-types/types";
 
@@ -61,6 +62,21 @@ export const createAlbumHandler: RequestHandler = async (req, res, next) => {
     const { album } = await createAlbum({ userId, ...params });
 
     return res.status(CREATED).json(album);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// update album handler
+export const updateAlbumHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = objectIdZodSchema.parse(req.userId);
+    const albumId = objectIdZodSchema.parse(req.params.albumId);
+    const params = updateAlbumZodSchema.parse(req.body);
+
+    const updatedAlbum = await updateAlbumById({ userId, albumId, ...params });
+
+    return res.status(OK).json(updatedAlbum);
   } catch (error) {
     next(error);
   }

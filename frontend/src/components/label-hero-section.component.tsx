@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import ImageLabel from "./image-label.component";
+import { AutoFitTitle } from "./info-title.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
 import { RefactorSearchLabelResponse } from "@joytify/shared-types/types";
@@ -49,7 +50,7 @@ const LabelHeroSection: React.FC<LabelHeroSectionProps> = ({ fm, label, classNam
         <p className={`hero-section--type`}>{labelTypeFm(type)}</p>
 
         {/* title */}
-        <h1 className={`info-title`}>{title}</h1>
+        <AutoFitTitle>{title}</AutoFitTitle>
 
         {/* other - songs count */}
         <p className={`hero-section--description`}>

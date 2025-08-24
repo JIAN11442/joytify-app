@@ -32,7 +32,7 @@ export const getLabels = async (
 
 // create label
 export const createLabel = async (params: CreateLabelRequest): Promise<LabelResponse> =>
-  API.post(`${LABELS}/create`, params);
+  API.post(`${LABELS}`, params);
 
 // get label by id
 export const getLabelById = async (labelId: string): Promise<RefactorSearchLabelResponse> =>

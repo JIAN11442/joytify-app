@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import ImageLabel from "./image-label.component";
+import { AutoFitTitle } from "./info-title.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { UploadFolder } from "@joytify/shared-types/constants";
@@ -86,7 +87,7 @@ const PlaylistHeroSection: React.FC<PlaylistHeroSectionProps> = ({ fm, playlist,
           onClick={handleActivePlaylistEditModal}
           className={`${isDefault && "cursor-default"}`}
         >
-          <h1 className={`info-title`}>{title}</h1>
+          <AutoFitTitle>{title}</AutoFitTitle>
         </button>
 
         {/* other - description or songs count */}

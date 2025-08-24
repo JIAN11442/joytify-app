@@ -7,8 +7,9 @@ import {
   getMusicianId,
   getRecommendedMusicians,
   unfollowTargetMusician,
+  updateMusicianById,
 } from "../services/musician.service";
-import { musicianZodSchema } from "../schemas/musician.zod";
+import { musicianZodSchema, updateMusicianZodSchema } from "../schemas/musician.zod";
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { HttpCode } from "@joytify/shared-types/constants";
 import { GetMusicianIdRequest } from "@joytify/shared-types/types";
@@ -18,9 +19,10 @@ const { OK } = HttpCode;
 // get musician ID handler
 export const getMusicianIdHandler: RequestHandler = async (req, res, next) => {
   try {
+    const userId = objectIdZodSchema.parse(req.userId);
     const params: GetMusicianIdRequest = musicianZodSchema.parse(req.query);
 
-    const { id } = await getMusicianId(params);
+    const { id } = await getMusicianId({ userId, ...params });
 
     return res.status(OK).json(id);
   } catch (error) {
@@ -60,6 +62,21 @@ export const getRecommendedMusiciansHandler: RequestHandler = async (req, res, n
     const recommendedMusicians = await getRecommendedMusicians(musicianId);
 
     return res.status(OK).json(recommendedMusicians);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// update musician handler
+export const updateMusicianHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = objectIdZodSchema.parse(req.userId);
+    const musicianId = objectIdZodSchema.parse(req.params.musicianId);
+    const params = updateMusicianZodSchema.parse(req.body);
+
+    const updatedMusician = await updateMusicianById({ userId, musicianId, ...params });
+
+    return res.status(OK).json(updatedMusician);
   } catch (error) {
     next(error);
   }

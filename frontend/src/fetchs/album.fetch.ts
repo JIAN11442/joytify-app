@@ -4,6 +4,7 @@ import {
   CreateAlbumRequest,
   AlbumResponse,
   RefactorAlbumResponse,
+  UpdateAlbumRequest,
 } from "@joytify/shared-types/types";
 
 const { ALBUMS } = API_ENDPOINTS;
@@ -22,6 +23,13 @@ export const getRecommendedAlbums = async (albumId: string): Promise<RefactorAlb
 // create album
 export const createAlbum = async (params: CreateAlbumRequest): Promise<AlbumResponse> =>
   API.post(ALBUMS, params);
+
+// update album
+export const updateAlbumInfo = async (params: UpdateAlbumRequest): Promise<AlbumResponse> => {
+  const { albumId, ...rest } = params;
+
+  return API.patch(`${ALBUMS}/${albumId}`, rest);
+};
 
 // remove album
 export const removeAlbum = async (albumId: string): Promise<AlbumResponse> =>

@@ -43,7 +43,8 @@ const ProfileCollectionCard: React.FC<CollectionCardProps> = ({
             `
               text-sm 
               font-medium 
-              text-neutral-400 
+              text-neutral-400
+              line-clamp-1
               truncate
             `,
             tw?.title
@@ -73,7 +74,11 @@ const ProfileCollectionCard: React.FC<CollectionCardProps> = ({
 
   if (to) {
     return (
-      <Link {...(props as LinkProps)} to={to} className={twMerge("grid-card-wrapper", className)}>
+      <Link
+        {...(props as LinkProps)}
+        to={to}
+        className={twMerge("grid-card-wrapper card-size--base", className)}
+      >
         {children}
       </Link>
     );
@@ -83,7 +88,7 @@ const ProfileCollectionCard: React.FC<CollectionCardProps> = ({
     <button
       {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}
       type="button"
-      className={twMerge("grid-card-wrapper", className)}
+      className={twMerge("grid-card-wrapper card-size--base", className)}
     >
       {children}
     </button>

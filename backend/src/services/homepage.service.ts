@@ -4,7 +4,8 @@ import AlbumModel from "../models/album.model";
 import PlaybackModel from "../models/playback.model";
 import MusicianModel from "../models/musician.model";
 import SongModel, { SongDocument } from "../models/song.model";
-import { MusicianOptions } from "@joytify/shared-types/constants";
+import { collectDocumentAttributes } from "./util.service";
+import { MusicianOptions, S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
 import { FETCH_LIMIT_PER_PAGE, PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
 import {
   LabelOptionsType,
@@ -18,7 +19,6 @@ import {
   RefactorSearchLabelResponse,
   RefactorSongResponse,
 } from "@joytify/shared-types/types";
-import { collectDocumentAttributes } from "./util.service";
 import { getPaginatedDocs } from "../utils/mongoose.util";
 
 type GetRecentlyPlayedSongsProps = {
@@ -44,7 +44,7 @@ const fetchLimit = { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE };
 export const getPopularMusicians = async (page: number) => {
   const musicianIds = (
     await MusicianModel.aggregate([
-      { $match: { roles: { $in: [ARTIST] } } },
+      { $match: { roles: { $in: [ARTIST] }, coverImage: { $ne: S3_DEFAULT_IMAGES.MUSICIAN } } },
       {
         $lookup: {
           from: "songs",

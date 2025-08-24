@@ -1,7 +1,3 @@
-<!-- 有刪除帳號協議頁面 -->
-<!-- 有音樂權轉讓協議 -->
-<!-- 手刻組件，包括 input，menu 等 -->
-
 # <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/logo.svg" alt="Joytify" width="26" height="26"> Joytify - Full-Stack Music Platform
 
 > A Spotify-inspired music streaming platform built with modern web technologies, featuring user authentication, music upload/playback, playlist management, song rating system, and automated data processing.
@@ -51,6 +47,7 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 - **🔍 Advanced Search** - Cross-collection search for songs, musicians, albums, and labels with intelligent filtering, pagination, and multi-type content display
 - **📋 Playlist Management** - Create playlists and assign songs with statistics tracking
 - **📊 Playback Analytics** - Detailed listening statistics and monthly insights
+- **🎯 Intelligent Recommendations** - Personalized song, album, musician, and label recommendations based on user preferences and listening history
 
 ### User Experience
 
@@ -59,10 +56,11 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 - **🍪 User Preferences** – Stores playback state, interface state, and personal settings in cookies for cross-session persistence (retains same state after re-login)
 - **🌐 Multi-language Support** - Static i18n system supporting 6 languages (en-US, zh-CN, zh-TW, ja, ko, ms) with easy expansion capability
 - **🎨 Dynamic Theming** - Auto color palette extraction from images (songs, albums, playlists, musicians, users) with gradient hero sections
-- **⌨️ Keyboard Shortcuts** - Debounced key processing with user preference persistence
+- **⌨️ Keyboard Shortcuts** - Comprehensive keyboard shortcut system with 32+ actions across General, Navigation, and Playback categories, featuring centralized event handling and user preference persistence
 - **🔔 Real-time Notifications** - Live updates via Socket.io for uploads and announcements
 - **📧 Email System** - Professional React Email templates for verification and notifications
 - **📊 Analytics Dashboard** - Monthly listening insights with animated visualizations
+- **⚖️ Legal Compliance** - Account deletion agreements and music rights transfer protocols for user protection and legal compliance
 
 <!--
 <div align="center">
@@ -82,14 +80,14 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 - **React 18** + **TypeScript** – Modern, performant UI with type safety
 - **Vite** – Blazing fast build tooling with hot module replacement
 - **TailwindCSS** – Utility-first styling with dynamic color theming
-- **Zustand** (16 stores) – Granular state management across application domains
+- **Zustand** (17 stores) – Granular state management across application domains
 - **React Query** – Server state synchronization and caching
 - **React Hook Form** – Scalable and performant form management
 - **React Intl** – Internationalization with 6-language support
 - **Firebase Auth** + **JWT** – Secure dual authentication flow
 - **Socket.IO Client** – Real-time notifications with token validation
 - **Recharts** + **Odometer.js** – Animated data visualization and statistics
-- **Custom Hook Architecture** – 30+ hooks for feature-specific logic
+- **Custom Hook Architecture** – 33 hooks for feature-specific logic
 - **Skeleton Loading** – Theme-aware loading components with multiple patterns (Image, Text, DeviceList)
 
 ### Backend
@@ -122,8 +120,8 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 ```mermaid
 graph TB
     subgraph "🎵 Application Layer"
-        FE[React Frontend<br/>157 Components<br/>15 Services]
-        BE[Node.js Backend<br/>18 Controllers<br/>13 Models]
+        FE[React Frontend<br/>173 Components<br/>18 Services]
+        BE[Node.js Backend<br/>19 Controllers<br/>13 Models]
         ST[Shared Types<br/>NPM Package]
     end
 
@@ -170,7 +168,7 @@ graph TB
 
 Joytify follows a modern three-layer architecture:
 
-- **🎵 Application Layer**: React frontend (157 components, 15 services) with Node.js backend (18 controllers, 13 models), sharing types via NPM package
+- **🎵 Application Layer**: React frontend (173 components, 18 services) with Node.js backend (19 controllers, 13 models), sharing types via NPM package
 - **🏗️ Processing Layer**: Scheduled AWS Lambda functions for statistics generation and data cleanup
 - **☁️ Infrastructure**: Serverless architecture with CloudWatch schedules, SNS messaging, and MongoDB Atlas
 

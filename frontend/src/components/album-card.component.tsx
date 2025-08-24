@@ -38,7 +38,6 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ album, className, tw }) => {
             `
               object-cover 
               aspect-square
-              brightness-[1.2]
               rounded-md
               transition-all
             `,

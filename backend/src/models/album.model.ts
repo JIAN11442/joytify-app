@@ -1,9 +1,13 @@
-import mongoose from "mongoose";
+import { isEqual } from "lodash";
+import mongoose, { UpdateQuery } from "mongoose";
+import usePalette from "../hooks/paletee.hook";
 import { HexPaletee } from "@joytify/shared-types/types";
 import { S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
 import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
+import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
 export interface AlbumDocument extends mongoose.Document {
+  creator: mongoose.Types.ObjectId;
   title: string;
   description: string;
   coverImage: string;
@@ -16,6 +20,7 @@ export interface AlbumDocument extends mongoose.Document {
 
 const albumSchema = new mongoose.Schema<AlbumDocument>(
   {
+    creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
     title: { type: String, required: true },
     description: { type: String },
     coverImage: { type: String, default: S3_DEFAULT_IMAGES.ALBUM },
@@ -34,6 +39,36 @@ const albumSchema = new mongoose.Schema<AlbumDocument>(
   },
   { timestamps: true }
 );
+
+// before created album,...
+albumSchema.pre("save", async function (next) {
+  // update paletee
+  if (this.coverImage) {
+    const paletee = await usePalette(this.coverImage);
+    this.paletee = paletee;
+  }
+
+  next();
+});
+
+// before update album,...
+albumSchema.pre("findOneAndUpdate", async function (next) {
+  const findQuery = this.getQuery();
+  let updateDoc = this.getUpdate() as UpdateQuery<AlbumDocument>;
+
+  const originalDoc = await this.model.findOne(findQuery);
+
+  if (updateDoc.$set?.coverImage) {
+    const paletee = await usePalette(updateDoc.$set.coverImage);
+    updateDoc.paletee = paletee;
+
+    if (originalDoc && !isEqual(originalDoc.coverImage, S3_DEFAULT_IMAGES.ALBUM)) {
+      await deleteAwsFileUrlOnModel(originalDoc.coverImage);
+    }
+  }
+
+  next();
+});
 
 // after update album,...
 albumSchema.post("findOneAndUpdate", async function (doc) {

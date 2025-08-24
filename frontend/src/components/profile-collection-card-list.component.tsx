@@ -120,8 +120,6 @@ const ProfileCollectionCardList: React.FC<CollectionCardListProps> = ({
               description={description}
               tw={{
                 img: `
-                  w-[180px]
-                  max-sm:w-[150px]
                   ${
                     collectionKey === "following"
                       ? "border-2 border-neutral-500/20 rounded-full"
