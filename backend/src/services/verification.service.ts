@@ -3,8 +3,8 @@ import { FilterQuery } from "mongoose";
 import UserModel from "../models/user.model";
 import VerificationModel, { VerificationDocument } from "../models/verification.model";
 
-import { JoytifyVerificationCodeEmail } from "../templates/verification-code.template";
 import { JoytifyResetPasswordLinkEmail } from "../templates/reset-password.template";
+import { JoytifyVerificationCodeEmail } from "../templates/verification-code.template";
 import { NODE_ENV, SENDER_EMAIL, TEST_EMAIL } from "../constants/env-validate.constant";
 import {
   HttpCode,

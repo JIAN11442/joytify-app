@@ -1,7 +1,7 @@
 import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 
-import { SessionDocument } from "../models/session.model";
 import { UserDocument } from "../models/user.model";
+import { SessionDocument } from "../models/session.model";
 import {
   ACCESS_SECRET_KEY,
   REFRESH_SECRET_KEY,
