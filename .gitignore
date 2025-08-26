@@ -67,5 +67,26 @@ share
 # SonarQube Folder
 .scannerwork
 
+# Test coverage
+coverage/
+*.lcov
+.nyc_output/
+.nyc_output
+coverage.json
+*.coverage
+coverage.xml
+coverage.info
+*.gcov
+*.gcda
+*.gcno
+
+# Jest coverage
+coverage/
+.jest/
+
+# Vitest coverage
+coverage/
+*.lcov
+
 # Claude code
 CLAUDE.md

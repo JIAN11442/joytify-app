@@ -18,6 +18,7 @@
 - [🛠️ Tech Stack](#-tech-stack)
 - [🏗️ System Architecture](#-system-architecture)
 - [🚀 Quick Start](#-quick-start)
+- [🧪 Testing Strategy](#-testing-strategy)
 
 ---
 
@@ -100,6 +101,13 @@ Joytify is a full-stack music streaming platform that allows users to upload, or
 - **Sharp** + **Node Vibrant** – Image processing and color palette extraction
 - **React Email** + **Resend** – Component-based email templates and delivery
 - **Socket.IO** – Real-time notifications with authentication middleware
+
+### Testing
+
+- **Jest** + **TypeScript** – Comprehensive unit testing framework
+- **Mocking Strategy** – Isolated testing with external dependency mocking
+- **Coverage Analysis** – 49.7% overall coverage with 96% services layer coverage
+- **Test Architecture** – 32 test suites with 600+ test cases
 
 ### Type Sharing & Architecture
 
@@ -232,6 +240,70 @@ cd backend && npm run dev
 cd ../frontend && npm run dev
 ```
 
+**5. Run tests (optional)**
+
+```bash
+# Backend tests
+cd backend && npm test
+
+# Run with coverage
+npm test -- --coverage
+
+# Frontend (no tests currently)
+cd ../frontend
+# Manual testing recommended for UI components
+```
+
 ### Environment Setup
 
 See the [Backend](./backend/) and [Frontend](./frontend/) directories for detailed configuration and setup instructions.
+
+---
+
+## 🧪 Testing Strategy
+
+### Backend Testing Coverage
+
+**Overall Coverage: 49.7%** - Strategic focus on critical business logic
+
+| Layer           | Coverage | Status       | Description                                         |
+| --------------- | -------- | ------------ | --------------------------------------------------- |
+| **Services**    | 96.01%   | ✅ Excellent | Business logic, database operations, error handling |
+| **Utils**       | 83.95%   | 🟢 Good      | Authentication, encryption, JWT utilities           |
+| **Extensions**  | 100%     | 🟢 Complete  | Mongoose query extensions and custom methods        |
+| **Middlewares** | 43.61%   | 🟡 Selective | Core middleware (error handling, authentication)    |
+| **Hooks**       | 100%     | 🟢 Complete  | Custom hooks and business logic                     |
+| **Schedules**   | 100%     | 🟢 Complete  | Automated task scheduling                           |
+
+### Test Framework
+
+- **Jest + TypeScript** - Modern testing framework with type safety
+- **32 Test Suites** - Unit tests across all backend components
+- **600+ Test Cases** - Comprehensive edge case and error scenario coverage
+- **Mocking Strategy** - External dependencies (Firebase, AWS, MongoDB) isolated
+- **Test Architecture** - Structured unit tests with proper setup/teardown
+
+### Coverage Philosophy
+
+Tests focus on protecting core business logic while maintaining development efficiency:
+
+- **Services Layer (96%)** - Complete coverage of critical business operations
+- **Utilities (84%)** - Security functions, data processing, authentication
+- **Error Handling** - Comprehensive exception scenarios and edge cases
+- **Configuration** - Minimal testing for environment-dependent code
+
+### Running Tests
+
+```bash
+# Run all tests
+cd backend && npm test
+
+# Run with coverage report
+npm test -- --coverage
+
+# Run specific test file
+npm test -- __tests__/unit/services/auth.service.test.ts
+
+# Watch mode for development
+npm test -- --watch
+```
