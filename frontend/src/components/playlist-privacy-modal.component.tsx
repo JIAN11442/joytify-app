@@ -4,8 +4,8 @@ import Modal from "./modal.component";
 import PlaylistWarningContent from "./playlist-warning-content.component";
 import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { PrivacyOptions } from "@joytify/shared-types/constants";
-import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
+import { PrivacyOptions } from "@joytify/types/constants";
+import { RefactorPlaylistResponse } from "@joytify/types/types";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

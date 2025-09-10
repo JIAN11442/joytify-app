@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { SupportedLocale } from "@joytify/shared-types/constants";
-import { SupportedLocaleType } from "@joytify/shared-types/types";
+import { SupportedLocale } from "@joytify/types/constants";
+import { SupportedLocaleType } from "@joytify/types/types";
 
 type LocaleState = {
   themeLocale: SupportedLocaleType;

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node --files src/server.ts",
+    "dev": "ts-node src/server.ts",
     "node": "nodemon src/server.ts",
     "test": "jest",
     "build": "tsc",
@@ -14,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@joytify/types": "^1.7.0",
     "@react-email/components": "^0.0.33",
     "aws-sdk": "^2.1680.0",
     "bcrypt": "^5.1.1",
@@ -35,6 +36,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@eslint/js": "^9.34.0",
     "@types/aws-sdk": "^2.7.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
@@ -46,6 +48,9 @@
     "@types/morgan": "^1.9.9",
     "@types/react": "^19.0.8",
     "@types/supertest": "^6.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
+    "eslint": "^9.34.0",
     "jest": "^30.0.5",
     "nodemon": "^3.1.4",
     "supertest": "^7.1.4",

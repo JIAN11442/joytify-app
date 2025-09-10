@@ -15,7 +15,7 @@ import {
   useGetRecommendedLabelsQuery,
   useGetRecommendedSongsQuery,
 } from "../hooks/homepage-query.hook";
-import { HomepageSection, LabelOptions } from "@joytify/shared-types/constants";
+import { HomepageSection, LabelOptions } from "@joytify/types/constants";
 
 const { GENRE, TAG } = LabelOptions;
 const {

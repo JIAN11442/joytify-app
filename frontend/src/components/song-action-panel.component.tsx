@@ -9,7 +9,7 @@ import Icon from "./react-icons.component";
 import MenuItem from "./menu-item.component";
 import QueuePlayButton from "./queue-play-button.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 import useSongState from "../states/song.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

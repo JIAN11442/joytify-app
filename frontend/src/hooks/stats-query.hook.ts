@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getMonthlyStats } from "../fetchs/stats.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
-import { GetMonthlyStatsRequest } from "@joytify/shared-types/types";
+import { GetMonthlyStatsRequest } from "@joytify/types/types";
 
 export const useGetMonthlyStats = (params: GetMonthlyStatsRequest, opts: object = {}) => {
   const [isQueryError, setIsQueryError] = useState(false);

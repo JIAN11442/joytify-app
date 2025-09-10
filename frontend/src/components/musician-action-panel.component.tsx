@@ -11,7 +11,7 @@ import {
   useUnfollowMusicianMutation,
 } from "../hooks/musician-mutate.hook";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorMusicianResponse } from "@joytify/shared-types/types";
+import { RefactorMusicianResponse } from "@joytify/types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type MusicianActionPanelProps = {

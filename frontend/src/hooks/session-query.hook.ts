@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getUserSessions } from "../fetchs/session.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
-import { DeviceStats } from "@joytify/shared-types/types";
+import { DeviceStats } from "@joytify/types/types";
 import useUserState from "../states/user.state";
 
 interface SessionQueryResult {

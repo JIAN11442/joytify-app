@@ -5,7 +5,7 @@ import { IoPause, IoPlayOutline } from "react-icons/io5";
 import Icon from "./react-icons.component";
 import SoundWave from "./sound-wave.component";
 import usePlaybackControl from "../hooks/playback-control.hook";
-import { Queue, RefactorSongResponse } from "@joytify/shared-types/types";
+import { Queue, RefactorSongResponse } from "@joytify/types/types";
 import usePlaybackControlState from "../states/playback-control.state";
 import { formatPlaybackCount } from "../utils/unit-format.util";
 

@@ -10,8 +10,8 @@ import {
   NotificationFilterOptions,
   SongAssociationAction,
   S3_DEFAULT_IMAGES,
-} from "@joytify/shared-types/constants";
-import { HexPaletee, SongAssociationActionType } from "@joytify/shared-types/types";
+} from "@joytify/types/constants";
+import { HexPaletee, SongAssociationActionType } from "@joytify/types/types";
 import { bulkUpdateReferenceArrayFields } from "../utils/mongoose.util";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 

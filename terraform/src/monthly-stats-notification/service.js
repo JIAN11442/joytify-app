@@ -1,4 +1,4 @@
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
+import { API_ENDPOINTS } from "@joytify/types/constants";
 
 const { NOTIFICATIONS } = API_ENDPOINTS;
 

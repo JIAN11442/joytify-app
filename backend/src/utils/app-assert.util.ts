@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { AppError } from "@joytify/shared-types/classes";
+import { AppError } from "@joytify/types/classes";
 
 // Extract parameter types from AppError constructor
 type AppErrorParams = ConstructorParameters<typeof AppError>;

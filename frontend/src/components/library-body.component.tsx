@@ -2,7 +2,7 @@ import Loader from "./loader.component";
 import LibraryPlaylist from "./library-playlist.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 
-import { AuthUserResponse } from "@joytify/shared-types/types";
+import { AuthUserResponse } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 
 type LibraryBodyProps = {

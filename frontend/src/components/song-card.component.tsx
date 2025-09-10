@@ -2,7 +2,7 @@ import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import AuthGuardLink from "./auth-guard-link.component";
 import QueuePlayButton from "./queue-play-button.component";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 
 type SongCardProps = {
   song: RefactorSongResponse;

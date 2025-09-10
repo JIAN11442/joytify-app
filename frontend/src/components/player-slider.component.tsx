@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { twMerge } from "tailwind-merge";
 import usePlaybackControl from "../hooks/playback-control.hook";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 import usePlaybackControlState from "../states/playback-control.state";
 import { getDuration } from "../utils/get-time.util";
 

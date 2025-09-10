@@ -12,7 +12,7 @@ import { PlaylistCheckboxListSkeleton } from "./skeleton-loading.component";
 import { useAssignSongToPlaylistsMutation } from "../hooks/song-mutate.hook";
 import { useGetPlaylistsQuery } from "../hooks/playlist-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { PlaylistResponse, PlaylistsResponse } from "@joytify/shared-types/types";
+import { PlaylistResponse, PlaylistsResponse } from "@joytify/types/types";
 import useSongState from "../states/song.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import useUserState from "../states/user.state";

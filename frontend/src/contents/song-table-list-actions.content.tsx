@@ -3,7 +3,7 @@ import { TbArrowRightToArc } from "react-icons/tb";
 import { RiPlayListAddLine } from "react-icons/ri";
 import { IconName } from "../components/react-icons.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 import useSongState from "../states/song.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { navigate } from "../lib/navigate.lib";

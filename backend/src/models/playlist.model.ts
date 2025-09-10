@@ -3,8 +3,8 @@ import UserModel from "./user.model";
 import SongModel from "./song.model";
 
 import usePalette from "../hooks/paletee.hook";
-import { PrivacyOptions, S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
-import { PrivacyType, HexPaletee } from "@joytify/shared-types/types";
+import { PrivacyOptions, S3_DEFAULT_IMAGES } from "@joytify/types/constants";
+import { PrivacyType, HexPaletee } from "@joytify/types/types";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 
 export interface PlaylistDocument extends mongoose.Document {

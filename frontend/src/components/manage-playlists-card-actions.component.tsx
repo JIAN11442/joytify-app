@@ -2,7 +2,7 @@ import { twMerge } from "tailwind-merge";
 import { IconBaseProps } from "react-icons";
 import Icon, { IconName } from "./react-icons.component";
 import { getManagePlaylistsCardActionsContent } from "../contents/manage-playlists-card-actions.content";
-import { PlaylistResponse } from "@joytify/shared-types/types";
+import { PlaylistResponse } from "@joytify/types/types";
 
 type ManagePlaylistsCardActionsProps = {
   isGroupHovered: boolean;

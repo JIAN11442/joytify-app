@@ -1,6 +1,6 @@
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { NotificationFilterOptions } from "@joytify/shared-types/constants";
-import { NotificationCountsResponse, NotificationFilterType } from "@joytify/shared-types/types";
+import { NotificationFilterOptions } from "@joytify/types/constants";
+import { NotificationCountsResponse, NotificationFilterType } from "@joytify/types/types";
 
 type ControlPanelItem = {
   id: string;

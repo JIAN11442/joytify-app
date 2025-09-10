@@ -5,7 +5,7 @@ import PaginationControl from "../components/pagination-control.component";
 import ProfileCollectionCard from "../components/profile-collection-card.component";
 import { useGetProfileCollectionInfoQuery } from "../hooks/user-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { ProfileCollectionsType } from "@joytify/shared-types/types";
+import { ProfileCollectionsType } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 
 const ProfileSectionPage = () => {

@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 import appAssert from "../utils/app-assert.util";
 import admin from "../config/firebase.config";
 

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import StatsModel from "../models/stats.model";
 import MusicianModel from "../models/musician.model";
-import { GetMonthlyStatsRequest, UserStats } from "@joytify/shared-types/types";
+import { GetMonthlyStatsRequest, UserStats } from "@joytify/types/types";
 
 type StatItem = { [key: string]: any; totalDuration: number; utilization?: number };
 

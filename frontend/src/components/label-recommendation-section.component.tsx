@@ -5,7 +5,7 @@ import Loader from "./loader.component";
 import LabelCardList from "./label-card-list.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorSearchLabelResponse } from "@joytify/shared-types/types";
+import { RefactorSearchLabelResponse } from "@joytify/types/types";
 
 type LabelRecommendationSectionProps = {
   fm: ScopedFormatMessage;

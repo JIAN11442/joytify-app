@@ -9,7 +9,7 @@ import {
   shouldPromptForRating,
 } from "../../../src/services/rating.service";
 import { getSongById } from "../../../src/services/song.service";
-import { RatingTypeOptions } from "@joytify/shared-types/constants";
+import { RatingTypeOptions } from "@joytify/types/constants";
 import { MIN_RATING_PROMPT_THRESHOLD } from "../../../src/constants/env-validate.constant";
 import appAssert from "../../../src/utils/app-assert.util";
 

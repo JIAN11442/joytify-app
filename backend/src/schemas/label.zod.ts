@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { LabelOptions } from "@joytify/shared-types/constants";
+import { LabelOptions } from "@joytify/types/constants";
 import { stringZodSchema } from "./util.zod";
 
 export const labelZodSchema = z.nativeEnum(LabelOptions);

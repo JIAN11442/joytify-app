@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { passwordZodSchema } from "./auth.zod";
 import { emailZodSchema, objectIdZodSchema } from "./util.zod";
-import { ProfileCollections } from "@joytify/shared-types/constants";
+import { ProfileCollections } from "@joytify/types/constants";
 
 export const userZodSchema = z.object({
   email: emailZodSchema.optional(),

@@ -1,7 +1,7 @@
 import { useScopedIntl } from "../hooks/intl.hook";
 import { ManageSongsOverviewSkeleton } from "./skeleton-loading.component";
 import { getManageSongsOverviewContent } from "../contents/manage-songs-overview.content";
-import { SongStatsResponse } from "@joytify/shared-types/types";
+import { SongStatsResponse } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 
 type ManageSongsOverviewProps = {

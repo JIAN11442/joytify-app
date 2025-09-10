@@ -13,7 +13,7 @@ import UserEntryPoint from "./user-entry-point.component";
 import NavbarSearchBar from "./navbar-searchbar.component";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { useGetUserUnviewedNotificationCountQuery } from "../hooks/notification-query.hook";
-import { SearchFilterOptions } from "@joytify/shared-types/constants";
+import { SearchFilterOptions } from "@joytify/types/constants";
 import useKeyboardShortcutModalState from "../states/keyboard-shortcut-modal.state";
 import useProviderState from "../states/provider.state";
 import useSidebarState from "../states/sidebar.state";

@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { Link, LinkProps } from "react-router-dom";
-import { AuthForOptions } from "@joytify/shared-types/constants";
+import { AuthForOptions } from "@joytify/types/constants";
 import useAuthModalState from "../states/auth-modal.state";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";

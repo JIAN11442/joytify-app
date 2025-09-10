@@ -1,10 +1,6 @@
 import { create } from "zustand";
-import { SongDeleteStatus } from "@joytify/shared-types/constants";
-import {
-  MusicianResponse,
-  RefactorSongResponse,
-  SongDeleteStatusType,
-} from "@joytify/shared-types/types";
+import { SongDeleteStatus } from "@joytify/types/constants";
+import { MusicianResponse, RefactorSongResponse, SongDeleteStatusType } from "@joytify/types/types";
 
 type ActiveSongDeleteModal = {
   active: boolean;

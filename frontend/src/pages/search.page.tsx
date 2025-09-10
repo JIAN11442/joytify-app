@@ -2,8 +2,8 @@ import { useParams, useSearchParams } from "react-router-dom";
 import SearchFilterPanel from "../components/search-filter-panel.component";
 import SearchFilterContent from "../components/search-filter-content.component";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { SearchFilterOptions } from "@joytify/shared-types/constants";
-import { SearchFilterType } from "@joytify/shared-types/types";
+import { SearchFilterOptions } from "@joytify/types/constants";
+import { SearchFilterType } from "@joytify/types/types";
 
 const SearchPage = () => {
   const { fm } = useScopedIntl();

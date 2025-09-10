@@ -3,9 +3,9 @@ import { useScopedIntl } from "../hooks/intl.hook";
 import usePlaybackControl from "../hooks/playback-control.hook";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { getKeyboardShortcutCategories } from "../contents/keyboard-shortcut-categories.content";
-import { KEYBOARD_SHORTCUTS } from "@joytify/shared-types/constants";
+import { KEYBOARD_SHORTCUTS } from "@joytify/types/constants";
 import usePlaybackControlState from "../states/playback-control.state";
-import { AudioVolumeType } from "@joytify/shared-types/types";
+import { AudioVolumeType } from "@joytify/types/types";
 
 import {
   toggleSidebar,

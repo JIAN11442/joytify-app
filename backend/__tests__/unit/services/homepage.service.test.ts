@@ -16,7 +16,7 @@ import {
   FETCH_LIMIT_PER_PAGE,
   PROFILE_FETCH_LIMIT,
 } from "../../../src/constants/env-validate.constant";
-import { MusicianOptions, S3_DEFAULT_IMAGES, LabelOptions } from "@joytify/shared-types/constants";
+import { MusicianOptions, S3_DEFAULT_IMAGES, LabelOptions } from "@joytify/types/constants";
 import { getPaginatedDocs } from "../../../src/utils/mongoose.util";
 
 // Mock all external dependencies

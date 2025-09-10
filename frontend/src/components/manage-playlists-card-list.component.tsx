@@ -8,7 +8,7 @@ import { ManageGridCardListSkeleton, PlaylistListCardSkeleton } from "./skeleton
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { ManagePlaylistsArrangement } from "../constants/manage.constant";
 import { ManagePlaylistsArrangementType } from "../types/manage.type";
-import { PlaylistResponse } from "@joytify/shared-types/types";
+import { PlaylistResponse } from "@joytify/types/types";
 import usePlaylistState from "../states/playlist.state";
 import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";

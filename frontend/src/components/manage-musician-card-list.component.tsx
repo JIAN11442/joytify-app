@@ -4,7 +4,7 @@ import AnimationWrapper from "./animation-wrapper.component";
 import ManageMusicianCard from "./manage-musician-card.component";
 import { ManageGridCardListSkeleton } from "./skeleton-loading.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { MusicianResponse } from "@joytify/shared-types/types";
+import { MusicianResponse } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { navigate } from "../lib/navigate.lib";

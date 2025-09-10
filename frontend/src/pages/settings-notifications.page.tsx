@@ -12,7 +12,7 @@ import { useScopedIntl } from "../hooks/intl.hook";
 import { useUpdateUserMutation } from "../hooks/user-mutate.hook";
 import { getSettingsNotificationsFields } from "../contents/settings-notifications.content";
 import { defaultNotificationPreferencesData } from "../constants/form.constant";
-import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
+import { RefactorProfileUserResponse } from "@joytify/types/types";
 import { DefaultNotificationPreferencesForm } from "../types/form.type";
 import useUserState from "../states/user.state";
 import { getModifiedFormData } from "../utils/get-form-data.util";

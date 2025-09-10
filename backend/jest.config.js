@@ -1,6 +1,6 @@
-import type { Config } from "jest";
+/** @type {import('jest').Config} */
 
-const config: Config = {
+const config = {
   preset: "ts-jest",
   testEnvironment: "node",
   roots: ["<rootDir>/src", "<rootDir>/__tests__"],
@@ -11,10 +11,10 @@ const config: Config = {
   collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts", "!src/**/*.test.ts"],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
   testTimeout: 10000,
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
 
   // coverage config
-  collectCoverage: false,
+  collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov", "html", "json-summary"],
   // coverageThreshold: {
@@ -27,4 +27,4 @@ const config: Config = {
   // },
 };
 
-export default config;
+module.exports = config;

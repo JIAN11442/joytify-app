@@ -1,7 +1,7 @@
 import { MdEditNote } from "react-icons/md";
 import { TbTrashXFilled } from "react-icons/tb";
 import { IconName } from "../components/react-icons.component";
-import { PlaylistResponse } from "@joytify/shared-types/types";
+import { PlaylistResponse } from "@joytify/types/types";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

@@ -1,5 +1,5 @@
-import { SearchFilterOptions } from "@joytify/shared-types/constants";
-import { AudioVolumeType } from "@joytify/shared-types/types";
+import { SearchFilterOptions } from "@joytify/types/constants";
+import { AudioVolumeType } from "@joytify/types/types";
 import useKeyboardShortcutModalState from "../states/keyboard-shortcut-modal.state";
 import usePlaybackControlState from "../states/playback-control.state";
 import useUploadModalState from "../states/upload-modal.state";

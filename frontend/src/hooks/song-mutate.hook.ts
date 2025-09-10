@@ -7,7 +7,7 @@ import {
   updateSongPlaylistsAssignment,
 } from "../fetchs/song.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
-import { UpdateSongInfoRequest } from "@joytify/shared-types/types";
+import { UpdateSongInfoRequest } from "@joytify/types/types";
 import queryClient from "../config/query-client.config";
 import { navigate } from "../lib/navigate.lib";
 import toast from "../lib/toast.lib";

@@ -2,7 +2,7 @@ import { useState } from "react";
 import QueuePlayButton from "./queue-play-button.component";
 import SongTableListArrangementMenu from "./song-table-list-arrangement-menu.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorSearchLabelResponse } from "@joytify/shared-types/types";
+import { RefactorSearchLabelResponse } from "@joytify/types/types";
 
 type LabelActionPanelProps = {
   fm: ScopedFormatMessage;

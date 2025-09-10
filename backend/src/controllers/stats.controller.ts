@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { getMonthlyStatsZodSchema } from "../schemas/stats.zod";
 import { getMonthlyStats } from "../services/stats.service";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 
 const { OK } = HttpCode;
 

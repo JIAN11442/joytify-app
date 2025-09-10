@@ -8,9 +8,9 @@ import {
 } from "../fetchs/verification.fetch";
 import { useScopedIntl } from "./intl.hook";
 import { MutationKey } from "../constants/query-client-key.constant";
-import { ErrorCode } from "@joytify/shared-types/constants";
-import { SendCodeRequest } from "@joytify/shared-types/types";
-import { AppError } from "@joytify/shared-types/classes";
+import { ErrorCode } from "@joytify/types/constants";
+import { SendCodeRequest } from "@joytify/types/types";
+import { AppError } from "@joytify/types/classes";
 import useVerificationModalState from "../states/verification.state";
 import useAuthModalState from "../states/auth-modal.state";
 import { navigate } from "../lib/navigate.lib";

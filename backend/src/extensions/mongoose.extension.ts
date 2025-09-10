@@ -1,5 +1,5 @@
 import { Query } from "mongoose";
-import { Label, Musician, PopulatedSongResponse } from "@joytify/shared-types/types";
+import { Label, Musician, PopulatedSongResponse } from "@joytify/types/types";
 import { remapFields } from "../utils/mongoose.util";
 import { joinLabels } from "../utils/join-labels.util";
 
@@ -78,7 +78,7 @@ export const applyMongooseExtensions = async () => {
    */
   Query.prototype.sortByIds = function (ids: any[]) {
     return this.transform((docs: any[]) => {
-      const idOrder = ids.map(id => id.toString());
+      const idOrder = ids.map((id) => id.toString());
       return docs.sort((a, b) => {
         const indexA = idOrder.indexOf(a._id.toString());
         const indexB = idOrder.indexOf(b._id.toString());

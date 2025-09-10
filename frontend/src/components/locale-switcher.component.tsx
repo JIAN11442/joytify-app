@@ -6,7 +6,7 @@ import Menu from "./menu.component";
 import Icon from "./react-icons.component";
 import MenuItem from "./menu-item.component";
 import { localeMap } from "../contents/locale.content";
-import { SupportedLocaleType } from "@joytify/shared-types/types";
+import { SupportedLocaleType } from "@joytify/types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type LocaleSwitcherProps = {

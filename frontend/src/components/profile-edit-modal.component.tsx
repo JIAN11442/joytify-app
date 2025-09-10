@@ -8,8 +8,8 @@ import ImageLabel from "./image-label.component";
 
 import { deleteFileFromAws } from "../fetchs/aws.fetch";
 import { useUpdateUserMutation } from "../hooks/user-mutate.hook";
-import { UploadFolder } from "@joytify/shared-types/constants";
-import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
+import { UploadFolder } from "@joytify/types/constants";
+import { RefactorProfileUserResponse } from "@joytify/types/types";
 import { DefaultEditProfileForm, FormMethods } from "../types/form.type";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";

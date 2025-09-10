@@ -5,7 +5,7 @@ import ja from "../locales/ja/index.ja";
 import ko from "../locales/ko/index.ko";
 import ms from "../locales/ms/index.ms";
 
-import { SupportedLocaleType } from "@joytify/shared-types/types";
+import { SupportedLocaleType } from "@joytify/types/types";
 
 export const LANGUAGE_FILES = {
   "en-US": enUS,

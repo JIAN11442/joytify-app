@@ -4,7 +4,7 @@ import AnimationWrapper from "./animation-wrapper.component";
 import StatsSongRanking from "./stats-song-ranking.component";
 import StatsArtistRanking from "./stats-artist-ranking.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { HexPaletee, PopulatedMonthlyStatsResponse } from "@joytify/shared-types/types";
+import { HexPaletee, PopulatedMonthlyStatsResponse } from "@joytify/types/types";
 
 type StatsLeaderboardProps = {
   fm: ScopedFormatMessage;

@@ -9,7 +9,7 @@ import { useScopedIntl } from "../hooks/intl.hook";
 import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 
 import { deleteFileFromAws } from "../fetchs/aws.fetch";
-import { UploadFolder } from "@joytify/shared-types/constants";
+import { UploadFolder } from "@joytify/types/constants";
 import { DefaultEditPlaylistForm, FormMethods } from "../types/form.type";
 import usePlaylistState from "../states/playlist.state";
 import { getModifiedFormData } from "../utils/get-form-data.util";

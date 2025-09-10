@@ -1,14 +1,14 @@
 import mongoose, { FilterQuery } from "mongoose";
 
 import LabelModel, { LabelDocument } from "../models/label.model";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 import {
   CreateLabelRequest,
   GetLabelIdRequest,
   LabelOptionsType,
   PopulatedSearchLabelResponse,
   RefactorSearchLabelResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
 import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
 

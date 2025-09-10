@@ -1,5 +1,5 @@
 import API from "../config/api-client.config";
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
+import { API_ENDPOINTS } from "@joytify/types/constants";
 import {
   CreateLabelRequest,
   GetLabelIdRequest,
@@ -7,7 +7,7 @@ import {
   LabelResponse,
   RefactorInputLabelResponse,
   RefactorSearchLabelResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 
 const { LABELS } = API_ENDPOINTS;
 

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { PlaylistResponse, RefactorPlaylistResponse } from "@joytify/shared-types/types";
+import { PlaylistResponse, RefactorPlaylistResponse } from "@joytify/types/types";
 
 export type ActivePlaylistModal = {
   active: boolean;

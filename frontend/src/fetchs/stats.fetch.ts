@@ -1,6 +1,6 @@
 import API from "../config/api-client.config";
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
-import { GetMonthlyStatsRequest, PopulatedMonthlyStatsResponse } from "@joytify/shared-types/types";
+import { API_ENDPOINTS } from "@joytify/types/constants";
+import { GetMonthlyStatsRequest, PopulatedMonthlyStatsResponse } from "@joytify/types/types";
 
 const { STATS } = API_ENDPOINTS;
 

@@ -17,7 +17,7 @@ import {
   VerificationForOptions,
   PrivacyOptions,
   ProfileCollections,
-} from "@joytify/shared-types/constants";
+} from "@joytify/types/constants";
 import {
   UpdateUserInfoRequest,
   ResetPasswordRequest,
@@ -31,7 +31,7 @@ import {
   Song,
   Album,
   PaginationQueryResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import { getPaginatedDocs, remapFields } from "../utils/mongoose.util";
 import { compareHashValue } from "../utils/bcrypt.util";
 import appAssert from "../utils/app-assert.util";

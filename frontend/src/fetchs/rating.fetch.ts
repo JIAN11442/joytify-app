@@ -1,6 +1,6 @@
 import API from "../config/api-client.config";
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
-import { UpsertSongRatingRequet, RatingResponse, SongResponse } from "@joytify/shared-types/types";
+import { API_ENDPOINTS } from "@joytify/types/constants";
+import { UpsertSongRatingRequet, RatingResponse, SongResponse } from "@joytify/types/types";
 
 const { RATINGS } = API_ENDPOINTS;
 

@@ -3,8 +3,8 @@ import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 
 import Icon from "./react-icons.component";
-import { VerificationCodeActions } from "@joytify/shared-types/constants";
-import { VerificationForType } from "@joytify/shared-types/types";
+import { VerificationCodeActions } from "@joytify/types/constants";
+import { VerificationForType } from "@joytify/types/types";
 import useVerificationModalState from "../states/verification.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { getDuration } from "../utils/get-time.util";

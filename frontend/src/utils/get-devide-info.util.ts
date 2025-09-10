@@ -1,7 +1,7 @@
 import DeviceDetector from "node-device-detector";
 import { deviceDetect } from "react-device-detect";
-import { DEVICE_TYPES, SCREEN_SIZES } from "@joytify/shared-types/constants";
-import { ExpandNavigator, IPGeoLocation, SessionInfo } from "@joytify/shared-types/types";
+import { DEVICE_TYPES, SCREEN_SIZES } from "@joytify/types/constants";
+import { ExpandNavigator, IPGeoLocation, SessionInfo } from "@joytify/types/types";
 
 type DeviceCategory = {
   isTablet: boolean;

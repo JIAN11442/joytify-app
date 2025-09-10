@@ -9,8 +9,8 @@ import Loader from "./loader.component";
 import Icon from "./react-icons.component";
 
 import { uploadFileToAws } from "../fetchs/aws.fetch";
-import { FileExtension } from "@joytify/shared-types/constants";
-import { UploadFolderType } from "@joytify/shared-types/types";
+import { FileExtension } from "@joytify/types/constants";
+import { UploadFolderType } from "@joytify/types/types";
 import { FormMethods } from "../types/form.type";
 import { useScopedIntl } from "../hooks/intl.hook";
 

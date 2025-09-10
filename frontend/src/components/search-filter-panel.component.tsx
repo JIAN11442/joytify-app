@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { twMerge } from "tailwind-merge";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { getSearchFilterPanelContent } from "../contents/search-filter-panel.content";
-import { SearchFilterType } from "@joytify/shared-types/types";
+import { SearchFilterType } from "@joytify/types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { navigate } from "../lib/navigate.lib";
 

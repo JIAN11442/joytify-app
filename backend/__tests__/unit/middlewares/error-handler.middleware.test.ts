@@ -1,7 +1,7 @@
 import { ZodError } from "zod";
 import { Request, Response } from "express";
-import { AppError } from "@joytify/shared-types/classes";
-import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
+import { AppError } from "@joytify/types/classes";
+import { HttpCode, ErrorCode } from "@joytify/types/constants";
 
 // Mock all external dependencies
 jest.doMock("../../../src/utils/cookies.util", () => ({

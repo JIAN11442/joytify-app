@@ -2,7 +2,7 @@ import AnimationWrapper from "./animation-wrapper.component";
 import StatsTracksBreakdown from "./stats-tracks-breakdown.component";
 import StatsListeningPattern from "./stats-listening-pattern.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { HexPaletee, PopulatedMonthlyStatsResponse } from "@joytify/shared-types/types";
+import { HexPaletee, PopulatedMonthlyStatsResponse } from "@joytify/types/types";
 
 type StatsDashboardProps = {
   fm: ScopedFormatMessage;

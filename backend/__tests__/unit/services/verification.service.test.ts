@@ -9,7 +9,7 @@ import {
 } from "../../../src/services/verification.service";
 import { JoytifyVerificationCodeEmail } from "../../../src/templates/verification-code.template";
 import { JoytifyResetPasswordLinkEmail } from "../../../src/templates/reset-password.template";
-import { VerificationCodeActions } from "@joytify/shared-types/constants";
+import { VerificationCodeActions } from "@joytify/types/constants";
 import {
   generateVerificationCode,
   generateVerificationLink,

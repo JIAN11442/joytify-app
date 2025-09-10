@@ -16,7 +16,7 @@ import {
   ManagePlaylistsSortDirectionType,
   ManagePlaylistsSortType,
 } from "../types/manage.type";
-import { PlaylistResponse } from "@joytify/shared-types/types";
+import { PlaylistResponse } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

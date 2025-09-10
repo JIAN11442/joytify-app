@@ -5,7 +5,7 @@ import ContentBox from "../components/content-box.component";
 import AnimationWrapper from "../components/animation-wrapper.component";
 import ResetPasswordForm from "../components/reset-password-form.component";
 import PasswordUpdateStatusForm from "../components/password-update-status-form.component";
-import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
+import { PasswordUpdateStatus } from "@joytify/types/constants";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

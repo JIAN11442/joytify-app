@@ -8,12 +8,12 @@ import {
 } from "../fetchs/user.fetch";
 import { logout } from "../fetchs/auth.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
-import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
+import { PasswordUpdateStatus } from "@joytify/types/constants";
 import {
   DeregisterUserAccountRequest,
   UpdateUserInfoRequest,
   UserResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import useUserState from "../states/user.state";
 import useSettingsState from "../states/settings.state";
 import queryClient from "../config/query-client.config";

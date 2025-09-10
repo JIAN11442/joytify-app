@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 import { IP2LOCATION_KEY } from "../constants/env-validate.constant";
 
 const { OK } = HttpCode;

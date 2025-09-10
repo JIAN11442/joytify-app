@@ -3,7 +3,7 @@ import Icon from "./react-icons.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import OdometerAnimated from "./odometer-animated.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { HexPaletee, PopulatedMonthlyStatsResponse } from "@joytify/shared-types/types";
+import { HexPaletee, PopulatedMonthlyStatsResponse } from "@joytify/types/types";
 import { getMonthlyStatsOverviewContent } from "../contents/stats-overview.content";
 
 type StatsOverviewSectionProps = {

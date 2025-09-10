@@ -5,7 +5,7 @@ import Loader from "./loader.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import SongRecommendationTableList from "./song-recommendation-table-list.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorPlaylistResponse, RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorPlaylistResponse, RefactorSongResponse } from "@joytify/types/types";
 
 type PlaylistRecommendedSectionProps = {
   fm: ScopedFormatMessage;

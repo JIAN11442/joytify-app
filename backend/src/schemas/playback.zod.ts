@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { objectIdZodSchema } from "./util.zod";
-import { PlaybackStateOptions } from "@joytify/shared-types/constants";
+import { PlaybackStateOptions } from "@joytify/types/constants";
 import { MIN_PLAYBACK_DURATION_SECONDS } from "../constants/env-validate.constant";
 
 export const playbackZodSchema = z.object({

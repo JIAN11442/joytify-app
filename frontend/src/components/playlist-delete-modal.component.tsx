@@ -9,7 +9,7 @@ import SingleSelectInputBox from "./single-select-input-box.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useDeletePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { defaultMovingPlaylistData } from "../constants/form.constant";
-import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
+import { RefactorPlaylistResponse } from "@joytify/types/types";
 import { DefaultMovingPlaylistForm } from "../types/form.type";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";

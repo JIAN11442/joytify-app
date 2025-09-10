@@ -1,6 +1,6 @@
 import mongoose, { UpdateQuery } from "mongoose";
 import { refreshSongPlaybackStats } from "../services/song.service";
-import { PlaybackStateOptions } from "@joytify/shared-types/constants";
+import { PlaybackStateOptions } from "@joytify/types/constants";
 
 export interface PlaybackDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;

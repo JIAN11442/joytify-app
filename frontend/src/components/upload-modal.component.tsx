@@ -22,7 +22,7 @@ import { useCreateSongMutation } from "../hooks/song-mutate.hook";
 import { useRemoveLabelMutation } from "../hooks/label-mutate.hook";
 import { useRemoveAlbumMutation } from "../hooks/album-mutate.hook";
 import { defaultSongData } from "../constants/form.constant";
-import { LabelOptions } from "@joytify/shared-types/constants";
+import { LabelOptions } from "@joytify/types/constants";
 import { QueryKey } from "../constants/query-client-key.constant";
 import { DefaultSongForm, FormMethods } from "../types/form.type";
 import useUploadModalState from "../states/upload-modal.state";

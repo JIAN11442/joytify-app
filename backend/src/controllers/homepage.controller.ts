@@ -11,7 +11,7 @@ import {
   getRecommendedLabels,
   getRecommendedSongs,
 } from "../services/homepage.service";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 import { labelZodSchema } from "../schemas/label.zod";
 
 const { OK } = HttpCode;

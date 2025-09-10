@@ -5,7 +5,7 @@ import Loader from "./loader.component";
 import AlbumCardList from "./album-card-list.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorAlbumResponse } from "@joytify/shared-types/types";
+import { RefactorAlbumResponse } from "@joytify/types/types";
 
 type AlbumRecommendationSectionProps = {
   fm: ScopedFormatMessage;

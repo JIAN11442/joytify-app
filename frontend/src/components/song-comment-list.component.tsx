@@ -5,7 +5,7 @@ import Icon from "./react-icons.component";
 import StarRating from "./star-rating.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type SongCommentListProps = {

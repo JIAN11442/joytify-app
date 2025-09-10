@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { VerificationForOptions } from "@joytify/shared-types/constants";
-import { VerificationForType, VerificationCodeActionType } from "@joytify/shared-types/types";
+import { VerificationForOptions } from "@joytify/types/constants";
+import { VerificationForType, VerificationCodeActionType } from "@joytify/types/types";
 
 type VerificationModalType = {
   active: boolean;

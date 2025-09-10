@@ -1,7 +1,7 @@
 import { useScopedIntl } from "../hooks/intl.hook";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
 import Loader from "./loader.component";
-import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
+import { RefactorPlaylistResponse } from "@joytify/types/types";
 
 type PlaylistWarningContentProps = {
   playlist: RefactorPlaylistResponse | null;

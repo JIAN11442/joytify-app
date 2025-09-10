@@ -1,6 +1,6 @@
 import SearchItemList from "./search-item-list.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { SearchAllResponse, SearchFilterType } from "@joytify/shared-types/types";
+import { SearchAllResponse, SearchFilterType } from "@joytify/types/types";
 
 type SearchAllListProps = {
   fm: ScopedFormatMessage;

@@ -5,7 +5,7 @@ import { TermsChecked } from "./account-deregistration-agreement.component";
 import AccountDeregistrationAgreement from "./account-deregistration-agreement.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { useDeleteSongMutation } from "../hooks/song-mutate.hook";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type SongDeleteDonationFormProps = {

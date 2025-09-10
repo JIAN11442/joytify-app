@@ -3,7 +3,7 @@ import AlbumModel from "../../../src/models/album.model";
 import LabelModel from "../../../src/models/label.model";
 import MusicianModel from "../../../src/models/musician.model";
 import { searchContentByType } from "../../../src/services/search.service";
-import { SearchFilterOptions, LabelOptions } from "@joytify/shared-types/constants";
+import { SearchFilterOptions, LabelOptions } from "@joytify/types/constants";
 import {
   FETCH_LIMIT_PER_PAGE,
   PROFILE_FETCH_LIMIT,

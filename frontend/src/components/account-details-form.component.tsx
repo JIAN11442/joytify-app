@@ -12,8 +12,8 @@ import { useScopedIntl } from "../hooks/intl.hook";
 
 import { QueryKey } from "../constants/query-client-key.constant";
 import { defaultAccountDetailsData } from "../constants/form.constant";
-import { LabelOptions, GenderOptions } from "@joytify/shared-types/constants";
-import { GenderOptionsKeys, RefactorProfileUserResponse } from "@joytify/shared-types/types";
+import { LabelOptions, GenderOptions } from "@joytify/types/constants";
+import { GenderOptionsKeys, RefactorProfileUserResponse } from "@joytify/types/types";
 import { DefaultAccountDetailsForm, FormMethods } from "../types/form.type";
 import { getModifiedFormData } from "../utils/get-form-data.util";
 import { validateDate } from "../utils/validate-date.util";

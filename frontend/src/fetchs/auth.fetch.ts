@@ -1,12 +1,7 @@
 import { getIdToken, AuthProvider } from "firebase/auth";
 
-import { AuthForOptions, API_ENDPOINTS } from "@joytify/shared-types/constants";
-import {
-  RegisterRequest,
-  LoginRequest,
-  AuthForType,
-  SessionInfo,
-} from "@joytify/shared-types/types";
+import { AuthForOptions, API_ENDPOINTS } from "@joytify/types/constants";
+import { RegisterRequest, LoginRequest, AuthForType, SessionInfo } from "@joytify/types/types";
 import { authWithThirdPartyUsingPopup } from "../config/firebase.config";
 import API from "../config/api-client.config";
 

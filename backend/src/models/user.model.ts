@@ -20,14 +20,14 @@ import {
   AudioVolume,
   LoopMode,
   S3_DEFAULT_IMAGES,
-} from "@joytify/shared-types/constants";
+} from "@joytify/types/constants";
 import {
   HexPaletee,
   AudioVolumeType,
   LoopModeType,
   SupportedLocaleType,
   PlaybackQueueWithIds,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import { compareHashValue, hashValue } from "../utils/bcrypt.util";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 import appAssert from "../utils/app-assert.util";

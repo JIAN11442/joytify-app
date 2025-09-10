@@ -4,7 +4,7 @@ import AlbumModel from "../models/album.model";
 import LabelModel from "../models/label.model";
 import MusicianModel from "../models/musician.model";
 import { FETCH_LIMIT_PER_PAGE, PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
-import { LabelOptions, SearchFilterOptions } from "@joytify/shared-types/constants";
+import { LabelOptions, SearchFilterOptions } from "@joytify/types/constants";
 import {
   LabelOptionsType,
   Musician,
@@ -15,7 +15,7 @@ import {
   RefactorMusicianResponse,
   RefactorSearchLabelResponse,
   RefactorSongResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import { getPaginatedDocs } from "../utils/mongoose.util";
 
 const { ALL, SONGS, MUSICIANS, ALBUMS, GENRES_AND_TAGS, LANGUAGES } = SearchFilterOptions;

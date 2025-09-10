@@ -1,6 +1,6 @@
 import { CookieOptions, Response } from "express";
 import { NODE_ENV, USE_NGINX_PROXY } from "../constants/env-validate.constant";
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
+import { API_ENDPOINTS } from "@joytify/types/constants";
 import {
   fifteenMinutesFromNow,
   oneDayFromNow,
@@ -42,7 +42,7 @@ const defaults: CookieOptions = {
   secure,
 };
 
-export const refreshCookiePath = `${USE_NGINX_PROXY ? "/api" : ""}${AUTH}/refresh`;
+export const refreshCookiePath = `${USE_NGINX_PROXY ? "/api/v1" : ""}${AUTH}/refresh`;
 
 // ===================== Cookies Options =====================
 

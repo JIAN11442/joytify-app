@@ -13,7 +13,7 @@ import {
   useGetRecommendedSongsQuery,
 } from "../hooks/homepage-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { LabelOptions } from "@joytify/shared-types/constants";
+import { LabelOptions } from "@joytify/types/constants";
 import useUserState from "../states/user.state";
 
 const HomePage = () => {

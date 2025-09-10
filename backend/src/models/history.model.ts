@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { PlaybackStateOptions } from "@joytify/shared-types/constants";
+import { PlaybackStateOptions } from "@joytify/types/constants";
 
 export interface HistoryDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;

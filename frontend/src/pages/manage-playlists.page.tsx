@@ -12,7 +12,7 @@ import { useGetPlaylistsQuery } from "../hooks/playlist-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { ManagePlaylistsArrangement } from "../constants/manage.constant";
 import { ManagePlaylistsArrangementType } from "../types/manage.type";
-import { PlaylistResponse } from "@joytify/shared-types/types";
+import { PlaylistResponse } from "@joytify/types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const ManagePlaylistsPage = () => {

@@ -3,7 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { getUserPreferencesCookie } from "../fetchs/cookie.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
 import { SuspenseQueryOptions } from "../types/tanstack-query.type";
-import { VerifiedUserPreferencesCookieResponse } from "@joytify/shared-types/types";
+import { VerifiedUserPreferencesCookieResponse } from "@joytify/types/types";
 import useUserState from "../states/user.state";
 
 // get verified user preferences cookie

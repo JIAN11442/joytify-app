@@ -6,8 +6,8 @@ import { FaHeadphonesSimple } from "react-icons/fa6";
 import Icon, { IconName } from "./react-icons.component";
 import QueuePlayButton from "./queue-play-button.component";
 import AuthGuardLink from "./auth-guard-link.component";
-import { LabelOptions } from "@joytify/shared-types/constants";
-import { RefactorSearchLabelResponse } from "@joytify/shared-types/types";
+import { LabelOptions } from "@joytify/types/constants";
+import { RefactorSearchLabelResponse } from "@joytify/types/types";
 import { useScopedIntl } from "../hooks/intl.hook";
 
 type LabelCardProps = {

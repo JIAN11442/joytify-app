@@ -1,5 +1,5 @@
 import z from "zod";
-import { LoopMode, SupportedLocale } from "@joytify/shared-types/constants";
+import { LoopMode, SupportedLocale } from "@joytify/types/constants";
 
 export const userPreferencesCookieSchema = z.object({
   sidebarCollapsed: z.boolean().optional(),

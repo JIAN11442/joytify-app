@@ -7,7 +7,7 @@ import ImageLabel from "./image-label.component";
 import { deleteFileFromAws } from "../fetchs/aws.fetch";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useUpdateSongInfoMutation } from "../hooks/song-mutate.hook";
-import { UploadFolder } from "@joytify/shared-types/constants";
+import { UploadFolder } from "@joytify/types/constants";
 import { DefaultSongEditForm, FormMethods } from "../types/form.type";
 import useSongState from "../states/song.state";
 import { timeoutForDelay } from "../lib/timeout.lib";

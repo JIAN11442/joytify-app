@@ -13,8 +13,8 @@ import {
   removeUserNotification,
   triggerNotificationSocket,
 } from "../services/notification.service";
-import { HttpCode } from "@joytify/shared-types/constants";
-import { NotificationFilterType } from "@joytify/shared-types/types";
+import { HttpCode } from "@joytify/types/constants";
+import { NotificationFilterType } from "@joytify/types/types";
 
 const { OK } = HttpCode;
 

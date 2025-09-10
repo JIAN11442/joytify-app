@@ -4,8 +4,8 @@ import { objectIdZodSchema } from "../schemas/util.zod";
 import { playbackZodSchema } from "../schemas/playback.zod";
 import { createPlaybackLog } from "../services/playback.service";
 import { shouldPromptForRating } from "../services/rating.service";
-import { HttpCode } from "@joytify/shared-types/constants";
-import { CreatePlaybackLogRequest } from "@joytify/shared-types/types";
+import { HttpCode } from "@joytify/types/constants";
+import { CreatePlaybackLogRequest } from "@joytify/types/types";
 
 const { OK, CREATED } = HttpCode;
 

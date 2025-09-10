@@ -3,7 +3,7 @@ import { TiUserOutline } from "react-icons/ti";
 import { PiMusicNoteSimpleFill } from "react-icons/pi";
 import Icon from "./react-icons.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { MusicianResponse } from "@joytify/shared-types/types";
+import { MusicianResponse } from "@joytify/types/types";
 
 type ManageMusicianCardImageProps = {
   fm: ScopedFormatMessage;

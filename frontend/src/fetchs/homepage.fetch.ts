@@ -1,12 +1,12 @@
 import API from "../config/api-client.config";
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
+import { API_ENDPOINTS } from "@joytify/types/constants";
 import {
   LabelOptionsType,
   PaginatedAlbumResponse,
   PaginatedLabelResponse,
   PaginatedMusicianResponse,
   PaginatedSongsResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 
 const { HOMEPAGE } = API_ENDPOINTS;
 

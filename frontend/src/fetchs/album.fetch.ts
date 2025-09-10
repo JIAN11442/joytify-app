@@ -1,11 +1,11 @@
 import API from "../config/api-client.config";
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
+import { API_ENDPOINTS } from "@joytify/types/constants";
 import {
   CreateAlbumRequest,
   AlbumResponse,
   RefactorAlbumResponse,
   UpdateAlbumRequest,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 
 const { ALBUMS } = API_ENDPOINTS;
 

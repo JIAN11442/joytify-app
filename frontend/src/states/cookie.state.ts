@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { LoopMode } from "@joytify/shared-types/constants";
-import { RefactorSongResponse, VerifiedPlayerParams } from "@joytify/shared-types/types";
+import { LoopMode } from "@joytify/types/constants";
+import { RefactorSongResponse, VerifiedPlayerParams } from "@joytify/types/types";
 
 type CookieState = {
   refactorCookiePlayer: VerifiedPlayerParams;

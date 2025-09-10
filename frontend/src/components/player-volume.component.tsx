@@ -8,7 +8,7 @@ import {
 
 import Icon from "./react-icons.component";
 import usePlaybackControl from "../hooks/playback-control.hook";
-import { AudioVolumeType } from "@joytify/shared-types/types";
+import { AudioVolumeType } from "@joytify/types/types";
 import usePlaybackControlState from "../states/playback-control.state";
 import useProviderState from "../states/provider.state";
 
@@ -69,7 +69,6 @@ const PlayerVolume: React.FC<PlayerVolumeProps> = ({ className }) => {
         className
       )}
     >
-
       {/* volume icon */}
       <button
         onClick={handleToggleVolumeBtn}

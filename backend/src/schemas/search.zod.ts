@@ -1,5 +1,5 @@
 import z from "zod";
-import { SearchFilterOptions } from "@joytify/shared-types/constants";
+import { SearchFilterOptions } from "@joytify/types/constants";
 
 export const searchParamsZodSchema = z.object({
   type: z.nativeEnum(SearchFilterOptions),

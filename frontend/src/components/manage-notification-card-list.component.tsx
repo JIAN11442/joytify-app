@@ -4,7 +4,7 @@ import PaginationControl from "./pagination-control.component";
 import { NotificationCardListSkeleton } from "./skeleton-loading.component";
 import ManageNotificationCardListItem from "./manage-notification-card-list-item.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { PaginatedNotificationResponse } from "@joytify/shared-types/types";
+import { PaginatedNotificationResponse } from "@joytify/types/types";
 
 type NotificationCardListProps = {
   fm: ScopedFormatMessage;

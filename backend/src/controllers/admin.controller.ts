@@ -12,7 +12,7 @@ import {
   removePlaylistStats,
   updateCollectionPaletee,
 } from "../services/admin.service";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 
 const { OK } = HttpCode;
 

@@ -6,8 +6,8 @@ import {
 } from "../services/cookie.service";
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { userPreferencesCookieSchema } from "../schemas/cookie.zod";
-import { HttpCode } from "@joytify/shared-types/constants";
-import { UpdateUserPreferencesCookieRequest } from "@joytify/shared-types/types";
+import { HttpCode } from "@joytify/types/constants";
+import { UpdateUserPreferencesCookieRequest } from "@joytify/types/types";
 import { setUserPreferenceCookie } from "../utils/cookies.util";
 
 const { OK } = HttpCode;

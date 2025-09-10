@@ -1,7 +1,7 @@
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import SongTitleItem from "./song-title-item.component";
 import WarningMsgBox from "./warning-message-box.component";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 
 type SongDeleteConfirmationFormProps = {
   song: RefactorSongResponse;

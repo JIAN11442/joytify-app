@@ -3,8 +3,8 @@ import ImageLabel from "./image-label.component";
 import { AutoFitTitle } from "./info-title.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { useUpdateUserMutation } from "../hooks/user-mutate.hook";
-import { UploadFolder } from "@joytify/shared-types/constants";
-import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
+import { UploadFolder } from "@joytify/types/constants";
+import { RefactorProfileUserResponse } from "@joytify/types/types";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

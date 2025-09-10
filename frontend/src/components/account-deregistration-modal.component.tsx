@@ -5,7 +5,7 @@ import DeregisterDonationForm from "./deregister-donation-form.component";
 import DeregisterConfirmationForm from "./deregister-confirmation-form.component";
 import { useDeregisterMutation } from "../hooks/user-mutate.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { AccountDeregistrationStatus } from "@joytify/shared-types/constants";
+import { AccountDeregistrationStatus } from "@joytify/types/constants";
 import useSettingsState from "../states/settings.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

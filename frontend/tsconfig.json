@@ -8,9 +8,9 @@
     // when compiling with TypeScript, specify module import paths (similar to Vite's alias configuration).
     // the only difference is that Vite's alias configuration is for the development environment, while tsconfig's alias configuration is for compilation.
     "paths": {
-      "@joytify/shared-types/types/*": ["../share/dist/esm/types/*"],
-      "@joytify/shared-types/constants/*": ["../share/dist/esm/constants/*"],
-      "@joytify/shared-types/classes/*": ["../share/dist/esm/classes/*"]
+      "@joytify/types/types/*": ["../share/dist/esm/types/*"],
+      "@joytify/types/constants/*": ["../share/dist/esm/constants/*"],
+      "@joytify/types/classes/*": ["../share/dist/esm/classes/*"]
     }
   },
   "files": [],

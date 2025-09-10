@@ -3,7 +3,7 @@ import { IconBaseProps, IconType } from "react-icons";
 import Icon from "./react-icons.component";
 import CheckboxLabel from "./checkbox-label.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { PlaylistResponse, PlaylistsResponse } from "@joytify/shared-types/types";
+import { PlaylistResponse, PlaylistsResponse } from "@joytify/types/types";
 
 interface PlaylistAssignmentListProps extends InputHTMLAttributes<HTMLInputElement> {
   fm: ScopedFormatMessage;

@@ -21,8 +21,8 @@ import {
   updateSongPlaylistsZodSchema,
 } from "../schemas/song.zod";
 import { objectIdZodSchema } from "../schemas/util.zod";
-import { HttpCode } from "@joytify/shared-types/constants";
-import { CreateSongRequest } from "@joytify/shared-types/types";
+import { HttpCode } from "@joytify/types/constants";
+import { CreateSongRequest } from "@joytify/types/types";
 
 const { CREATED, OK } = HttpCode;
 

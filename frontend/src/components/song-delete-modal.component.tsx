@@ -3,7 +3,7 @@ import Modal from "./modal.component";
 import SongDeleteDonationForm from "./song-delete-donation-form.component";
 import SongDeleteConfirmationForm from "./song-delete-confirmation-form.component";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { SongDeleteStatus } from "@joytify/shared-types/constants";
+import { SongDeleteStatus } from "@joytify/types/constants";
 import useManagesState from "../states/manages.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

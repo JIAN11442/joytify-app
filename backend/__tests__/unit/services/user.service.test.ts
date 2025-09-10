@@ -17,7 +17,7 @@ import {
   deregisterUserAccount,
 } from "../../../src/services/user.service";
 import { sendEmail } from "../../../src/services/verification.service";
-import { ProfileCollections } from "@joytify/shared-types/constants";
+import { ProfileCollections } from "@joytify/types/constants";
 import { compareHashValue } from "../../../src/utils/bcrypt.util";
 import { getPaginatedDocs } from "../../../src/utils/mongoose.util";
 import { verifyToken, VerificationTokenSignOptions } from "../../../src/utils/jwt.util";

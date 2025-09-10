@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { LabelOptions, S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
-import { HexPaletee } from "@joytify/shared-types/types";
+import { LabelOptions, S3_DEFAULT_IMAGES } from "@joytify/types/constants";
+import { HexPaletee } from "@joytify/types/types";
 import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
 import usePalette from "../hooks/paletee.hook";
 

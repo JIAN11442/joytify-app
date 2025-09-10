@@ -16,8 +16,8 @@ import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
 
 import { deleteFileFromAws } from "../fetchs/aws.fetch";
-import { UploadFolder } from "@joytify/shared-types/constants";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { UploadFolder } from "@joytify/types/constants";
+import { RefactorSongResponse } from "@joytify/types/types";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

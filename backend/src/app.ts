@@ -26,7 +26,7 @@ import authenticate from "./middlewares/authenticate.middleware";
 import firebaseInitialize from "./middlewares/firebase.middleware";
 import errorHandler from "./middlewares/error-handler.middleware";
 
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
+import { API_ENDPOINTS } from "@joytify/types/constants";
 import { NODE_ENV, ORIGIN_APP } from "./constants/env-validate.constant";
 import { adminApiKeyValidate } from "./middlewares/api-key.middleware";
 import searchRoute from "./routes/search.route";

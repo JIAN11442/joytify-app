@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import MusicianCard from "./musician-card.component";
 import AnimationWrapper from "./animation-wrapper.component";
-import { RefactorMusicianResponse } from "@joytify/shared-types/types";
+import { RefactorMusicianResponse } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 
 type MusicianCardListProps = {

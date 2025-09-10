@@ -11,7 +11,7 @@ import SongTableListActions from "./song-table-list-actions.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import usePlaybackControl from "../hooks/playback-control.hook";
 import { ArrangementOptions } from "../constants/arrangement.constant";
-import { HexPaletee, Queue, RefactorSongResponse } from "@joytify/shared-types/types";
+import { HexPaletee, Queue, RefactorSongResponse } from "@joytify/types/types";
 import usePlaybackControlState from "../states/playback-control.state";
 import useSidebarState from "../states/sidebar.state";
 import useLocaleState from "../states/locale.state";

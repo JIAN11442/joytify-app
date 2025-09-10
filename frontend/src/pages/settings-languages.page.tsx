@@ -13,7 +13,7 @@ import LocaleCardList from "../components/locale-card-list.component";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { LocaleMap, localeMap } from "../contents/locale.content";
-import { SupportedLocaleType } from "@joytify/shared-types/types";
+import { SupportedLocaleType } from "@joytify/types/types";
 import useLocaleState from "../states/locale.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

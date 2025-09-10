@@ -5,13 +5,13 @@ import SongModel from "../models/song.model";
 import MusicianModel, { MusicianDocument } from "../models/musician.model";
 import { collectDocumentAttributes } from "./util.service";
 import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 import {
   GetMusicianIdRequest,
   PopulatedMusicianResponse,
   RefactorMusicianResponse,
   UpdateMusicianRequest,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
 
 const { INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;

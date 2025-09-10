@@ -1,13 +1,13 @@
 import { isEqual } from "lodash";
 import { useCallback } from "react";
 import useMusicAudioPlayer from "./music-audio-player.hook";
-import { LoopMode } from "@joytify/shared-types/constants";
+import { LoopMode } from "@joytify/types/constants";
 import {
   Queue,
   AudioVolumeType,
   PlaybackQueueWithObjects,
   RefactorSongResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import usePlaybackControlState from "../states/playback-control.state";
 import { shuffleArray } from "../utils/shuffle-array.util";
 

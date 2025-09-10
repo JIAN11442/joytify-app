@@ -4,7 +4,7 @@ import Icon from "./react-icons.component";
 import ManagePlaylistsCardImage from "./manage-playlists-card-image.component";
 import ManagePlaylistsCardActions from "./manage-playlists-card-actions.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { PlaylistResponse } from "@joytify/shared-types/types";
+import { PlaylistResponse } from "@joytify/types/types";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
 
 type ManagePlaylistsGridCardProps = {

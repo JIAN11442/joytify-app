@@ -9,7 +9,7 @@ import {
 } from "../services/playlist.service";
 import { createPlaylistZodSchema, playlistZodSchema } from "../schemas/playlist.zod";
 import { objectIdZodSchema, stringZodSchema } from "../schemas/util.zod";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 
 const { OK, CREATED } = HttpCode;
 

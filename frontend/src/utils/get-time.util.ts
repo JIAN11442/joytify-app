@@ -5,7 +5,7 @@ import "moment/dist/locale/ja";
 import "moment/dist/locale/ko";
 import "moment/dist/locale/ms";
 
-import { SupportedLocaleType } from "@joytify/shared-types/types";
+import { SupportedLocaleType } from "@joytify/types/types";
 
 const momentLocaleMap: Record<string, string> = {
   "en-US": "en",

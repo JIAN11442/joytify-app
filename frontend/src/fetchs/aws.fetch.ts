@@ -1,5 +1,5 @@
 import API from "../config/api-client.config";
-import { FileExtension, UploadFolder, API_ENDPOINTS } from "@joytify/shared-types/constants";
+import { FileExtension, UploadFolder, API_ENDPOINTS } from "@joytify/types/constants";
 
 export interface SignedUrlRequest {
   subfolder?: UploadFolder;

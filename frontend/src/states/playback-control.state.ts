@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { LoopMode } from "@joytify/shared-types/constants";
+import { LoopMode } from "@joytify/types/constants";
 import {
   AudioVolumeType,
   LoopModeType,
   PlaybackQueueWithObjects,
   RefactorSongResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 
 type PlaybackControlState = {
   playlistSongs: RefactorSongResponse[];

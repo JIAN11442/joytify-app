@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { AuthForOptions } from "@joytify/shared-types/constants";
-import { AuthForType } from "@joytify/shared-types/types";
+import { AuthForOptions } from "@joytify/types/constants";
+import { AuthForType } from "@joytify/types/types";
 
 const { SIGN_IN } = AuthForOptions;
 

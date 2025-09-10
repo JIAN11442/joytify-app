@@ -2,7 +2,7 @@ import { useState } from "react";
 import Icon from "./react-icons.component";
 import ManageSongsCardImage from "./manage-songs-card-image.component";
 import { getManageSongsCardActionsContent } from "../contents/manage-songs-card-actions.content";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 import usePlaybackControlState from "../states/playback-control.state";
 import useUserState from "../states/user.state";
 import useSongState from "../states/song.state";

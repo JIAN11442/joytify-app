@@ -2,7 +2,7 @@ import { twMerge } from "tailwind-merge";
 import { IoIosClose } from "react-icons/io";
 import Icon from "./react-icons.component";
 import CheckboxLabel from "./checkbox-label.component";
-import { Label } from "@joytify/shared-types/types";
+import { Label } from "@joytify/types/types";
 
 interface CheckBoxItemProps {
   opt: Label;

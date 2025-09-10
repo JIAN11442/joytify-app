@@ -14,8 +14,8 @@ import {
   getLabelIdZodSchema,
 } from "../schemas/label.zod";
 import { objectIdZodSchema } from "../schemas/util.zod";
-import { HttpCode } from "@joytify/shared-types/constants";
-import { CreateLabelRequest, GetLabelIdRequest } from "@joytify/shared-types/types";
+import { HttpCode } from "@joytify/types/constants";
+import { CreateLabelRequest, GetLabelIdRequest } from "@joytify/types/types";
 
 const { OK, CREATED } = HttpCode;
 

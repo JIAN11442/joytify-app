@@ -13,8 +13,8 @@ import {
   loginZodSchema,
   registerZodSchema,
 } from "../schemas/auth.zod";
-import { HttpCode } from "@joytify/shared-types/constants";
-import { RegisterRequest, LoginRequest } from "@joytify/shared-types/types";
+import { HttpCode } from "@joytify/types/constants";
+import { RegisterRequest, LoginRequest } from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
 import {
   clearAuthCookies,

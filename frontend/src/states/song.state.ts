@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 import { ArrangementOptions } from "../constants/arrangement.constant";
 import { ArrangementType } from "../types/arragement.type";
 

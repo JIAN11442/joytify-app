@@ -8,7 +8,7 @@ import {
   FileExtension,
   UploadFolder,
   API_ENDPOINTS,
-} from "@joytify/shared-types/constants";
+} from "@joytify/types/constants";
 import {
   SongResponse,
   RefactorSongResponse,
@@ -17,7 +17,7 @@ import {
   UpdateSongPlaylistsRequest,
   UpdateSongInfoRequest,
   GetSongsByQueryRequest,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import { DefaultSongForm } from "../types/form.type";
 import getAudioDuration from "../utils/get-audio-duration.util";
 

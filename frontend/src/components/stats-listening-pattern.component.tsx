@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { HexPaletee, PopulatedMonthlyStatsResponse } from "@joytify/shared-types/types";
+import { HexPaletee, PopulatedMonthlyStatsResponse } from "@joytify/types/types";
 
 type StatsListeningPatternProps = {
   fm: ScopedFormatMessage;

@@ -9,9 +9,9 @@ import {
   ProfileCollectionInfoResponse,
   ChangePasswordRequest,
   DeregisterUserAccountRequest,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import { getLabelId } from "./label.fetch";
-import { LabelOptions, API_ENDPOINTS } from "@joytify/shared-types/constants";
+import { LabelOptions, API_ENDPOINTS } from "@joytify/types/constants";
 
 const { USERS } = API_ENDPOINTS;
 

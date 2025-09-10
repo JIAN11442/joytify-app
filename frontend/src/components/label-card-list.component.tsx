@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import LabelCard from "./label-card.component";
 import AnimationWrapper from "./animation-wrapper.component";
-import { RefactorSearchLabelResponse } from "@joytify/shared-types/types";
+import { RefactorSearchLabelResponse } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 
 type LabelCardListProps = {

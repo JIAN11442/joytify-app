@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { objectIdZodSchema, stringZodSchema } from "./util.zod";
-import { PrivacyOptions } from "@joytify/shared-types/constants";
+import { PrivacyOptions } from "@joytify/types/constants";
 
 export const playlistZodSchema = z.object({
   title: stringZodSchema.min(1).optional(),

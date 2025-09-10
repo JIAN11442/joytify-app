@@ -1,8 +1,8 @@
 import AlbumCardList from "./album-card-list.component";
 import HomepageSectionList from "./homepage-section-list.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { HomepageSection } from "@joytify/shared-types/constants";
-import { PaginatedAlbumResponse } from "@joytify/shared-types/types";
+import { HomepageSection } from "@joytify/types/constants";
+import { PaginatedAlbumResponse } from "@joytify/types/types";
 
 type HomepageRecommendedAlbumsProps = {
   fm: ScopedFormatMessage;

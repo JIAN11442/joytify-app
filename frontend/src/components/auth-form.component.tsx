@@ -17,7 +17,7 @@ import { useLocalAuthMutation, useThirdPartyAuthMutation } from "../hooks/auth-m
 import { getCurrentIPGeoLocation } from "../fetchs/network.fetch";
 import { defaultLoginData, defaultRegisterData } from "../constants/form.constant";
 import { FirebaseProvider } from "../constants/firebase-provider.constant";
-import { AuthForOptions } from "@joytify/shared-types/constants";
+import { AuthForOptions } from "@joytify/types/constants";
 import type { DefaultAuthForm } from "../types/form.type";
 import useAuthModalState from "../states/auth-modal.state";
 import useVerificationModalState from "../states/verification.state";

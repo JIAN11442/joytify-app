@@ -5,7 +5,7 @@ import AuthForm from "./auth-form.component";
 import ForgotPasswordForm from "./forgot-password-form.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 
-import { AuthForOptions } from "@joytify/shared-types/constants";
+import { AuthForOptions } from "@joytify/types/constants";
 import useVerificationModalState from "../states/verification.state";
 import useAuthModalState from "../states/auth-modal.state";
 

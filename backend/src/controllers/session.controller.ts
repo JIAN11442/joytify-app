@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { RequestHandler } from "express";
 import SessionModel from "../models/session.model";
 import { objectIdZodSchema } from "../schemas/util.zod";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 import appAssert from "../utils/app-assert.util";
 
 const { OK, INTERNAL_SERVER_ERROR, NOT_FOUND } = HttpCode;

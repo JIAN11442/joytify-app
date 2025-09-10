@@ -10,8 +10,8 @@ import {
   sendLinkEmailToUser,
   verifyLink,
 } from "../services/verification.service";
-import { HttpCode } from "@joytify/shared-types/constants";
-import { VerifyCodeRequest } from "@joytify/shared-types/types";
+import { HttpCode } from "@joytify/types/constants";
+import { VerifyCodeRequest } from "@joytify/types/types";
 import { clearVerificationCookies, setVerificationCookies } from "../utils/cookies.util";
 
 const { OK } = HttpCode;

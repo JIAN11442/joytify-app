@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { INTERNAL_API_KEY, ADMIN_API_KEY } from "../constants/env-validate.constant";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 import appAssert from "../utils/app-assert.util";
 
 const { UNAUTHORIZED } = HttpCode;

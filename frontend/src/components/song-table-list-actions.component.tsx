@@ -6,7 +6,7 @@ import Icon from "./react-icons.component";
 import MenuItem from "./menu-item.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { getSongTableListActionsContent } from "../contents/song-table-list-actions.content";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 
 type SongTableListActionsProps = {
   fm: ScopedFormatMessage;

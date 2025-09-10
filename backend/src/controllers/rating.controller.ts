@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { upsertSongRatingZodSchema } from "../schemas/rating.zod";
 import { getRatingBySongId, upsertSongRating } from "../services/rating.service";
-import { HttpCode, RatingTypeOptions } from "@joytify/shared-types/constants";
+import { HttpCode, RatingTypeOptions } from "@joytify/types/constants";
 
 const { OK } = HttpCode;
 const { SONG } = RatingTypeOptions;

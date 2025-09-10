@@ -1,4 +1,4 @@
-import { SupportedLocale } from "@joytify/shared-types/constants";
+import { SupportedLocale } from "@joytify/types/constants";
 
 export type LocaleMapFields = {
   flag: string;

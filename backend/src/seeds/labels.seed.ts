@@ -1,4 +1,4 @@
-import { LabelOptions } from "@joytify/shared-types/constants";
+import { LabelOptions } from "@joytify/types/constants";
 
 const defaultLanguageLabel = [
   { label: "English", type: LabelOptions.LANGUAGE, default: true },

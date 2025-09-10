@@ -10,8 +10,8 @@ import QueuePlayButton from "./queue-play-button.component";
 import SongTableListArrangementMenu from "./song-table-list-arrangement-menu.component";
 import { useUpdatePlaylistMutation } from "../hooks/playlist-mutate.hook";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { PrivacyOptions } from "@joytify/shared-types/constants";
-import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
+import { PrivacyOptions } from "@joytify/types/constants";
+import { RefactorPlaylistResponse } from "@joytify/types/types";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

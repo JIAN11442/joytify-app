@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 
 import { AWS_BUCKET_NAME } from "../constants/env-validate.constant";
-import { FileExtension, UploadFolder } from "@joytify/shared-types/constants";
+import { FileExtension, UploadFolder } from "@joytify/types/constants";
 import awsUrlParser from "./aws-url-parser.util";
 import s3 from "../config/aws-s3.config";
 

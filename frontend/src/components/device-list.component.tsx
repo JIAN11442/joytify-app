@@ -6,7 +6,7 @@ import Icon from "./react-icons.component";
 import { DevicesListSkeleton } from "./skeleton-loading.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useSignOutTargetDeviceMutation } from "../hooks/session-mutate.hook";
-import { SessionResponse } from "@joytify/shared-types/types";
+import { SessionResponse } from "@joytify/types/types";
 import useLocaleState from "../states/locale.state";
 import { getTimeAgo } from "../utils/get-time.util";
 import { timeoutForDelay } from "../lib/timeout.lib";

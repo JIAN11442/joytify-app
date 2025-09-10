@@ -5,8 +5,8 @@ import LabelModel from "../models/label.model";
 import MusicianModel from "../models/musician.model";
 import PlaylistModel from "../models/playlist.model";
 import NotificationModel from "../models/notification.model";
-import { HttpCode, NotificationFilterOptions } from "@joytify/shared-types/constants";
-import { CreateSystemAnnouncementRequest } from "@joytify/shared-types/types";
+import { HttpCode, NotificationFilterOptions } from "@joytify/types/constants";
+import { CreateSystemAnnouncementRequest } from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
 import usePalette from "../hooks/paletee.hook";
 

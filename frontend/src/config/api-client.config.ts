@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig } from "axios";
 
 import queryClient from "./query-client.config";
 import { navigate } from "../lib/navigate.lib";
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
+import { API_ENDPOINTS } from "@joytify/types/constants";
 
 const { AUTH } = API_ENDPOINTS;
 

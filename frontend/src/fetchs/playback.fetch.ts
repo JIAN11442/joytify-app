@@ -1,6 +1,6 @@
 import API from "../config/api-client.config";
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
-import { CreatePlaybackLogRequest, PlaybackLogResponse } from "@joytify/shared-types/types";
+import { API_ENDPOINTS } from "@joytify/types/constants";
+import { CreatePlaybackLogRequest, PlaybackLogResponse } from "@joytify/types/types";
 
 const { PLAYBACK } = API_ENDPOINTS;
 const MIN_PLAYBACK_DURATION = import.meta.env.VITE_MIN_PLAYBACK_DURATION;

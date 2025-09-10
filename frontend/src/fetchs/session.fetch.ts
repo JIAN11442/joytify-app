@@ -1,6 +1,6 @@
 import API from "../config/api-client.config";
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
-import { SessionResponse } from "@joytify/shared-types/types";
+import { API_ENDPOINTS } from "@joytify/types/constants";
+import { SessionResponse } from "@joytify/types/types";
 
 const { SESSIONS } = API_ENDPOINTS;
 

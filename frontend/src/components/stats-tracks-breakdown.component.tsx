@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { PieLabelProps } from "recharts/types/polar/Pie";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { PopulatedMonthlyStatsResponse } from "@joytify/shared-types/types";
+import { PopulatedMonthlyStatsResponse } from "@joytify/types/types";
 
 type StatsTracksBreakdownProps = {
   fm: ScopedFormatMessage;

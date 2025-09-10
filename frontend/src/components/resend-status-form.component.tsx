@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { LuMailCheck, LuMailX } from "react-icons/lu";
 
 import Icon from "./react-icons.component";
-import { VerificationCodeActions } from "@joytify/shared-types/constants";
-import { VerificationForType } from "@joytify/shared-types/types";
+import { VerificationCodeActions } from "@joytify/types/constants";
+import { VerificationForType } from "@joytify/types/types";
 import useVerificationModalState from "../states/verification.state";
 import { getDuration } from "../utils/get-time.util";
 import { timeoutForDelay } from "../lib/timeout.lib";

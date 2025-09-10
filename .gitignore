@@ -52,11 +52,11 @@ note.txt
 *.zip
 
 # Dev Docker
-Dockerfile.dev
-Dockerfile
-docker-compose.yaml
-.dockerignore
-nginx
+# Dockerfile.dev
+# Dockerfile
+# docker-compose.yaml
+# .dockerignore
+# nginx
 
 # TypeScript build info
 *.tsbuildinfo

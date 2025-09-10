@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import AlbumCard from "./album-card.component";
 import AnimationWrapper from "./animation-wrapper.component";
-import { RefactorAlbumResponse } from "@joytify/shared-types/types";
+import { RefactorAlbumResponse } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 
 type AlbumCardListProps = {

@@ -10,7 +10,7 @@ import {
   markNotificationsAsRead,
   removeUserNotification,
 } from "../../../src/services/notification.service";
-import { NotificationFilterOptions } from "@joytify/shared-types/constants";
+import { NotificationFilterOptions } from "@joytify/types/constants";
 import { getSocketServer } from "../../../src/config/socket.config";
 import appAssert from "../../../src/utils/app-assert.util";
 

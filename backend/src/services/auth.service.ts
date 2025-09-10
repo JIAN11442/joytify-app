@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 
 import UserModel from "../models/user.model";
 import SessionModel from "../models/session.model";
-import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
+import { HttpCode, ErrorCode } from "@joytify/types/constants";
 import { oneDay, thirtyDaysFormNow } from "../utils/date.util";
 import appAssert from "../utils/app-assert.util";
 import {
@@ -14,7 +14,7 @@ import {
   UserPreferenceSignOptions,
   verifyToken,
 } from "../utils/jwt.util";
-import { SessionInfo } from "@joytify/shared-types/types";
+import { SessionInfo } from "@joytify/types/types";
 
 type AuthServiceRequest = {
   email: string;

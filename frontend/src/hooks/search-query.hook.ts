@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getSearchContentByType } from "../fetchs/search.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
-import { SearchFilterType } from "@joytify/shared-types/types";
+import { SearchFilterType } from "@joytify/types/types";
 
 type GetSearchContentByTypeQuery = {
   type: SearchFilterType;

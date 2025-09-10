@@ -3,7 +3,7 @@ import Icon from "./react-icons.component";
 import SongTitleItem from "./song-title-item.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { HexPaletee, PopulatedMonthlyStatsResponse } from "@joytify/shared-types/types";
+import { HexPaletee, PopulatedMonthlyStatsResponse } from "@joytify/types/types";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
 
 type StatsSongRanking = {

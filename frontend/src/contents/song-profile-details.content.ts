@@ -1,7 +1,7 @@
 import { IntlShape } from "react-intl";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { SongProfileDetailsOptions } from "@joytify/shared-types/constants";
-import { RefactorSongResponse, SongProfileDetailsType } from "@joytify/shared-types/types";
+import { SongProfileDetailsOptions } from "@joytify/types/constants";
+import { RefactorSongResponse, SongProfileDetailsType } from "@joytify/types/types";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
 import { getDuration } from "../utils/get-time.util";
 

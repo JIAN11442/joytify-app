@@ -7,7 +7,7 @@ import {
   getProfileUserInfo,
 } from "../fetchs/user.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
-import { ProfileCollectionsType } from "@joytify/shared-types/types";
+import { ProfileCollectionsType } from "@joytify/types/types";
 import useUserState from "../states/user.state";
 
 type GetProfileUserInfoQueryRequest = {

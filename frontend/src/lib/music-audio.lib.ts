@@ -1,7 +1,7 @@
 import { isNumber } from "lodash";
 import usePlaybackControlState from "../states/playback-control.state";
-import { LoopMode } from "@joytify/shared-types/constants";
-import { Queue } from "@joytify/shared-types/types";
+import { LoopMode } from "@joytify/types/constants";
+import { Queue } from "@joytify/types/types";
 
 let musicAudio: HTMLAudioElement | null = null;
 

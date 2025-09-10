@@ -13,7 +13,7 @@ import {
   AudioVolumeType,
   SupportedLocaleType,
   PlaybackQueueWithIds,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 
 // ===================== Defaults =====================
 

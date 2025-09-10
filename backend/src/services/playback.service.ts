@@ -3,8 +3,8 @@ import SongModel from "../models/song.model";
 import HistoryModel from "../models/history.model";
 import PlaybackModel from "../models/playback.model";
 import { trackPlaybackStats } from "./stats.service";
-import { HttpCode } from "@joytify/shared-types/constants";
-import { CreatePlaybackLogRequest } from "@joytify/shared-types/types";
+import { HttpCode } from "@joytify/types/constants";
+import { CreatePlaybackLogRequest } from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
 
 interface CreatePlaybackLogServiceRequest extends CreatePlaybackLogRequest {

@@ -9,7 +9,7 @@ import AnimationWrapper from "./animation-wrapper.component";
 import SongRecommendationTableList from "./song-recommendation-table-list.component";
 import { useGetQuerySongsQuery } from "../hooks/song-query.hook";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorPlaylistResponse } from "@joytify/shared-types/types";
+import { RefactorPlaylistResponse } from "@joytify/types/types";
 
 type PlaylistSongSearchSectionProps = {
   fm: ScopedFormatMessage;

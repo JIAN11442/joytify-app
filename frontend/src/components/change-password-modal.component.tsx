@@ -4,7 +4,7 @@ import Modal from "./modal.component";
 import UpdatePasswordForm from "./update-password-form.component";
 import PasswordUpdateStatusForm from "./password-update-status-form.component";
 import { useChangePasswordMutation } from "../hooks/user-mutate.hook";
-import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
+import { PasswordUpdateStatus } from "@joytify/types/constants";
 import useSettingsState from "../states/settings.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { useScopedIntl } from "../hooks/intl.hook";

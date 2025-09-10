@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import { AccountDeregistrationStatus, PasswordUpdateStatus } from "@joytify/shared-types/constants";
+import { AccountDeregistrationStatus, PasswordUpdateStatus } from "@joytify/types/constants";
 import {
   AccountDeregistrationStatusType,
   PasswordUpdateStatusType,
   RefactorProfileUserResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 
 type ActiveAccountDeregistrationModalType = {
   active: boolean;

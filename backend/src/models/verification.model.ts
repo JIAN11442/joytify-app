@@ -1,8 +1,8 @@
 import mongoose, { UpdateQuery } from "mongoose";
 
 import { SEND_LIMIT_PER_PERIOD } from "../constants/env-validate.constant";
-import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
-import { VerificationForType } from "@joytify/shared-types/types";
+import { HttpCode, ErrorCode } from "@joytify/types/constants";
+import { VerificationForType } from "@joytify/types/types";
 import { hashValue } from "../utils/bcrypt.util";
 import appAssert from "../utils/app-assert.util";
 

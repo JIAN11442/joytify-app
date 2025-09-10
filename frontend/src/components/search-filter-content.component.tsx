@@ -15,7 +15,7 @@ import SearchFilterSkeleton from "./search-filter-skeleton.component";
 import SearchPaginationList from "./search-pagination-list.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { useSearchContentByTypeQuery } from "../hooks/search-query.hook";
-import { SearchFilterOptions } from "@joytify/shared-types/constants";
+import { SearchFilterOptions } from "@joytify/types/constants";
 import {
   SearchAlbumResponse,
   SearchAllResponse,
@@ -23,7 +23,7 @@ import {
   SearchLabelResponse,
   SearchMusicianResponse,
   SearchSongResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 
 type SearchFilterContentProps = {
   fm: ScopedFormatMessage;

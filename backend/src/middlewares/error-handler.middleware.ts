@@ -1,8 +1,8 @@
 import { ZodError } from "zod";
 import { ErrorRequestHandler } from "express";
 
-import { AppError } from "@joytify/shared-types/classes";
-import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
+import { AppError } from "@joytify/types/classes";
+import { HttpCode, ErrorCode } from "@joytify/types/constants";
 import { clearAuthCookies, refreshCookiePath, setUnauthorizedCookies } from "../utils/cookies.util";
 import { deleteAwsFileUrl } from "../utils/aws-s3-url.util";
 import awsUrlParser from "../utils/aws-url-parser.util";

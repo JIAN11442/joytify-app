@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import s3 from "../../../src/config/aws-s3.config";
-import { UploadFolder, FileExtension } from "@joytify/shared-types/constants";
+import { UploadFolder, FileExtension } from "@joytify/types/constants";
 import {
   generateUploadUrl,
   deleteAwsFileUrl,

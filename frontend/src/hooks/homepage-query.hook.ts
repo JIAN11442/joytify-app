@@ -8,7 +8,7 @@ import {
   getRecentlyPlayedSongs,
 } from "../fetchs/homepage.fetch";
 import { QueryKey } from "../constants/query-client-key.constant";
-import { LabelOptionsType } from "@joytify/shared-types/types";
+import { LabelOptionsType } from "@joytify/types/types";
 import useUserState from "../states/user.state";
 
 type RecommendedItemsBySongIdsRequest = {

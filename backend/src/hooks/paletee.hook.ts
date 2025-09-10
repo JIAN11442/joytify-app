@@ -1,4 +1,4 @@
-import { HexPaletee } from "@joytify/shared-types/types";
+import { HexPaletee } from "@joytify/types/types";
 import getImgPaletee from "../utils/get-palette.util";
 
 const usePalette = async (imgSrc: string): Promise<HexPaletee> => {

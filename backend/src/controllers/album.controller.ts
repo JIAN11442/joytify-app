@@ -9,8 +9,8 @@ import {
 } from "../services/album.service";
 import { objectIdZodSchema } from "../schemas/util.zod";
 import { albumZodSchema, updateAlbumZodSchema } from "../schemas/album.zod";
-import { HttpCode } from "@joytify/shared-types/constants";
-import { CreateAlbumRequest } from "@joytify/shared-types/types";
+import { HttpCode } from "@joytify/types/constants";
+import { CreateAlbumRequest } from "@joytify/types/types";
 
 const { OK, CREATED } = HttpCode;
 

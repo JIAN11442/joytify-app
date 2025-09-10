@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { searchParamsZodSchema, searchQueryZodSchema } from "../schemas/search.zod";
 import { searchContentByType } from "../services/search.service";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 
 const { OK } = HttpCode;
 

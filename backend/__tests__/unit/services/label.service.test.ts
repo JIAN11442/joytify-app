@@ -8,7 +8,7 @@ import {
   createLabel,
   removeLabel,
 } from "../../../src/services/label.service";
-import { LabelOptions } from "@joytify/shared-types/constants";
+import { LabelOptions } from "@joytify/types/constants";
 
 // Mock all external dependencies
 jest.mock("../../../src/models/label.model");

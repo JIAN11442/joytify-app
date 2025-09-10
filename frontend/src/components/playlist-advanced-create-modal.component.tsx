@@ -17,7 +17,7 @@ import { useScopedIntl } from "../hooks/intl.hook";
 import { deleteFileFromAws } from "../fetchs/aws.fetch";
 import { DefaultPlaylistAdvancedCreateForm, FormMethods } from "../types/form.type";
 import { defaultPlaylistAdvancedCreatData } from "../constants/form.constant";
-import { UploadFolder } from "@joytify/shared-types/constants";
+import { UploadFolder } from "@joytify/types/constants";
 import usePlaylistState from "../states/playlist.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

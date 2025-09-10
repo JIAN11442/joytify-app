@@ -3,8 +3,8 @@ import { twMerge } from "tailwind-merge";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { NotificationControlPanelSkeleton } from "./skeleton-loading.component";
 import { getManageNotificationControlPanelContent } from "../contents/manage-notification-control-panel.content";
-import { NotificationFilterOptions } from "@joytify/shared-types/constants";
-import { NotificationCountsResponse, NotificationFilterType } from "@joytify/shared-types/types";
+import { NotificationFilterOptions } from "@joytify/types/constants";
+import { NotificationCountsResponse, NotificationFilterType } from "@joytify/types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 type ManageNotificationControlPanelProps = {

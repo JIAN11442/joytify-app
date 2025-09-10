@@ -5,7 +5,7 @@ import Menu from "./menu.component";
 import Icon from "./react-icons.component";
 import MenuItem from "./menu-item.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
+import { RefactorProfileUserResponse } from "@joytify/types/types";
 import useUserState from "../states/user.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

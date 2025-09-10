@@ -10,8 +10,8 @@ import {
   HttpCode,
   VerificationForOptions,
   VerificationCodeActions,
-} from "@joytify/shared-types/constants";
-import { SendCodeRequest, VerifyCodeRequest } from "@joytify/shared-types/types";
+} from "@joytify/types/constants";
+import { SendCodeRequest, VerifyCodeRequest } from "@joytify/types/types";
 import { generateVerificationCode, generateVerificationLink } from "../utils/generate-code.util";
 import { generateNanoId } from "../utils/generate-nanoid.util";
 import { tenMinutesFromNow } from "../utils/date.util";

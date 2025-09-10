@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
+import { PasswordUpdateStatus } from "@joytify/types/constants";
 import {
   AuthUserResponse,
   RefactorProfileUserResponse,
   ProfileCollectionInfoResponse,
   PasswordUpdateStatusType,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 
 type ActiveEditProfileModal = {
   active: boolean;

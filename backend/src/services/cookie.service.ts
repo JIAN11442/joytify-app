@@ -1,8 +1,8 @@
 import _ from "lodash";
 
 import UserModel from "../models/user.model";
-import { HttpCode } from "@joytify/shared-types/constants";
-import { UpdateUserPreferencesCookieRequest } from "@joytify/shared-types/types";
+import { HttpCode } from "@joytify/types/constants";
+import { UpdateUserPreferencesCookieRequest } from "@joytify/types/types";
 import {
   signToken,
   UserPreferenceSignOptions,

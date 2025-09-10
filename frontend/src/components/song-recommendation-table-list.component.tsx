@@ -5,7 +5,7 @@ import Icon from "./react-icons.component";
 import SongTitleItem from "./song-title-item.component";
 import AuthGuardLink from "./auth-guard-link.component";
 import { useAssignSongToPlaylistsMutation } from "../hooks/song-mutate.hook";
-import { RefactorPlaylistResponse, RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorPlaylistResponse, RefactorSongResponse } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 import createColorStyle from "../utils/create-color-style.util";
 

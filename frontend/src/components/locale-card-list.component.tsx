@@ -5,7 +5,7 @@ import Icon from "./react-icons.component";
 import LocaleCard from "./locale-card.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { LocaleMap } from "../contents/locale.content";
-import { SupportedLocaleType } from "@joytify/shared-types/types";
+import { SupportedLocaleType } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 import useLocaleState from "../states/locale.state";
 

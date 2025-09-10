@@ -1,8 +1,8 @@
 import { isEqual } from "lodash";
 import mongoose, { UpdateQuery } from "mongoose";
 import usePalette from "../hooks/paletee.hook";
-import { HexPaletee } from "@joytify/shared-types/types";
-import { S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
+import { HexPaletee } from "@joytify/types/types";
+import { S3_DEFAULT_IMAGES } from "@joytify/types/constants";
 import { deleteDocWhileFieldsArrayEmpty } from "../utils/mongoose.util";
 import { deleteAwsFileUrlOnModel } from "../utils/aws-s3-url.util";
 

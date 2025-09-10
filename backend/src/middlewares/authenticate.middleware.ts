@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 
-import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
+import { HttpCode, ErrorCode } from "@joytify/types/constants";
 import { AccessTokenSignOptions, verifyToken } from "../utils/jwt.util";
 import appAssert from "../utils/app-assert.util";
 

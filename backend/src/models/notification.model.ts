@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import MusicianModel from "./musician.model";
 import UserModel, { UserDocument } from "./user.model";
 import { broadcastNotificationToUsers } from "../services/notification.service";
-import { NotificationFilterOptions } from "@joytify/shared-types/constants";
-import { NotificationFilterType } from "@joytify/shared-types/types";
+import { NotificationFilterOptions } from "@joytify/types/constants";
+import { NotificationFilterType } from "@joytify/types/types";
 
 export interface NotificationDocument extends mongoose.Document {
   type: NotificationFilterType;

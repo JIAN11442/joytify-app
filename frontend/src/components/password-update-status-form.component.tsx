@@ -6,8 +6,8 @@ import Loader from "./loader.component";
 import Icon from "./react-icons.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useSignOutDevicesMutation } from "../hooks/session-mutate.hook";
-import { PasswordUpdateStatus } from "@joytify/shared-types/constants";
-import { PasswordUpdateStatusType } from "@joytify/shared-types/types";
+import { PasswordUpdateStatus } from "@joytify/types/constants";
+import { PasswordUpdateStatusType } from "@joytify/types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 import { getDuration } from "../utils/get-time.util";
 

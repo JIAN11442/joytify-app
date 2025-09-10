@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { stringZodSchema } from "./util.zod";
-import { MusicianOptions } from "@joytify/shared-types/constants";
+import { MusicianOptions } from "@joytify/types/constants";
 
 export const musicianZodSchema = z.object({
   musician: stringZodSchema,

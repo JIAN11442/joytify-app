@@ -3,7 +3,7 @@ import SongModel, { SongDocument } from "../models/song.model";
 import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
 
 import { getPlaybackStatisticsBySongId } from "./playback.service";
-import { HttpCode, ErrorCode } from "@joytify/shared-types/constants";
+import { HttpCode, ErrorCode } from "@joytify/types/constants";
 import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
 import {
   CreateSongRequest,
@@ -12,7 +12,7 @@ import {
   UpdateSongPlaylistsRequest,
   RefactorSongResponse,
   PopulatedSongResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
 import { parseToFloat } from "../utils/parse-float.util";
 import { collectDocumentAttributes } from "./util.service";

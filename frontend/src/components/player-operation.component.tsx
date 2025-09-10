@@ -9,8 +9,8 @@ import { MdSkipNext, MdSkipPrevious } from "react-icons/md";
 import Icon from "./react-icons.component";
 import PlayerSlider from "./player-slider.component";
 import usePlaybackControl from "../hooks/playback-control.hook";
-import { LoopMode } from "@joytify/shared-types/constants";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { LoopMode } from "@joytify/types/constants";
+import { RefactorSongResponse } from "@joytify/types/types";
 import usePlaybackControlState from "../states/playback-control.state";
 import { resetMusicAudioInstance } from "../lib/music-audio.lib";
 

@@ -1,4 +1,4 @@
-import { LabelOptionsType, RefactorInputLabelResponse } from "@joytify/shared-types/types";
+import { LabelOptionsType, RefactorInputLabelResponse } from "@joytify/types/types";
 import { OptionType } from "../components/multi-select-input-box.component";
 
 export const getLabelOptions = (

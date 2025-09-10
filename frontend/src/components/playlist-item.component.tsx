@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 import { useScopedIntl } from "../hooks/intl.hook";
-import { PlaylistResponse } from "@joytify/shared-types/types";
+import { PlaylistResponse } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

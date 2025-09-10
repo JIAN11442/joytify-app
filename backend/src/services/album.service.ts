@@ -2,14 +2,14 @@ import SongModel from "../models/song.model";
 import AlbumModel from "../models/album.model";
 import { collectDocumentAttributes } from "./util.service";
 import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 import {
   CreateAlbumRequest,
   Musician,
   PopulatedAlbumResponse,
   RefactorAlbumResponse,
   UpdateAlbumRequest,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
 
 interface CreateAlbumServiceRequest extends CreateAlbumRequest {

@@ -4,14 +4,14 @@ import AlbumCardList from "./album-card-list.component";
 import LabelCardList from "./label-card-list.component";
 import MusicianCardList from "./musician-card-list.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { SearchFilterOptions } from "@joytify/shared-types/constants";
+import { SearchFilterOptions } from "@joytify/types/constants";
 import {
   RefactorAlbumResponse,
   RefactorMusicianResponse,
   RefactorSearchLabelResponse,
   RefactorSongResponse,
   SearchFilterType,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 
 type SearchItemListProps = {
   fm: ScopedFormatMessage;

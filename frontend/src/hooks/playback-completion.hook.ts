@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import usePlaybackControl from "./playback-control.hook";
 import { useRecordPlaybackLogMutation } from "./playback-mutate.hook";
-import { PlaybackStateType } from "@joytify/shared-types/types";
+import { PlaybackStateType } from "@joytify/types/types";
 import useSongState from "../states/song.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

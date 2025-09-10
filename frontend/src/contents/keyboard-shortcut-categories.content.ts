@@ -1,5 +1,5 @@
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { KEYBOARD_SHORTCUTS } from "@joytify/shared-types/constants";
+import { KEYBOARD_SHORTCUTS } from "@joytify/types/constants";
 
 type KeyboardShortcutItem = {
   id: string;

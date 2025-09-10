@@ -4,7 +4,7 @@ import PlayerSlider from "./player-slider.component";
 import SongTitleItem from "./song-title-item.component";
 import PlayerOperation from "./player-operation.component";
 import AnimationWrapper from "./animation-wrapper.component";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 import useUserState from "../states/user.state";
 
 type AudioPlayerProps = {

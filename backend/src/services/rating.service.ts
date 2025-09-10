@@ -3,16 +3,12 @@ import RatingModel from "../models/rating.model";
 import PlaylistModel from "../models/playlist.model";
 import PlaybackModel from "../models/playback.model";
 import { getSongById } from "./song.service";
-import { HttpCode, RatingTypeOptions } from "@joytify/shared-types/constants";
+import { HttpCode, RatingTypeOptions } from "@joytify/types/constants";
 import {
   MIN_RATING_PROMPT_THRESHOLD,
   MAX_RATING_PROMPT_THRESHOLD,
 } from "../constants/env-validate.constant";
-import {
-  RatingType,
-  UpsertRatingRequest,
-  UpsertSongRatingRequet,
-} from "@joytify/shared-types/types";
+import { RatingType, UpsertRatingRequest, UpsertSongRatingRequet } from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
 
 interface UpsertRatingServiceRequest extends UpsertRatingRequest {

@@ -3,7 +3,7 @@ import ResendStatusForm from "./resend-status-form.component";
 import VerifyStatusForm from "./verify-status-form.component";
 import VerificationInputForm from "./verification-input-form.component";
 
-import { VerificationForOptions, VerificationCodeActions } from "@joytify/shared-types/constants";
+import { VerificationForOptions, VerificationCodeActions } from "@joytify/types/constants";
 import useVerificationModalState from "../states/verification.state";
 
 const VerificationCodeModal = () => {

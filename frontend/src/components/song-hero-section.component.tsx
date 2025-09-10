@@ -3,8 +3,8 @@ import { twMerge } from "tailwind-merge";
 import ImageLabel from "./image-label.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useUpdateSongInfoMutation } from "../hooks/song-mutate.hook";
-import { UploadFolder } from "@joytify/shared-types/constants";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { UploadFolder } from "@joytify/types/constants";
+import { RefactorSongResponse } from "@joytify/types/types";
 import useSongState from "../states/song.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

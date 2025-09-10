@@ -3,7 +3,7 @@ import { RiUserUnfollowFill } from "react-icons/ri";
 import Icon from "./react-icons.component";
 import ManageArtistCardImage from "./manage-musician-card-image.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { MusicianResponse } from "@joytify/shared-types/types";
+import { MusicianResponse } from "@joytify/types/types";
 import useManagesState from "../states/manages.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { RatingTypeOptions } from "@joytify/shared-types/constants";
-import { RatingType } from "@joytify/shared-types/types";
+import { RatingTypeOptions } from "@joytify/types/constants";
+import { RatingType } from "@joytify/types/types";
 
 export interface RatingDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;

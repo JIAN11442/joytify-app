@@ -13,7 +13,7 @@ import {
 } from "../../../src/services/musician.service";
 import { collectDocumentAttributes } from "../../../src/services/util.service";
 import { PROFILE_FETCH_LIMIT } from "../../../src/constants/env-validate.constant";
-import { MusicianOptions } from "@joytify/shared-types/constants";
+import { MusicianOptions } from "@joytify/types/constants";
 import appAssert from "../../../src/utils/app-assert.util";
 
 // Mock all external dependencies

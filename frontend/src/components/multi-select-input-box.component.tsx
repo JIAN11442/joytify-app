@@ -7,7 +7,7 @@ import AnimationWrapper from "./animation-wrapper.component";
 import OptionCheckboxItem from "./option-checkbox-item.component";
 
 import { FormMethods } from "../types/form.type";
-import { Label, LabelOptionsType, RefactorInputLabelResponse } from "@joytify/shared-types/types";
+import { Label, LabelOptionsType, RefactorInputLabelResponse } from "@joytify/types/types";
 import useUploadModalState, { RefetchType } from "../states/upload-modal.state";
 import { timeoutForDelay, timeoutForEventListener } from "../lib/timeout.lib";
 import mergeRefs from "../lib/merge-refs.lib";

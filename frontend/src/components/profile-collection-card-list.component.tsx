@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import AuthGuardLink from "./auth-guard-link.component";
 import ProfileCollectionCard from "./profile-collection-card.component";
-import { ProfileDocs } from "@joytify/shared-types/types";
+import { ProfileDocs } from "@joytify/types/types";
 
 type CollectionCardListProps = {
   title?: { content: string; progress: boolean };

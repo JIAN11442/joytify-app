@@ -1,6 +1,6 @@
 import { useScopedIntl } from "../hooks/intl.hook";
 import { getManageSongsCardDetailsContent } from "../contents/manage-songs-card-details.content";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 
 type ManageSongsCardDetailsProps = {
   song: RefactorSongResponse;

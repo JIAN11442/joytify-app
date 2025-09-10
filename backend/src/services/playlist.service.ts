@@ -3,13 +3,13 @@ import { FilterQuery, UpdateQuery } from "mongoose";
 
 import SongModel, { SongDocument } from "../models/song.model";
 import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 import {
   CreatePlaylistRequest,
   UpdatePlaylistRequest,
   PopulatedPlaylistResponse,
   RefactorPlaylistResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
 
 interface CreatePlaylistServiceRequest extends CreatePlaylistRequest {

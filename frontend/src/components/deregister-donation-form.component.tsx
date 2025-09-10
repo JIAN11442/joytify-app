@@ -5,8 +5,8 @@ import DonationTermsAgreement from "./donation-terms-agreement.component";
 import { TermsChecked } from "./account-deregistration-agreement.component";
 import AccountDeregistrationAgreement from "./account-deregistration-agreement.component";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { AccountDeregistrationStatus } from "@joytify/shared-types/constants";
-import { DeregisterUserAccountRequest } from "@joytify/shared-types/types";
+import { AccountDeregistrationStatus } from "@joytify/types/constants";
+import { DeregisterUserAccountRequest } from "@joytify/types/types";
 import useSettingsState from "../states/settings.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

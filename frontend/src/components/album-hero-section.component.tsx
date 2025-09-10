@@ -3,8 +3,8 @@ import ImageLabel from "./image-label.component";
 import { AutoFitTitle } from "./info-title.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { useUpdateAlbumMutation } from "../hooks/album-mutate.hook";
-import { UploadFolder } from "@joytify/shared-types/constants";
-import { RefactorAlbumResponse } from "@joytify/shared-types/types";
+import { UploadFolder } from "@joytify/types/constants";
+import { RefactorAlbumResponse } from "@joytify/types/types";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
 import useUserState from "../states/user.state";
 

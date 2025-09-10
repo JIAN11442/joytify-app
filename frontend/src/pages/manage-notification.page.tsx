@@ -16,8 +16,8 @@ import {
   useGetUserNotificationsByTypeQuery,
 } from "../hooks/notification-query.hook";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { NotificationFilterOptions } from "@joytify/shared-types/constants";
-import { NotificationFilterType } from "@joytify/shared-types/types";
+import { NotificationFilterOptions } from "@joytify/types/constants";
+import { NotificationFilterType } from "@joytify/types/types";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
 const ManageNotificationPage = () => {

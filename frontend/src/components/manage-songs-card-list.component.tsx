@@ -5,7 +5,7 @@ import ManageSongsCard from "./manage-songs-card.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { ManageGridCardListSkeleton } from "./skeleton-loading.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorSongResponse } from "@joytify/shared-types/types";
+import { RefactorSongResponse } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 
 type ManageSongsCardListProps = {

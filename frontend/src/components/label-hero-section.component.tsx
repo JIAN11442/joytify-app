@@ -2,8 +2,8 @@ import { twMerge } from "tailwind-merge";
 import ImageLabel from "./image-label.component";
 import { AutoFitTitle } from "./info-title.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { UploadFolder } from "@joytify/shared-types/constants";
-import { RefactorSearchLabelResponse } from "@joytify/shared-types/types";
+import { UploadFolder } from "@joytify/types/constants";
+import { RefactorSearchLabelResponse } from "@joytify/types/types";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
 
 type LabelHeroSectionProps = {

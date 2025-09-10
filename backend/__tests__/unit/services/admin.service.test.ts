@@ -11,7 +11,7 @@ import {
   deleteSongById,
   updateCollectionPaletee,
 } from "../../../src/services/admin.service";
-import { NotificationFilterOptions } from "@joytify/shared-types/constants";
+import { NotificationFilterOptions } from "@joytify/types/constants";
 import usePalette from "../../../src/hooks/paletee.hook";
 
 // Mock all external dependencies

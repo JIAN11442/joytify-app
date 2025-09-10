@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { createPlaybackLog } from "../fetchs/playback.fetch";
 import { MutationKey, QueryKey } from "../constants/query-client-key.constant";
-import { PlaybackLogResponse } from "@joytify/shared-types/types";
+import { PlaybackLogResponse } from "@joytify/types/types";
 import useSongState from "../states/song.state";
 import queryClient from "../config/query-client.config";
 import { timeoutForDelay } from "../lib/timeout.lib";

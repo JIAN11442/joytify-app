@@ -8,7 +8,7 @@ import {
   updateCollectionPaleteeHandler,
   deleteTargetSongHandler,
 } from "../controllers/admin.controller";
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
+import { API_ENDPOINTS } from "@joytify/types/constants";
 
 const { NOTIFICATIONS, PLAYLISTS, SONGS } = API_ENDPOINTS;
 

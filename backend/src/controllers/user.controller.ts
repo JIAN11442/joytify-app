@@ -16,12 +16,12 @@ import {
   updatePasswordZodSchema,
   userZodSchema,
 } from "../schemas/user.zod";
-import { HttpCode } from "@joytify/shared-types/constants";
+import { HttpCode } from "@joytify/types/constants";
 import {
   UpdateUserInfoRequest,
   ResetPasswordRequest,
   ChangePasswordRequest,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 
 type ResetPasswordBodyRequest = Omit<ResetPasswordRequest, "token">;
 

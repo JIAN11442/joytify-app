@@ -5,7 +5,7 @@ import PlaybackModel from "../models/playback.model";
 import MusicianModel from "../models/musician.model";
 import SongModel, { SongDocument } from "../models/song.model";
 import { collectDocumentAttributes } from "./util.service";
-import { MusicianOptions, S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
+import { MusicianOptions, S3_DEFAULT_IMAGES } from "@joytify/types/constants";
 import { FETCH_LIMIT_PER_PAGE, PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
 import {
   LabelOptionsType,
@@ -18,7 +18,7 @@ import {
   RefactorMusicianResponse,
   RefactorSearchLabelResponse,
   RefactorSongResponse,
-} from "@joytify/shared-types/types";
+} from "@joytify/types/types";
 import { getPaginatedDocs } from "../utils/mongoose.util";
 
 type GetRecentlyPlayedSongsProps = {

@@ -4,7 +4,7 @@ import usePlaybackControl from "../hooks/playback-control.hook";
 import { usePlaybackCompletion } from "../hooks/playback-completion.hook";
 import { useRecordPlaybackLogMutation } from "../hooks/playback-mutate.hook";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
-import { LoopMode, PlaybackStateOptions } from "@joytify/shared-types/constants";
+import { LoopMode, PlaybackStateOptions } from "@joytify/types/constants";
 import usePlaybackControlState from "../states/playback-control.state";
 import useCookieState from "../states/cookie.state";
 import { timeoutForEventListener } from "../lib/timeout.lib";

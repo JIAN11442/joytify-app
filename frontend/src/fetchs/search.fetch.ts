@@ -1,9 +1,6 @@
 import API from "../config/api-client.config";
-import { API_ENDPOINTS } from "@joytify/shared-types/constants";
-import {
-  SearchContentByTypeRequest,
-  SearchContentByTypeResponse,
-} from "@joytify/shared-types/types";
+import { API_ENDPOINTS } from "@joytify/types/constants";
+import { SearchContentByTypeRequest, SearchContentByTypeResponse } from "@joytify/types/types";
 
 const { SEARCHES } = API_ENDPOINTS;
 

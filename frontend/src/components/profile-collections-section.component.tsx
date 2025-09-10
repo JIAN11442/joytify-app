@@ -2,8 +2,8 @@ import { pick } from "lodash";
 import { useParams } from "react-router-dom";
 import ProfileCollectionCardList from "./profile-collection-card-list.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { ProfileCollections } from "@joytify/shared-types/constants";
-import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
+import { ProfileCollections } from "@joytify/types/constants";
+import { RefactorProfileUserResponse } from "@joytify/types/types";
 
 type ProfileCollectionsSectionProps = {
   fm: ScopedFormatMessage;

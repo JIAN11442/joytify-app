@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import UserModel from "../models/user.model";
 import { FETCH_LIMIT_PER_PAGE } from "../constants/env-validate.constant";
-import { HttpCode, NotificationFilterOptions } from "@joytify/shared-types/constants";
-import { PaginationQueryResponse, NotificationFilterType } from "@joytify/shared-types/types";
+import { HttpCode, NotificationFilterOptions } from "@joytify/types/constants";
+import { PaginationQueryResponse, NotificationFilterType } from "@joytify/types/types";
 import { getSocketServer } from "../config/socket.config";
 import appAssert from "../utils/app-assert.util";
 

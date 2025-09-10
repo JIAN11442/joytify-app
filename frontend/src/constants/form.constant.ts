@@ -1,4 +1,4 @@
-import { S3_DEFAULT_IMAGES } from "@joytify/shared-types/constants";
+import { S3_DEFAULT_IMAGES } from "@joytify/types/constants";
 
 export const defaultSongData = {
   title: "",

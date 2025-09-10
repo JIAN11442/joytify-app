@@ -1,6 +1,6 @@
 import z from "zod";
 import { objectIdZodSchema, pageZodSchema } from "./util.zod";
-import { LabelOptions } from "@joytify/shared-types/constants";
+import { LabelOptions } from "@joytify/types/constants";
 
 export const getPersonalRecommendedItemsZodSchema = z.object({
   page: pageZodSchema,

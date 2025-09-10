@@ -8,7 +8,7 @@ import InputBox from "./input-box.component";
 import { useScopedIntl } from "../hooks/intl.hook";
 import { useSendResetPasswordEmailMutation } from "../hooks/verification-mutate.hook";
 import { defaultForgotPasswordData } from "../constants/form.constant";
-import { AuthForOptions } from "@joytify/shared-types/constants";
+import { AuthForOptions } from "@joytify/types/constants";
 import { DefaultForgotPasswordForm } from "../types/form.type";
 import useAuthModalState from "../states/auth-modal.state";
 import { isHighlight } from "../lib/icon-highlight.lib";

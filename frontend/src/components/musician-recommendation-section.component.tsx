@@ -5,7 +5,7 @@ import Loader from "./loader.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import MusicianCardList from "./musician-card-list.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { RefactorMusicianResponse } from "@joytify/shared-types/types";
+import { RefactorMusicianResponse } from "@joytify/types/types";
 
 type MusicianRecommendationSectionProps = {
   fm: ScopedFormatMessage;

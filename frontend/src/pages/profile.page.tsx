@@ -3,7 +3,7 @@ import Loader from "../components/loader.component";
 import ProfileHeroSection from "../components/profile-hero-section.component";
 import ProfileActionPanel from "../components/profile-action-panel.component";
 import ProfileCollectionsSection from "../components/profile-collections-section.component";
-import { RefactorProfileUserResponse } from "@joytify/shared-types/types";
+import { RefactorProfileUserResponse } from "@joytify/types/types";
 import useUserState from "../states/user.state";
 
 const ProfilePage = () => {

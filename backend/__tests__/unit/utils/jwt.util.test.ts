@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { describe } from "@jest/globals";
-import { AudioVolumeType, LoopModeType, SupportedLocaleType } from "@joytify/shared-types/types";
+import { AudioVolumeType, LoopModeType, SupportedLocaleType } from "@joytify/types/types";
 import {
   AccessTokenPayload,
   AccessTokenSignOptions,

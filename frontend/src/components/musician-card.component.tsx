@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import AuthGuardLink from "./auth-guard-link.component";
 import QueuePlayButton from "./queue-play-button.component";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { RefactorMusicianResponse } from "@joytify/shared-types/types";
+import { RefactorMusicianResponse } from "@joytify/types/types";
 
 type MusicianCardProps = {
   musician: RefactorMusicianResponse;

@@ -4,8 +4,8 @@ import {
   GridCardListSectionSkeleton,
   SongTableListSkeleton,
 } from "./skeleton-loading.component";
-import { SearchFilterOptions } from "@joytify/shared-types/constants";
-import { SearchFilterType } from "@joytify/shared-types/types";
+import { SearchFilterOptions } from "@joytify/types/constants";
+import { SearchFilterType } from "@joytify/types/types";
 
 type SearchFilterSkeletonProps = {
   type: SearchFilterType;

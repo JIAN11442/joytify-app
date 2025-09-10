@@ -5,7 +5,7 @@ import { MdTrendingFlat } from "react-icons/md";
 import { HiTrendingDown, HiTrendingUp } from "react-icons/hi";
 import { IconName } from "../components/react-icons.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
-import { PopulatedMonthlyStatsResponse } from "@joytify/shared-types/types";
+import { PopulatedMonthlyStatsResponse } from "@joytify/types/types";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
 
 type MonthlyStatsOverviewRequest = {

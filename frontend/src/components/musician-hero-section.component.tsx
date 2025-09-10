@@ -5,8 +5,8 @@ import ImageLabel from "./image-label.component";
 import { AutoFitTitle } from "./info-title.component";
 import { ScopedFormatMessage } from "../hooks/intl.hook";
 import { useUpdateMusicianMutation } from "../hooks/musician-mutate.hook";
-import { UploadFolder } from "@joytify/shared-types/constants";
-import { RefactorMusicianResponse } from "@joytify/shared-types/types";
+import { UploadFolder } from "@joytify/types/constants";
+import { RefactorMusicianResponse } from "@joytify/types/types";
 import useUserState from "../states/user.state";
 import { formatPlaybackDuration } from "../utils/unit-format.util";
 

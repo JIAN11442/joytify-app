@@ -3,13 +3,13 @@ import { useEffect, useRef } from "react";
 import { getSongById } from "../fetchs/song.fetch";
 import { useGetUserPreferencesCookieQuery } from "../hooks/cookie-query.hook";
 import { useUpdateUserPreferencesMutation } from "../hooks/cookie-mutate.hook";
-import { LoopMode, SupportedLocale } from "@joytify/shared-types/constants";
+import { LoopMode, SupportedLocale } from "@joytify/types/constants";
 import usePlaybackControlState from "../states/playback-control.state";
 import useSidebarState from "../states/sidebar.state";
 import useCookieState from "../states/cookie.state";
 import useLocaleState from "../states/locale.state";
 import useUserState from "../states/user.state";
-import { Queue } from "@joytify/shared-types/types";
+import { Queue } from "@joytify/types/types";
 import { getMusicAudioInstance } from "../lib/music-audio.lib";
 import { timeoutForDelay } from "../lib/timeout.lib";
 

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { OptionType } from "../components/multi-select-input-box.component";
-import { RefactorInputLabelResponse } from "@joytify/shared-types/types";
+import { RefactorInputLabelResponse } from "@joytify/types/types";
 
 export type RefetchType<T> = (
   options?: RefetchOptions

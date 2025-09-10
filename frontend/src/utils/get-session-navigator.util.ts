@@ -1,4 +1,4 @@
-import { SessionNavigator } from "@joytify/shared-types/types";
+import { SessionNavigator } from "@joytify/types/types";
 
 type ExpandNavigator = Navigator & SessionNavigator;
 

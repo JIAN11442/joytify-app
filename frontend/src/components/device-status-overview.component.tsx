@@ -3,7 +3,7 @@ import Icon from "./react-icons.component";
 import { DevicesOverviewSkeleton } from "./skeleton-loading.component";
 import { getDeviceStatusOverviewFields } from "../contents/device-status-overview.content";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { DeviceStats } from "@joytify/shared-types/types";
+import { DeviceStats } from "@joytify/types/types";
 import useSidebarState from "../states/sidebar.state";
 
 type DeviceStatusOverviewProps = {

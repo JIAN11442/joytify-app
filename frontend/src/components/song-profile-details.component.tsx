@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useScopedIntl } from "../hooks/intl.hook";
-import { SongProfileDetailsOptions } from "@joytify/shared-types/constants";
-import { RefactorSongResponse, SongProfileDetailsType } from "@joytify/shared-types/types";
+import { SongProfileDetailsOptions } from "@joytify/types/constants";
+import { RefactorSongResponse, SongProfileDetailsType } from "@joytify/types/types";
 import { getSongProfileDetailsContent } from "../contents/song-profile-details.content";
 import { timeoutForDelay } from "../lib/timeout.lib";
 
