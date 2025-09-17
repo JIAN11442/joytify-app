@@ -3,7 +3,7 @@ import SongModel from "../models/song.model";
 import AlbumModel from "../models/album.model";
 import LabelModel from "../models/label.model";
 import MusicianModel from "../models/musician.model";
-import { FETCH_LIMIT_PER_PAGE, PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
+import { PAGINATION_FETCH_LIMIT, INITIAL_FETCH_LIMIT } from "../constants/env-validate.constant";
 import { LabelOptions, SearchFilterOptions } from "@joytify/types/constants";
 import {
   LabelOptionsType,
@@ -39,13 +39,13 @@ interface FindItemsByTypeAndQuery extends FindItemsByQuery {
 }
 
 const defaultFetchLimit = {
-  initial: FETCH_LIMIT_PER_PAGE,
-  load: FETCH_LIMIT_PER_PAGE,
+  initial: PAGINATION_FETCH_LIMIT,
+  load: PAGINATION_FETCH_LIMIT,
 };
 
 const profileFetchLimit = {
-  initial: PROFILE_FETCH_LIMIT,
-  load: FETCH_LIMIT_PER_PAGE,
+  initial: INITIAL_FETCH_LIMIT,
+  load: PAGINATION_FETCH_LIMIT,
 };
 
 const createMatchQuery = <T>(query: string): FilterQuery<T> => ({

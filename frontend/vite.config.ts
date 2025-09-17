@@ -1,4 +1,4 @@
-import path from "path";
+// import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -17,12 +17,14 @@ export default defineConfig({
     //   ignored: ["**/node_modules/**", "**/.git/**"],
     // },
   },
+
   // 設置別名，指定模組導入路徑，簡化導入路徑的使用
-  resolve: {
-    alias: {
-      "@joytify/types": path.resolve(__dirname, "../share/dist/esm"),
-    },
-  },
+  // resolve: {
+  //   alias: {
+  //     "@joytify/types": path.resolve(__dirname, "../share/dist/esm"),
+  //   },
+  // },
+
   // 預編譯依賴項，減少 HMR（熱模組替換）時的延遲，提高開發時的響應速度
   optimizeDeps: {
     include: ["@joytify/types"],

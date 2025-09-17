@@ -4,7 +4,7 @@ import UserModel from "../models/user.model";
 import SongModel from "../models/song.model";
 import MusicianModel, { MusicianDocument } from "../models/musician.model";
 import { collectDocumentAttributes } from "./util.service";
-import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
+import { INITIAL_FETCH_LIMIT } from "../constants/env-validate.constant";
 import { HttpCode } from "@joytify/types/constants";
 import {
   GetMusicianIdRequest,
@@ -106,7 +106,7 @@ export const getRecommendedMusicians = async (musicianId: string) => {
         ],
       },
     },
-    { $limit: PROFILE_FETCH_LIMIT },
+    { $limit: INITIAL_FETCH_LIMIT },
     {
       $group: {
         _id: null,
@@ -134,7 +134,7 @@ export const getRecommendedMusicians = async (musicianId: string) => {
   const recommendedMusicians = await MusicianModel.find({
     _id: { $in: result?.musicianIds || [] },
   })
-    .limit(PROFILE_FETCH_LIMIT)
+    .limit(INITIAL_FETCH_LIMIT)
     .populateNestedSongDetails()
     .refactorSongFields<PopulatedMusicianResponse>({ transformNestedSongs: true })
     .lean<RefactorMusicianResponse>();

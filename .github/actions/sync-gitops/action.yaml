@@ -1,0 +1,108 @@
+name: "Sync GitOps"
+description: "Build image, update manifests, and sync to GitOps repository for ArgoCD auto-deployment"
+
+inputs:
+  # BUILD AND PUSH DOCKER IMAGE
+  service:
+    description: "Service name (backend/frontend)"
+    required: true
+  image-name:
+    description: "Docker image name suffix (e.g. api/web)"
+    required: true
+  dockerfile:
+    description: "Path to Dockerfile"
+    required: true
+  context:
+    description: "Build context path"
+    required: true
+  registry:
+    description: "Container registry URL"
+    required: true
+    default: "ghcr.io"
+  image-owner:
+    description: "Image owner (GitHub username/org)"
+    required: true
+  image-prefix:
+    description: "Image name prefix (project name)"
+    required: false
+  platforms:
+    description: "Target platforms for multi-arch build"
+    required: false
+    default: "linux/amd64,linux/arm64"
+  build-args:
+    description: "Build arguments for Docker build"
+    required: false
+
+  # UPDATE HELM VALUES
+  # helm-values-path:
+  #   description: "Path to Helm values.yaml file"
+  #   required: true
+  # override-values:
+  #   description: "YAML content to override specific values"
+  #   required: false
+  #   default: ""
+
+runs:
+  using: "composite"
+  steps:
+    # 1. 構建和推送 Docker 鏡像
+    - name: Build and Push Docker Image
+      id: build
+      uses: ./.github/actions/build-push-docker
+      with:
+        service: ${{ inputs.service }}
+        image-name: ${{ inputs.image-name }}
+        dockerfile: ${{ inputs.dockerfile }}
+        context: ${{ inputs.context }}
+        registry: ${{ inputs.registry }}
+        image-owner: ${{ inputs.image-owner }}
+        image-prefix: ${{ inputs.image-prefix }}
+        platforms: ${{ inputs.platforms }}
+        build-args: ${{ inputs.build-args }}
+
+    # # 2. 更新 Helm 值
+    # - name: Update Helm Values
+    #   id: update-helm-values
+    #   uses: ./.github/actions/update-helm-chart
+    #   with:
+    #     values-file: ${{ inputs.helm-values-path }}
+    #     image-repository: ${{ steps.build.outputs.repository}} # 從上一步的 outputs 取
+    #     image-tag: ${{ steps.build.outputs.tag }} # 從上一步的 outputs 取
+    #     image-digest: ${{ steps.build.outputs.digest }} # 從上一步的 outputs 取
+    #     override-values: ${{ inputs.override-values }}
+
+    # # 3. commit and push to GitOps repository
+    # - name: Commit GitOps Changes
+    #   id: commit
+    #   shell: bash
+    #   run: |
+    #     # 检查是否有变更
+    #     if git diff --quiet; then
+    #       echo "ℹ️  No changes detected"
+    #       echo "committed=false" >> $GITHUB_OUTPUT
+    #     else
+    #       echo "✅ Changes detected:"
+    #       git diff --name-only
+
+    #       # 配置 Git 用户信息
+    #       # commit 的時候需要，github actions 會自動處理
+    #       git config user.name "github-actions[bot]"
+    #       git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    #       # 添加变更
+    #       git add .
+
+    #       # 提交变更
+    #       git commit -m "chore: sync ${{ inputs.service }} service to GitOps
+
+    #     - Image: ${{ steps.build.outputs.repository }}:${{ steps.build.outputs.tag }}
+    #     - Digest: ${{ steps.build.outputs.digest }}
+    #     - Commit: ${{ github.sha }}
+    #     - ArgoCD will auto-sync this change"
+
+    #       # 推送到远程仓库
+    #       git push
+
+    #       echo "✅ Successfully synced to GitOps repository"
+    #       echo "committed=true" >> $GITHUB_OUTPUT
+    #     fi

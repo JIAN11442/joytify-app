@@ -354,7 +354,7 @@ describe("Label Service", () => {
         type: LabelOptions.GENRE,
         songs: { $ne: [] },
       });
-      expect(mockQueryChain.limit).toHaveBeenCalledWith(50); // PROFILE_FETCH_LIMIT
+      expect(mockQueryChain.limit).toHaveBeenCalledWith(50); // INITIAL_FETCH_LIMIT
       expect(mockQueryChain.populateNestedSongDetails).toHaveBeenCalled();
       expect(mockQueryChain.refactorSongFields).toHaveBeenCalledWith({
         transformNestedSongs: true,

@@ -6,7 +6,7 @@ import MusicianModel from "../models/musician.model";
 import SongModel, { SongDocument } from "../models/song.model";
 import { collectDocumentAttributes } from "./util.service";
 import { MusicianOptions, S3_DEFAULT_IMAGES } from "@joytify/types/constants";
-import { FETCH_LIMIT_PER_PAGE, PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
+import { PAGINATION_FETCH_LIMIT, INITIAL_FETCH_LIMIT } from "../constants/env-validate.constant";
 import {
   LabelOptionsType,
   Musician,
@@ -39,7 +39,7 @@ type GetRecommendedLabelsProps = {
 };
 
 const { ARTIST } = MusicianOptions;
-const fetchLimit = { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE };
+const fetchLimit = { initial: INITIAL_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT };
 
 export const getPopularMusicians = async (page: number) => {
   const musicianIds = (

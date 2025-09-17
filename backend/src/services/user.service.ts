@@ -11,7 +11,7 @@ import UserModel, { UserDocument } from "../models/user.model";
 import { sendEmail } from "./verification.service";
 
 import { JoytifyPasswordChangedEmail } from "../templates/password-changed.template";
-import { FETCH_LIMIT_PER_PAGE, PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
+import { PAGINATION_FETCH_LIMIT, INITIAL_FETCH_LIMIT } from "../constants/env-validate.constant";
 import {
   HttpCode,
   VerificationForOptions,
@@ -72,8 +72,8 @@ export const getProfileUserInfo = async (userId: string, page: number) => {
   const { PUBLIC } = PrivacyOptions;
 
   const opts = {
-    skip: (page - 1) * PROFILE_FETCH_LIMIT,
-    limit: PROFILE_FETCH_LIMIT,
+    skip: (page - 1) * INITIAL_FETCH_LIMIT,
+    limit: INITIAL_FETCH_LIMIT,
     sort: { createdAt: -1 },
   };
 
@@ -158,7 +158,7 @@ export const getProfileCollectionsInfo = async (
   let docs: PaginationQueryResponse<any> = { docs: [], totalDocs: 0, page: page };
 
   const opts: PaginationOpts = {
-    limit: { initial: PROFILE_FETCH_LIMIT * 2, load: FETCH_LIMIT_PER_PAGE },
+    limit: { initial: INITIAL_FETCH_LIMIT * 2, load: PAGINATION_FETCH_LIMIT },
     page: page,
   };
 

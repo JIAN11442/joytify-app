@@ -10,7 +10,7 @@ const SessionHeartBeatProvider: React.FC<SessionHeartBeatProps> = ({ children })
   const { authUser } = useUserState();
   const { mutate: touchSessionHeartBeat } = useTouchSessionHeartBeatMutation();
 
-  const HEARTBEAT_INTERVAL = import.meta.env.VITE_HEARTBEAT_THRESHOLD * 1000 * 60;
+  const HEARTBEAT_INTERVAL = (import.meta.env.VITE_HEARTBEAT_INTERVAL || 1) * 1000 * 60;
 
   useEffect(() => {
     if (!authUser) return;

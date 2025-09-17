@@ -3,10 +3,10 @@ import jwt, { SignOptions, VerifyOptions } from "jsonwebtoken";
 import { UserDocument } from "../models/user.model";
 import { SessionDocument } from "../models/session.model";
 import {
-  ACCESS_SECRET_KEY,
-  REFRESH_SECRET_KEY,
-  USER_PREFERENCE_SECRET_KEY,
-  VERIFICATION_SECRET_KEY,
+  JWT_ACCESS_SECRET_KEY,
+  JWT_REFRESH_SECRET_KEY,
+  JWT_USER_PREFERENCE_SECRET_KEY,
+  JWT_VERIFICATION_SECRET_KEY,
 } from "../constants/env-validate.constant";
 import {
   LoopModeType,
@@ -62,25 +62,25 @@ export type UserPreferenceTokenPayload = {
 export const AccessTokenSignOptions: SignOptionsAndSecret = {
   ...defaults,
   expiresIn: "15m",
-  secret: ACCESS_SECRET_KEY,
+  secret: JWT_ACCESS_SECRET_KEY,
 };
 
 export const RefreshTokenSignOptions: SignOptionsAndSecret = {
   ...defaults,
   expiresIn: "30d",
-  secret: REFRESH_SECRET_KEY,
+  secret: JWT_REFRESH_SECRET_KEY,
 };
 
 export const VerificationTokenSignOptions: SignOptionsAndSecret = {
   ...defaults,
   expiresIn: "10m",
-  secret: VERIFICATION_SECRET_KEY,
+  secret: JWT_VERIFICATION_SECRET_KEY,
 };
 
 export const UserPreferenceSignOptions: SignOptionsAndSecret = {
   ...defaults,
   expiresIn: "30d",
-  secret: USER_PREFERENCE_SECRET_KEY,
+  secret: JWT_USER_PREFERENCE_SECRET_KEY,
 };
 
 // ===================== Sign and Verify =====================
@@ -96,7 +96,7 @@ export const verifyToken = async <TPayload extends object = AccessTokenPayload>(
 ) => {
   try {
     let payload;
-    const { secret = ACCESS_SECRET_KEY, ...verifyOpts } = options;
+    const { secret = JWT_ACCESS_SECRET_KEY, ...verifyOpts } = options;
 
     if (token) {
       payload = jwt.verify(token, secret, {

@@ -5,8 +5,8 @@ import PlaybackModel from "../models/playback.model";
 import { getSongById } from "./song.service";
 import { HttpCode, RatingTypeOptions } from "@joytify/types/constants";
 import {
-  MIN_RATING_PROMPT_THRESHOLD,
-  MAX_RATING_PROMPT_THRESHOLD,
+  RATING_MIN_PROMPT_THRESHOLD,
+  RATING_MAX_PROMPT_THRESHOLD,
 } from "../constants/env-validate.constant";
 import { RatingType, UpsertRatingRequest, UpsertSongRatingRequet } from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
@@ -74,9 +74,9 @@ const upsertRating = async (params: UpsertRatingServiceRequest) => {
 };
 
 const shouldPromptAtPlayCount = (count: number): boolean => {
-  const minThreshold = MIN_RATING_PROMPT_THRESHOLD;
-  const midThreshold = MIN_RATING_PROMPT_THRESHOLD * 2;
-  const maxThreshold = MAX_RATING_PROMPT_THRESHOLD;
+  const minThreshold = RATING_MIN_PROMPT_THRESHOLD;
+  const midThreshold = RATING_MIN_PROMPT_THRESHOLD * 2;
+  const maxThreshold = RATING_MAX_PROMPT_THRESHOLD;
 
   // first prompt at min threshold
   // second prompt at mid threshold

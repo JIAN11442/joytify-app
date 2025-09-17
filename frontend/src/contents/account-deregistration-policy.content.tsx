@@ -83,7 +83,7 @@ export const getAccountDeregistrationPolicyContents = (
             a: (chunks) => (
               <a
                 href={`https://mail.google.com/mail/?view=cm&to=${
-                  import.meta.env.VITE_SENDER_EMAIL
+                  import.meta.env.VITE_OFFICIAL_EMAIL
                 }`}
                 target="_blank"
                 className={`text-blue-600 underline`}
@@ -91,7 +91,7 @@ export const getAccountDeregistrationPolicyContents = (
                 {chunks}
               </a>
             ),
-            email: import.meta.env.VITE_SENDER_EMAIL,
+            email: import.meta.env.VITE_OFFICIAL_EMAIL,
           }}
         />,
       ],

@@ -40,8 +40,8 @@ resource "aws_lambda_function" "monthly_stats_notification" {
       SNS_TOPIC_ARN                = aws_sns_topic.notification_topic.arn
       SCHEDULE_MODE                = local.schedule_mode
       PLAYBACK_CLEANUP_LAMBDA_NAME = aws_lambda_function.playback_data_cleanup.function_name
-      BACKEND_API_URL              = local.backend_api_url
-      INTERNAL_API_KEY             = local.internal_api_key
+      API_DOMAIN                   = local.backend_api_url
+      API_INTERNAL_SECRET_KEY      = local.internal_api_key
       DB_NAME                      = local.db_name
     }
   }

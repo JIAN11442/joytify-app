@@ -225,7 +225,7 @@ cp frontend/.env.example frontend/.env
 Key environment variables needed:
 
 - `MONGODB_CONNECTION_STRING` - Database connection
-- `ACCESS_SECRET_KEY` - JWT authentication
+- `JWT_ACCESS_SECRET_KEY` - JWT authentication
 - `FIREBASE_PROJECT_ID` - Firebase configuration
 - `AWS_ACCESS_KEY_ID` - S3 file storage
 - `RESEND_API_KEY` - Email service

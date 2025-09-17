@@ -24,7 +24,14 @@ import {
 // Mock date utilities
 jest.mock("../../../src/utils/date.util");
 
-const mockFifteenMinutesFromNow = fifteenMinutesFromNow as jest.MockedFunction<typeof fifteenMinutesFromNow>;
+// Mock environment variables
+jest.mock("../../../src/constants/env-validate.constant", () => ({
+  NODE_ENV: "development", // Default to development for most tests
+}));
+
+const mockFifteenMinutesFromNow = fifteenMinutesFromNow as jest.MockedFunction<
+  typeof fifteenMinutesFromNow
+>;
 const mockOneDayFromNow = oneDayFromNow as jest.MockedFunction<typeof oneDayFromNow>;
 const mockTenMinutesFromNow = tenMinutesFromNow as jest.MockedFunction<typeof tenMinutesFromNow>;
 const mockThirtyDaysFormNow = thirtyDaysFormNow as jest.MockedFunction<typeof thirtyDaysFormNow>;
@@ -66,9 +73,9 @@ describe("Cookies Util", () => {
       // ==================== Assert ====================
       // verify returned options contain correct security settings and expiration time
       expect(options).toEqual({
-        sameSite: "strict", // production-like environment (NODE_ENV !== "development")
-        httpOnly: true, // production-like environment
-        secure: true, // production-like environment
+        sameSite: "lax", // development environment (NODE_ENV === "development")
+        httpOnly: false, // development environment
+        secure: false, // development environment
         expires: mockDate15Min,
       });
       // verify date utility function is called correctly
@@ -83,9 +90,9 @@ describe("Cookies Util", () => {
       // ==================== Assert ====================
       // verify returned options contain correct security settings, expiration time and path
       expect(options).toEqual({
-        sameSite: "strict",
-        httpOnly: true,
-        secure: true,
+        sameSite: "lax",
+        httpOnly: false,
+        secure: false,
         expires: mockDate30Days,
         path: "/auth/refresh",
       });
@@ -101,9 +108,9 @@ describe("Cookies Util", () => {
       // ==================== Assert ====================
       // verify returned options contain correct security settings and expiration time
       expect(options).toEqual({
-        sameSite: "strict",
-        httpOnly: true,
-        secure: true,
+        sameSite: "lax",
+        httpOnly: false,
+        secure: false,
         expires: mockDate1Day,
       });
     });
@@ -116,9 +123,9 @@ describe("Cookies Util", () => {
       // ==================== Assert ====================
       // verify returned options contain correct security settings and expiration time
       expect(options).toEqual({
-        sameSite: "strict",
-        httpOnly: true,
-        secure: true,
+        sameSite: "lax",
+        httpOnly: false,
+        secure: false,
         expires: mockDate10Min,
       });
     });
@@ -131,9 +138,9 @@ describe("Cookies Util", () => {
       // ==================== Assert ====================
       // verify returned options contain correct security settings and expiration time
       expect(options).toEqual({
-        sameSite: "strict",
-        httpOnly: true,
-        secure: true,
+        sameSite: "lax",
+        httpOnly: false,
+        secure: false,
         expires: mockDate30Days,
       });
     });
@@ -158,18 +165,30 @@ describe("Cookies Util", () => {
       // verify unauthorized cookie is cleared first
       expect(mockRes.clearCookie).toHaveBeenCalledWith("unauthorized");
       // verify access token cookie is set
-      expect(mockRes.cookie).toHaveBeenCalledWith("accessToken", "access-token-123", expect.objectContaining({
-        expires: mockDate15Min
-      }));
+      expect(mockRes.cookie).toHaveBeenCalledWith(
+        "accessToken",
+        "access-token-123",
+        expect.objectContaining({
+          expires: mockDate15Min,
+        })
+      );
       // verify refresh token cookie is set
-      expect(mockRes.cookie).toHaveBeenCalledWith("refreshToken", "refresh-token-456", expect.objectContaining({
-        expires: mockDate30Days,
-        path: "/auth/refresh"
-      }));
+      expect(mockRes.cookie).toHaveBeenCalledWith(
+        "refreshToken",
+        "refresh-token-456",
+        expect.objectContaining({
+          expires: mockDate30Days,
+          path: "/auth/refresh",
+        })
+      );
       // verify user preference cookie is set
-      expect(mockRes.cookie).toHaveBeenCalledWith("ui_prefs", '{"theme":"dark"}', expect.objectContaining({
-        expires: mockDate30Days
-      }));
+      expect(mockRes.cookie).toHaveBeenCalledWith(
+        "ui_prefs",
+        '{"theme":"dark"}',
+        expect.objectContaining({
+          expires: mockDate30Days,
+        })
+      );
 
       // verify response object is returned
       expect(result).toBe(mockRes);
@@ -188,9 +207,13 @@ describe("Cookies Util", () => {
 
       // ==================== Assert ====================
       // verify unauthorized cookie is set with redirect URL
-      expect(mockRes.cookie).toHaveBeenCalledWith("unauthorized", "/dashboard", expect.objectContaining({
-        expires: mockDate1Day
-      }));
+      expect(mockRes.cookie).toHaveBeenCalledWith(
+        "unauthorized",
+        "/dashboard",
+        expect.objectContaining({
+          expires: mockDate1Day,
+        })
+      );
       // verify response object is returned
       expect(result).toBe(mockRes);
     });
@@ -205,9 +228,13 @@ describe("Cookies Util", () => {
 
       // ==================== Assert ====================
       // verify verification token cookie is set
-      expect(mockRes.cookie).toHaveBeenCalledWith("vrfctToken", "session-123", expect.objectContaining({
-        expires: mockDate10Min
-      }));
+      expect(mockRes.cookie).toHaveBeenCalledWith(
+        "vrfctToken",
+        "session-123",
+        expect.objectContaining({
+          expires: mockDate10Min,
+        })
+      );
       // verify response object is returned
       expect(result).toBe(mockRes);
     });
@@ -222,9 +249,13 @@ describe("Cookies Util", () => {
 
       // ==================== Assert ====================
       // verify user preference cookie is set
-      expect(mockRes.cookie).toHaveBeenCalledWith("ui_prefs", '{"lang":"en"}', expect.objectContaining({
-        expires: mockDate30Days
-      }));
+      expect(mockRes.cookie).toHaveBeenCalledWith(
+        "ui_prefs",
+        '{"lang":"en"}',
+        expect.objectContaining({
+          expires: mockDate30Days,
+        })
+      );
       // verify response object is returned
       expect(result).toBe(mockRes);
     });
@@ -240,7 +271,9 @@ describe("Cookies Util", () => {
       // verify access token cookie is cleared
       expect(mockRes.clearCookie).toHaveBeenCalledWith("accessToken");
       // verify refresh token cookie is cleared (with path)
-      expect(mockRes.clearCookie).toHaveBeenCalledWith("refreshToken", { path: "/auth/refresh" });
+      expect(mockRes.clearCookie).toHaveBeenCalledWith("refreshToken", {
+        path: "/auth/refresh",
+      });
       // verify user preference cookie is cleared
       expect(mockRes.clearCookie).toHaveBeenCalledWith("ui_prefs");
 
@@ -282,8 +315,8 @@ describe("Cookies Util", () => {
       setAuthCookies({
         res: mockRes,
         accessToken: "jwt-access",
-        refreshToken: "jwt-refresh", 
-        ui_prefs: '{"theme":"dark"}'
+        refreshToken: "jwt-refresh",
+        ui_prefs: '{"theme":"dark"}',
       });
 
       // ==================== Assert ====================
@@ -312,9 +345,13 @@ describe("Cookies Util", () => {
 
       // ==================== Assert ====================
       // verify verification token cookie is set
-      expect(mockRes.cookie).toHaveBeenCalledWith("vrfctToken", "reset-session", expect.objectContaining({
-        expires: mockDate10Min
-      }));
+      expect(mockRes.cookie).toHaveBeenCalledWith(
+        "vrfctToken",
+        "reset-session",
+        expect.objectContaining({
+          expires: mockDate10Min,
+        })
+      );
 
       // ==================== Arrange ====================
       // clear mock state to prepare for clear test
@@ -336,17 +373,45 @@ describe("Cookies Util", () => {
 
       // ==================== Assert ====================
       // verify unauthorized cookie is set with redirect URL
-      expect(mockRes.cookie).toHaveBeenCalledWith("unauthorized", "/protected", expect.objectContaining({
-        expires: mockDate1Day
-      }));
+      expect(mockRes.cookie).toHaveBeenCalledWith(
+        "unauthorized",
+        "/protected",
+        expect.objectContaining({
+          expires: mockDate1Day,
+        })
+      );
     });
   });
 
   describe("refreshCookiePath", () => {
-    it("should have correct path without proxy", () => {
+    it("should have correct path in development environment", () => {
       // ==================== Act & Assert ====================
-      // verify refresh cookie path is set correctly
+      // verify refresh cookie path is set correctly for development
       expect(refreshCookiePath).toBe("/auth/refresh");
+    });
+
+    it("should have correct path in production environment", () => {
+      // ==================== Arrange ====================
+      // Mock production environment by temporarily overriding the module
+      const originalEnv = require("../../../src/constants/env-validate.constant");
+      jest.doMock("../../../src/constants/env-validate.constant", () => ({
+        ...originalEnv,
+        NODE_ENV: "production",
+      }));
+
+      // Clear module cache and re-import
+      jest.resetModules();
+      const {
+        refreshCookiePath: prodRefreshCookiePath,
+      } = require("../../../src/utils/cookies.util");
+
+      // ==================== Act & Assert ====================
+      // verify refresh cookie path is set correctly for production
+      expect(prodRefreshCookiePath).toBe("/api/v1/auth/refresh");
+
+      // ==================== Cleanup ====================
+      // Restore original module
+      jest.resetModules();
     });
   });
 
@@ -363,7 +428,7 @@ describe("Cookies Util", () => {
 
       // ==================== Act & Assert ====================
       // test setting user preference cookie for each format
-      prefFormats.forEach(prefs => {
+      prefFormats.forEach((prefs) => {
         jest.clearAllMocks();
         setUserPreferenceCookie({ res: mockRes, ui_prefs: prefs });
         expect(mockRes.cookie).toHaveBeenCalledWith("ui_prefs", prefs, expect.any(Object));
@@ -381,7 +446,7 @@ describe("Cookies Util", () => {
 
       // ==================== Act & Assert ====================
       // test setting verification cookie for each format
-      tokens.forEach(token => {
+      tokens.forEach((token) => {
         jest.clearAllMocks();
         setVerificationCookies({ res: mockRes, sessionToken: token });
         expect(mockRes.cookie).toHaveBeenCalledWith("vrfctToken", token, expect.any(Object));

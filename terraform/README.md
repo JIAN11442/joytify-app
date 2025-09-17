@@ -198,8 +198,8 @@ This guide helps you quickly deploy and validate the Joytify serverless infrastr
    | MONGODB_CONNECTION_STRING | MongoDB Atlas connection string    | mongodb+srv://...                                |
    | DISCORD_WEBHOOK_URL       | Discord webhook for notifications  | https://discord.com/api/webhooks/YOUR_WEBHOOK_ID |
    | DISCORD_TIMEZONE          | Timezone for Discord notifications | Asia/Taipei                                      |
-   | INTERNAL_API_KEY          | Internal API key for backend auth  | (your-random-key)                                |
-   | BACKEND_API_URL           | Main backend API URL               | https://api.joytify.com                          |
+   | API_INTERNAL_SECRET_KEY   | Internal API key for backend auth  | (your-random-key)                                |
+   | API_DOMAIN                | Main backend API URL               | https://api.joytify.com                          |
    | SCHEDULE_MODE             | Schedule mode (production/test)    | production                                       |
 
 5. **Deploy the main infrastructure**

@@ -1,0 +1,317 @@
+name: CI/CD Pipeline
+
+# 觸發條件
+on:
+  push:
+    # branches: [main]
+    branches:
+      - main
+      - chore/ci
+
+    # 只要 push 變動是在 helm 目錄下，就不觸發 workflow
+    # 因為更新 helm values 之後需要再 commit & push，避免循環觸發
+    paths-ignore:
+      - "helm/**"
+
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "helm/**"
+
+# 設定並行限制
+# 如果有舊的 workflow 正在執行的情況下 push 新的 workflow，
+# 那麼舊的 workflow 會被取消，執行新的 workflow，避免資源浪費
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.head_commit.id }} # 包含commit ID，更精确
+  cancel-in-progress: true # 新的取消舊的
+
+# 集中管理可配置參數
+env:
+  REGISTRY: ghcr.io
+  PROJECT_NAME: joytify
+  PLATFORMS: linux/amd64
+  # 保留的版本數：包括 tagged 和 untagged
+  # 以我們的情境，一個 tagged 會有 4 個 untagged（參考 action.yaml 註釋解釋），
+  # 所以設定 50 可以保留 10 個 tagged
+  RETENTION_COUNT: 50
+  BACKEND_PATH: backend
+  FRONTEND_PATH: frontend
+  AWS_INFRA_SECRETS_NAME: JOYTIFY_INFRA_HELM_ENVS
+  AWS_APP_SECRETS_NAME: JOYTIFY_APPLICATION_ENVS
+
+jobs:
+  # 檢查哪些檔案有變更
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Filter changes
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            backend:
+              - '${{ env.BACKEND_PATH }}/**'
+              - '${{ env.BACKEND_PATH }}/Dockerfile'
+            frontend:
+              - '${{ env.FRONTEND_PATH }}/**'
+              - '${{ env.FRONTEND_PATH }}/Dockerfile'
+            workflow:
+              - '.github/workflows/**'
+
+  # 測試
+  test:
+    needs: changes
+    runs-on: ubuntu-latest
+    if: needs.changes.outputs.backend == 'true'
+    strategy:
+      matrix:
+        node: [18]
+      fail-fast: false # 不會因為一個 node 版本測試失敗就停止其他 node 版本的測試
+    defaults:
+      run:
+        working-directory: ${{ env.BACKEND_PATH }} # 設定預設工作目錄，避免每次都要 cd 到 backend 目錄
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # 設置 Node.js 運行環境（順便設置 cache）
+      # 如果 cache 比較複雜，比如不只有 node 要 cache，那建議自己寫 actions/cache@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: "npm"
+          cache-dependency-path: ./${{ env.BACKEND_PATH }}/package-lock.json
+
+      # 安裝 backend 的 dependencies
+      # 原本 npm ci 預設就會先刪除 node_modules 再下載（乾淨安裝）
+      # 但因為我們前一步已經有 cache 了，所以即使刪除了 node_modules
+      # 也可以從 cache 中取得 node_modules，大幅減少安裝時間
+      - name: Install Dependencies
+        run: npm ci
+
+      # 測試
+      - name: Testing
+        run: npm run test -- --coverage
+
+      # 上傳覆蓋結果
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports-node-${{ matrix.node }}
+          path: ${{ env.BACKEND_PATH }}/coverage/
+
+  # 構建、推送、更新 helm chart 後再推送 gitops repo
+  sync_gitops:
+    needs: [changes, test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30 # 设置30分钟超时
+    if: always() && (needs.changes.outputs.backend == 'true' || needs.changes.outputs.frontend == 'true') && (needs.test.result == 'success' || needs.test.result == 'skipped')
+
+    # 設定權限
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # github push commit 时需要
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 配置 AWS 憑證
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.EXTERNAL_SECRETS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.EXTERNAL_SECRETS_ACCESS_KEY_SECRET }}
+
+      # 設置小寫 actor
+      # Bash 語法: ${VAR,,} → 把 VAR 的內容轉成小寫；${VAR^^} → 把 VAR 的內容轉成大寫
+      # 因為我的原本的 username 是 JIAN11442，但接下來的 image 必須小寫，所以這裡要特別處理
+      - name: Set lowercase actor
+        run: echo "GITHUB_ACTOR=${GITHUB_ACTOR,,}" >> $GITHUB_ENV
+
+      # 獲取前端配置 (非機敏配置)
+      - name: Fetch secrets from AWS Secrets Manager
+        id: secrets
+        # $GITHUB_ENV 是 GitHub Actions 的環境變數
+        # 我們將獲取的 secret 注入其中，這樣就合併到 env 中，讓後續的步驟可以使用
+        run: |
+          INFRA_CONFIG=$(aws secretsmanager get-secret-value --secret-id ${{ env.AWS_INFRA_SECRETS_NAME }} --query SecretString --output text)
+          APP_CONFIG=$(aws secretsmanager get-secret-value --secret-id ${{ env.AWS_APP_SECRETS_NAME }} --query SecretString --output text)
+
+          echo "API_PORT=$(echo $INFRA_CONFIG | jq -r '.API_PORT')" >> $GITHUB_ENV
+          echo "API_DOMAIN=$(echo $INFRA_CONFIG | jq -r '.API_DOMAIN')" >> $GITHUB_ENV
+          echo "API_SERVICE_NAME=$(echo $INFRA_CONFIG | jq -r '.API_SERVICE_NAME')" >> $GITHUB_ENV
+          echo "API_SERVICE_PORT=$(echo $INFRA_CONFIG | jq -r '.API_SERVICE_PORT')" >> $GITHUB_ENV
+
+          echo "ORIGIN_APP=https://$(echo $INFRA_CONFIG | jq -r '.WEB_DOMAIN')" >> $GITHUB_ENV
+
+
+          echo "WEB_PORT=$(echo $INFRA_CONFIG | jq -r '.WEB_PORT')" >> $GITHUB_ENV
+          echo "WEB_DOMAIN=$(echo $INFRA_CONFIG | jq -r '.WEB_DOMAIN')" >> $GITHUB_ENV
+          echo "WEB_SERVICE_NAME=$(echo $INFRA_CONFIG | jq -r '.WEB_SERVICE_NAME')" >> $GITHUB_ENV
+          echo "WEB_SERVICE_PORT=$(echo $INFRA_CONFIG | jq -r '.WEB_SERVICE_PORT')" >> $GITHUB_ENV
+
+          echo "VITE_SERVER_URL=https://$(echo $INFRA_CONFIG | jq -r '.API_DOMAIN')" >> $GITHUB_ENV
+          echo "VITE_SENDER_EMAIL=$(echo $INFRA_CONFIG | jq -r '.OFFICIAL_EMAIL')" >> $GITHUB_ENV
+          echo "VITE_HEARTBEAT_INTERVAL=$(echo $APP_CONFIG | jq -r '.SESSION_HEARTBEAT_INTERVAL')" >> $GITHUB_ENV
+          echo "VITE_MIN_PLAYBACK_DURATION=$(echo $APP_CONFIG | jq -r '.PLAYBACK_MIN_DURATION_SECONDS')" >> $GITHUB_ENV
+
+          echo "CLUSTER_ISSUER=$(echo $INFRA_CONFIG | jq -r '.CLUSTER_ISSUER')" >> $GITHUB_ENV
+
+      # 設置 Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 登入 GitHub Container Registry
+      - name: Login to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }} # github 會自動生成這個 token，方便
+
+      # 自動部署後端
+      - name: Sync Backend to GitOps
+        if: needs.changes.outputs.backend == 'true' && needs.test.result == 'success'
+        uses: ./.github/actions/sync-gitops
+        with:
+          service: backend
+
+          # metadata
+          registry: ${{ env.REGISTRY }}
+          image-owner: ${{ env.GITHUB_ACTOR }} # 必須是小寫
+          image-prefix: ${{ env.PROJECT_NAME }}
+          image-name: api
+
+          # build-push-docker
+          context: ./${{ env.BACKEND_PATH }}
+          dockerfile: ${{ env.BACKEND_PATH }}/Dockerfile
+          platforms: ${{ env.PLATFORMS }}
+
+          # update-helm-chart
+          # helm-values-path: ./helm/backend/values.yaml
+          # override-values: |
+          #   ghcr:
+          #     username: ${{ github.actor }}
+          #     token: ${{ secrets.GHCR_TOKEN }}
+          #   container:
+          #     port: ${{ env.API_PORT }}
+          #   service:
+          #     name: ${{ env.API_SERVICE_NAME }}
+          #     port: ${{ env.API_SERVICE_PORT }}
+          #     targetPort: ${{ env.API_PORT }}
+          #   awsCredentials:
+          #     accessKeyId:
+          #       value: ${{ secrets.EXTERNAL_SECRETS_ACCESS_KEY_ID }}
+          #     secretAccessKey:
+          #       value: ${{ secrets.EXTERNAL_SECRETS_ACCESS_KEY_SECRET }}
+          #   secretStore:
+          #     aws:
+          #       region: ${{ secrets.AWS_REGION }}
+          #   ingress:
+          #     domain: ${{ env.API_DOMAIN }}
+          #     clusterIssuer: ${{ env.CLUSTER_ISSUER }}
+          #   envs:
+          #     ORIGIN_URL: ${{ env.ORIGIN_URL }}
+
+      # 自動部署前端
+      - name: Sync Frontend to GitOps
+        if: needs.changes.outputs.frontend == 'true'
+        uses: ./.github/actions/sync-gitops
+        with:
+          service: frontend
+
+          # metadata
+          registry: ${{ env.REGISTRY }}
+          image-owner: ${{ env.GITHUB_ACTOR }}
+          image-prefix: ${{ env.PROJECT_NAME }}
+          image-name: web
+
+          # build-push-docker
+          context: ./${{ env.FRONTEND_PATH }}
+          dockerfile: ${{ env.FRONTEND_PATH }}/Dockerfile
+          platforms: ${{ env.PLATFORMS }}
+          build-args: |
+            VITE_SERVER_URL=${{ env.VITE_SERVER_URL }}
+            VITE_SENDER_EMAIL=${{ env.VITE_SENDER_EMAIL }}
+            VITE_HEARTBEAT_INTERVAL=${{ env.VITE_HEARTBEAT_INTERVAL }}
+            VITE_MIN_PLAYBACK_DURATION=${{ env.VITE_MIN_PLAYBACK_DURATION }}
+
+          # update-helm-chart
+          # helm-values-path: ./helm/frontend/values.yaml
+          # override-values: |
+          #   ghcr:
+          #     username: ${{ github.actor }}
+          #     token: ${{ secrets.GHCR_TOKEN }}
+          #   container:
+          #     port: ${{ env.WEB_PORT }}
+          #   service:
+          #     name: ${{ env.WEB_SERVICE_NAME }}
+          #     port: ${{ env.WEB_SERVICE_PORT }}
+          #     targetPort: ${{ env.WEB_PORT }}
+          #   ingress:
+          #     domain: ${{ env.WEB_DOMAIN }}
+          #     clusterIssuer: ${{ env.CLUSTER_ISSUER }}
+
+  # GHCR Image 清理
+  cleanup-images:
+    needs: [changes, sync_gitops]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.sync_gitops.result == 'success'
+
+    # 設定權限
+    permissions:
+      packages: write
+
+    # 設定策略
+    strategy:
+      matrix:
+        image-name: [api, web]
+
+    steps:
+      # 清理策略 1: 保留最近 10 個版本 (啟用)
+      - name: Delete old package versions (keep ${{ env.RETENTION_COUNT }} recently versions)
+        continue-on-error: true
+        uses: actions/delete-package-versions@v4
+        with:
+          package-name: "${{ env.PROJECT_NAME }}-${{ matrix.image-name }}"
+          package-type: "container"
+          min-versions-to-keep: ${{ env.RETENTION_COUNT }}
+          delete-only-untagged-versions: false
+          owner: ${{ github.repository_owner }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 清理策略 2: 按時間清理 30 天前的版本
+      # - name: Delete versions older than 30 days
+      #   uses: actions/delete-package-versions@v4
+      #   with:
+      #     package-name: 'cicd-learning-${{ matrix.image-name }}'
+      #     package-type: 'container'
+      #     ignore-versions: '^(latest|stable|prod)$'
+      #     oldest-to-keep: '30 days'
+
+      # 清理策略 3: 清理開發分支的 images
+      # - name: Delete development branch images
+      #   uses: actions/delete-package-versions@v4
+      #   with:
+      #     package-name: 'cicd-learning-${{ matrix.image-name }}'
+      #     package-type: 'container'
+      #     version-pattern: '^develop-.*$'
+      #     min-versions-to-keep: 3
+
+      # 清理策略 4: 只清理未標記的版本
+      # - name: Delete untagged versions
+      #   uses: actions/delete-package-versions@v4
+      #   with:
+      #     package-name: 'cicd-learning-${{ matrix.image-name }}'
+      #     package-type: 'container'
+      #     delete-only-untagged-versions: true

@@ -50,8 +50,8 @@ const handler = async (event) => {
     if (usersUpdated > 0 && socketUserIds?.length > 0) {
       await triggerSocketNotifications(
         socketUserIds,
-        process.env.BACKEND_API_URL,
-        process.env.INTERNAL_API_KEY
+        process.env.API_DOMAIN,
+        process.env.API_INTERNAL_SECRET_KEY
       );
     }
 

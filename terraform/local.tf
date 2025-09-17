@@ -12,13 +12,13 @@ locals {
   # ========================================
   # SECRETS & ENVIRONMENT VARIABLES
   # ========================================
-  secret_name               = "MERN_JOYTIFY_ENVS"
+  secret_name               = "JOYTIFY_LAMBDA_ENVS"
   secret_data               = jsondecode(data.aws_secretsmanager_secret_version.joytify.secret_string)
   mongodb_connection_string = local.secret_data["MONGODB_CONNECTION_STRING"]
   discord_webhook_url       = local.secret_data["DISCORD_WEBHOOK_URL"]
   discord_timezone          = local.secret_data["DISCORD_TIMEZONE"]
-  internal_api_key          = local.secret_data["INTERNAL_API_KEY"]
-  backend_api_url           = local.secret_data["BACKEND_API_URL"]
+  internal_api_key          = local.secret_data["API_INTERNAL_SECRET_KEY"]
+  backend_api_url           = local.secret_data["API_DOMAIN"]
 
   # ========================================
   # SCHEDULING CONFIGURATION

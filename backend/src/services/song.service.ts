@@ -4,7 +4,7 @@ import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
 
 import { getPlaybackStatisticsBySongId } from "./playback.service";
 import { HttpCode, ErrorCode } from "@joytify/types/constants";
-import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
+import { INITIAL_FETCH_LIMIT } from "../constants/env-validate.constant";
 import {
   CreateSongRequest,
   DeleteSongRequest,
@@ -186,7 +186,7 @@ export const getRecommendedSongs = async (playlistId: string) => {
       { albums: { $in: features.albums } },
     ],
   })
-    .limit(PROFILE_FETCH_LIMIT)
+    .limit(INITIAL_FETCH_LIMIT)
     .populateSongDetails()
     .refactorSongFields<PopulatedSongResponse>()
     .lean<RefactorSongResponse[]>();

@@ -5,8 +5,8 @@ import MusicianModel from "../../../src/models/musician.model";
 import { searchContentByType } from "../../../src/services/search.service";
 import { SearchFilterOptions, LabelOptions } from "@joytify/types/constants";
 import {
-  FETCH_LIMIT_PER_PAGE,
-  PROFILE_FETCH_LIMIT,
+  PAGINATION_FETCH_LIMIT,
+  INITIAL_FETCH_LIMIT,
 } from "../../../src/constants/env-validate.constant";
 import { getPaginatedDocs } from "../../../src/utils/mongoose.util";
 
@@ -132,8 +132,8 @@ describe("Search Service", () => {
         expect(mockGetPaginatedDocs).toHaveBeenCalledWith(
           expect.objectContaining({
             limit: {
-              initial: PROFILE_FETCH_LIMIT,
-              load: FETCH_LIMIT_PER_PAGE,
+              initial: INITIAL_FETCH_LIMIT,
+              load: PAGINATION_FETCH_LIMIT,
             },
           })
         );
@@ -196,8 +196,8 @@ describe("Search Service", () => {
           model: SongModel,
           filter: { _id: { $in: [{ _id: "song1" }, { _id: "song2" }] } },
           limit: {
-            initial: FETCH_LIMIT_PER_PAGE,
-            load: FETCH_LIMIT_PER_PAGE,
+            initial: PAGINATION_FETCH_LIMIT,
+            load: PAGINATION_FETCH_LIMIT,
           },
           page: 1,
         });
@@ -814,7 +814,7 @@ describe("Search Service", () => {
         expect(mockGetPaginatedDocs).toHaveBeenCalledWith({
           model: SongModel,
           filter: { _id: { $in: [{ _id: "song1" }, { _id: "song2" }] } },
-          limit: { initial: FETCH_LIMIT_PER_PAGE, load: FETCH_LIMIT_PER_PAGE },
+          limit: { initial: PAGINATION_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT },
           page: 1,
         });
 

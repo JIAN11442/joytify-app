@@ -1,11 +1,11 @@
 import SessionModel from "../../../src/models/session.model";
 import { sessionOnlineStatusCheckSchedule } from "../../../src/schedules/session-online.schedule";
-import { SESSION_THRESHOLD } from "../../../src/constants/env-validate.constant";
+import { SESSION_OFFLINE_TIMEOUT } from "../../../src/constants/env-validate.constant";
 
 // Mock all external dependencies
 jest.mock("../../../src/models/session.model");
 jest.mock("../../../src/constants/env-validate.constant", () => ({
-  SESSION_THRESHOLD: 5, // 5 minutes for testing
+  SESSION_OFFLINE_TIMEOUT: 5, // 5 minutes for testing
 }));
 
 // Mock type definitions
@@ -18,7 +18,7 @@ const mockConsoleError = jest.spyOn(console, "error").mockImplementation(() => {
 
 describe("Session Online Schedule", () => {
   // Mock data constants
-  const ONLINE_CHECK_THRESHOLD = SESSION_THRESHOLD * 60 * 1000; // 5 minutes in milliseconds
+  const ONLINE_CHECK_THRESHOLD = SESSION_OFFLINE_TIMEOUT * 60 * 1000; // 5 minutes in milliseconds
 
   const mockUpdateResult = {
     acknowledged: true,
@@ -141,7 +141,7 @@ describe("Session Online Schedule", () => {
 
     it("should use correct threshold calculation", () => {
       // ==================== Arrange ====================
-      // The mocked SESSION_THRESHOLD is 5 minutes
+      // The mocked SESSION_OFFLINE_TIMEOUT is 5 minutes
       const expectedThreshold = 5 * 60 * 1000; // 300000 milliseconds
 
       const setIntervalSpy = jest.spyOn(global, "setInterval");

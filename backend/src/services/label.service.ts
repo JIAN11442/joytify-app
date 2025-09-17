@@ -10,7 +10,7 @@ import {
   RefactorSearchLabelResponse,
 } from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
-import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
+import { INITIAL_FETCH_LIMIT } from "../constants/env-validate.constant";
 
 type GetLabelsServiceRequest = {
   userId: string;
@@ -144,7 +144,7 @@ export const getRecommendedLabels = async (labelId: string) => {
     type: label.type,
     songs: { $ne: [] },
   })
-    .limit(PROFILE_FETCH_LIMIT)
+    .limit(INITIAL_FETCH_LIMIT)
     .populateNestedSongDetails()
     .refactorSongFields<PopulatedSearchLabelResponse>({ transformNestedSongs: true })
     .lean<RefactorSearchLabelResponse>();

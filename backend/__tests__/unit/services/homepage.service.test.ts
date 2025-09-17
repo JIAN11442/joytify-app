@@ -13,8 +13,8 @@ import {
 } from "../../../src/services/homepage.service";
 import { collectDocumentAttributes } from "../../../src/services/util.service";
 import {
-  FETCH_LIMIT_PER_PAGE,
-  PROFILE_FETCH_LIMIT,
+  PAGINATION_FETCH_LIMIT,
+  INITIAL_FETCH_LIMIT,
 } from "../../../src/constants/env-validate.constant";
 import { MusicianOptions, S3_DEFAULT_IMAGES, LabelOptions } from "@joytify/types/constants";
 import { getPaginatedDocs } from "../../../src/utils/mongoose.util";
@@ -139,7 +139,7 @@ describe("Homepage Service", () => {
       expect(mockGetPaginatedDocs).toHaveBeenCalledWith({
         model: MusicianModel,
         filter: { _id: { $in: mockMusicianIds } },
-        limit: { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE },
+        limit: { initial: INITIAL_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT },
         page: 1,
       });
 
@@ -167,7 +167,7 @@ describe("Homepage Service", () => {
       expect(mockGetPaginatedDocs).toHaveBeenCalledWith({
         model: MusicianModel,
         filter: { _id: { $in: [] } },
-        limit: { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE },
+        limit: { initial: INITIAL_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT },
         page: 1,
       });
     });
@@ -239,7 +239,7 @@ describe("Homepage Service", () => {
       expect(mockGetPaginatedDocs).toHaveBeenCalledWith({
         model: SongModel,
         filter: { _id: { $in: mockSongIds } },
-        limit: { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE },
+        limit: { initial: INITIAL_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT },
         page: 1,
       });
 
@@ -268,7 +268,7 @@ describe("Homepage Service", () => {
       expect(mockGetPaginatedDocs).toHaveBeenCalledWith({
         model: SongModel,
         filter: { _id: { $in: [] } },
-        limit: { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE },
+        limit: { initial: INITIAL_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT },
         page: 1,
       });
     });
@@ -324,7 +324,7 @@ describe("Homepage Service", () => {
             { languages: { $in: mockFeatures.languages } },
           ],
         },
-        limit: { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE },
+        limit: { initial: INITIAL_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT },
         page: 1,
       });
 
@@ -363,7 +363,7 @@ describe("Homepage Service", () => {
       expect(mockGetPaginatedDocs).toHaveBeenCalledWith({
         model: SongModel,
         filter: {},
-        limit: { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE },
+        limit: { initial: INITIAL_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT },
         page: 1,
       });
     });
@@ -469,7 +469,7 @@ describe("Homepage Service", () => {
       expect(mockGetPaginatedDocs).toHaveBeenCalledWith({
         model: AlbumModel,
         filter: { _id: { $in: mockAlbumIds } },
-        limit: { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE },
+        limit: { initial: INITIAL_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT },
         page: 1,
       });
 
@@ -550,7 +550,7 @@ describe("Homepage Service", () => {
       expect(mockGetPaginatedDocs).toHaveBeenCalledWith({
         model: AlbumModel,
         filter: { _id: { $in: [] } },
-        limit: { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE },
+        limit: { initial: INITIAL_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT },
         page: 1,
       });
     });
@@ -612,7 +612,7 @@ describe("Homepage Service", () => {
       expect(mockGetPaginatedDocs).toHaveBeenCalledWith({
         model: LabelModel,
         filter: { _id: { $in: mockLabelIds } },
-        limit: { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE },
+        limit: { initial: INITIAL_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT },
         page: 1,
       });
 
@@ -665,7 +665,7 @@ describe("Homepage Service", () => {
       expect(mockGetPaginatedDocs).toHaveBeenCalledWith({
         model: LabelModel,
         filter: { _id: { $in: [] } },
-        limit: { initial: PROFILE_FETCH_LIMIT, load: FETCH_LIMIT_PER_PAGE },
+        limit: { initial: INITIAL_FETCH_LIMIT, load: PAGINATION_FETCH_LIMIT },
         page: 1,
       });
     });

@@ -10,7 +10,7 @@ import {
 } from "../../../src/services/rating.service";
 import { getSongById } from "../../../src/services/song.service";
 import { RatingTypeOptions } from "@joytify/types/constants";
-import { MIN_RATING_PROMPT_THRESHOLD } from "../../../src/constants/env-validate.constant";
+import { RATING_MIN_PROMPT_THRESHOLD } from "../../../src/constants/env-validate.constant";
 import appAssert from "../../../src/utils/app-assert.util";
 
 // Mock all external dependencies
@@ -361,7 +361,7 @@ describe("Rating Service", () => {
       };
 
       mockRatingModel.findOne.mockResolvedValue(null);
-      mockPlaybackModel.countDocuments.mockResolvedValue(MIN_RATING_PROMPT_THRESHOLD);
+      mockPlaybackModel.countDocuments.mockResolvedValue(RATING_MIN_PROMPT_THRESHOLD);
 
       // ==================== Act ====================
       const result = await shouldPromptForRating(params);
@@ -398,7 +398,7 @@ describe("Rating Service", () => {
       };
 
       mockRatingModel.findOne.mockResolvedValue(null);
-      mockPlaybackModel.countDocuments.mockResolvedValue(MIN_RATING_PROMPT_THRESHOLD - 1); // Below threshold
+      mockPlaybackModel.countDocuments.mockResolvedValue(RATING_MIN_PROMPT_THRESHOLD - 1); // Below threshold
 
       // ==================== Act ====================
       const result = await shouldPromptForRating(params);
@@ -436,8 +436,8 @@ describe("Rating Service", () => {
 
       mockRatingModel.findOne.mockResolvedValue(null);
 
-      // Test mid threshold (MIN_RATING_PROMPT_THRESHOLD * 2)
-      mockPlaybackModel.countDocuments.mockResolvedValue(MIN_RATING_PROMPT_THRESHOLD * 2);
+      // Test mid threshold (RATING_MIN_PROMPT_THRESHOLD * 2)
+      mockPlaybackModel.countDocuments.mockResolvedValue(RATING_MIN_PROMPT_THRESHOLD * 2);
 
       // ==================== Act ====================
       const result = await shouldPromptForRating(params);

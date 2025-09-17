@@ -23,6 +23,12 @@ export const usePlaybackCompletion = () => {
         { songId, duration, state },
         {
           onSuccess: (data) => {
+            if (!data) {
+              // if no data, continue with normal playback
+              onContinuePlayback();
+              return;
+            }
+
             const { shouldPrompt, song } = data;
 
             if (shouldPrompt) {
