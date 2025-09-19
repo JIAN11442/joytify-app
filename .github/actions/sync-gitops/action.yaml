@@ -33,14 +33,25 @@ inputs:
     description: "Build arguments for Docker build"
     required: false
 
+  # GITOPS REPOSITORIES
+  gitops-repository:
+    description: "GitOps repository (e.g. owner/gitops)"
+    required: false
+    default: ""
+  gitops-token:
+    description: "GitHub token for GitOps repository access"
+    required: false
+    default: ""
+
   # UPDATE HELM VALUES
-  # helm-values-path:
-  #   description: "Path to Helm values.yaml file"
-  #   required: true
-  # override-values:
-  #   description: "YAML content to override specific values"
-  #   required: false
-  #   default: ""
+  helm-values-path:
+    description: "Path to Helm values.yaml file"
+    required: false
+    default: ""
+  override-values:
+    description: "YAML content to override specific values"
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -60,49 +71,61 @@ runs:
         platforms: ${{ inputs.platforms }}
         build-args: ${{ inputs.build-args }}
 
-    # # 2. 更新 Helm 值
-    # - name: Update Helm Values
-    #   id: update-helm-values
-    #   uses: ./.github/actions/update-helm-chart
-    #   with:
-    #     values-file: ${{ inputs.helm-values-path }}
-    #     image-repository: ${{ steps.build.outputs.repository}} # 從上一步的 outputs 取
-    #     image-tag: ${{ steps.build.outputs.tag }} # 從上一步的 outputs 取
-    #     image-digest: ${{ steps.build.outputs.digest }} # 從上一步的 outputs 取
-    #     override-values: ${{ inputs.override-values }}
+    # 2. 切換到 GitOps 倉庫
+    - name: Checkout GitOps Repository
+      if: ${{ inputs.gitops-repository != '' }}
+      uses: actions/checkout@v5
+      with:
+        repository: ${{ inputs.gitops-repository }}
+        token: ${{ inputs.gitops-token }}
+        path: gitops-repo # 創建一個新的目錄來存放 GitOps repo（之後步驟都用 gitops-repo 這名稱來設定）
 
-    # # 3. commit and push to GitOps repository
-    # - name: Commit GitOps Changes
-    #   id: commit
-    #   shell: bash
-    #   run: |
-    #     # 检查是否有变更
-    #     if git diff --quiet; then
-    #       echo "ℹ️  No changes detected"
-    #       echo "committed=false" >> $GITHUB_OUTPUT
-    #     else
-    #       echo "✅ Changes detected:"
-    #       git diff --name-only
+    # 3. 更新 Helm 值
+    - name: Update Helm Values
+      if: ${{ inputs.helm-values-path != '' }}
+      id: update-helm-values
+      uses: ./.github/actions/update-helm-chart
+      with:
+        values-file: ${{ inputs.gitops-repository != '' && format('gitops-repo/{0}', inputs.helm-values-path) || inputs.helm-values-path }}
+        image-repository: ${{ steps.build.outputs.repository}} # 從上一步的 outputs 取
+        image-tag: ${{ steps.build.outputs.tag }} # 從上一步的 outputs 取
+        image-digest: ${{ steps.build.outputs.digest }} # 從上一步的 outputs 取
+        override-values: ${{ inputs.override-values }}
 
-    #       # 配置 Git 用户信息
-    #       # commit 的時候需要，github actions 會自動處理
-    #       git config user.name "github-actions[bot]"
-    #       git config user.email "github-actions[bot]@users.noreply.github.com"
+    # 4. 推送
+    - name: Commit Changes
+      if: ${{ inputs.helm-values-path != '' }}
+      id: commit
+      shell: bash
+      working-directory: ${{ inputs.gitops-repository != '' && 'gitops-repo' || '.' }}
+      run: |
+        # 检查是否有变更
+        if git diff --quiet; then
+          echo "ℹ️  No changes detected"
+          echo "committed=false" >> $GITHUB_OUTPUT
+        else
+          echo "✅ Changes detected:"
+          git diff --name-only
 
-    #       # 添加变更
-    #       git add .
+          # 配置 Git 用户信息
+          # commit 的時候需要，github actions 會自動處理
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-    #       # 提交变更
-    #       git commit -m "chore: sync ${{ inputs.service }} service to GitOps
+          # 添加变更
+          git add .
 
-    #     - Image: ${{ steps.build.outputs.repository }}:${{ steps.build.outputs.tag }}
-    #     - Digest: ${{ steps.build.outputs.digest }}
-    #     - Commit: ${{ github.sha }}
-    #     - ArgoCD will auto-sync this change"
+          # 提交变更
+          git commit -m "chore: sync ${{ inputs.service }} service to GitOps
 
-    #       # 推送到远程仓库
-    #       git push
+        - Image: ${{ steps.build.outputs.repository }}:${{ steps.build.outputs.tag }}
+        - Digest: ${{ steps.build.outputs.digest }}
+        - Commit: ${{ github.sha }}
+        - ArgoCD will auto-sync this change"
 
-    #       echo "✅ Successfully synced to GitOps repository"
-    #       echo "committed=true" >> $GITHUB_OUTPUT
-    #     fi
+          # 推送到远程仓库
+          git push
+
+          echo "✅ Successfully synced to GitOps repository"
+          echo "committed=true" >> $GITHUB_OUTPUT
+        fi

@@ -36,8 +36,9 @@ env:
   RETENTION_COUNT: 50
   BACKEND_PATH: backend
   FRONTEND_PATH: frontend
-  AWS_INFRA_SECRETS_NAME: JOYTIFY_INFRA_HELM_ENVS
+  AWS_INFRA_SECRETS_NAME: JOYTIFY_INFRA_ENVS
   AWS_APP_SECRETS_NAME: JOYTIFY_APPLICATION_ENVS
+  GITOPS_REPOSITORY: JIAN11442/joytify-helm
 
 jobs:
   # 檢查哪些檔案有變更
@@ -71,10 +72,12 @@ jobs:
     strategy:
       matrix:
         node: [18]
-      fail-fast: false # 不會因為一個 node 版本測試失敗就停止其他 node 版本的測試
+      # 不會因為一個 node 版本測試失敗就停止其他 node 版本的測試
+      fail-fast: false
     defaults:
       run:
-        working-directory: ${{ env.BACKEND_PATH }} # 設定預設工作目錄，避免每次都要 cd 到 backend 目錄
+        # 設定預設工作目錄，避免每次都要 cd 到 backend 目錄
+        working-directory: ${{ env.BACKEND_PATH }}
 
     steps:
       - uses: actions/checkout@v5
@@ -120,9 +123,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-        with:
-          # github push commit 时需要
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       # 配置 AWS 憑證
       - name: Configure AWS credentials
@@ -152,13 +152,12 @@ jobs:
           echo "API_SERVICE_NAME=$(echo $INFRA_CONFIG | jq -r '.API_SERVICE_NAME')" >> $GITHUB_ENV
           echo "API_SERVICE_PORT=$(echo $INFRA_CONFIG | jq -r '.API_SERVICE_PORT')" >> $GITHUB_ENV
 
-          echo "ORIGIN_APP=https://$(echo $INFRA_CONFIG | jq -r '.WEB_DOMAIN')" >> $GITHUB_ENV
-
-
           echo "WEB_PORT=$(echo $INFRA_CONFIG | jq -r '.WEB_PORT')" >> $GITHUB_ENV
           echo "WEB_DOMAIN=$(echo $INFRA_CONFIG | jq -r '.WEB_DOMAIN')" >> $GITHUB_ENV
           echo "WEB_SERVICE_NAME=$(echo $INFRA_CONFIG | jq -r '.WEB_SERVICE_NAME')" >> $GITHUB_ENV
           echo "WEB_SERVICE_PORT=$(echo $INFRA_CONFIG | jq -r '.WEB_SERVICE_PORT')" >> $GITHUB_ENV
+
+          echo "ORIGIN_APP=https://$(echo $INFRA_CONFIG | jq -r '.WEB_DOMAIN')" >> $GITHUB_ENV
 
           echo "VITE_SERVER_URL=https://$(echo $INFRA_CONFIG | jq -r '.API_DOMAIN')" >> $GITHUB_ENV
           echo "VITE_SENDER_EMAIL=$(echo $INFRA_CONFIG | jq -r '.OFFICIAL_EMAIL')" >> $GITHUB_ENV
@@ -166,6 +165,10 @@ jobs:
           echo "VITE_MIN_PLAYBACK_DURATION=$(echo $APP_CONFIG | jq -r '.PLAYBACK_MIN_DURATION_SECONDS')" >> $GITHUB_ENV
 
           echo "CLUSTER_ISSUER=$(echo $INFRA_CONFIG | jq -r '.CLUSTER_ISSUER')" >> $GITHUB_ENV
+          echo "GHCR_SECRET_NAME=$(echo $INFRA_CONFIG | jq -r '.GHCR_SECRET_NAME')" >> $GITHUB_ENV
+          echo "AWS_CREDENTIALS_NAME=$(echo $INFRA_CONFIG | jq -r '.AWS_CREDENTIALS_NAME')" >> $GITHUB_ENV
+          echo "AWS_CREDENTIAL_ID_KEY=$(echo $INFRA_CONFIG | jq -r '.AWS_CREDENTIAL_ID_KEY')" >> $GITHUB_ENV
+          echo "AWS_CREDENTIAL_SECRET_KEY=$(echo $INFRA_CONFIG | jq -r '.AWS_CREDENTIAL_SECRET_KEY')" >> $GITHUB_ENV
 
       # 設置 Docker Buildx
       - name: Set up Docker Buildx
@@ -197,31 +200,40 @@ jobs:
           dockerfile: ${{ env.BACKEND_PATH }}/Dockerfile
           platforms: ${{ env.PLATFORMS }}
 
+          # gitops-repository
+          gitops-repository: ${{ env.GITOPS_REPOSITORY }}
+          gitops-token: ${{ secrets.PAT_TOKEN }}
+
           # update-helm-chart
-          # helm-values-path: ./helm/backend/values.yaml
-          # override-values: |
-          #   ghcr:
-          #     username: ${{ github.actor }}
-          #     token: ${{ secrets.GHCR_TOKEN }}
-          #   container:
-          #     port: ${{ env.API_PORT }}
-          #   service:
-          #     name: ${{ env.API_SERVICE_NAME }}
-          #     port: ${{ env.API_SERVICE_PORT }}
-          #     targetPort: ${{ env.API_PORT }}
-          #   awsCredentials:
-          #     accessKeyId:
-          #       value: ${{ secrets.EXTERNAL_SECRETS_ACCESS_KEY_ID }}
-          #     secretAccessKey:
-          #       value: ${{ secrets.EXTERNAL_SECRETS_ACCESS_KEY_SECRET }}
-          #   secretStore:
-          #     aws:
-          #       region: ${{ secrets.AWS_REGION }}
-          #   ingress:
-          #     domain: ${{ env.API_DOMAIN }}
-          #     clusterIssuer: ${{ env.CLUSTER_ISSUER }}
-          #   envs:
-          #     ORIGIN_URL: ${{ env.ORIGIN_URL }}
+          helm-values-path: backend/values.yaml
+          override-values: |
+            imagePullSecrets:
+              name: ${{ env.GHCR_SECRET_NAME }}
+            container:
+              port: ${{ env.API_PORT }}
+            service:
+              name: ${{ env.API_SERVICE_NAME }}
+              port: ${{ env.API_SERVICE_PORT }}
+              targetPort: ${{ env.API_PORT }}
+            awsCredentials:
+              name: ${{ env.AWS_CREDENTIALS_NAME }}
+              accessIdKey: ${{ env.AWS_CREDENTIAL_ID_KEY }}
+              accessSecretKey: ${{ env.AWS_CREDENTIAL_SECRET_KEY }}
+            secretStore:
+              aws:
+                region: ${{ secrets.AWS_REGION }}
+            externalSecret:
+              dataFrom:
+                extract:
+                  key: ${{ env.AWS_APP_SECRETS_NAME }}
+            ingress:
+              domain: ${{ env.API_DOMAIN }}
+              clusterIssuer: ${{ env.CLUSTER_ISSUER }}
+            envs:
+              ORIGIN_APP: ${{ env.ORIGIN_APP }}
+              API_PORT: ${{ env.API_PORT }}
+              OFFICIAL_EMAIL: ${{ env.OFFICIAL_EMAIL }}
+              TEST_EMAIL: onboarding@resend.dev
 
       # 自動部署前端
       - name: Sync Frontend to GitOps
@@ -246,21 +258,24 @@ jobs:
             VITE_HEARTBEAT_INTERVAL=${{ env.VITE_HEARTBEAT_INTERVAL }}
             VITE_MIN_PLAYBACK_DURATION=${{ env.VITE_MIN_PLAYBACK_DURATION }}
 
+          # gitops-repository
+          gitops-repository: ${{ env.GITOPS_REPOSITORY }}
+          gitops-token: ${{ secrets.PAT_TOKEN }}
+
           # update-helm-chart
-          # helm-values-path: ./helm/frontend/values.yaml
-          # override-values: |
-          #   ghcr:
-          #     username: ${{ github.actor }}
-          #     token: ${{ secrets.GHCR_TOKEN }}
-          #   container:
-          #     port: ${{ env.WEB_PORT }}
-          #   service:
-          #     name: ${{ env.WEB_SERVICE_NAME }}
-          #     port: ${{ env.WEB_SERVICE_PORT }}
-          #     targetPort: ${{ env.WEB_PORT }}
-          #   ingress:
-          #     domain: ${{ env.WEB_DOMAIN }}
-          #     clusterIssuer: ${{ env.CLUSTER_ISSUER }}
+          helm-values-path: frontend/values.yaml
+          override-values: |
+            imagePullSecrets:
+              name: ${{ env.GHCR_SECRET_NAME }}
+            container:
+              port: ${{ env.WEB_PORT }}
+            service:
+              name: ${{ env.WEB_SERVICE_NAME }}
+              port: ${{ env.WEB_SERVICE_PORT }}
+              targetPort: ${{ env.WEB_PORT }}
+            ingress:
+              domain: ${{ env.WEB_DOMAIN }}
+              clusterIssuer: ${{ env.CLUSTER_ISSUER }}
 
   # GHCR Image 清理
   cleanup-images:

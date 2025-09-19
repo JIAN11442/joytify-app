@@ -29,8 +29,6 @@ runs:
     - name: Setup yq
       uses: frenck/action-setup-yq@v1
 
-    # 需要先拉取 repository
-
     # 更新 image repository (optional)
     - name: Update image.repository
       if: ${{ inputs.image-repository != '' }}
