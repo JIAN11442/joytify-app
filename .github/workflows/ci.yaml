@@ -29,11 +29,12 @@ concurrency:
 env:
   REGISTRY: ghcr.io
   PROJECT_NAME: joytify
+  # amd64: x86_64(cloud), arm64: aarch64(macos)
   PLATFORMS: linux/amd64
   # 保留的版本數：包括 tagged 和 untagged
   # 以我們的情境，一個 tagged 會有 4 個 untagged（參考 action.yaml 註釋解釋），
-  # 所以設定 50 可以保留 10 個 tagged
-  RETENTION_COUNT: 50
+  # 所以如果設定 50，那代表可以保留 10 個 tagged，40個 untagged
+  RETENTION_COUNT: 30
   BACKEND_PATH: backend
   FRONTEND_PATH: frontend
   AWS_INFRA_SECRETS_NAME: JOYTIFY_INFRA_ENVS
@@ -283,7 +284,7 @@ jobs:
   cleanup-images:
     needs: [changes, sync_gitops]
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.sync_gitops.result == 'success'
+    if: github.event_name == 'push' && needs.sync_gitops.result == 'success'
 
     # 設定權限
     permissions:

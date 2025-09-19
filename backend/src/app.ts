@@ -15,8 +15,8 @@ import userRoute from "./routes/user.route";
 import songRoute from "./routes/song.route";
 import labelRoute from "./routes/label.route";
 import albumRoute from "./routes/album.route";
-import musicianRoute from "./routes/musician.route";
 import playlistRoute from "./routes/playlist.route";
+import musicianRoute from "./routes/musician.route";
 import notificationRoute from "./routes/notification.route";
 import homepageRoute from "./routes/homepage.route";
 import sessionRoute from "./routes/session.route";
@@ -58,7 +58,10 @@ const app = express();
 
 const createVersionedRoute = (version: string) => {
   return (path: string, ...middlewares: RequestHandler[]) => {
-    return app.use(`/api/${version}${path}`, ...middlewares);
+
+    const route = NODE_ENV === "development" ? path : `/api/${version}${path}`;
+
+    return app.use(route, ...middlewares);
   };
 };
 
