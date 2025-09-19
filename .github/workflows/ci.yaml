@@ -163,6 +163,7 @@ jobs:
           echo "VITE_SENDER_EMAIL=$(echo $INFRA_CONFIG | jq -r '.OFFICIAL_EMAIL')" >> $GITHUB_ENV
           echo "VITE_HEARTBEAT_INTERVAL=$(echo $APP_CONFIG | jq -r '.SESSION_HEARTBEAT_INTERVAL')" >> $GITHUB_ENV
           echo "VITE_MIN_PLAYBACK_DURATION=$(echo $APP_CONFIG | jq -r '.PLAYBACK_MIN_DURATION_SECONDS')" >> $GITHUB_ENV
+          echo "VITE_ENV=$(echo $APP_CONFIG | jq -r '.NODE_ENV')" >> $GITHUB_ENV
 
           echo "CLUSTER_ISSUER=$(echo $INFRA_CONFIG | jq -r '.CLUSTER_ISSUER')" >> $GITHUB_ENV
           echo "GHCR_SECRET_NAME=$(echo $INFRA_CONFIG | jq -r '.GHCR_SECRET_NAME')" >> $GITHUB_ENV
@@ -257,6 +258,7 @@ jobs:
             VITE_SENDER_EMAIL=${{ env.VITE_SENDER_EMAIL }}
             VITE_HEARTBEAT_INTERVAL=${{ env.VITE_HEARTBEAT_INTERVAL }}
             VITE_MIN_PLAYBACK_DURATION=${{ env.VITE_MIN_PLAYBACK_DURATION }}
+            VITE_ENV=${{ env.VITE_ENV }}
 
           # gitops-repository
           gitops-repository: ${{ env.GITOPS_REPOSITORY }}

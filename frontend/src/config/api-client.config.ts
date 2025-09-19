@@ -7,8 +7,11 @@ import { API_ENDPOINTS } from "@joytify/types/constants";
 
 const { AUTH } = API_ENDPOINTS;
 
+const environment = import.meta.env.VITE_ENV;
+const serverUrl = import.meta.env.VITE_SERVER_URL;
+
 const options: AxiosRequestConfig = {
-  baseURL: import.meta.env.VITE_SERVER_URL,
+  baseURL: environment !== "development" ? `${serverUrl}/api/v1` : serverUrl,
   withCredentials: true,
 };
 
