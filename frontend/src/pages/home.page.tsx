@@ -1,8 +1,8 @@
 import HomepageRecentlyPlayed from "../components/homepage-recently-played.component";
 import HomepagePopularMusicians from "../components/homepage-popular-musicians.component";
 import HomepageRecommendedSongs from "../components/homepage-recommended-songs.component";
-import HomepageRecommendedGenres from "../components/homepage-recommended-genres.component";
 import HomepageRecommendedAlbums from "../components/homepage-recommended-albums.component";
+import HomepageRecommendedGenres from "../components/homepage-recommended-genres.component";
 import HomepageRecommendedTags from "../components/homepage-recommended-tags.component";
 import { GridCardListSectionSkeleton } from "../components/skeleton-loading.component";
 import {

@@ -20,6 +20,7 @@ import {
 } from "@joytify/types/constants";
 import {
   UpdateUserInfoRequest,
+  UpdatePasswordRequest,
   ResetPasswordRequest,
   ChangePasswordRequest,
   DeregisterUserAccountRequest,
@@ -45,16 +46,16 @@ interface UpdateUserServiceRequest extends UpdateUserInfoRequest {
   userId: string;
 }
 
+interface UpdatePasswordServiceRequest extends UpdatePasswordRequest {
+  user: UserDocument;
+}
+
 interface ChangePasswordServiceRequest extends ChangePasswordRequest {
   userId: string;
 }
 
 interface DeregisterAccountServiceRequest extends DeregisterUserAccountRequest {
   userId: string;
-}
-
-interface UpdatePasswordServiceRequest extends ChangePasswordRequest {
-  user: UserDocument;
 }
 
 type PaginationOpts = {
@@ -258,13 +259,11 @@ export const updateUserPassword = async (params: UpdatePasswordServiceRequest) =
   const { user, currentPassword, newPassword } = params;
 
   // check current password is match
-  const passwordIsMatch = await compareHashValue(currentPassword, user.password);
+  if (currentPassword) {
+    const passwordIsMatch = await compareHashValue(currentPassword, user.password);
 
-  appAssert(passwordIsMatch, UNAUTHORIZED, "Invalid current password");
-
-  // update user password
-  user.password = newPassword;
-  await user.save();
+    appAssert(passwordIsMatch, UNAUTHORIZED, "Invalid current password");
+  }
 
   // send email
   const username = user.email.split("@")[0];
@@ -272,6 +271,10 @@ export const updateUserPassword = async (params: UpdatePasswordServiceRequest) =
   const subject = "Your Joytify password has been changed";
 
   await sendEmail({ to: user.email, subject, content });
+
+  // only update password after email is sent successfully
+  user.password = newPassword;
+  await user.save();
 
   return { updatedUser: user.omitPassword() };
 };

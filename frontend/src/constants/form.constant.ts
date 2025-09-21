@@ -31,7 +31,7 @@ export const defaultForgotPasswordData = {
 };
 
 export const defaultUpdatePasswordData = {
-  currentPassword: "",
+  currentPassword: undefined as string | undefined,
   newPassword: "",
   confirmPassword: "",
 };

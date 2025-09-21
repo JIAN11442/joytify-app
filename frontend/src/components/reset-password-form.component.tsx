@@ -24,6 +24,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token, className 
     <UpdatePasswordForm
       title={resetPasswordFormFm("title")}
       description={resetPasswordFormFm("description")}
+      type="reset"
       updatePasswordFn={(params) => resetPasswordFn({ token, ...params })}
       isFetching={isFetching}
       verified={verified as boolean}

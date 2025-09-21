@@ -15,7 +15,11 @@ export const userZodSchema = z.object({
   systemAnnouncement: z.boolean().optional(),
 });
 
-export const updatePasswordZodSchema = z.object({
+export const resetPasswordZodSchema = z.object({
+  newPassword: passwordZodSchema,
+});
+
+export const changePasswordZodSchema = z.object({
   currentPassword: passwordZodSchema,
   newPassword: passwordZodSchema,
 });

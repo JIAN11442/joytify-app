@@ -572,9 +572,9 @@ describe("User Service", () => {
 
       // ==================== Act & Assert ====================
       // 1. expect error for invalid token
-      await expect(
-        resetUserPassword({ token: "invalid-token", currentPassword: "", newPassword: "" })
-      ).rejects.toThrow("Invalid or expired token");
+      await expect(resetUserPassword({ token: "invalid-token", newPassword: "" })).rejects.toThrow(
+        "Invalid or expired token"
+      );
     });
 
     it("should throw error when verification document not found", async () => {
@@ -585,9 +585,9 @@ describe("User Service", () => {
 
       // ==================== Act & Assert ====================
       // 1. expect error for missing verification
-      await expect(
-        resetUserPassword({ token: mockToken, currentPassword: "", newPassword: "" })
-      ).rejects.toThrow("Invalid or expired token");
+      await expect(resetUserPassword({ token: mockToken, newPassword: "" })).rejects.toThrow(
+        "Invalid or expired token"
+      );
     });
 
     it("should throw error when user not found", async () => {
@@ -599,9 +599,9 @@ describe("User Service", () => {
 
       // ==================== Act & Assert ====================
       // 1. expect error for missing user
-      await expect(
-        resetUserPassword({ token: mockToken, currentPassword: "", newPassword: "" })
-      ).rejects.toThrow("Invalid or expired token");
+      await expect(resetUserPassword({ token: mockToken, newPassword: "" })).rejects.toThrow(
+        "Invalid or expired token"
+      );
     });
 
     it("should throw error when password update fails", async () => {

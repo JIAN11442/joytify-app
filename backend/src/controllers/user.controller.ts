@@ -11,9 +11,10 @@ import {
 } from "../services/user.service";
 import { objectIdZodSchema, pageZodSchema } from "../schemas/util.zod";
 import {
+  changePasswordZodSchema,
   deregisterUserZodSchema,
   profileCollectionsZodSchema,
-  updatePasswordZodSchema,
+  resetPasswordZodSchema,
   userZodSchema,
 } from "../schemas/user.zod";
 import { HttpCode } from "@joytify/types/constants";
@@ -87,7 +88,7 @@ export const updateUserHandler: RequestHandler = async (req, res, next) => {
 export const resetPasswordHandler: RequestHandler = async (req, res, next) => {
   try {
     const token = req.params.token;
-    const parsedParams: ResetPasswordBodyRequest = updatePasswordZodSchema.parse(req.body);
+    const parsedParams: ResetPasswordBodyRequest = resetPasswordZodSchema.parse(req.body);
 
     await resetUserPassword({ token, ...parsedParams });
 
@@ -101,7 +102,7 @@ export const resetPasswordHandler: RequestHandler = async (req, res, next) => {
 export const changePasswordHandler: RequestHandler = async (req, res, next) => {
   try {
     const userId = objectIdZodSchema.parse(req.userId);
-    const params: ChangePasswordRequest = updatePasswordZodSchema.parse(req.body);
+    const params: ChangePasswordRequest = changePasswordZodSchema.parse(req.body);
 
     await changeUserPassword({ userId, ...params });
 

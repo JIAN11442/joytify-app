@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 
 import Modal from "./modal.component";
-import UpdatePasswordForm from "./update-password-form.component";
+import UpdatePasswordForm, { ChangeFnParams } from "./update-password-form.component";
 import PasswordUpdateStatusForm from "./password-update-status-form.component";
 import { useChangePasswordMutation } from "../hooks/user-mutate.hook";
 import { PasswordUpdateStatus } from "@joytify/types/constants";
@@ -68,7 +68,8 @@ const ChangePasswordModal = () => {
       >
         {passwordChangeStatus === INITIAL ? (
           <UpdatePasswordForm
-            updatePasswordFn={(params) => changePasswordFn(params)}
+            type="change"
+            updatePasswordFn={(params) => changePasswordFn(params as ChangeFnParams)}
             isPending={isPending}
             disabled={isPending}
             className={`w-full`}

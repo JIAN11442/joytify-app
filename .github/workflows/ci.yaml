@@ -159,6 +159,7 @@ jobs:
           echo "WEB_SERVICE_PORT=$(echo $INFRA_CONFIG | jq -r '.WEB_SERVICE_PORT')" >> $GITHUB_ENV
 
           echo "ORIGIN_APP=https://$(echo $INFRA_CONFIG | jq -r '.WEB_DOMAIN')" >> $GITHUB_ENV
+          echo "OFFICIAL_EMAIL=$(echo $INFRA_CONFIG | jq -r '.OFFICIAL_EMAIL')" >> $GITHUB_ENV
 
           echo "VITE_SERVER_URL=https://$(echo $INFRA_CONFIG | jq -r '.API_DOMAIN')" >> $GITHUB_ENV
           echo "VITE_SENDER_EMAIL=$(echo $INFRA_CONFIG | jq -r '.OFFICIAL_EMAIL')" >> $GITHUB_ENV

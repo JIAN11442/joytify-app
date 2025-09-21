@@ -43,7 +43,8 @@ const { CONFLICT, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } = 
 // send email service
 export const sendEmail = async ({
   content,
-  from = NODE_ENV === "development" ? TEST_EMAIL : OFFICIAL_EMAIL,
+  // from = NODE_ENV === "development" ? TEST_EMAIL : OFFICIAL_EMAIL,
+  from = OFFICIAL_EMAIL,
   ...rest
 }: SendEmailParams) => {
   const { data, error } = await resend.emails.send({
