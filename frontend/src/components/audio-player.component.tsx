@@ -6,6 +6,7 @@ import PlayerOperation from "./player-operation.component";
 import AnimationWrapper from "./animation-wrapper.component";
 import { RefactorSongResponse } from "@joytify/types/types";
 import useUserState from "../states/user.state";
+import { timeoutForDelay } from "../lib/timeout.lib";
 
 type AudioPlayerProps = {
   song: RefactorSongResponse;
@@ -17,14 +18,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
 
   if (!song || !authUser) return null;
 
-  const { title, imageUrl, artist, ownership } = song;
+  const { title, imageUrl, artist } = song;
   const { name: artistName } = artist;
-  const isUserOwned = song.creator === authUser._id && !ownership.isPlatformOwned;
 
-  const handleNavigateToPlaylist = () => {
-    if (!isUserOwned) return;
-
-    navigate(`/playlist/${song?.playlistFor}`);
+  const handleNavigateToSongPage = () => {
+    timeoutForDelay(() => {
+      navigate(`/song/${song?._id}`);
+    });
   };
 
   return (
@@ -63,12 +63,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ song }) => {
           imageUrl={imageUrl}
           artist={artistName}
           switchFunc={false}
-          onClick={handleNavigateToPlaylist}
+          onClick={handleNavigateToSongPage}
           className={{
             item: `
               text-sm
               text-grey-custom/50
-              ${isUserOwned && "cursor-pointer"}
+              cursor-pointer
             `,
             content: `max-sm:hidden`,
           }}

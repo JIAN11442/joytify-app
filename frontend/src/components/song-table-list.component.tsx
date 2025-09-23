@@ -107,6 +107,9 @@ const SongTableList: React.FC<SongTableListProps> = ({
             <th className={durationClassName}>
               <Icon name={IoTimeOutline} opts={{ size: 20 }} />
             </th>
+
+            {/* actions */}
+            <th className={actionsClassName}></th>
           </tr>
         </thead>
 

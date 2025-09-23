@@ -108,6 +108,8 @@ const ProfileCollectionCardList: React.FC<CollectionCardListProps> = ({
         )}
       >
         {collectionDocs.map((doc) => {
+          if (!doc) return null;
+
           const { _id, title, imageUrl } = doc;
           const description = Array.isArray(doc.description) ? doc.description[0] : doc.description;
 

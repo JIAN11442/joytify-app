@@ -20,6 +20,7 @@ export const useAutoFitFont = ({
 
     const resize = () => {
       let current = maxSingle;
+      const originalTextAlign = el.style.textAlign;
       el.style.fontSize = `${current}rem`;
 
       const measureLines = () => {
@@ -47,6 +48,7 @@ export const useAutoFitFont = ({
         }
       }
 
+      el.style.textAlign = originalTextAlign;
       setFontSize(current);
     };
 

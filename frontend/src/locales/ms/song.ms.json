@@ -82,7 +82,7 @@
   "song.delete.modal.donation.delete": "Padam lagu ini secara kekal",
   "song.delete.modal.donation.back": "Kembali ke halaman sebelum",
 
-  "song.playlist.assignment.modal.title": "Tambah ke Senarai Main",
+  "song.playlist.assignment.modal.title": "Susun dalam Senarai Main",
   "song.playlist.assignment.modal.description": "Pilih senarai main yang anda mahu lagu ini muncul",
   "song.playlist.assignment.modal.searchbar.placeholder": "Cari senarai main",
   "song.playlist.assignment.modal.added.title": "Senarai Main Ditambah",
@@ -100,14 +100,14 @@
   "song.tableList.arrangement.menu.layout.list": "senarai",
   "song.tableList.arrangement.menu.layout.compact": "padat",
   "song.tableList.actions.navigateToMain": "Pergi ke halaman lagu",
-  "song.tableList.actions.addToPlaylist": "Tambah ke senarai main",
+  "song.tableList.actions.organizeInPlaylists": "Susun dalam senarai main",
   "song.tableList.actions.rate": "Beri penilaian untuk lagu ini",
   "song.tableList.noSongs.1": "Belum ada lagu",
   "song.tableList.noSongs.2": "Anda boleh memuat naik muzik melalui butang <strong>+</strong> di bar sisi",
 
   "song.hero.section.type": "lagu",
   "song.action.panel.menu.editDetails": "Sunting butiran lagu",
-  "song.action.panel.menu.assignmentPlaylist": "Tambah ke senarai main",
+  "song.action.panel.menu.organizeInPlaylists": "Susun dalam senarai main",
   "song.action.panel.menu.rate": "Beri penilaian untuk lagu ini",
   "song.comment.list.title": "Penilaian & Komen ({count})"
 }

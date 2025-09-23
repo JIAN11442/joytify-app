@@ -203,18 +203,21 @@ const usePlaybackControl = () => {
   );
 
   const cycleLoop = useCallback(() => {
-    const switchedLoopMode = {
-      [NONE]: TRACK,
-      [TRACK]: PLAYLIST,
-      [PLAYLIST]: NONE,
-    }[loopMode];
+    const { playlistSongs } = getAudioContent();
+    const hasMultipleSongs = playlistSongs && playlistSongs.length > 1;
+
+    const loopCycle = hasMultipleSongs
+      ? { [NONE]: TRACK, [TRACK]: PLAYLIST, [PLAYLIST]: NONE }
+      : { [NONE]: TRACK, [TRACK]: NONE, [PLAYLIST]: NONE };
+
+    const switchedLoopMode = loopCycle[loopMode];
 
     if (switchedLoopMode !== NONE && isShuffle) {
       shuffleSong(false);
     }
 
     setLoopMode(switchedLoopMode);
-  }, [loopMode, isShuffle, shuffleSong]);
+  }, [loopMode, isShuffle, shuffleSong, getAudioContent]);
 
   const adjustVolume = useCallback(
     (value: AudioVolumeType) => {

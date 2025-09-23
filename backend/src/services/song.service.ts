@@ -88,6 +88,7 @@ export const getUserSongs = async (userId: string) => {
   const songs = await SongModel.find({ creator: userId, "ownership.isPlatformOwned": false })
     .populateSongDetails()
     .refactorSongFields<PopulatedSongResponse>()
+    .sort({ createdAt: -1 })
     .lean<RefactorSongResponse[]>();
 
   return { songs };

@@ -228,6 +228,10 @@ body,
     @apply text-grey-custom/50 hover:text-white transition;
   }
 
+  .player-btn-disabled {
+    @apply text-grey-custom/50 opacity-30 hover:text-grey-custom/50 cursor-not-allowed;
+  }
+
   .song-rate-btn {
     @apply p-3
     w-1/2

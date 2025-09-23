@@ -82,7 +82,7 @@
   "song.delete.modal.donation.delete": "Permanently delete this song",
   "song.delete.modal.donation.back": "Back to previous page",
 
-  "song.playlist.assignment.modal.title": "Add to Playlists",
+  "song.playlist.assignment.modal.title": "Organize in Playlists",
   "song.playlist.assignment.modal.description": "Select the playlists where you want this song to appear",
   "song.playlist.assignment.modal.searchbar.placeholder": "Search for playlists",
   "song.playlist.assignment.modal.added.title": "Added Playlists",
@@ -100,14 +100,14 @@
   "song.tableList.arrangement.menu.layout.list": "list",
   "song.tableList.arrangement.menu.layout.compact": "compact",
   "song.tableList.actions.navigateToMain": "Go to song page",
-  "song.tableList.actions.addToPlaylist": "Add to playlist",
+  "song.tableList.actions.organizeInPlaylists": "Organize in playlists",
   "song.tableList.actions.rate": "Rate this song",
   "song.tableList.noSongs.1": "No songs yet",
   "song.tableList.noSongs.2": "You can upload music through the <strong>+</strong> button in the sidebar",
 
   "song.hero.section.type": "Song",
   "song.action.panel.menu.editDetails": "Edit song details",
-  "song.action.panel.menu.assignmentPlaylist": "Add to playlists",
+  "song.action.panel.menu.organizeInPlaylists": "Organize in playlists",
   "song.action.panel.menu.rate": "Rate this song",
   "song.comment.list.title": "Ratings & Comments ({count})"
 }

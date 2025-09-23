@@ -82,7 +82,7 @@
   "song.delete.modal.donation.delete": "この楽曲を完全に削除する",
   "song.delete.modal.donation.back": "前のページに戻る",
 
-  "song.playlist.assignment.modal.title": "プレイリストに追加",
+  "song.playlist.assignment.modal.title": "プレイリストに整理",
   "song.playlist.assignment.modal.description": "この曲を表示させたいプレイリストを選択してください",
   "song.playlist.assignment.modal.searchbar.placeholder": "プレイリストを検索",
   "song.playlist.assignment.modal.added.title": "追加済みプレイリスト",
@@ -100,14 +100,14 @@
   "song.tableList.arrangement.menu.layout.list": "リスト",
   "song.tableList.arrangement.menu.layout.compact": "コンパクト",
   "song.tableList.actions.navigateToMain": "楽曲ページへ移動",
-  "song.tableList.actions.addToPlaylist": "プレイリストに追加",
+  "song.tableList.actions.organizeInPlaylists": "プレイリストに整理",
   "song.tableList.actions.rate": "この楽曲を評価",
   "song.tableList.noSongs.1": "まだ楽曲がありません",
   "song.tableList.noSongs.2": "サイドバーの <strong>+</strong> ボタンから音楽をアップロードできます",
 
   "song.hero.section.type": "楽曲",
   "song.action.panel.menu.editDetails": "楽曲情報を編集",
-  "song.action.panel.menu.assignmentPlaylist": "プレイリストに追加",
+  "song.action.panel.menu.organizeInPlaylists": "プレイリストに整理",
   "song.action.panel.menu.rate": "この楽曲を評価",
   "song.comment.list.title": "他のユーザーの評価 ({count})"
 }
