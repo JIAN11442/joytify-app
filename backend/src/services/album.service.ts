@@ -94,7 +94,7 @@ export const createAlbum = async (params: CreateAlbumServiceRequest) => {
   const { userId, title, artists, ...rest } = params;
 
   let album = await AlbumModel.findOneAndUpdate(
-    { title, artists },
+    { title },
     { $addToSet: { users: userId } },
     { new: true }
   );

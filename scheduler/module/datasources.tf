@@ -38,6 +38,7 @@ data "aws_iam_policy_document" "lambda_assume_role_policy" {
   }
 }
 
+
 # ========================================
 # LAMBDA ROLE POLICY
 # ========================================
@@ -94,31 +95,12 @@ data "aws_iam_policy_document" "lambda_role_policy" {
 
 }
 
+
 # ========================================
 # SNS TOPIC POLICY
 # ========================================
 data "aws_iam_policy_document" "sns_topic_policy" {
   version = "2012-10-17"
-
-  // allow cloudwatch to publish to sns topic
-  # statement {
-  #   effect = "Allow"
-  #   actions = ["SNS:Publish"]
-  #   // principals means who/service can publish to this sns topic
-  #   principals {
-  #     type = "Service"
-  #     identifiers = ["cloudwatch.amazonaws.com"]
-  #   }
-  #   // only allow this resource(cloudwatch alarm) to publish to this sns topic
-  #   resources = ["${aws_sns_topic.notification_topic.arn}"]
-
-  #   // only allow this resource(cloudwatch alarm) to publish to this sns topic
-  #   condition {
-  #     test = "ArnEquals"
-  #     variable = "aws:SourceArn"
-  #     values = ["${aws_cloudwatch_metric_alarm.lambda_initialize_error_alarm.arn}"]
-  #   }
-  # }
 
   // allow lambda to publish to sns topic
   statement {
@@ -134,7 +116,10 @@ data "aws_iam_policy_document" "sns_topic_policy" {
   }
 }
 
-// get mongodb connection string from aws secrets manager
+
+# ========================================
+# SECRETS MANAGER
+# ========================================
 data "aws_secretsmanager_secret" "joytify" {
   name = local.secret_name
 }
@@ -142,5 +127,4 @@ data "aws_secretsmanager_secret" "joytify" {
 data "aws_secretsmanager_secret_version" "joytify" {
   secret_id = data.aws_secretsmanager_secret.joytify.id
 }
-
 

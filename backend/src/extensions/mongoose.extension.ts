@@ -106,13 +106,15 @@ export const applyMongooseExtensions = async () => {
       lyricists: joinLabels(song.lyricists),
       composers: joinLabels(song.composers),
       languages: joinLabels(song.languages),
-      ratings: song.ratings?.map((rating: any) => ({
-        id: rating._id,
-        username: rating.user?.username,
-        profileImage: rating.user?.profileImage,
-        rating: rating.rating,
-        comment: rating.comment,
-      })),
+      ratings: song.ratings
+        ?.filter((rating: any) => rating.user?.username && rating.user?.profileImage) // 只保留還存在的用戶評論
+        ?.map((rating: any) => ({
+          id: rating._id,
+          username: rating.user?.username,
+          profileImage: rating.user?.profileImage,
+          rating: rating.rating,
+          comment: rating.comment,
+        })),
     });
 
     return this.transform((docs: TInput[]) => {

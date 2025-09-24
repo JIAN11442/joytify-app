@@ -1,0 +1,95 @@
+version: "3"
+
+env:
+  DIR: "{{.TASKFILE_DIR}}"
+  DEV_DIR: "{{.DIR}}/dev"
+  PROD_DIR: "{{.DIR}}/prod"
+
+tasks:
+  # =============================================================================
+  # DEVELOPMENT ENVIRONMENT
+  # =============================================================================
+
+  dev:plan:
+    desc: "📋 Plan Development Environment changes"
+    dir: "{{.DEV_DIR}}"
+    cmds:
+      - terragrunt plan --non-interactive
+    summary: |
+      Shows planned changes for Development Environment
+
+  dev:validate:
+    desc: "✅ Validate Development Environment configuration"
+    dir: "{{.DEV_DIR}}"
+    cmds:
+      - terragrunt validate --non-interactive
+    summary: |
+      Validates the Development Environment configuration
+
+  dev:deploy:
+    desc: "🚀 Deploy Development Environment"
+    dir: "{{.DEV_DIR}}"
+    cmds:
+      - terragrunt apply --non-interactive -auto-approve
+    summary: |
+      Deploys the Development Environment
+
+  dev:destroy:
+    desc: "💥 Destroy Development Environment"
+    dir: "{{.DEV_DIR}}"
+    cmds:
+      - terragrunt destroy --non-interactive -auto-approve
+    summary: |
+      Destroys the Development Environment
+
+  dev:output:
+    desc: "📤 Show Development Environment outputs"
+    dir: "{{.DEV_DIR}}"
+    cmds:
+      - terragrunt output --non-interactive
+    summary: |
+      Displays all outputs from Development Environment
+
+  # =============================================================================
+  # PRODUCTION ENVIRONMENT
+  # =============================================================================
+
+  prod:plan:
+    desc: "📋 Plan Production Environment changes"
+    dir: "{{.PROD_DIR}}"
+    cmds:
+      - terragrunt plan --non-interactive
+    summary: |
+      Shows planned changes for Production Environment
+
+  prod:validate:
+    desc: "✅ Validate Production Environment configuration"
+    dir: "{{.PROD_DIR}}"
+    cmds:
+      - terragrunt validate --non-interactive
+    summary: |
+      Validates the Production Environment configuration
+
+  prod:deploy:
+    desc: "🚀 Deploy Production Environment"
+    dir: "{{.PROD_DIR}}"
+    cmds:
+      - terragrunt apply --non-interactive -auto-approve
+    summary: |
+      Deploys the Production Environment
+
+  prod:destroy:
+    desc: "💥 Destroy Production Environment"
+    dir: "{{.PROD_DIR}}"
+    cmds:
+      - terragrunt destroy --non-interactive -auto-approve
+    summary: |
+      Destroys the Production Environment
+
+  prod:output:
+    desc: "📤 Show Production Environment outputs"
+    dir: "{{.PROD_DIR}}"
+    cmds:
+      - terragrunt output --non-interactive
+    summary: |
+      Displays all outputs from Production Environment

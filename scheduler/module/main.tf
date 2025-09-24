@@ -36,13 +36,13 @@ resource "aws_lambda_function" "monthly_stats_notification" {
 
   environment {
     variables = {
+      DB_NAME                      = local.db_name
       MONGODB_URI                  = local.mongodb_connection_string
       SNS_TOPIC_ARN                = aws_sns_topic.notification_topic.arn
-      SCHEDULE_MODE                = local.schedule_mode
       PLAYBACK_CLEANUP_LAMBDA_NAME = aws_lambda_function.playback_data_cleanup.function_name
       API_DOMAIN                   = local.backend_api_url
       API_INTERNAL_SECRET_KEY      = local.internal_api_key
-      DB_NAME                      = local.db_name
+      ENVIRONMENT                  = var.environment
     }
   }
 
@@ -94,11 +94,10 @@ resource "aws_lambda_function" "playback_data_cleanup" {
     variables = {
       MONGODB_URI                    = local.mongodb_connection_string
       SNS_TOPIC_ARN                  = aws_sns_topic.notification_topic.arn
-      SCHEDULE_MODE                  = local.schedule_mode
-      CLEANUP_DAYS                   = local.cleanup_days
-      CLEANUP_BATCH_SIZE             = local.cleanup_batch_size
-      CLEANUP_BATCH_DELAY_MS         = local.cleanup_batch_delay_ms
-      CLEANUP_TIMEOUT_SAFETY_MINUTES = local.cleanup_timeout_safety_minutes
+      CLEANUP_DAYS                   = local.playback_cleanup_days
+      CLEANUP_BATCH_SIZE             = local.playback_cleanup_batch_size
+      CLEANUP_BATCH_DELAY_MS         = local.playback_cleanup_batch_delay_ms
+      CLEANUP_TIMEOUT_SAFETY_MINUTES = local.playback_cleanup_timeout_safety_minutes
     }
   }
 
@@ -159,19 +158,19 @@ resource "aws_sns_topic_subscription" "discord_notification_subscription" {
   endpoint  = aws_lambda_function.discord_notification.arn
 }
 
-# Removed playback_cleanup_subscription to prevent SNS loop
-# Playback cleanup is triggered directly by monthly stats Lambda
 
 # ========================================
 # LAMBDA PERMISSIONS
 # ========================================
 
 resource "aws_lambda_permission" "allow_monthly_stats_invoke_by_eventbridge" {
+  count = var.enable_auto_schedule ? 1 : 0
+
   statement_id  = "AllowEventBridgeInvokeLambda"
   action        = "lambda:InvokeFunction"
   principal     = "events.amazonaws.com"
   function_name = aws_lambda_function.monthly_stats_notification.function_name
-  source_arn    = aws_cloudwatch_event_rule.monthly_stats_schedule.arn
+  source_arn    = aws_cloudwatch_event_rule.monthly_stats_schedule[0].arn
 }
 
 
@@ -183,15 +182,15 @@ resource "aws_lambda_permission" "allow_discord_invoke_by_sns" {
   source_arn    = aws_sns_topic.notification_topic.arn
 }
 
-# Lambda permission for playback cleanup is now handled via IAM role policy
-# See datasource.tf for lambda:InvokeFunction permission
 
 resource "aws_lambda_permission" "allow_playback_cleanup_invoke_by_eventbridge" {
+  count = var.enable_auto_schedule ? 1 : 0
+
   statement_id  = "AllowEventBridgeInvokePlaybackCleanupLambda"
   action        = "lambda:InvokeFunction"
   principal     = "events.amazonaws.com"
   function_name = aws_lambda_function.playback_data_cleanup.function_name
-  source_arn    = aws_cloudwatch_event_rule.weekly_cleanup_schedule.arn
+  source_arn    = aws_cloudwatch_event_rule.weekly_cleanup_schedule[0].arn
 }
 
 
@@ -200,9 +199,11 @@ resource "aws_lambda_permission" "allow_playback_cleanup_invoke_by_eventbridge" 
 # ========================================
 
 resource "aws_cloudwatch_event_rule" "monthly_stats_schedule" {
+  count = var.enable_auto_schedule ? 1 : 0
+
   name                = "${var.project_name}-monthly-stats-schedule"
-  description         = "Automated monthly statistics generation schedule (${local.schedule_mode} mode)"
-  schedule_expression = local.monthly_stats_schedule_expression
+  description         = "Automated monthly statistics generation schedule)"
+  schedule_expression = local.monthly_stats_schedule
   state               = "ENABLED"
 
   tags = {
@@ -215,12 +216,15 @@ resource "aws_cloudwatch_event_rule" "monthly_stats_schedule" {
 }
 
 resource "aws_cloudwatch_event_target" "monthly_stats_target" {
-  rule = aws_cloudwatch_event_rule.monthly_stats_schedule.name
+  count = var.enable_auto_schedule ? 1 : 0
+
+  rule = aws_cloudwatch_event_rule.monthly_stats_schedule[0].name
   arn  = aws_lambda_function.monthly_stats_notification.arn
 }
 
-# Weekly cleanup schedule
 resource "aws_cloudwatch_event_rule" "weekly_cleanup_schedule" {
+  count = var.enable_auto_schedule ? 1 : 0
+
   name                = "${var.project_name}-weekly-cleanup-schedule"
   description         = "Weekly playback data cleanup schedule"
   schedule_expression = local.weekly_cleanup_schedule
@@ -236,7 +240,9 @@ resource "aws_cloudwatch_event_rule" "weekly_cleanup_schedule" {
 }
 
 resource "aws_cloudwatch_event_target" "weekly_cleanup_target" {
-  rule = aws_cloudwatch_event_rule.weekly_cleanup_schedule.name
+  count = var.enable_auto_schedule ? 1 : 0
+
+  rule = aws_cloudwatch_event_rule.weekly_cleanup_schedule[0].name
   arn  = aws_lambda_function.playback_data_cleanup.arn
 }
 
@@ -276,4 +282,3 @@ resource "aws_cloudwatch_metric_alarm" "playback_cleanup_error_alarm" {
     FunctionName = aws_lambda_function.playback_data_cleanup.function_name
   }
 }
-

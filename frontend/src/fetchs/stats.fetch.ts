@@ -9,5 +9,6 @@ export const getMonthlyStats = async (
 ): Promise<PopulatedMonthlyStatsResponse> => {
   const { userId, yearMonth, timezone } = params;
   const queryParams = timezone ? { timezone } : {};
+
   return API.get(`${STATS}/monthly/${userId}/${yearMonth}`, { params: queryParams });
 };

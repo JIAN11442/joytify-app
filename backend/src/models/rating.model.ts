@@ -16,7 +16,7 @@ const ratingSchema = new mongoose.Schema<RatingDocument>(
     song: { type: mongoose.Schema.Types.ObjectId, ref: "Song", index: true },
     type: { type: String, enum: RatingTypeOptions, required: true },
     rating: { type: Number, required: true, min: 1, max: 5, default: 0 },
-    comment: { type: String, required: true, default: "" },
+    comment: { type: String, required: false, default: "" },
   },
   { timestamps: true }
 );

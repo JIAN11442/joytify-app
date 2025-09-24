@@ -1,0 +1,137 @@
+version: "3"
+
+# Include environment-specific taskfiles
+includes:
+  envs: ./environments/Taskfile.yaml
+
+tasks:
+  # =============================================================================
+  # MAIN OPERATIONS (Primary tasks for daily use)
+  # =============================================================================
+
+  all:plan:
+    desc: "📋 Plan all scheduler changes"
+    cmds:
+      - task: envs:dev:plan
+      - task: envs:prod:plan
+    summary: |
+      Shows planned changes for all scheduler envs
+
+  all:validate:
+    desc: "✅ Validate all scheduler configurations"
+    cmds:
+      - task: envs:dev:validate
+      - task: envs:prod:validate
+    summary: |
+      Validates all scheduler environment configurations
+
+  all:deploy:
+    desc: "🚀 Deploy all scheduler envs"
+    cmds:
+      - task: envs:dev:deploy
+      - task: envs:prod:deploy
+    summary: |
+      Deploys all scheduler envs
+
+  all:destroy:
+    desc: "💥 Destroy all scheduler envs"
+    cmds:
+      - task: envs:prod:destroy
+      - task: envs:dev:destroy
+      - task: cleanup-state
+    summary: |
+      Destroys all scheduler envs in reverse order and cleans up backend resources
+
+  all:output:
+    desc: "📤 Show all scheduler outputs"
+    cmds:
+      - task: envs:dev:output
+      - task: envs:prod:output
+    summary: |
+      Displays all outputs from all scheduler envs
+
+  # =============================================================================
+  # MONITORING & UTILITIES (Status checking and helper tasks)
+  # =============================================================================
+
+  status:
+    desc: "📊 Check scheduler status"
+    cmds:
+      - |
+        echo "🔍 Checking scheduler status..."
+        echo ""
+        echo "🛠️ Development Environment:"
+        cd envs/dev && terragrunt output 2>/dev/null || echo "  Not deployed"
+        echo ""
+        echo "🚀 Production Environment:"
+        cd ../prod && terragrunt output 2>/dev/null || echo "  Not deployed"
+    summary: |
+      Shows the current status of all scheduler envs
+
+  # =============================================================================
+  # BACKEND RESOURCE MANAGEMENT
+  # =============================================================================
+
+  cleanup-state:
+    desc: "🗄️ Clean up Terraform state resources (S3 bucket and DynamoDB table)"
+    cmds:
+      - |
+        echo "🧹 Cleaning up Terraform backend resources..."
+        echo ""
+
+        # 檢查並刪除 S3 bucket
+        BUCKET_NAME="joytify-app-tfstate-bucket"
+        echo "📦 Checking S3 bucket: $BUCKET_NAME"
+        if aws s3 ls "s3://$BUCKET_NAME" 2>/dev/null; then
+          echo "🗑️  Deleting S3 bucket: $BUCKET_NAME"
+          
+          # 檢查版本控制狀態
+          VERSIONING=$(aws s3api get-bucket-versioning --bucket "$BUCKET_NAME" --query 'Status' --output text 2>/dev/null || echo "Disabled")
+          if [ "$VERSIONING" = "Enabled" ]; then
+            echo "⚠️  Bucket has versioning enabled, suspending versioning first..."
+            aws s3api put-bucket-versioning --bucket "$BUCKET_NAME" --versioning-configuration Status=Suspended 2>/dev/null
+            sleep 2
+          fi
+          
+          # 刪除所有版本和刪除標記
+          echo "🗑️  Removing all object versions and delete markers..."
+          aws s3api delete-objects --bucket "$BUCKET_NAME" --delete "$(aws s3api list-object-versions --bucket "$BUCKET_NAME" --output json --query '{Objects: Versions[].{Key:Key,VersionId:VersionId}}')" 2>/dev/null || true
+          aws s3api delete-objects --bucket "$BUCKET_NAME" --delete "$(aws s3api list-object-versions --bucket "$BUCKET_NAME" --output json --query '{Objects: DeleteMarkers[].{Key:Key,VersionId:VersionId}}')" 2>/dev/null || true
+          
+          # 現在嘗試刪除 bucket
+          aws s3 rb "s3://$BUCKET_NAME" --force 2>/dev/null && echo "✅ S3 bucket deleted successfully" || echo "⚠️  Failed to delete S3 bucket"
+        else
+          echo "✅ S3 bucket $BUCKET_NAME not found or already deleted"
+        fi
+
+        echo ""
+
+        # 檢查並刪除 DynamoDB table
+        TABLE_NAME="joytify-app-tfstate-lock-table"
+        echo "🗄️  Checking DynamoDB table: $TABLE_NAME"
+        if aws dynamodb describe-table --table-name "$TABLE_NAME" --region ap-northeast-1 2>/dev/null; then
+          echo "🗑️  Deleting DynamoDB table: $TABLE_NAME"
+          aws dynamodb delete-table --table-name "$TABLE_NAME" --region ap-northeast-1 2>/dev/null && echo "✅ DynamoDB table deleted successfully" || echo "⚠️  Failed to delete DynamoDB table"
+        else
+          echo "✅ DynamoDB table $TABLE_NAME not found or already deleted"
+        fi
+
+        echo ""
+
+        # 清理 Terraform 和 Terragrunt 緩存
+        echo "🧹 Cleaning up Terraform and Terragrunt cache..."
+        find . -name ".terragrunt-cache" -type d -exec rm -rf {} + 2>/dev/null || true
+        find . -name ".terraform" -type d -exec rm -rf {} + 2>/dev/null || true
+        echo "✅ Cache cleanup completed"
+
+        echo ""
+        echo "🎉 Backend cleanup completed"
+    summary: |
+      Manually cleans up Terraform backend resources (S3 bucket, DynamoDB table) and local cache
+
+  help:
+    desc: "📚 Show available tasks and their descriptions"
+    cmds:
+      - task --list
+    summary: |
+      Lists all available tasks with descriptions

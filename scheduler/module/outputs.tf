@@ -33,11 +33,11 @@ output "cloudwatch_log_groups" {
 output "event_schedules" {
   description = "EventBridge schedule configurations"
   value = {
-    monthly_stats_schedule  = aws_cloudwatch_event_rule.monthly_stats_schedule.schedule_expression
-    weekly_cleanup_schedule = aws_cloudwatch_event_rule.weekly_cleanup_schedule.schedule_expression
-    schedule_mode           = local.schedule_mode
-    cleanup_days            = local.cleanup_days
-    cleanup_batch_size      = local.cleanup_batch_size
-    cleanup_batch_delay_ms  = local.cleanup_batch_delay_ms
+    monthly_stats_schedule  = var.enable_auto_schedule ? aws_cloudwatch_event_rule.monthly_stats_schedule[0].schedule_expression : "disabled"
+    weekly_cleanup_schedule = var.enable_auto_schedule ? aws_cloudwatch_event_rule.weekly_cleanup_schedule[0].schedule_expression : "disabled"
+    environment            = var.environment
+    cleanup_days            = local.playback_cleanup_days
+    cleanup_batch_size      = local.playback_cleanup_batch_size
+    cleanup_batch_delay_ms  = local.playback_cleanup_batch_delay_ms
   }
 }

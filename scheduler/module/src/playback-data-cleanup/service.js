@@ -2,6 +2,12 @@ import { MongoClient } from "mongodb";
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
+const MONGODB_URI = process.env.MONGODB_URI;
+const CLEANUP_DAYS = process.env.CLEANUP_DAYS;
+const CLEANUP_BATCH_SIZE = process.env.CLEANUP_BATCH_SIZE;
+const CLEANUP_BATCH_DELAY_MS = process.env.CLEANUP_BATCH_DELAY_MS;
+const CLEANUP_TIMEOUT_SAFETY_MINUTES = process.env.CLEANUP_TIMEOUT_SAFETY_MINUTES;
+
 /**
  * Cleanup playback data using appropriate method based on dataset size
  */
@@ -53,7 +59,9 @@ const cleanupPlaybackData = async (
 
           // Safety timeout check - stop before Lambda timeout to allow clean shutdown
           if (Date.now() - startTime > timeoutSafetyMinutes * 60 * 1000) {
-            console.log(`⏰ Safety timeout reached (${timeoutSafetyMinutes} minutes), stopping batch processing gracefully`);
+            console.log(
+              `⏰ Safety timeout reached (${timeoutSafetyMinutes} minutes), stopping batch processing gracefully`
+            );
             break;
           }
         }
@@ -86,17 +94,17 @@ const cleanupPlaybackData = async (
  */
 const cleanupOldPlaybackData = async (testMode = false) => {
   // Configuration
-  const batchSize = parseInt(process.env.CLEANUP_BATCH_SIZE || "10000");
-  const batchDelayMs = parseInt(process.env.CLEANUP_BATCH_DELAY_MS || "100");
-  const cleanupDays = parseInt(process.env.CLEANUP_DAYS || "60");
-  const timeoutSafetyMinutes = parseInt(process.env.CLEANUP_TIMEOUT_SAFETY_MINUTES || "14");
+  const batchSize = parseInt(CLEANUP_BATCH_SIZE || "10000");
+  const batchDelayMs = parseInt(CLEANUP_BATCH_DELAY_MS || "100");
+  const cleanupDays = parseInt(CLEANUP_DAYS || "60");
+  const timeoutSafetyMinutes = parseInt(CLEANUP_TIMEOUT_SAFETY_MINUTES || "14");
   const collectionName = testMode ? "test-playbacks" : "playbacks";
 
   const startTime = Date.now();
 
   try {
     // Get MongoDB connection from the handler
-    const mongoUri = process.env.MONGODB_URI;
+    const mongoUri = MONGODB_URI;
     if (!mongoUri) {
       throw new Error("MONGODB_URI environment variable is required");
     }
@@ -148,10 +156,13 @@ const cleanupOldPlaybackData = async (testMode = false) => {
     const executionTimeMs = Date.now() - startTime;
     const wasTimeoutStopped = executionTimeMs > timeoutSafetyMinutes * 60 * 1000;
     const remainingRecords = countToDelete - totalDeleted;
-    const completionPercentage = countToDelete > 0 ? (totalDeleted / countToDelete * 100).toFixed(1) : 100;
+    const completionPercentage =
+      countToDelete > 0 ? ((totalDeleted / countToDelete) * 100).toFixed(1) : 100;
 
     if (wasTimeoutStopped && remainingRecords > 0) {
-      console.log(`⏰ Cleanup stopped early due to timeout: ${totalDeleted} records deleted, ${remainingRecords} remaining`);
+      console.log(
+        `⏰ Cleanup stopped early due to timeout: ${totalDeleted} records deleted, ${remainingRecords} remaining`
+      );
     } else {
       console.log(`✅ Cleanup completed: ${totalDeleted} records deleted`);
     }
@@ -181,7 +192,7 @@ const cleanupOldPlaybackData = async (testMode = false) => {
  */
 const determineCleanupModeFromEvent = (event) => {
   console.log("Parsing event:", JSON.stringify(event, null, 2));
-  const testMode = process.env.SCHEDULE_MODE === "test_auto" || event.testMode || false;
+  const testMode = event.testMode || false;
   console.log(`Parsed event - testMode: ${testMode}`);
   return { testMode };
 };
