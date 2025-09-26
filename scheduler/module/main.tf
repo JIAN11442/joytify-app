@@ -25,7 +25,7 @@ resource "aws_iam_role_policy" "lambda_execution_policy" {
 # ========================================
 
 resource "aws_lambda_function" "monthly_stats_notification" {
-  function_name    = "${var.project_name}-monthly-stats-notification"
+  function_name    = "${var.project_name}-${var.environment}-monthly-stats-notification"
   role             = aws_iam_role.lambda_execution_role.arn
   runtime          = var.nodejs_runtime
   filename         = local.monthly_stats_output_path
@@ -56,7 +56,7 @@ resource "aws_lambda_function" "monthly_stats_notification" {
 }
 
 resource "aws_lambda_function" "discord_notification" {
-  function_name    = "${var.project_name}-discord-notification"
+  function_name    = "${var.project_name}-${var.environment}-discord-notification"
   role             = aws_iam_role.lambda_execution_role.arn
   runtime          = var.nodejs_runtime
   filename         = local.discord_notification_output_path
@@ -81,7 +81,7 @@ resource "aws_lambda_function" "discord_notification" {
 }
 
 resource "aws_lambda_function" "playback_data_cleanup" {
-  function_name    = "${var.project_name}-playback-data-cleanup"
+  function_name    = "${var.project_name}-${var.environment}-playback-data-cleanup"
   role             = aws_iam_role.lambda_execution_role.arn
   runtime          = var.nodejs_runtime
   filename         = local.playback_cleanup_output_path
@@ -136,7 +136,7 @@ resource "aws_cloudwatch_log_group" "playback_cleanup_log_group" {
 
 # Main notification topic for execution results
 resource "aws_sns_topic" "notification_topic" {
-  name = "${var.project_name}-lambda-notifications"
+  name = "${var.project_name}-${var.environment}-lambda-notifications"
 
   tags = {
     Project     = var.project_name
@@ -201,7 +201,7 @@ resource "aws_lambda_permission" "allow_playback_cleanup_invoke_by_eventbridge" 
 resource "aws_cloudwatch_event_rule" "monthly_stats_schedule" {
   count = var.enable_auto_schedule ? 1 : 0
 
-  name                = "${var.project_name}-monthly-stats-schedule"
+  name                = "${var.project_name}-${var.environment}-monthly-stats-schedule"
   description         = "Automated monthly statistics generation schedule)"
   schedule_expression = local.monthly_stats_schedule
   state               = "ENABLED"
@@ -225,7 +225,7 @@ resource "aws_cloudwatch_event_target" "monthly_stats_target" {
 resource "aws_cloudwatch_event_rule" "weekly_cleanup_schedule" {
   count = var.enable_auto_schedule ? 1 : 0
 
-  name                = "${var.project_name}-weekly-cleanup-schedule"
+  name                = "${var.project_name}-${var.environment}-weekly-cleanup-schedule"
   description         = "Weekly playback data cleanup schedule"
   schedule_expression = local.weekly_cleanup_schedule
   state               = "ENABLED"

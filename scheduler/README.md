@@ -1,12 +1,12 @@
-# <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/logo.svg" alt="Joytify" width="26" height="26"> Joytify Terraform Infrastructure
+# <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/defaults/logo.svg" alt="Joytify" width="26" height="26"> Joytify Scheduler Infrastructure
 
-> Infrastructure as Code for Joytify's serverless data processing pipeline with automated statistics and intelligent cleanup
+> Terragrunt-managed serverless scheduler for Joytify's automated data processing pipeline with monthly statistics and intelligent cleanup
 
 ## 📋 Project Documentation
 
-- **🏠 [Main Application](https://github.com/JIAN11442/MERN-Joytify/tree/main)** - Application overview, tech stack, features
-- **🏗️ [Infrastructure Pipeline](./README.md)** - AWS Lambda processing pipeline _(You are here)_
-- **📚 [Shared Types](https://github.com/JIAN11442/joytify-shared-types)** - Shared TypeScript interfaces
+- **🏠 [Main Application](https://github.com/JIAN11442/joytify-app)** - Application overview, tech stack, features
+- **⏰ [Scheduler Infrastructure](https://github.com/JIAN11442/joytify-app/tree/main/scheduler)** - Terragrunt-managed serverless scheduler _(You are here)_
+- **📚 [Shared Types](https://github.com/JIAN11442/joytify-types)** - Shared TypeScript types, constants, and utilities
 
 ---
 
@@ -20,27 +20,41 @@
     - [Evolution Process](#evolution-process)
       - [Phase 1: Unified Monthly Statistics Processing](#phase-1-unified-monthly-statistics-processing)
       - [Phase 2: Batch Processing Implementation](#phase-2-batch-processing-implementation)
-      - [Phase 3: Event-Driven Architecture with Data Retention](#phase-3-event-driven-architecture-with-data-retention)
+      - [Phase 3: Event-Driven Architecture with Intelligent Data Lifecycle Management](#phase-3-event-driven-architecture-with-intelligent-data-lifecycle-management)
 
 - [🚀 Quick Start](#-quick-start)
 
   - [Prerequisites](#prerequisites)
+  - [Environment Architecture](#environment-architecture)
+    - [Core Environment Differences](#core-environment-differences)
+    - [Configuration Management](#configuration-management)
   - [Deployment Steps](#deployment-steps)
+    - [1. Clone and Navigate](#1-clone-and-navigate)
+    - [2. Install Task (if needed)](#2-install-task-if-needed)
+    - [3. View Available Operations](#3-view-available-operations)
+    - [4. Configure AWS Credentials](#4-configure-aws-credentials)
+    - [5. Set up AWS Secrets Manager](#5-set-up-aws-secrets-manager)
+    - [6. Choose Your Environment](#6-choose-your-environment)
+    - [7. Verify Deployment](#7-verify-deployment)
+  - [Testing the Functions](#testing-the-functions)
+    - [Development Environment Testing](#development-environment-testing)
+    - [Production Environment Testing](#production-environment-testing)
+    - [Monitor Execution](#monitor-execution)
   - [Cleanup](#cleanup)
+    - [Remove Specific Environment](#remove-specific-environment)
+    - [Complete Cleanup](#complete-cleanup)
 
 - [⚙️ Configuration & Operations](#configuration-operations)
 
-  - [Variables & Settings](#variables--settings)
-    - [Terraform Variables](#terraform-variables)
-    - [Local Configuration](#local-configuration)
-    - [Schedule Configuration](#schedule-configuration)
-    - [Configuration Changes](#configuration-changes)
-  - [Monitoring & Debug](#monitoring--debug)
-    - [View Lambda Logs](#view-lambda-logs)
-    - [Check Function Status](#check-function-status)
-    - [Verify EventBridge Rules](#verify-eventbridge-rules)
-    - [Monitor SNS Topics](#monitor-sns-topics)
-    - [Discord Notifications](#discord-notifications)
+  - [Variables Reference](#variables-reference)
+    - [Environment & Schedule Configuration](#environment--schedule-configuration)
+    - [Lambda Configuration](#lambda-configuration)
+    - [Data Processing Configuration](#data-processing-configuration)
+    - [Monitoring Configuration](#monitoring-configuration)
+  - [Monitoring & Troubleshooting](#monitoring--troubleshooting)
+    - [Real-time Log Monitoring](#real-time-log-monitoring)
+    - [Performance Analytics](#performance-analytics)
+    - [Infrastructure Health Check](#infrastructure-health-check)
 
 - [📊 Performance & Scaling](#performance-scaling)
   - [Capacity Planning](#capacity-planning)
@@ -52,11 +66,7 @@
     - [Capacity Growth Projections](#capacity-growth-projections)
     - [Conclusion](#conclusion)
   - [Scaling Strategies](#scaling-strategies)
-    - [Current Capacity](#current-capacity)
-    - [Scaling Options](#scaling-options)
-      - [Vertical Scaling](#vertical-scaling)
-      - [Horizontal Scaling](#horizontal-scaling)
-      - [Database Scaling](#database-scaling)
+    - [Alternative Data Lifecycle Strategies](#alternative-data-lifecycle-strategies)
 
 ---
 
@@ -70,85 +80,159 @@ This Terraform project implements a **serverless event-driven architecture** tha
 
 ```mermaid
 graph TB
-    subgraph "AWS Infrastructure (Terraform Managed)"
-        EB1[📅 Monthly Schedule<br/>Every 1st 2AM UTC]
-        EB2[📅 Weekly Schedule<br/>Every Mon 4AM UTC]
-        STATS[📊 Monthly Stats Lambda]
-        CLEANUP[🧹 Playback Cleanup Lambda]
-        DISCORD[🤖 Discord Lambda]
-        SNS[📢 SNS Topic]
-        CW1[📊 CloudWatch Logs]
-        CW2[🚨 CloudWatch Alarms]
-        IAM[🛡️ IAM Roles & Policies]
-        SECRETS[🔐 Secrets Manager]
+    subgraph "External Services"
+        MONGO[📦 MongoDB Atlas<br/>Notifications & Playbacks]
+        API[🔗 Backend API<br/>WebSocket Integration]
     end
 
+    subgraph "AWS Infrastructure (Terraform Managed)"
+        %% CloudWatch Event Schedulers
+        EB1[📅 Monthly Schedule<br/>Every 1st 2AM UTC]
+        EB2[📅 Weekly Schedule<br/>Every Mon 4AM UTC]
+
+        %% Lambda Functions
+        STATS(📊 Monthly Stats Lambda<br/>Notification Generation)
+        CLEANUP(🧹 Playback Cleanup Lambda<br/>Data Retention)
+        DISCORD(🤖 Discord Notification<br/>Execution Monitoring)
+
+        %% AWS Services
+        SNS[📢 SNS Topic<br/>Results Coordination]
+        CW1[📊 CloudWatch Logs<br/>Centralized Logging]
+        CW2[🚨 CloudWatch Alarms<br/>Error Monitoring]
+        IAM[🛡️ IAM Roles & Policies<br/>Access Control]
+        SECRETS[🔐 Secrets Manager<br/>JOYTIFY_SCHEDULER_ENVS]
+    end
+
+    %% External Users (Final Output)
+    USERS[👤 Discord Users<br/>Notification Recipients]
+
+    %% Monthly Main Execution Path (Blue solid line)
     EB1 --> STATS
+    STATS -->|Auto Invoke| CLEANUP
+    STATS -->|Results| SNS
+    CLEANUP -->|Results| SNS
+    SNS -->|Trigger| DISCORD
+    DISCORD -->|Send Notifications| USERS
+
+    %% Weekly Main Execution Path (Orange solid line)
     EB2 --> CLEANUP
-    STATS -->|Direct Invoke| CLEANUP
-    STATS --> SNS
-    CLEANUP --> SNS
-    SNS --> DISCORD
-    STATS --> CW1
-    CLEANUP --> CW1
-    DISCORD --> CW1
-    CW2 --> SNS
-    STATS --> SECRETS
-    CLEANUP --> SECRETS
-    DISCORD --> SECRETS
+    CLEANUP -->|Results| SNS
+    SNS -->|Trigger| DISCORD
+    DISCORD -->|Send Notifications| USERS
+
+    %% Data Injections (Dotted lines)
+    STATS -.->|Read/Write| MONGO
+    CLEANUP -.->|Clean Data| MONGO
+    STATS -.->|Notification| API
+
+    %% Configuration Injections (Deploy-time)
+    SECRETS -.->|Deploy: Env Vars| STATS
+    SECRETS -.->|Deploy: Env Vars| CLEANUP
+    SECRETS -.->|Deploy: Env Vars| DISCORD
+
+    %% Logging (Thin lines)
+    STATS -...->|Logs| CW1
+    CLEANUP -...->|Logs| CW1
+    DISCORD -...->|Logs| CW1
+
+    %% Alarm tracking
+    CW2 -->|Alarm| SNS
+
+    %% Apply styles
+    class MONGO database
+    class API api
+    class STATS,CLEANUP,DISCORD lambda
+    class EB1,EB2,CW1,CW2 cloudwatch
+    class SECRETS secrets
+    class SNS sns
+    class IAM iam
+    class USERS users
+
+    %% Styling - Unified stroke width
+    classDef database fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef api fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef lambda fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef cloudwatch fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef secrets fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef sns fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+    classDef iam fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px
+    classDef users fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+
+    %% Essential paths
+    linkStyle 0 stroke:#004c99,stroke-width:3px
+    linkStyle 1 stroke:#004c99,stroke-width:3px
+    linkStyle 2 stroke:#004c99,stroke-width:3px
+    linkStyle 3 stroke:#004c99,stroke-width:3px
+    linkStyle 4 stroke:#004c99,stroke-width:3px
+    linkStyle 5 stroke:#004c99,stroke-width:3px
+    linkStyle 6 stroke:#cc5500,stroke-width:3px
+    linkStyle 7 stroke:#cc5500,stroke-width:3px
+    linkStyle 8 stroke:#cc5500,stroke-width:3px
+    linkStyle 9 stroke:#cc5500,stroke-width:3px
+
+    %% MongoDB Data connections (Blue dotted)
+    linkStyle 10 stroke:#2196f3,stroke-width:2px,stroke-dasharray:5 5
+    linkStyle 11 stroke:#2196f3,stroke-width:2px,stroke-dasharray:5 5
+    linkStyle 12 stroke:#2196f3,stroke-width:2px,stroke-dasharray:5 5
+
+    %% Alarm connection (Red)
+    linkStyle 15 stroke:#f44336,stroke-width:2px
+
 ```
 
-| Component                          | Purpose                     | Key Features                                 |
-| ---------------------------------- | --------------------------- | -------------------------------------------- |
-| **📊 Monthly Stats Lambda**        | User statistics processing  | Generates notifications, triggers cleanup    |
-| **🧹 Playback Cleanup Lambda**     | Intelligent data cleanup    | Batch deletion with timeout protection       |
-| **🤖 Discord Notification Lambda** | Real-time monitoring        | Execution status and progress tracking       |
-| **📅 EventBridge**                 | Scheduled automation        | Triggers monthly/weekly operations           |
-| **📢 SNS Topic**                   | Inter-service communication | Coordinates Lambda execution results         |
-| **📊 CloudWatch Logs**             | Observability               | Centralized logging for all Lambda functions |
-| **🚨 CloudWatch Alarms**           | Error monitoring            | Automatic error detection and alerting       |
-| **🛡️ IAM Roles & Policies**        | Security & access control   | Least-privilege access management            |
-| **🔐 Secrets Manager**             | Secure configuration        | Stores MongoDB URI, API keys, and webhooks   |
+| Component                          | Purpose                     | Key Features                                                                   |
+| ---------------------------------- | --------------------------- | ------------------------------------------------------------------------------ |
+| **📊 Monthly Stats Lambda**        | Notification generation     | Aggregates user stats, creates notifications, triggers cleanup & WebSocket     |
+| **🧹 Playback Cleanup Lambda**     | Intelligent data cleanup    | Batch deletion with timeout protection, configurable retention logic           |
+| **🤖 Discord Notification Lambda** | Execution monitoring        | SNS message formatting, Discord webhook notifications, CloudWatch alarm alerts |
+| **📅 CloudWatch Events**           | Scheduled automation        | Monthly (1st 2AM UTC) + Weekly (Mon 4AM UTC) triggers                          |
+| **📢 SNS Topic**                   | Inter-service communication | Coordinates execution results and triggers Discord notifications               |
+| **📊 CloudWatch Logs**             | Observability               | Centralized logging for all Lambda functions with configurable retention       |
+| **🚨 CloudWatch Alarms**           | Error monitoring            | Lambda error detection, SNS alerting to Discord                                |
+| **🛡️ IAM Roles & Policies**        | Security & access control   | Lambda execution, SNS publishing, Secrets Manager access                       |
+| **🔐 Secrets Manager**             | Deploy-time configuration   | Stores environment variables (MongoDB URI, Discord webhooks, API keys)         |
 
 ## Design Evolution
 
 ### Design Principles
 
-- Maximize processing efficiency within the free MongoDB M0 (512MB) tier.
-- Prioritize automation and reliability for development-stage workloads.
-- Minimize operational complexity and cost.
-- Ensure the architecture can be easily scaled or upgraded for production.
+- **Storage Optimization**: Maximize processing efficiency within MongoDB M0 (512MB) tier with intelligent data retention and cleanup.
+- **Development-First Automation**: Prioritize automation and reliability for development-stage workloads without manual intervention.
+- **Cost-Effective Operations**: Minimize operational complexity and cost through serverless architecture and shared resources.
+- **Future Scalability**: Design for seamless scaling and production deployments with established upgrade paths.
 
 ### Evolution Process
 
 #### Phase 1: Unified Monthly Statistics Processing
 
-| Service                | Description                                         | Status | Issue                                                     | Solution                                                     |
-| ---------------------- | --------------------------------------------------- | ------ | --------------------------------------------------------- | ------------------------------------------------------------ |
-| EventBridge            | Monthly trigger at 2 AM on 1st                      | ✅     | -                                                         | -                                                            |
-| Lambda (Statistics)    | Generate reports from user monthly playback records | ✅     | Tested with 250M records, processed via MongoDB aggregate | -                                                            |
-| Lambda (Data Transfer) | Transfer playback data to backup history collection | ❌     | 2.5M records exceeded 15-minute Lambda timeout            | Trigger multiple Lambdas via CloudWatch based on data volume |
-| Auxiliary Services     | SNS, CloudWatch, Secrets Manager, Discord           | ✅     | -                                                         | -                                                            |
+| Service                | Description                                         | Status | Issue                                                                                   | Solution                                                                                          |
+| ---------------------- | --------------------------------------------------- | ------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| CloudWatch Events      | Monthly trigger at 2 AM on 1st                      | ✅     | -                                                                                       | -                                                                                                 |
+| Lambda (Statistics)    | Generate reports from user monthly playback records | ✅     | Tested with 250M records, processed via MongoDB aggregate                               | -                                                                                                 |
+| Lambda (Data Transfer) | Transfer playback data to backup history collection | ❌     | 2.5M records exceeded 15-minute Lambda timeout                                          | Trigger multiple CloudWatch-based Lambda invocations to distribute load across multiple functions |
+| Auxiliary Services     | SNS, CloudWatch, Secrets Manager, Discord           | ✅     | **Design Philosophy**: Complete data preservation approach started failing due to scale | -                                                                                                 |
 
 #### Phase 2: Batch Processing Implementation
 
-| Service             | Description                                      | Status | Issue                                                                      | Solution                                                         |
-| ------------------- | ------------------------------------------------ | ------ | -------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| EventBridge         | Monthly trigger at 2 AM on 1st                   | ✅     | -                                                                          | -                                                                |
-| Lambda (Dispatcher) | Determine number of Lambdas based on data volume | ✅     | -                                                                          | -                                                                |
-| Lambda (Statistics) | Process statistics in batches                    | ✅     | -                                                                          | -                                                                |
-| Lambda (Transfer)   | Transfer data in batches                         | ❌     | 2.5M records still timeout, MongoDB memory couldn't handle batch processes | Move statistics logic to main application with real-time updates |
-| Auxiliary Services  | SNS, CloudWatch, Secrets Manager, Discord        | ✅     | -                                                                          | -                                                                |
+| Service             | Description                                       | Status | Issue                                                                                              | Solution                                                                                                                 |
+| ------------------- | ------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| CloudWatch Events   | Monthly trigger at 2 AM on 1st                    | ✅     | -                                                                                                  | -                                                                                                                        |
+| Lambda (Dispatcher) | Determine number of Lambdas based on data volume  | ✅     | -                                                                                                  | -                                                                                                                        |
+| Lambda (Statistics) | Process statistics in batches (10K records/batch) | ✅     | -                                                                                                  | -                                                                                                                        |
+| Lambda (Transfer)   | Transfer data in batches                          | ❌     | 2.5M records still timeout, MongoDB memory constraints on M0 tier couldn't handle batch processing | **Architecture Shift**: Move data retention away from schedule-based transfers to application-layer lifecycle management |
+| Auxiliary Services  | SNS, CloudWatch, Secrets Manager, Discord         | ✅     | -                                                                                                  | -                                                                                                                        |
 
-#### Phase 3: Event-Driven Architecture with Data Retention
+#### Phase 3: Event-Driven Architecture with Intelligent Data Lifecycle Management
 
-| Service                | Description                                                                 | Status | Performance              | Design Rationale                          |
-| ---------------------- | --------------------------------------------------------------------------- | ------ | ------------------------ | ----------------------------------------- |
-| EventBridge (Monthly)  | Trigger at 2 AM on 1st                                                      | ✅     | Reliable scheduling      | Monthly statistics and cleanup operations |
-| EventBridge (Weekly)   | Trigger at 4 AM every Monday                                                | ✅     | Consistent cleanup       | Weekly data retention maintenance         |
-| Lambda (Notifications) | Generate notifications, update user associations, trigger WebSocket updates | ✅     | Real-time processing     | Event-driven notification system          |
-| Lambda (Cleanup)       | Cleanup playback records with retention logic                               | ✅     | Efficient batch deletion | Maintain MongoDB M0 (512MB) capacity      |
-| Auxiliary Services     | SNS, CloudWatch, Secrets Manager, Discord                                   | ✅     | Comprehensive monitoring | Complete observability and error handling |
+| Service                     | Description                                                                 | Status | Performance                                        | Design Rationale                                                                         |
+| --------------------------- | --------------------------------------------------------------------------- | ------ | -------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| CloudWatch Events (Monthly) | Trigger at 2 AM on 1st                                                      | ✅     | Reliable scheduling                                | Monthly statistics + auto-invoke cleanup integration                                     |
+| CloudWatch Events (Weekly)  | Trigger at 4 AM every Monday                                                | ✅     | Consistent cleanup                                 | Independent lifecycle maintenance ensuring M0 capacity stability                         |
+| Lambda (Notifications)      | Generate notifications, update user associations, trigger WebSocket updates | ✅     | Real-time processing                               | Event-driven notification system built for development-stage monitoring                  |
+| Lambda (Cleanup)            | Smart retention policy with batch deletion (optimized for M0 tier)          | ✅     | Efficient batch processing with timeout protection | **Solution**: Intelligent data lifecycle replaces preservation-focused transfer approach |
+| Auxiliary Services          | SNS, CloudWatch, Secrets Manager, Discord                                   | ✅     | Comprehensive monitoring                           | Complete observability and error handling for operational excellence                     |
+
+**Evolution Summary**: The architecture evolved from data preservation focus (preserving all historical records) to intelligent lifecycle management (maintaining data only as long as business value) under MongoDB M0 constraints. This transition from "collect everything" to "manage effectively" enables sustainable development-stage operation within resource limits.
 
 This is why the current framework is designed as it is: to achieve the best possible efficiency and reliability under strict development-stage constraints. If you are interested in scaling or production-level deployment, please refer to the [Scaling Strategies](#scaling-strategies) section below for recommended upgrade strategies.
 
@@ -156,304 +240,311 @@ This is why the current framework is designed as it is: to achieve the best poss
 
 # 🚀 Quick Start
 
-This guide helps you quickly deploy and validate the Joytify serverless infrastructure using Terraform.
+This guide helps you deploy the Joytify serverless scheduler using Terragrunt and Task automation.
 
 ## Prerequisites
 
-- AWS account with sufficient permissions (IAM, Lambda, EventBridge, SNS, CloudWatch, Secrets Manager)
-- Terraform (v1.0+)
-- Node.js (for packaging Lambda functions)
-- MongoDB Atlas account (for database connection)
-- Discord webhook URL (for monitoring notifications)
+**Required AWS Permissions:**
+
+- **IAM**: Create execution roles and policies for Lambda execution (lambda execution role + policy attachments)
+- **Lambda**: Create functions, manage permissions, manage environment variables and invoke targets
+- **CloudWatch Events**: Create CloudWatch Event rules and targets (for scheduled triggers)
+- **SNS**: Create topics, manage SNS topic policies and subscribe to topics
+- **CloudWatch**: Create log groups, metric alarms with SNS actions; manage CloudWatch events
+- **Secrets Manager**: Access and read existing secrets (no create/delete permissions needed for deployment)
+
+**Development Tools:**
+
+- **Terragrunt** (v0.45+) - Multi-environment infrastructure management
+- **Task** (automation tool) - `brew install go-task` or [download](https://taskfile.dev/installation/)
+- **Node.js** (v18+) - For packaging and running Lambda deployment packages
+
+**External Services:**
+
+- **MongoDB Atlas** account - Database for processing data and storing statistics
+- **Discord webhook URL** - For real-time execution monitoring and alerting
+
+## Environment Architecture
+
+This scheduler uses Terragrunt for multi-environment management with distinct configurations designed for safe development practices:
+
+### Core Environment Differences
+
+| Feature                  | Development (`dev/`)          | Production (`prod/`)           |
+| ------------------------ | ----------------------------- | ------------------------------ |
+| **Purpose**              | Manual testing & development  | Automated production schedules |
+| **Database Collections** | `test-*` prefixed collections | Production collections         |
+| **Auto Scheduling**      | ❌ Disabled                   | ✅ Enabled                     |
+| **Lambda Memory**        | 128MB                         | 256MB                          |
+| **Log Retention**        | 1 day                         | 7 days                         |
+| **Cleanup Period**       | 1 day (for testing)           | 60 days (production retention) |
+| **Batch Size**           | 100 records                   | 10,000 records                 |
+| **Monthly Schedule**     | Manual triggers only          | 1st of month, 2AM UTC          |
+| **Weekly Cleanup**       | Manual triggers only          | Every Monday, 4AM UTC          |
+| **Timeout Settings**     | 30s/60s                       | 300s/900s (5min/15min)         |
+
+### Configuration Management
+
+Environment settings are defined in dedicated configuration files:
+
+- **`environments/dev/terragrunt.hcl`** - Development optimization settings
+- **`environments/prod/terragrunt.hcl`** - Production reliability settings
+
+> 💡 **Design Philosophy**: Development auto-scheduling is disabled (`enable_auto_schedule = false`) to prevent accidental production triggers, while using isolated `test-*` database collections for safe testing.
+
+> 🔧 **Advanced Configuration**: For detailed parameter tuning, variable ranges, and operational commands, see [Configuration & Operations](#configuration-operations).
 
 ## Deployment Steps
 
-1. **Clone this repository**
+### 1. Clone and Navigate
 
-   ```bash
-   git clone https://github.com/your-org/MERN-Joytify.git
-   cd MERN-Joytify/terraform
-   ```
+```bash
+git clone https://github.com/JIAN11442/joytify-app.git
+cd joytify-app/scheduler
+```
 
-2. **Initialize remote backend (S3 + DynamoDB)**
-   Before deploying the main infrastructure, you must first set up the remote backend for Terraform state management. This ensures your infrastructure state is stored safely in S3 and locked via DynamoDB to prevent concurrent changes.
+### 2. Install Task (if needed)
 
-   ```bash
-   cd aws-s3-dynamodb
-   terraform init
-   terraform apply
-   cd ..
-   ```
+```bash
+# macOS
+brew install go-task
 
-3. **Configure AWS credentials**  
-   Make sure your AWS CLI is configured with the right profile.
+# Verify installation
+task --version
+```
 
-4. **Set up Secrets Manager**  
-   Store your MongoDB URI, Discord webhook, and other secrets in AWS Secrets Manager.
+### 3. View Available Operations
 
-   The following keys are required (example secret name: `MERN_JOYTIFY_ENVS`):
+```bash
+# See all available commands
+task --list
 
-   | Key                       | Description                        | Example Value                                    |
-   | ------------------------- | ---------------------------------- | ------------------------------------------------ |
-   | MONGODB_CONNECTION_STRING | MongoDB Atlas connection string    | mongodb+srv://...                                |
-   | DISCORD_WEBHOOK_URL       | Discord webhook for notifications  | https://discord.com/api/webhooks/YOUR_WEBHOOK_ID |
-   | DISCORD_TIMEZONE          | Timezone for Discord notifications | Asia/Taipei                                      |
-   | INTERNAL_API_KEY          | Internal API key for backend auth  | (your-random-key)                                |
-   | BACKEND_API_URL           | Main backend API URL               | https://api.joytify.com                          |
-   | SCHEDULE_MODE             | Schedule mode (production/test)    | production                                       |
+# Check current deployment status
+task status
+```
 
-5. **Deploy the main infrastructure**
+### 4. Configure AWS Credentials
 
-   ```bash
-   terraform init
-   terraform apply
-   ```
+Ensure your AWS CLI is configured with appropriate permissions for the scheduler deployment.
 
-6. **Test the monthly stats Lambda**
+### 5. Set up AWS Secrets Manager
 
-   **Option A: Production mode (uses real data)**
+Create a secret named `JOYTIFY_SCHEDULER_ENVS` with these keys:
 
-   ```bash
-   aws lambda invoke --function-name joytify-monthly-stats-notification \
-     --payload '{}' response.json
-   ```
+| Key                       | Description                        | Example Value                                    |
+| ------------------------- | ---------------------------------- | ------------------------------------------------ |
+| MONGODB_CONNECTION_STRING | MongoDB Atlas connection string    | mongodb+srv://user:pass@cluster.mongodb.net/db   |
+| DISCORD_WEBHOOK_URL       | Discord webhook for notifications  | https://discord.com/api/webhooks/YOUR_WEBHOOK_ID |
+| DISCORD_TIMEZONE          | Timezone for Discord notifications | Asia/Taipei                                      |
+| API_INTERNAL_SECRET_KEY   | Internal API key for backend auth  | your-random-secret-key                           |
+| API_DOMAIN                | Main backend API URL               | https://api.joytify.com                          |
 
-   **Option B: Test mode (requires test data)**
+### 6. Choose Your Environment
 
-   First, generate the base64 payload:
+**For Development/Testing:**
 
-   ```bash
-   echo '{"testMode": true}' | base64
-   # Output: eyJ0ZXN0TW9kZSI6dHJ1ZX0=
-   ```
+Development environment uses separate `test-*` database collections for safe testing.
 
-   Then invoke the function:
+**Generate Test Data:**
 
-   ```bash
-   aws lambda invoke --function-name joytify-monthly-stats-notification \
-     --payload 'eyJ0ZXN0TW9kZSI6dHJ1ZX0=' response.json
-   ```
+```bash
+# Navigate to test data generator
+cd test && npm install
 
-   > **Note:** Test mode requires sample data. See [test-data-tools/](test-data-tools/) for data generation scripts.
+# Configure database connection (copy template and edit)
+cp .env.example .env
 
-7. **Generate and test with sample data**
+# Generate 1000 test users with realistic playback data
+node generator.js generate 1000
 
-   **Generate test data:**
+# View all available commands
+node generator.js
+```
 
-   ```bash
-   cd test-data-tools
-   node test-data-generator.js generate 5000
-   # Expected output:
-   # Users: 5,000
-   # Playbacks: ~2.5M records
-   # Average per user: 500 records
-   ```
+**Deploy Development Infrastructure:**
 
-   **Test with generated data:**
+```bash
+# Return to scheduler directory
+cd ..
 
-   ```bash
-   aws lambda invoke --function-name joytify-monthly-stats-notification \
-     --payload 'eyJ0ZXN0TW9kZSI6dHJ1ZX0=' response.json
+# Preview changes
+task envs:dev:plan
 
-   # Expected result:
-   # Processing time: ~3.4 seconds
-   # Users processed: 5,000
-   # Users updated: 5,000
-   # Notifications created: 1
-   ```
+# Deploy development infrastructure
+task envs:dev:deploy
+```
 
-   **Clear test data:**
+**For Production:**
 
-   ```bash
-   cd test-data-tools
-   node test-data-generator.js clear
-   ```
+```bash
+# Preview changes
+task envs:prod:plan
 
-8. **Monitor via Discord notifications**  
-   Check your Discord channel for real-time execution status and progress.
+# Deploy production infrastructure
+task envs:prod:deploy
+```
+
+### 7. Verify Deployment
+
+```bash
+# Check deployment status
+task status
+
+# View specific environment outputs
+task envs:dev:output
+# or
+task envs:prod:output
+```
+
+## Testing the Functions
+
+### Development Environment Testing
+
+Development environment is designed for manual testing and uses separate test database collections:
+
+```bash
+# Generate the base64 payload
+echo '{"testMode": true}' | base64
+# Output: eyJ0ZXN0TW9kZSI6dHJ1ZX0=
+
+# Test monthly stats function (processes test-* collections)
+aws lambda invoke --function-name joytify-app-dev-monthly-stats-notification --payload 'eyJ0ZXN0TW9kZSI6dHJ1ZX0=' response.json
+
+# Test cleanup function (cleans test-playbacks collection)
+aws lambda invoke --function-name joytify-app-dev-playback-data-cleanup --payload 'eyJ0ZXN0TW9kZSI6dHJ1ZX0=' response.json
+```
+
+> 📝 **Note**: If you don't have test data, these functions will complete quickly with zero records processed.
+
+### Production Environment Testing
+
+Production environment runs on automated schedules, but can be manually triggered for testing:
+
+```bash
+# Generate the base64 payload
+echo '{}' | base64
+# Output: e30=
+
+# Manual trigger for testing (normally runs automatically)
+aws lambda invoke --function-name joytify-app-prod-monthly-stats-notification --payload 'e30=' response.json
+```
+
+> ⚠️ **Note**: Production environment processes real user data and is configured for automated execution. Manual triggers should only be used for testing or emergency situations.
+
+### Monitor Execution
+
+The infrastructure automatically sends real-time execution status and monitoring alerts to your Discord channel:
+
+<div align="left">
+  <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/readme/discord-notifications.png" width="60%" alt="Discord Notifications">
+</div>
 
 ## Cleanup
 
-To remove all resources:
+### Remove Specific Environment
 
 ```bash
-terraform destroy
+task envs:dev:destroy
+# or
+task envs:prod:destroy
 ```
+
+### Complete Cleanup
+
+```bash
+# Remove environments sequentially and clean up backend resources
+task envs:prod:destroy
+task envs:dev:destroy
+task cleanup-state
+```
+
+> ⚠️ **Warning**: Complete cleanup removes Terraform state backend (S3 bucket and DynamoDB table). Use with caution.
 
 ---
 
 <h1 id="configuration-operations">⚙️ Configuration & Operations</h1>
 
-## Variables & Settings
+> **Infrastructure parameter reference and operational monitoring guide**
 
-### Terraform Variables
+## Variables Reference
 
-| Variable                        | Default          | Range                    | Purpose                  |
-| ------------------------------- | ---------------- | ------------------------ | ------------------------ |
-| `environment`                   | `prod`           | `dev`, `staging`, `prod` | Environment name         |
-| `region`                        | `ap-northeast-1` | AWS regions              | AWS region               |
-| `nodejs_runtime`                | `nodejs20.x`     | Node.js versions         | Lambda runtime           |
-| `cloudwatch_log_retention_days` | `30`             | 1-365                    | Log retention period     |
-| `project_name`                  | `joytify`        | String                   | Resource naming prefix   |
-| `lambda_memory_size`            | `1024`           | 128-10240                | Lambda memory allocation |
+### Environment & Schedule Configuration
 
-**Override variables:**
+| Variable                  | Default             | Range/Options            | Purpose                             |
+| ------------------------- | ------------------- | ------------------------ | ----------------------------------- |
+| `environment`             | `prod`              | `dev`, `staging`, `prod` | Environment name                    |
+| `project_name`            | `joytify`           | String                   | Resource naming prefix              |
+| `nodejs_runtime`          | `nodejs20.x`        | Node.js versions         | Lambda runtime version              |
+| `enable_auto_schedule`    | `true`              | `true`, `false`          | Enable/disable automatic scheduling |
+| `monthly_stats_schedule`  | `cron(0 2 1 * ? *)` | Cron/Rate expressions    | Monthly stats trigger schedule      |
+| `weekly_cleanup_schedule` | `cron(0 4 ? * 2 *)` | Cron/Rate expressions    | Weekly cleanup trigger schedule     |
 
-```bash
-terraform apply -var="environment=dev" -var="lambda_memory_size=2048"
-```
+### Lambda Configuration
 
-### Local Configuration
+| Variable                           | Default | Range     | Purpose                               |
+| ---------------------------------- | ------- | --------- | ------------------------------------- |
+| `lambda_memory_size`               | `256`   | 128-10240 | Lambda memory allocation (MB)         |
+| `monthly_stats_timeout_seconds`    | `300`   | 1-900     | Monthly stats Lambda timeout (sec)    |
+| `playback_cleanup_timeout_seconds` | `900`   | 1-900     | Playback cleanup Lambda timeout (sec) |
 
-| Setting                            | Value | Purpose                    |
-| ---------------------------------- | ----- | -------------------------- |
-| `cleanup_days`                     | 60    | Data retention period      |
-| `cleanup_batch_size`               | 10000 | Records per batch          |
-| `cleanup_batch_delay_ms`           | 100   | Delay between batches      |
-| `cleanup_timeout_safety_minutes`   | 14    | Safety timeout             |
-| `monthly_stats_timeout_seconds`    | 300   | Stats processing timeout   |
-| `playback_cleanup_timeout_seconds` | 900   | Cleanup processing timeout |
+### Data Processing Configuration
 
-**Modify in `local.tf`:**
+| Variable                         | Default | Range    | Purpose                            |
+| -------------------------------- | ------- | -------- | ---------------------------------- |
+| `cleanup_days`                   | `60`    | 1-365    | Data retention period (days)       |
+| `cleanup_batch_size`             | `10000` | 1-100000 | Records per batch processing       |
+| `cleanup_batch_delay_ms`         | `100`   | 0-5000   | Delay between batches (ms)         |
+| `cleanup_timeout_safety_minutes` | `14`    | 1-60     | Safety timeout before Lambda limit |
 
-```hcl
-# Data cleanup settings
-cleanup_days = 60 # Keep 60 days of playback data
+### Monitoring Configuration
 
-# Batch processing settings
-cleanup_batch_size = 10000 # Records per batch
-cleanup_batch_delay_ms = 100 # Delay between batches (ms)
-cleanup_timeout_safety_minutes = 14 # Stop processing before Lambda timeout
-```
+| Variable                        | Default | Range | Purpose              |
+| ------------------------------- | ------- | ----- | -------------------- |
+| `cloudwatch_log_retention_days` | `7`     | 1-∞   | Log retention period |
 
-### Schedule Configuration
+> 💡 **Configuration Changes**: Edit variables in `environments/{env}/terragrunt.hcl` and apply with `task envs:{env}:apply`.
 
-| Mode           | Schedule            | Purpose              |
-| -------------- | ------------------- | -------------------- |
-| `production`   | `cron(0 2 1 * ? *)` | Monthly 1st 2AM UTC  |
-| `test_auto`    | `rate(5 minutes)`   | Test every 5 minutes |
-| Weekly Cleanup | `cron(0 4 ? * 2 *)` | Monday 4AM UTC       |
+## Monitoring & Troubleshooting
 
-**Change schedule mode in AWS Secrets Manager:**
+### Real-time Log Monitoring
 
 ```bash
-aws secretsmanager update-secret \
-  --secret-id MERN_JOYTIFY_ENVS \
-  --secret-string '{"SCHEDULE_MODE":"test_auto",...}'
+# View live execution logs
+aws logs tail /aws/lambda/joytify-app-{env}-monthly-stats-notification --follow
+aws logs tail /aws/lambda/joytify-app-{env}-playback-data-cleanup --follow
+aws logs tail /aws/lambda/joytify-app-{env}-discord-notification --follow
+
+# Search for errors in recent logs
+aws logs filter-log-events --log-group-name /aws/lambda/joytify-app-{env}-monthly-stats-notification --filter-pattern "ERROR" --start-time $(date -d '1 day ago' +%s)000
 ```
 
-### Configuration Changes
-
-**Performance Tuning:**
+### Performance Analytics
 
 ```bash
-# Increase memory for better performance
-terraform apply -var="lambda_memory_size=2048"
+# Function execution duration (last 24 hours)
+aws cloudwatch get-metric-statistics --namespace AWS/Lambda --metric-name Duration --dimensions Name=FunctionName,Value=joytify-app-{env}-monthly-stats-notification --start-time $(date -d '1 day ago' -u +%Y-%m-%dT%H:%M:%S) --end-time $(date -u +%Y-%m-%dT%H:%M:%S) --period 3600 --statistics Average,Maximum
 
-# Adjust batch size for faster processing
-# Edit local.tf: cleanup_batch_size = 20000
-terraform apply
+# Error and throttle monitoring
+aws cloudwatch get-metric-statistics --namespace AWS/Lambda --metric-name Errors --dimensions Name=FunctionName,Value=joytify-app-{env}-monthly-stats-notification --start-time $(date -d '1 day ago' -u +%Y-%m-%dT%H:%M:%S) --end-time $(date -u +%Y-%m-%dT%H:%M:%S) --period 3600 --statistics Sum
 
-# Reduce retention period
-# Edit local.tf: cleanup_days = 30
-terraform apply
+# Memory utilization tracking
+aws cloudwatch get-metric-statistics --namespace AWS/Lambda --metric-name MemoryUtilization --dimensions Name=FunctionName,Value=joytify-app-{env}-monthly-stats-notification --start-time $(date -d '1 day ago' -u +%Y-%m-%dT%H:%M:%S) --end-time $(date -u +%Y-%m-%dT%H:%M:%S) --period 3600 --statistics Maximum
 ```
 
-**Schedule Management:**
+### Infrastructure Health Check
 
 ```bash
-# Switch to test mode
-aws secretsmanager update-secret \
-  --secret-id MERN_JOYTIFY_ENVS \
-  --secret-string '{"SCHEDULE_MODE":"test_auto"}'
+# Verify CloudWatch Events scheduling
+aws events describe-rule --name joytify-app-{env}-monthly-stats-schedule
+aws events list-targets-by-rule --rule joytify-app-{env}-monthly-stats-schedule
 
-# Switch to production mode
-aws secretsmanager update-secret \
-  --secret-id MERN_JOYTIFY_ENVS \
-  --secret-string '{"SCHEDULE_MODE":"production"}'
+# SNS topic status and subscriptions
+aws sns get-topic-attributes --topic-arn $(task envs:{env}:output | grep sns_topic_arn | cut -d'"' -f4)
+aws sns list-subscriptions-by-topic --topic-arn $(task envs:{env}:output | grep sns_topic_arn | cut -d'"' -f4)
+
+# Lambda function configuration verification
+aws lambda get-function --function-name joytify-app-{env}-monthly-stats-notification --query 'Configuration.[FunctionName,Runtime,MemorySize,Timeout,LastModified]'
 ```
-
-**Log Management:**
-
-```bash
-# Set log retention
-aws logs put-retention-policy \
-  --log-group-name /aws/lambda/joytify-monthly-stats-notification \
-  --retention-in-days 7
-
-# Search for errors
-aws logs filter-log-events \
-  --log-group-name /aws/lambda/joytify-monthly-stats-notification \
-  --filter-pattern "ERROR"
-```
-
-## Monitoring & Debug
-
-### View Lambda Logs
-
-```bash
-# Monthly stats logs
-aws logs tail /aws/lambda/joytify-monthly-stats-notification --follow
-
-# Cleanup logs
-aws logs tail /aws/lambda/joytify-playback-data-cleanup --follow
-
-# Discord notification logs
-aws logs tail /aws/lambda/joytify-discord-notification --follow
-```
-
-### Check Function Status
-
-```bash
-# Get function configuration
-aws lambda get-function --function-name joytify-monthly-stats-notification
-
-# List all functions
-aws lambda list-functions --query 'Functions[?contains(FunctionName, `joytify`)]'
-
-# Check function metrics
-aws cloudwatch get-metric-statistics \
-  --namespace AWS/Lambda \
-  --metric-name Duration \
-  --dimensions Name=FunctionName,Value=joytify-monthly-stats-notification \
-  --start-time $(date -d '1 hour ago' -u +%Y-%m-%dT%H:%M:%S) \
-  --end-time $(date -u +%Y-%m-%dT%H:%M:%S) \
-  --period 300 \
-  --statistics Average,Maximum
-```
-
-### Verify EventBridge Rules
-
-```bash
-# List scheduled rules
-aws events list-rules --name-prefix joytify
-
-# Check rule targets
-aws events list-targets-by-rule --rule joytify-monthly-stats
-
-# Get rule details
-aws events describe-rule --name joytify-monthly-stats
-```
-
-### Monitor SNS Topics
-
-```bash
-# List SNS topics
-aws sns list-topics --query 'Topics[?contains(TopicArn, `joytify`)]'
-
-# Get topic attributes
-aws sns get-topic-attributes --topic-arn arn:aws:sns:ap-northeast-1:ACCOUNT:joytify-lambda-notifications
-```
-
-### Discord Notifications
-
-The infrastructure automatically sends execution status and monitoring alerts to Discord via webhooks:
-
-<div align="left">
-  <img src="https://mern-joytify-bucket-yj.s3.ap-northeast-1.amazonaws.com/readme/discord-notifications.png" width="60%" alt="Discord Notifications">
-  <br>
-  <em>Real-time execution status and monitoring alerts via Discord webhooks</em>
-</div>
 
 ---
 
@@ -572,30 +663,19 @@ Based on real data analysis and 60-day retention, MongoDB M0 (512MB) can sustain
 
 ## Scaling Strategies
 
-### Current Capacity
+| Scenario        | Users Limit   | Scaling Action        | Infrastructure                            | Setup Time | Monthly Cost | Alternative Choices                               |
+| --------------- | ------------- | --------------------- | ----------------------------------------- | ---------- | ------------ | ------------------------------------------------- |
+| **Current**     | 3,500 users   | -                     | M0 MongoDB (512MB)<br/>256MB Lambda       | Current    | $0           | -                                                 |
+| **Performance** | 3,500 users   | Memory upgrade        | M0 MongoDB (512MB)<br/>512MB Lambda       | 5 min      | +$0.33       | Increase batch size                               |
+| **Growth**      | 10,000 users  | Database upgrade      | M10 MongoDB (10GB)<br/>Optimized Lambda   | 1 day      | +$57         | Alternative: PostgreSQL<br/>Alternative: DynamoDB |
+| **Enterprise**  | 50,000+ users | Architecture redesign | M30+ MongoDB<br/>Microservices + Sharding | 2-4 weeks  | +$200        | Alternative: Multi-database strategy              |
 
-- **Users**: Designed for 100K+ active users
-- **Processing**: Handles millions of playback records
-- **Execution Time**: Typical completion under 10 minutes
+### Alternative Data Lifecycle Strategies
 
-### Scaling Options
+Before infrastructure scaling, consider these data management optimizations:
 
-#### Vertical Scaling
-
-- **Memory**: Increase `lambda_memory_size` (1024MB → 2048MB)
-- **Timeout**: Extend Lambda timeout (15min → 30min)
-- **Batch Size**: Adjust `cleanup_batch_size` (10K → 20K records)
-
-#### Horizontal Scaling
-
-- **Parallel Processing**: Split cleanup by date ranges
-- **Sharding**: Distribute data across multiple MongoDB clusters
-- **Microservices**: Separate stats and cleanup into dedicated services
-
-#### Database Scaling
-
-- **MongoDB M10**: Upgrade from M0 for higher capacity
-- **Read Replicas**: Add read replicas for analytics queries
-- **Data Archiving**: Move old data to S3 for cost optimization
+- **Aggressive Retention Policy**: Reduce from 60 days to 30 days, doubling user capacity with same hardware
+- **Tiered Storage**: Hot data (MongoDB) + cold data (S3 archival) for cost-effective long-term storage
+- **Selective Cleanup**: Different retention periods per data type to optimize storage efficiency
 
 ---

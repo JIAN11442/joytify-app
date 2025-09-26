@@ -13,7 +13,7 @@ locals {
   # ========================================
   # SECRETS & ENVIRONMENT VARIABLES
   # ========================================
-  secret_name               = "JOYTIFY_LAMBDA_ENVS"
+  secret_name               = "JOYTIFY_SCHEDULER_ENVS"
   secret_data               = jsondecode(data.aws_secretsmanager_secret_version.joytify.secret_string)
   mongodb_connection_string = local.secret_data["MONGODB_CONNECTION_STRING"]
   discord_webhook_url       = local.secret_data["DISCORD_WEBHOOK_URL"]

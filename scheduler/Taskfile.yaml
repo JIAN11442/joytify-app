@@ -5,55 +5,6 @@ includes:
   envs: ./environments/Taskfile.yaml
 
 tasks:
-  # =============================================================================
-  # MAIN OPERATIONS (Primary tasks for daily use)
-  # =============================================================================
-
-  all:plan:
-    desc: "📋 Plan all scheduler changes"
-    cmds:
-      - task: envs:dev:plan
-      - task: envs:prod:plan
-    summary: |
-      Shows planned changes for all scheduler envs
-
-  all:validate:
-    desc: "✅ Validate all scheduler configurations"
-    cmds:
-      - task: envs:dev:validate
-      - task: envs:prod:validate
-    summary: |
-      Validates all scheduler environment configurations
-
-  all:deploy:
-    desc: "🚀 Deploy all scheduler envs"
-    cmds:
-      - task: envs:dev:deploy
-      - task: envs:prod:deploy
-    summary: |
-      Deploys all scheduler envs
-
-  all:destroy:
-    desc: "💥 Destroy all scheduler envs"
-    cmds:
-      - task: envs:prod:destroy
-      - task: envs:dev:destroy
-      - task: cleanup-state
-    summary: |
-      Destroys all scheduler envs in reverse order and cleans up backend resources
-
-  all:output:
-    desc: "📤 Show all scheduler outputs"
-    cmds:
-      - task: envs:dev:output
-      - task: envs:prod:output
-    summary: |
-      Displays all outputs from all scheduler envs
-
-  # =============================================================================
-  # MONITORING & UTILITIES (Status checking and helper tasks)
-  # =============================================================================
-
   status:
     desc: "📊 Check scheduler status"
     cmds:
@@ -61,16 +12,12 @@ tasks:
         echo "🔍 Checking scheduler status..."
         echo ""
         echo "🛠️ Development Environment:"
-        cd envs/dev && terragrunt output 2>/dev/null || echo "  Not deployed"
+        cd environments/dev && terragrunt output 2>/dev/null || echo "  Not deployed"
         echo ""
         echo "🚀 Production Environment:"
-        cd ../prod && terragrunt output 2>/dev/null || echo "  Not deployed"
+        cd environments/prod && terragrunt output 2>/dev/null || echo "  Not deployed"
     summary: |
       Shows the current status of all scheduler envs
-
-  # =============================================================================
-  # BACKEND RESOURCE MANAGEMENT
-  # =============================================================================
 
   cleanup-state:
     desc: "🗄️ Clean up Terraform state resources (S3 bucket and DynamoDB table)"
