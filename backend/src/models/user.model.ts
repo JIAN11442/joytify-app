@@ -8,7 +8,6 @@ import PlaylistModel, { PlaylistDocument } from "./playlist.model";
 import VerificationModel from "./verification.model";
 import MusicianModel from "./musician.model";
 import PlaybackModel from "./playback.model";
-import HistoryModel from "./history.model";
 import StatsModel from "./stats.model";
 
 import usePalette from "../hooks/paletee.hook";
@@ -329,9 +328,6 @@ userSchema.pre("findOneAndDelete", async function (next) {
 
       // delete user playback
       await PlaybackModel.findOneAndDelete({ user: user.id });
-
-      // delete user history
-      await HistoryModel.findOneAndDelete({ user: user.id });
 
       // delete user stats
       await StatsModel.findOneAndDelete({ user: user.id });

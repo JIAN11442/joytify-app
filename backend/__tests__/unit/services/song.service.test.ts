@@ -8,36 +8,27 @@ import {
   getSongById,
   getSongsByQuery,
   getRecommendedSongs,
-  refreshSongPlaybackStats,
   statsUserSongs,
   updateSongInfoById,
   assignSongToPlaylists,
   deleteSongById,
 } from "../../../src/services/song.service";
-import { getPlaybackStatisticsBySongId } from "../../../src/services/playback.service";
 import { collectDocumentAttributes } from "../../../src/services/util.service";
-import { parseToFloat } from "../../../src/utils/parse-float.util";
 import appAssert from "../../../src/utils/app-assert.util";
 
 // Mock all external dependencies
 jest.mock("../../../src/models/song.model");
 jest.mock("../../../src/models/playlist.model");
-jest.mock("../../../src/services/playback.service");
 jest.mock("../../../src/services/util.service");
 jest.mock("../../../src/utils/app-assert.util");
-jest.mock("../../../src/utils/parse-float.util");
 
 // Mock type definitions
 const mockSongModel = SongModel as jest.Mocked<typeof SongModel>;
 const mockPlaylistModel = PlaylistModel as jest.Mocked<typeof PlaylistModel>;
-const mockGetPlaybackStatisticsBySongId = getPlaybackStatisticsBySongId as jest.MockedFunction<
-  typeof getPlaybackStatisticsBySongId
->;
 const mockCollectDocumentAttributes = collectDocumentAttributes as jest.MockedFunction<
   typeof collectDocumentAttributes
 >;
 const mockAppAssert = appAssert as jest.MockedFunction<typeof appAssert>;
-const mockParseToFloat = parseToFloat as jest.MockedFunction<typeof parseToFloat>;
 
 describe("Song Service", () => {
   // Mock data constants
@@ -111,8 +102,6 @@ describe("Song Service", () => {
       }
     });
 
-    // Mock parseToFloat
-    mockParseToFloat.mockImplementation((value) => value);
 
     // Mock mongoose session
     mongoose.startSession = jest.fn().mockResolvedValue(mockSession);
@@ -415,64 +404,6 @@ describe("Song Service", () => {
     });
   });
 
-  describe("refreshSongPlaybackStats", () => {
-    it("should refresh song playback stats successfully", async () => {
-      // ==================== Arrange ====================
-      const mockStats = {
-        totalDuration: 1800,
-        totalCount: 10,
-        weightedAvgDuration: 180,
-      };
-
-      mockGetPlaybackStatisticsBySongId.mockResolvedValue(mockStats);
-      mockSongModel.findByIdAndUpdate.mockResolvedValue(mockSong);
-
-      // ==================== Act ====================
-      const result = await refreshSongPlaybackStats(mockSongId);
-
-      // ==================== Assert Process ====================
-      // 1. verify playback stats retrieval
-      expect(mockGetPlaybackStatisticsBySongId).toHaveBeenCalledWith(mockSongId);
-
-      // 2. verify song update
-      expect(mockSongModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        mockSongId,
-        {
-          "activities.totalPlaybackCount": 10,
-          "activities.totalPlaybackDuration": 1800,
-          "activities.weightedAveragePlaybackDuration": 180,
-        },
-        { new: true }
-      );
-
-      // 3. verify parseToFloat calls
-      expect(mockParseToFloat).toHaveBeenCalledWith(1800);
-      expect(mockParseToFloat).toHaveBeenCalledWith(180);
-
-      // 4. verify correct result
-      expect(result).toEqual({
-        updatedSong: mockSong,
-      });
-    });
-
-    it("should handle song not found error", async () => {
-      // ==================== Arrange ====================
-      const mockStats = {
-        totalDuration: 1800,
-        totalCount: 10,
-        weightedAvgDuration: 180,
-      };
-
-      mockGetPlaybackStatisticsBySongId.mockResolvedValue(mockStats);
-      mockSongModel.findByIdAndUpdate.mockResolvedValue(null);
-
-      // ==================== Act & Assert ====================
-      await expect(refreshSongPlaybackStats(mockSongId)).rejects.toThrow("Song not found");
-
-      // ==================== Assert Process ====================
-      expect(mockAppAssert).toHaveBeenCalledWith(null, 404, "Song not found");
-    });
-  });
 
   describe("statsUserSongs", () => {
     it("should get user songs stats successfully", async () => {

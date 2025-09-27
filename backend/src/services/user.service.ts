@@ -1,7 +1,6 @@
 import SongModel from "../models/song.model";
 import AlbumModel from "../models/album.model";
 import StatsModel from "../models/stats.model";
-import HistoryModel from "../models/history.model";
 import PlaybackModel from "../models/playback.model";
 import PlaylistModel from "../models/playlist.model";
 import MusicianModel from "../models/musician.model";
@@ -352,15 +351,6 @@ export const deregisterUserAccount = async (params: DeregisterAccountServiceRequ
           deletedPlaybacks.acknowledged === true,
           INTERNAL_SERVER_ERROR,
           "Failed to delete user playback records in deregistration process"
-        );
-
-        // delete all user history records
-        const deletedHistories = await HistoryModel.deleteMany({ user: userId });
-
-        appAssert(
-          deletedHistories.acknowledged === true,
-          INTERNAL_SERVER_ERROR,
-          "Failed to delete user history records in deregistration process"
         );
 
         // delete all user stat records

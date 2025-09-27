@@ -1,6 +1,6 @@
-import mongoose, { UpdateQuery } from "mongoose";
-import { refreshSongPlaybackStats } from "../services/song.service";
+import mongoose from "mongoose";
 import { PlaybackStateOptions } from "@joytify/types/constants";
+import SongModel from "./song.model";
 
 export interface PlaybackDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
@@ -48,39 +48,37 @@ const playbackSchema = new mongoose.Schema<PlaybackDocument>(
   { timestamps: true }
 );
 
-// after save playback, ...
+// Add post save middleware before creating the model
 playbackSchema.post("save", async function (doc) {
   try {
-    const songId = doc.song.toString();
+    const { song, duration } = doc;
 
-    if (songId && !this.isModified("song")) {
-      await refreshSongPlaybackStats(songId);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-});
+    // Get current song statistics
+    const currentSong = await SongModel.findById(song);
+    if (!currentSong) return;
 
-// after created playback, ...
-playbackSchema.post("findOneAndUpdate", async function (doc) {
-  try {
-    if (!doc) {
-      return;
-    }
+    const currentCount = currentSong.activities?.totalPlaybackCount || 0;
+    const currentTotalDuration = currentSong.activities?.totalPlaybackDuration || 0;
 
-    const query = this.getQuery();
-    const update = this.getUpdate() as UpdateQuery<PlaybackDocument>;
+    // Calculate new statistics
+    const newCount = currentCount + 1;
+    const newTotalDuration = currentTotalDuration + Number(duration);
 
-    const songId =
-      query.songs && query.songs.$elemMatch
-        ? query.songs.$elemMatch.id
-        : update && update.$push && update.$push.songs
-          ? update.$push.songs.id
-          : null;
+    // Calculate weighted average duration
+    // Formula: (previous_weighted_avg * previous_total_duration + new_duration^2) / new_total_duration
+    const currentWeightedAvg = currentSong.activities?.weightedAveragePlaybackDuration || 0;
+    const previousWeightedSum = currentWeightedAvg * currentTotalDuration;
+    const newWeightedAvg =
+      newTotalDuration > 0
+        ? (previousWeightedSum + Number(duration) * Number(duration)) / newTotalDuration
+        : 0;
 
-    if (songId !== null) {
-      await refreshSongPlaybackStats(songId.toString());
-    }
+    // Update song statistics
+    await SongModel.findByIdAndUpdate(song, {
+      "activities.totalPlaybackCount": newCount,
+      "activities.totalPlaybackDuration": newTotalDuration,
+      "activities.weightedAveragePlaybackDuration": newWeightedAvg,
+    });
   } catch (error) {
     console.log(error);
   }

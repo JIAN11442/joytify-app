@@ -1,6 +1,4 @@
-import mongoose from "mongoose";
 import SongModel from "../models/song.model";
-import HistoryModel from "../models/history.model";
 import PlaybackModel from "../models/playback.model";
 import { trackPlaybackStats } from "./stats.service";
 import { HttpCode } from "@joytify/types/constants";
@@ -52,43 +50,3 @@ export const createPlaybackLog = async (data: CreatePlaybackLogServiceRequest) =
   return { playbackLog };
 };
 
-export const getPlaybackStatisticsBySongId = async (songId: string) => {
-  const songObjId = new mongoose.Types.ObjectId(songId);
-  const initialResult = { count: 0, totalDuration: 0, durations: [] };
-
-  const aggregateQuery = [
-    { $match: { song: songObjId } },
-    {
-      $group: {
-        _id: null,
-        count: { $sum: 1 },
-        totalDuration: { $sum: "$duration" },
-        durations: { $push: "$duration" },
-      },
-    },
-  ];
-
-  const [playbackResults, historyResults] = await Promise.all([
-    PlaybackModel.aggregate(aggregateQuery),
-    HistoryModel.aggregate(aggregateQuery),
-  ]);
-
-  const playbackData = playbackResults[0] || initialResult;
-  const historyData = historyResults[0] || initialResult;
-
-  const totalCount = playbackData.count + historyData.count;
-  const totalDuration = playbackData.totalDuration + historyData.totalDuration;
-
-  if (totalCount === 0) {
-    return { totalDuration: 0, totalCount: 0, weightedAvgDuration: 0 };
-  }
-
-  const allDurations = [...playbackData.durations, ...historyData.durations];
-
-  const weightedAvgDuration =
-    totalDuration > 0
-      ? allDurations.reduce((acc, duration) => acc + duration * duration, 0) / totalDuration
-      : 0;
-
-  return { totalDuration, totalCount, weightedAvgDuration };
-};

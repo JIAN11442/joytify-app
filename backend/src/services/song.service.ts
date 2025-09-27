@@ -2,7 +2,6 @@ import mongoose, { FilterQuery } from "mongoose";
 import SongModel, { SongDocument } from "../models/song.model";
 import PlaylistModel, { PlaylistDocument } from "../models/playlist.model";
 
-import { getPlaybackStatisticsBySongId } from "./playback.service";
 import { HttpCode, ErrorCode } from "@joytify/types/constants";
 import { INITIAL_FETCH_LIMIT } from "../constants/env-validate.constant";
 import {
@@ -14,7 +13,6 @@ import {
   PopulatedSongResponse,
 } from "@joytify/types/types";
 import appAssert from "../utils/app-assert.util";
-import { parseToFloat } from "../utils/parse-float.util";
 import { collectDocumentAttributes } from "./util.service";
 
 type CreateSongServiceRequest = { userId: string; songInfo: CreateSongRequest };
@@ -195,25 +193,6 @@ export const getRecommendedSongs = async (playlistId: string) => {
   return recommendedSongs;
 };
 
-// re-calculate target song's total duration, total count and average duration
-export const refreshSongPlaybackStats = async (songId: string) => {
-  const { totalDuration, totalCount, weightedAvgDuration } =
-    await getPlaybackStatisticsBySongId(songId);
-
-  const updatedSong = await SongModel.findByIdAndUpdate(
-    songId,
-    {
-      "activities.totalPlaybackCount": totalCount,
-      "activities.totalPlaybackDuration": parseToFloat(totalDuration),
-      "activities.weightedAveragePlaybackDuration": parseToFloat(weightedAvgDuration),
-    },
-    { new: true }
-  );
-
-  appAssert(updatedSong, NOT_FOUND, "Song not found");
-
-  return { updatedSong };
-};
 
 // stats user's songs
 export const statsUserSongs = async (userId: string) => {

@@ -2,7 +2,6 @@ import UserModel from "../../../src/models/user.model";
 import SongModel from "../../../src/models/song.model";
 import AlbumModel from "../../../src/models/album.model";
 import StatsModel from "../../../src/models/stats.model";
-import HistoryModel from "../../../src/models/history.model";
 import PlaybackModel from "../../../src/models/playback.model";
 import PlaylistModel from "../../../src/models/playlist.model";
 import MusicianModel from "../../../src/models/musician.model";
@@ -28,7 +27,6 @@ jest.mock("../../../src/models/user.model");
 jest.mock("../../../src/models/song.model");
 jest.mock("../../../src/models/album.model");
 jest.mock("../../../src/models/stats.model");
-jest.mock("../../../src/models/history.model");
 jest.mock("../../../src/models/playback.model");
 jest.mock("../../../src/models/playlist.model");
 jest.mock("../../../src/models/musician.model");
@@ -54,7 +52,6 @@ const mockUserModel = UserModel as jest.Mocked<typeof UserModel>;
 const mockSongModel = SongModel as jest.Mocked<typeof SongModel>;
 const mockAlbumModel = AlbumModel as jest.Mocked<typeof AlbumModel>;
 const mockStatsModel = StatsModel as jest.Mocked<typeof StatsModel>;
-const mockHistoryModel = HistoryModel as jest.Mocked<typeof HistoryModel>;
 const mockPlaybackModel = PlaybackModel as jest.Mocked<typeof PlaybackModel>;
 const mockPlaylistModel = PlaylistModel as jest.Mocked<typeof PlaylistModel>;
 const mockMusicianModel = MusicianModel as jest.Mocked<typeof MusicianModel>;
@@ -697,8 +694,7 @@ describe("User Service", () => {
       mockUserModel.findById.mockResolvedValue(mockUserWithSongs as any);
       mockSongModel.findByIdAndDelete.mockResolvedValue({ _id: "song-1" } as any);
       mockPlaybackModel.deleteMany.mockResolvedValue({ acknowledged: true } as any);
-      mockHistoryModel.deleteMany.mockResolvedValue({ acknowledged: true } as any);
-      mockStatsModel.deleteMany.mockResolvedValue({ acknowledged: true } as any);
+            mockStatsModel.deleteMany.mockResolvedValue({ acknowledged: true } as any);
       mockUserModel.findByIdAndDelete.mockResolvedValue(mockUserDoc as any);
 
       // ==================== Act ====================
@@ -715,8 +711,7 @@ describe("User Service", () => {
 
       // 3. verify related data deletion
       expect(mockPlaybackModel.deleteMany).toHaveBeenCalledWith({ user: mockUserId });
-      expect(mockHistoryModel.deleteMany).toHaveBeenCalledWith({ user: mockUserId });
-      expect(mockStatsModel.deleteMany).toHaveBeenCalledWith({ user: mockUserId });
+            expect(mockStatsModel.deleteMany).toHaveBeenCalledWith({ user: mockUserId });
 
       // 4. verify user account deletion
       expect(mockUserModel.findByIdAndDelete).toHaveBeenCalledWith(mockUserId);
@@ -916,8 +911,7 @@ describe("User Service", () => {
       mockUserModel.findById.mockResolvedValue(mockUserWithSongs as any);
       mockSongModel.findByIdAndDelete.mockResolvedValue({ _id: "song-1" } as any);
       mockPlaybackModel.deleteMany.mockResolvedValue({ acknowledged: true } as any);
-      mockHistoryModel.deleteMany.mockResolvedValue({ acknowledged: false } as any); // deletion fails
-      mockUserModel.findByIdAndDelete.mockResolvedValue(mockUserDoc as any);
+            mockUserModel.findByIdAndDelete.mockResolvedValue(mockUserDoc as any);
 
       // ==================== Act ====================
       // 1. deregister user account (should handle history deletion failure gracefully)
@@ -925,8 +919,7 @@ describe("User Service", () => {
 
       // ==================== Assert Process ====================
       // 1. verify history deletion was attempted
-      expect(mockHistoryModel.deleteMany).toHaveBeenCalledWith({ user: mockUserId });
-
+      
       // 2. verify user account was still deleted despite history deletion failure
       expect(mockUserModel.findByIdAndDelete).toHaveBeenCalledWith(mockUserId);
 
@@ -952,8 +945,7 @@ describe("User Service", () => {
       mockUserModel.findById.mockResolvedValue(mockUserWithSongs as any);
       mockSongModel.findByIdAndDelete.mockResolvedValue({ _id: "song-1" } as any);
       mockPlaybackModel.deleteMany.mockResolvedValue({ acknowledged: true } as any);
-      mockHistoryModel.deleteMany.mockResolvedValue({ acknowledged: true } as any);
-      mockStatsModel.deleteMany.mockResolvedValue({ acknowledged: false } as any); // deletion fails
+            mockStatsModel.deleteMany.mockResolvedValue({ acknowledged: false } as any); // deletion fails
       mockUserModel.findByIdAndDelete.mockResolvedValue(mockUserDoc as any);
 
       // ==================== Act ====================
