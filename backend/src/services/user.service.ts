@@ -11,7 +11,7 @@ import UserModel, { UserDocument } from "../models/user.model";
 import { sendEmail } from "./verification.service";
 
 import { JoytifyPasswordChangedEmail } from "../templates/password-changed.template";
-import { FETCH_LIMIT_PER_PAGE, PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
+import { PAGINATION_FETCH_LIMIT, INITIAL_FETCH_LIMIT } from "../constants/env-validate.constant";
 import {
   HttpCode,
   VerificationForOptions,
@@ -20,6 +20,7 @@ import {
 } from "@joytify/types/constants";
 import {
   UpdateUserInfoRequest,
+  UpdatePasswordRequest,
   ResetPasswordRequest,
   ChangePasswordRequest,
   DeregisterUserAccountRequest,
@@ -45,16 +46,16 @@ interface UpdateUserServiceRequest extends UpdateUserInfoRequest {
   userId: string;
 }
 
+interface UpdatePasswordServiceRequest extends UpdatePasswordRequest {
+  user: UserDocument;
+}
+
 interface ChangePasswordServiceRequest extends ChangePasswordRequest {
   userId: string;
 }
 
 interface DeregisterAccountServiceRequest extends DeregisterUserAccountRequest {
   userId: string;
-}
-
-interface UpdatePasswordServiceRequest extends ChangePasswordRequest {
-  user: UserDocument;
 }
 
 type PaginationOpts = {
@@ -72,8 +73,8 @@ export const getProfileUserInfo = async (userId: string, page: number) => {
   const { PUBLIC } = PrivacyOptions;
 
   const opts = {
-    skip: (page - 1) * PROFILE_FETCH_LIMIT,
-    limit: PROFILE_FETCH_LIMIT,
+    skip: (page - 1) * INITIAL_FETCH_LIMIT,
+    limit: INITIAL_FETCH_LIMIT,
     sort: { createdAt: -1 },
   };
 
@@ -158,7 +159,7 @@ export const getProfileCollectionsInfo = async (
   let docs: PaginationQueryResponse<any> = { docs: [], totalDocs: 0, page: page };
 
   const opts: PaginationOpts = {
-    limit: { initial: PROFILE_FETCH_LIMIT * 2, load: FETCH_LIMIT_PER_PAGE },
+    limit: { initial: INITIAL_FETCH_LIMIT * 2, load: PAGINATION_FETCH_LIMIT },
     page: page,
   };
 
@@ -258,13 +259,11 @@ export const updateUserPassword = async (params: UpdatePasswordServiceRequest) =
   const { user, currentPassword, newPassword } = params;
 
   // check current password is match
-  const passwordIsMatch = await compareHashValue(currentPassword, user.password);
+  if (currentPassword) {
+    const passwordIsMatch = await compareHashValue(currentPassword, user.password);
 
-  appAssert(passwordIsMatch, UNAUTHORIZED, "Invalid current password");
-
-  // update user password
-  user.password = newPassword;
-  await user.save();
+    appAssert(passwordIsMatch, UNAUTHORIZED, "Invalid current password");
+  }
 
   // send email
   const username = user.email.split("@")[0];
@@ -272,6 +271,10 @@ export const updateUserPassword = async (params: UpdatePasswordServiceRequest) =
   const subject = "Your Joytify password has been changed";
 
   await sendEmail({ to: user.email, subject, content });
+
+  // only update password after email is sent successfully
+  user.password = newPassword;
+  await user.save();
 
   return { updatedUser: user.omitPassword() };
 };

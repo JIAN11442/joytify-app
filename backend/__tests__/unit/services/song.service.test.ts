@@ -82,6 +82,7 @@ describe("Song Service", () => {
   const mockQueryChain = {
     populateSongDetails: jest.fn().mockReturnThis(),
     refactorSongFields: jest.fn().mockReturnThis(),
+    sort: jest.fn().mockReturnThis(),
     lean: jest.fn().mockResolvedValue([mockSong]),
     limit: jest.fn().mockReturnThis(),
   };

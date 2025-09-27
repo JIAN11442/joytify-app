@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@joytify/types": "^1.7.0",
+    "@joytify/types": "^1.7.1",
     "@react-email/components": "^0.0.33",
     "aws-sdk": "^2.1680.0",
     "bcrypt": "^5.1.1",

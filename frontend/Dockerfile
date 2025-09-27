@@ -1,0 +1,37 @@
+# BUILD STAGE
+
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+# 接收 build args (前端配置)
+ARG VITE_SERVER_URL
+ARG VITE_SENDER_EMAIL
+ARG VITE_HEARTBEAT_INTERVAL
+ARG VITE_MIN_PLAYBACK_DURATION
+
+# 設置環境變數
+ENV VITE_SERVER_URL=$VITE_SERVER_URL
+ENV VITE_SENDER_EMAIL=$VITE_SENDER_EMAIL
+ENV VITE_HEARTBEAT_INTERVAL=$VITE_HEARTBEAT_INTERVAL
+ENV VITE_MIN_PLAYBACK_DURATION=$VITE_MIN_PLAYBACK_DURATION
+
+RUN npm run build
+
+
+
+# RUN STAGE
+
+FROM nginx:alpine
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 5173

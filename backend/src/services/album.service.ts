@@ -1,7 +1,7 @@
 import SongModel from "../models/song.model";
 import AlbumModel from "../models/album.model";
 import { collectDocumentAttributes } from "./util.service";
-import { PROFILE_FETCH_LIMIT } from "../constants/env-validate.constant";
+import { INITIAL_FETCH_LIMIT } from "../constants/env-validate.constant";
 import { HttpCode } from "@joytify/types/constants";
 import {
   CreateAlbumRequest,
@@ -69,7 +69,7 @@ export const getRecommendedAlbums = async (albumId: string) => {
         ],
       },
     },
-    { $limit: PROFILE_FETCH_LIMIT },
+    { $limit: INITIAL_FETCH_LIMIT },
     {
       $group: {
         _id: null,
@@ -94,7 +94,7 @@ export const createAlbum = async (params: CreateAlbumServiceRequest) => {
   const { userId, title, artists, ...rest } = params;
 
   let album = await AlbumModel.findOneAndUpdate(
-    { title, artists },
+    { title },
     { $addToSet: { users: userId } },
     { new: true }
   );

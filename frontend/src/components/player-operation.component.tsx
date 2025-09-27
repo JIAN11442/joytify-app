@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { twMerge } from "tailwind-merge";
 import { AiOutlineStop } from "react-icons/ai";
-import { RiLoopLeftLine } from "react-icons/ri";
 import { LuDot, LuShuffle } from "react-icons/lu";
+import { RiLoopLeftLine, RiPlayListAddLine } from "react-icons/ri";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { MdSkipNext, MdSkipPrevious } from "react-icons/md";
 
@@ -13,6 +13,8 @@ import { LoopMode } from "@joytify/types/constants";
 import { RefactorSongResponse } from "@joytify/types/types";
 import usePlaybackControlState from "../states/playback-control.state";
 import { resetMusicAudioInstance } from "../lib/music-audio.lib";
+import { timeoutForDelay } from "../lib/timeout.lib";
+import useSongState from "../states/song.state";
 
 type PlayerOperationProps = {
   song: RefactorSongResponse;
@@ -22,8 +24,15 @@ type PlayerOperationProps = {
 const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, className }) => {
   const { NONE, TRACK } = LoopMode;
 
+  const { setActiveSongAssignmentModal } = useSongState();
   const { shuffleSong, switchSong, togglePlayback, cycleLoop } = usePlaybackControl();
-  const { isShuffle, isPlaying, loopMode } = usePlaybackControlState();
+  const { isShuffle, isPlaying, loopMode, playlistSongs } = usePlaybackControlState();
+
+  const handleActiveSongAssignmentModal = useCallback(() => {
+    timeoutForDelay(() => {
+      setActiveSongAssignmentModal({ active: true, song });
+    });
+  }, [song]);
 
   const handleShuffleSong = useCallback(() => {
     shuffleSong(!isShuffle);
@@ -45,6 +54,8 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, className }) =>
     resetMusicAudioInstance();
   };
 
+  const isPlaylistSongs = playlistSongs.length > 1;
+
   return (
     <div className={twMerge(`flex flex-col`, className)}>
       {/* slider */}
@@ -54,11 +65,22 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, className }) =>
       <div
         className={`
           flex
-          gap-3
+          gap-3.5
+          max-sm:gap-3
           items-center
           justify-center
         `}
       >
+        {/* collect */}
+        <button
+          type="button"
+          title="collect"
+          onClick={handleActiveSongAssignmentModal}
+          className={`player-btn`}
+        >
+          <Icon name={RiPlayListAddLine} opts={{ size: 24 }} />
+        </button>
+
         {/* shuffle */}
         <button
           type="button"
@@ -68,7 +90,13 @@ const PlayerOperation: React.FC<PlayerOperationProps> = ({ song, className }) =>
             relative
             flex
             items-center
-            ${isShuffle ? "text-green-500" : "player-btn"}
+            ${
+              isPlaylistSongs
+                ? isShuffle
+                  ? "text-green-500"
+                  : "player-btn"
+                : "player-btn-disabled"
+            }
           `}
         >
           <Icon name={LuShuffle} opts={{ size: 24 }} />

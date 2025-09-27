@@ -3,7 +3,7 @@ import { API_ENDPOINTS } from "@joytify/types/constants";
 import { CreatePlaybackLogRequest, PlaybackLogResponse } from "@joytify/types/types";
 
 const { PLAYBACK } = API_ENDPOINTS;
-const MIN_PLAYBACK_DURATION = import.meta.env.VITE_MIN_PLAYBACK_DURATION;
+const MIN_PLAYBACK_DURATION = import.meta.env.VITE_MIN_PLAYBACK_DURATION || 30;
 
 // create playback log
 export const createPlaybackLog = async (

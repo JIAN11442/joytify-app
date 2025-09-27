@@ -4,14 +4,14 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
     // when compiling with TypeScript, specify module import paths (similar to Vite's alias configuration).
     // the only difference is that Vite's alias configuration is for the development environment, while tsconfig's alias configuration is for compilation.
-    "paths": {
-      "@joytify/types/types/*": ["../share/dist/esm/types/*"],
-      "@joytify/types/constants/*": ["../share/dist/esm/constants/*"],
-      "@joytify/types/classes/*": ["../share/dist/esm/classes/*"]
-    }
+    // "paths": {
+    //   "@joytify/types/types/*": ["../share/dist/esm/types/*"],
+    //   "@joytify/types/constants/*": ["../share/dist/esm/constants/*"],
+    //   "@joytify/types/classes/*": ["../share/dist/esm/classes/*"]
+    // }
   },
   "files": [],
   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]

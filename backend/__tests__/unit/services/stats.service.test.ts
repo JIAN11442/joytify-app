@@ -506,7 +506,6 @@ describe("Stats Service", () => {
           $match: {
             "stats.summary.year": 2024,
             "stats.summary.month": 1,
-            createdAt: { $gte: new Date(2024, 0, 1), $lt: new Date(2024, 1, 1) },
           },
         },
         expect.objectContaining({ $lookup: expect.any(Object) }) as any, // songs lookup

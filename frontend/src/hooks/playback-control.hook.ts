@@ -134,7 +134,7 @@ const usePlaybackControl = () => {
 
       if (queue.length === 1) {
         seekAudio(0);
-        console.log("只有一首，切換也只要循環播放這一首");
+        // console.log("只有一首，切換也只要循環播放這一首");
         return;
       }
 
@@ -156,10 +156,10 @@ const usePlaybackControl = () => {
           currentIndex: newCurrentIndex,
         });
 
-        console.log(
-          "switch(shuffle)：",
-          newQueue.map((song) => song.title)
-        );
+        // console.log(
+        //   "switch(shuffle)：",
+        //   newQueue.map((song) => song.title)
+        // );
       } else {
         const nextIndex =
           direction === "next"
@@ -167,11 +167,11 @@ const usePlaybackControl = () => {
             : (currentIndex - 1 + queue.length) % queue.length;
         playSong({ queue, currentIndex: nextIndex, seekToInitialBeforePlay: true });
 
-        console.log(
-          "switch(normal)：",
-          queue.map((song) => song.title),
-          audioSong.title
-        );
+        // console.log(
+        //   "switch(normal)：",
+        //   queue.map((song) => song.title),
+        //   audioSong.title
+        // );
       }
     },
     [isShuffle, getAudioContent, seekAudio, playSong]
@@ -197,24 +197,27 @@ const usePlaybackControl = () => {
         currentIndex: newCurrentIndex,
       });
 
-      console.log(newQueue.map((song) => song.title));
+      // console.log(newQueue.map((song) => song.title));
     },
     [getAudioContent]
   );
 
   const cycleLoop = useCallback(() => {
-    const switchedLoopMode = {
-      [NONE]: TRACK,
-      [TRACK]: PLAYLIST,
-      [PLAYLIST]: NONE,
-    }[loopMode];
+    const { playlistSongs } = getAudioContent();
+    const hasMultipleSongs = playlistSongs && playlistSongs.length > 1;
+
+    const loopCycle = hasMultipleSongs
+      ? { [NONE]: TRACK, [TRACK]: PLAYLIST, [PLAYLIST]: NONE }
+      : { [NONE]: TRACK, [TRACK]: NONE, [PLAYLIST]: NONE };
+
+    const switchedLoopMode = loopCycle[loopMode];
 
     if (switchedLoopMode !== NONE && isShuffle) {
       shuffleSong(false);
     }
 
     setLoopMode(switchedLoopMode);
-  }, [loopMode, isShuffle, shuffleSong]);
+  }, [loopMode, isShuffle, shuffleSong, getAudioContent]);
 
   const adjustVolume = useCallback(
     (value: AudioVolumeType) => {

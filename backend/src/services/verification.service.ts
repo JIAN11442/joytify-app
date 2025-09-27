@@ -5,7 +5,7 @@ import VerificationModel, { VerificationDocument } from "../models/verification.
 
 import { JoytifyResetPasswordLinkEmail } from "../templates/reset-password.template";
 import { JoytifyVerificationCodeEmail } from "../templates/verification-code.template";
-import { NODE_ENV, SENDER_EMAIL, TEST_EMAIL } from "../constants/env-validate.constant";
+import { NODE_ENV, OFFICIAL_EMAIL, TEST_EMAIL } from "../constants/env-validate.constant";
 import {
   HttpCode,
   VerificationForOptions,
@@ -43,7 +43,8 @@ const { CONFLICT, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } = 
 // send email service
 export const sendEmail = async ({
   content,
-  from = NODE_ENV === "development" ? TEST_EMAIL : SENDER_EMAIL,
+  // from = NODE_ENV === "development" ? TEST_EMAIL : OFFICIAL_EMAIL,
+  from = OFFICIAL_EMAIL,
   ...rest
 }: SendEmailParams) => {
   const { data, error } = await resend.emails.send({

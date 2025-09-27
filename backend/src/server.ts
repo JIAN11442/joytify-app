@@ -5,7 +5,7 @@ import app from "./app";
 import { initializeSocket } from "./config/socket.config";
 import connectMongoDB from "./config/connect-mongodb.config";
 import { sessionOnlineStatusCheckSchedule } from "./schedules/session-online.schedule";
-import { BACKEND_PORT } from "./constants/env-validate.constant";
+import { API_PORT } from "./constants/env-validate.constant";
 import consoleLogBox from "./utils/console-boxes.util";
 
 const startServer = async () => {
@@ -26,8 +26,8 @@ const startServer = async () => {
 
     initializeSocket(server);
 
-    server.listen(BACKEND_PORT, () => {
-      consoleLogBox(`🚀 Server ready at http://localhost:${BACKEND_PORT}`);
+    server.listen(API_PORT, () => {
+      consoleLogBox(`🚀 Server ready at http://localhost:${API_PORT}`);
     });
 
     sessionOnlineStatusCheckSchedule();

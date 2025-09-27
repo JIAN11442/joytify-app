@@ -1,7 +1,7 @@
 import SessionModel from "../models/session.model";
-import { SESSION_THRESHOLD } from "../constants/env-validate.constant";
+import { SESSION_OFFLINE_TIMEOUT } from "../constants/env-validate.constant";
 
-const ONLINE_CHECK_THRESHOLD = SESSION_THRESHOLD * 60 * 1000;
+const ONLINE_CHECK_THRESHOLD = SESSION_OFFLINE_TIMEOUT * 60 * 1000;
 
 export const sessionOnlineStatusCheckSchedule = () => {
   setInterval(async () => {

@@ -265,7 +265,6 @@ export const getMonthlyStats = async (params: GetMonthlyStatsRequest) => {
       $match: {
         "stats.summary.year": year,
         "stats.summary.month": month,
-        createdAt: { $gte: new Date(year, month - 1, 1), $lt: new Date(year, month, 1) },
       },
     },
     // populate songs with artist names while preserving order

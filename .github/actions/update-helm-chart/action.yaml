@@ -1,0 +1,71 @@
+name: "Update Helm Values"
+description: "Updates Helm values.yaml (image repository, tag/digest, and other deployment configs)"
+
+inputs:
+  values-file:
+    description: "Path to values.yaml file"
+    required: true
+  image-repository:
+    description: "Image repository (e.g. ghcr.io/joytify/backend-api)"
+    required: false
+    default: ""
+  image-tag:
+    description: "Image tag (e.g. latest, main-abcdef1234)"
+    required: false
+    default: ""
+  image-digest:
+    description: "Image digest (e.g. sha256:abcdef1234)"
+    required: false
+    default: ""
+  override-values:
+    description: "YAML content to override specific values"
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    # 安裝 yq
+    - name: Setup yq
+      uses: frenck/action-setup-yq@v1
+
+    # 更新 image repository (optional)
+    - name: Update image.repository
+      if: ${{ inputs.image-repository != '' }}
+      shell: bash
+      run: yq -i '.image.repository = "${{ inputs.image-repository }}"' ${{ inputs.values-file }}
+
+    # 更新 image tag (optional)
+    - name: Update image.tag
+      if: ${{ inputs.image-tag != '' }}
+      shell: bash
+      run: yq -i '.image.tag = "${{ inputs.image-tag }}"' ${{ inputs.values-file }}
+
+    # 更新 image digest (optional)
+    - name: Update image.digest
+      if: ${{ inputs.image-digest != '' }}
+      shell: bash
+      run: yq -i '.image.digest = "${{ inputs.image-digest }}"' ${{ inputs.values-file }}
+
+    # 更新其他值 (optional)
+    # 1. 創建臨時文件（轉為 yaml 文件）
+    # 2. 使用 yq 進行字段級別的覆蓋（使用 *= 操作符，特點是目標文件如果存在該字段就覆蓋，不存在就新增）
+    # 3. 刪除臨時文件
+    - name: Update other values
+      if: ${{ inputs.override-values != '' }}
+      shell: bash
+      run: |
+        echo "Overriding values:"
+        echo "${{ inputs.override-values }}"
+
+        cat <<'EOF' > /tmp/override.yaml
+        ${{ inputs.override-values }}
+        EOF
+
+        yq -i '. *= load("/tmp/override.yaml")' "${{ inputs.values-file }}"
+
+        rm /tmp/override.yaml
+
+    - name: Show updated values.yaml
+      shell: bash
+      run: cat ${{ inputs.values-file }}

@@ -163,7 +163,7 @@ export const deletePlaylistById = async (params: DeletePlaylistServiceRequest) =
 
   // if have target playlist ID
   if (targetPlaylistId) {
-    const [updatedPlaylist, updatedSongs] = await Promise.all([
+    const [updatedPlaylist, addToTargetResult, removeFromCurrentResult] = await Promise.all([
       // add all songs ID from delete playlist to target playlist
       PlaylistModel.findByIdAndUpdate(
         targetPlaylistId,
@@ -176,18 +176,31 @@ export const deletePlaylistById = async (params: DeletePlaylistServiceRequest) =
         },
         { new: true }
       ),
+
       // add target playlist ID to songs's playlistFor property
       SongModel.updateMany(
         { _id: { $in: playlist.songs } },
-        { $addToSet: { playlistFor: targetPlaylistId }, $pull: { playlistFor: currentPlaylistId } },
+        { $addToSet: { playlistFor: targetPlaylistId } },
+        { new: true }
+      ),
+      // remove current playlist ID from songs's playlistFor property
+      SongModel.updateMany(
+        { _id: { $in: playlist.songs } },
+        { $pull: { playlistFor: currentPlaylistId } },
         { new: true }
       ),
     ]);
+
     appAssert(updatedPlaylist, NOT_FOUND, "Target playlist not found");
     appAssert(
-      updatedSongs.acknowledged,
+      addToTargetResult.acknowledged,
       INTERNAL_SERVER_ERROR,
       "Failed to add target playlist ID to songs's playlistFor property"
+    );
+    appAssert(
+      removeFromCurrentResult.acknowledged,
+      INTERNAL_SERVER_ERROR,
+      "Failed to remove current playlist ID from songs's playlistFor property"
     );
   }
 

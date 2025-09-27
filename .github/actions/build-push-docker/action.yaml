@@ -1,0 +1,90 @@
+name: "Build and Push Docker Service"
+description: "Builds and pushes Docker image for a specific service"
+
+inputs:
+  service:
+    description: "Service name (backend/frontend)"
+    required: true
+
+  # metadata
+  registry:
+    description: "Container registry URL"
+    required: true
+    default: "ghcr.io"
+  image-owner:
+    description: "Image owner (GitHub username/org)"
+    required: true
+  image-prefix:
+    description: "Image name prefix (project name)"
+    required: false
+  image-name:
+    description: "Docker image name suffix (e.g. api/web)"
+    required: true
+
+  # build-push-docker
+  context:
+    description: "Build context path"
+    required: true
+  dockerfile:
+    description: "Path to Dockerfile"
+    required: true
+  platforms:
+    description: "Target platforms for multi-arch build"
+    required: false
+    default: "linux/amd64,linux/arm64"
+  build-args:
+    description: "Build arguments for Docker build"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ inputs.registry }}/${{ inputs.image-owner }}/${{ inputs.image-prefix }}-${{ inputs.image-name }}
+        # 設定 tag 的格式
+        # type=sha,prefix={{branch}}- 使用 branch 名稱作為 prefix (避免 tag 衝突，也方便回溯)
+        # type=raw,value=latest,enable={{is_default_branch}} 將 default branch (main) 視為 latest tag
+
+        # 結果會產生 1 個 tagged，四個 untagged，例如：
+        # tagged: main-1234567890, latest
+
+        # untagged:
+        ## main-1234567891（linux/amd64）
+        ## main-1234567892（linux/arm64）
+        ## main-1234567893（amd64-manifest）
+        ## main-1234567894（arm64-manifest）
+        tags: |
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Docker image
+      id: build
+      uses: docker/build-push-action@v5
+      with:
+        context: ${{ inputs.context }}
+        file: ${{ inputs.dockerfile }}
+        push: true
+        platforms: ${{ inputs.platforms }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        build-args: ${{ inputs.build-args }}
+        # 使用 GitHub Actions Cache 來加速 build 過程
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+outputs:
+  repository:
+    description: "Full image repository URL"
+    value: ${{ inputs.registry }}/${{ inputs.image-owner }}/${{ inputs.image-prefix }}-${{ inputs.image-name }}
+  tag:
+    description: "Resolved image tags"
+    # 這裡不用取 steps.meta.outputs.tags，因為 tags 有兩種，一種是 sha，一種是 latest
+    # 我們直接取精准的 sha 即可，所以要嘛從 tags 取，要嘛直接從 github.sha 取
+    value: ${{ github.sha }}
+  digest:
+    description: "Built image digest"
+    # 這裡的 outputs 是 docker/build-push-action 的 outputs，不是這個 action 的 outputs
+    value: ${{ steps.build.outputs.digest }}

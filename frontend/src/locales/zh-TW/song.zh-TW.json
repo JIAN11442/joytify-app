@@ -82,7 +82,7 @@
   "song.delete.modal.donation.delete": "永久刪除這首歌",
   "song.delete.modal.donation.back": "回到上一頁",
 
-  "song.playlist.assignment.modal.title": "加入播放清單",
+  "song.playlist.assignment.modal.title": "整理到播放清單",
   "song.playlist.assignment.modal.description": "選擇你希望此歌曲出現在的播放清單",
   "song.playlist.assignment.modal.searchbar.placeholder": "搜尋播放清單",
   "song.playlist.assignment.modal.added.title": "已加入的播放清單",
@@ -100,14 +100,14 @@
   "song.tableList.arrangement.menu.layout.list": "列表",
   "song.tableList.arrangement.menu.layout.compact": "簡潔",
   "song.tableList.actions.navigateToMain": "前往歌曲主頁",
-  "song.tableList.actions.addToPlaylist": "加入播放清單",
+  "song.tableList.actions.organizeInPlaylists": "整理到播放清單",
   "song.tableList.actions.rate": "為此歌曲評分",
   "song.tableList.noSongs.1": "尚無歌曲",
   "song.tableList.noSongs.2": "你可以透過側邊欄的 <strong>+</strong> 按鈕上傳音樂",
 
   "song.hero.section.type": "歌曲",
   "song.action.panel.menu.editDetails": "編輯歌曲信息",
-  "song.action.panel.menu.assignmentPlaylist": "加入播放清單",
+  "song.action.panel.menu.organizeInPlaylists": "整理到播放清單",
   "song.action.panel.menu.rate": "為此歌曲評分",
   "song.comment.list.title": "其他用戶評價 ({count})"
 }

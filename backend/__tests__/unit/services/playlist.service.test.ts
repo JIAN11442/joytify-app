@@ -501,7 +501,9 @@ describe("Playlist Service", () => {
 
       mockPlaylistModel.findById.mockResolvedValue(mockPlaylist);
       mockPlaylistModel.findByIdAndUpdate.mockResolvedValue(mockPlaylist);
-      mockSongModel.updateMany.mockResolvedValue({ acknowledged: true });
+      mockSongModel.updateMany
+        .mockResolvedValueOnce({ acknowledged: true }) // First call: add to target playlist
+        .mockResolvedValueOnce({ acknowledged: true }); // Second call: remove from current playlist
       mockPlaylistModel.findOneAndDelete.mockResolvedValue(mockPlaylist);
 
       // ==================== Act ====================
@@ -521,13 +523,17 @@ describe("Playlist Service", () => {
         { new: true }
       );
 
-      // 2. verify song update
-      expect(mockSongModel.updateMany).toHaveBeenCalledWith(
+      // 2. verify song updates (two separate operations)
+      expect(mockSongModel.updateMany).toHaveBeenNthCalledWith(
+        1,
         { _id: { $in: [mockSongObjectId] } },
-        {
-          $addToSet: { playlistFor: mockTargetPlaylistId },
-          $pull: { playlistFor: mockPlaylistId },
-        },
+        { $addToSet: { playlistFor: mockTargetPlaylistId } },
+        { new: true }
+      );
+      expect(mockSongModel.updateMany).toHaveBeenNthCalledWith(
+        2,
+        { _id: { $in: [mockSongObjectId] } },
+        { $pull: { playlistFor: mockPlaylistId } },
         { new: true }
       );
 
@@ -585,7 +591,7 @@ describe("Playlist Service", () => {
 
       mockPlaylistModel.findById.mockResolvedValue(mockPlaylist);
       mockPlaylistModel.findByIdAndUpdate.mockResolvedValue(mockPlaylist);
-      mockSongModel.updateMany.mockResolvedValue({ acknowledged: false });
+      mockSongModel.updateMany.mockResolvedValueOnce({ acknowledged: false }); // First call fails
 
       // ==================== Act & Assert ====================
       await expect(deletePlaylistById(params)).rejects.toThrow(
@@ -597,6 +603,33 @@ describe("Playlist Service", () => {
         false,
         500,
         "Failed to add target playlist ID to songs's playlistFor property"
+      );
+    });
+
+    it("should handle second song update failure", async () => {
+      // ==================== Arrange ====================
+      const params = {
+        userId: mockUserId,
+        currentPlaylistId: mockPlaylistId,
+        targetPlaylistId: mockTargetPlaylistId,
+      };
+
+      mockPlaylistModel.findById.mockResolvedValue(mockPlaylist);
+      mockPlaylistModel.findByIdAndUpdate.mockResolvedValue(mockPlaylist);
+      mockSongModel.updateMany
+        .mockResolvedValueOnce({ acknowledged: true }) // First call succeeds
+        .mockResolvedValueOnce({ acknowledged: false }); // Second call fails
+
+      // ==================== Act & Assert ====================
+      await expect(deletePlaylistById(params)).rejects.toThrow(
+        "Failed to remove current playlist ID from songs's playlistFor property"
+      );
+
+      // ==================== Assert Process ====================
+      expect(mockAppAssert).toHaveBeenCalledWith(
+        false,
+        500,
+        "Failed to remove current playlist ID from songs's playlistFor property"
       );
     });
 

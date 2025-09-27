@@ -291,7 +291,7 @@ const AccountInfoSection: React.FC<AccountInfoSectionProps> = ({ profileUser }) 
         <div
           className={`
             flex
-            w-fit
+            w-full
             m-5
             gap-5
             items-end
@@ -330,7 +330,14 @@ const AccountInfoSection: React.FC<AccountInfoSectionProps> = ({ profileUser }) 
           </div>
 
           {/* username */}
-          <p className={`info-title text-3xl`}>
+          <p
+            className={`
+              info-title 
+              text-3xl 
+              truncate 
+              pr-5
+            `}
+          >
             {inputUsername && inputUsername.length > 0 ? inputUsername : generateUsername}
           </p>
         </div>

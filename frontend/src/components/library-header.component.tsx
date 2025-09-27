@@ -21,6 +21,7 @@ import useAuthModalState from "../states/auth-modal.state";
 import useSidebarState from "../states/sidebar.state";
 import useLibraryState from "../states/library.state";
 import { timeoutForDelay } from "../lib/timeout.lib";
+import useProviderState from "../states/provider.state";
 
 type LibraryHeaderProps = {
   authUser?: AuthUserResponse | null;
@@ -49,6 +50,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
     setActiveLibrarySearchBar,
     setLibrarySearchVal,
   } = useLibraryState();
+  const { screenWidth } = useProviderState();
 
   const { playlists } = useGetPlaylistsQuery(librarySearchVal);
   const { mutate: createPlaylistFn } = useCreatePlaylistMutation();
@@ -238,8 +240,8 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({ authUser }) => {
                 visible: activeAddingOptions,
                 setVisible: setActiveAddingOptions,
               }}
-              wrapper={{ transformOrigin: "top left" }}
-              className={`fixed w-[210px]`}
+              wrapper={{ transformOrigin: screenWidth < 500 ? "top" : "top left" }}
+              className={`fixed w-[210px] ${screenWidth < 500 ? "right-8" : ""}`}
             >
               {/* add new song */}
               <MenuItem

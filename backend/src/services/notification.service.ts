@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import UserModel from "../models/user.model";
-import { FETCH_LIMIT_PER_PAGE } from "../constants/env-validate.constant";
+import { PAGINATION_FETCH_LIMIT } from "../constants/env-validate.constant";
 import { HttpCode, NotificationFilterOptions } from "@joytify/types/constants";
 import { PaginationQueryResponse, NotificationFilterType } from "@joytify/types/types";
 import { getSocketServer } from "../config/socket.config";
@@ -33,7 +33,7 @@ export const getUserNotificationsByType = async (
 ) => {
   let docs: PaginationQueryResponse<any> = { docs: [], totalDocs: 0, page: page };
 
-  const load = FETCH_LIMIT_PER_PAGE;
+  const load = PAGINATION_FETCH_LIMIT;
   const fetchLimit = load * page;
 
   const userObjectId = new mongoose.Types.ObjectId(userId);

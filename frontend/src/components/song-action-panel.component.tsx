@@ -110,7 +110,7 @@ const SongActionPanel: React.FC<SongActionPanelProps> = ({ fm, song, editable })
 
           {/* assignment playlist */}
           <MenuItem
-            label={songActionPanelFm("menu.assignmentPlaylist")}
+            label={songActionPanelFm("menu.organizeInPlaylists")}
             icon={{ name: PiPlaylist, opts: { size: 18 } }}
             onClick={handleActiveSongAssignmentModal}
           />

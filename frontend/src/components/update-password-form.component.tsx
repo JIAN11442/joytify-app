@@ -19,14 +19,21 @@ import { timeoutForDelay } from "../lib/timeout.lib";
 import { isHighlight } from "../lib/icon-highlight.lib";
 import { passwordRegex } from "../utils/regex.util";
 
-type UpdateFnParams = {
+export type ResetFnParams = {
+  newPassword: string;
+};
+
+export type ChangeFnParams = {
   currentPassword: string;
   newPassword: string;
 };
 
+type UpdateFnParams = ResetFnParams | ChangeFnParams;
+
 type UpdatePasswordFormProps = {
   title?: string;
   description?: string;
+  type: "reset" | "change";
   updatePasswordFn: (params: UpdateFnParams) => void;
   isFetching?: boolean;
   verified?: boolean;
@@ -43,6 +50,7 @@ type UpdatePasswordFormProps = {
 const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
   title,
   description,
+  type,
   updatePasswordFn,
   isFetching,
   verified,
@@ -110,10 +118,10 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
     [watch, errors]
   );
 
-  const onSubmit: SubmitHandler<DefaultUpdatePasswordForm> = (value) => {
-    const { currentPassword, newPassword } = value;
+  const onSubmit: SubmitHandler<DefaultUpdatePasswordForm> = ({ newPassword, currentPassword }) => {
+    const params = type === "reset" ? { newPassword } : { currentPassword, newPassword };
 
-    updatePasswordFn({ currentPassword, newPassword });
+    updatePasswordFn(params);
   };
 
   // auto close verified msg
@@ -211,22 +219,24 @@ const UpdatePasswordForm: React.FC<UpdatePasswordFormProps> = ({
         )}
       >
         {/* current password */}
-        <InputBox
-          id="reset-current-password"
-          type="password"
-          placeholder={updateCurrentPasswordFm("input.placeholder")}
-          icon={{ name: IoKey }}
-          iconHighlight={isIconHighlight("currentPassword")}
-          disabled={disabled}
-          className={`py-4`}
-          required
-          {...register("currentPassword", {
-            validate: (value) => {
-              return passwordRegex.test(value) || getWarningMsg(INVALID_PASSWORD_REGEX);
-            },
-            onChange: () => watch("newPassword").length > 0 && trigger("newPassword"),
-          })}
-        />
+        {type === "change" && (
+          <InputBox
+            id="reset-current-password"
+            type="password"
+            placeholder={updateCurrentPasswordFm("input.placeholder")}
+            icon={{ name: IoKey }}
+            iconHighlight={isIconHighlight("currentPassword")}
+            disabled={disabled}
+            className={`py-4`}
+            required
+            {...register("currentPassword", {
+              validate: (value) => {
+                return passwordRegex.test(value || "") || getWarningMsg(INVALID_PASSWORD_REGEX);
+              },
+              onChange: () => watch("newPassword").length > 0 && trigger("newPassword"),
+            })}
+          />
+        )}
 
         {/* new password */}
         <InputBox

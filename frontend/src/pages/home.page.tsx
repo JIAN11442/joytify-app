@@ -1,6 +1,6 @@
 import HomepageRecentlyPlayed from "../components/homepage-recently-played.component";
-import HomepageRecommendedSongs from "../components/homepage-recommended-songs.component";
 import HomepagePopularMusicians from "../components/homepage-popular-musicians.component";
+import HomepageRecommendedSongs from "../components/homepage-recommended-songs.component";
 import HomepageRecommendedAlbums from "../components/homepage-recommended-albums.component";
 import HomepageRecommendedGenres from "../components/homepage-recommended-genres.component";
 import HomepageRecommendedTags from "../components/homepage-recommended-tags.component";

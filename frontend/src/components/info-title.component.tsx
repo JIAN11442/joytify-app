@@ -25,6 +25,7 @@ export const AutoFitTitle: React.FC<AutoFitTitleProps> = ({ children, onClick, c
         fontFamily: "Montserrat",
         wordBreak: "break-word",
         overflowWrap: "break-word",
+        textAlign: "left",
       }}
       className={className}
     >

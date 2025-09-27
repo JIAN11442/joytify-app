@@ -42,12 +42,6 @@ export const getSongTableListActionsContent = (fm: ScopedFormatMessage): SongTab
 
   const actions = [
     {
-      id: "song-table-list-actions-add-to-playlist",
-      title: songTableListActionsFm("addToPlaylist"),
-      icon: { name: RiPlayListAddLine },
-      onClick: (song: RefactorSongResponse) => handleActiveSongAssignmentModal(song),
-    },
-    {
       id: "song-table-list-actions-rate",
       title: songTableListActionsFm("rate"),
       icon: { name: FaStar },
@@ -58,6 +52,12 @@ export const getSongTableListActionsContent = (fm: ScopedFormatMessage): SongTab
       title: songTableListActionsFm("navigateToMain"),
       icon: { name: TbArrowRightToArc },
       onClick: (song: RefactorSongResponse) => handleNavigateToSongPage(song),
+    },
+    {
+      id: "song-table-list-actions-organize-in-playlists",
+      title: songTableListActionsFm("organizeInPlaylists"),
+      icon: { name: RiPlayListAddLine },
+      onClick: (song: RefactorSongResponse) => handleActiveSongAssignmentModal(song),
     },
   ] as SongTableListAction[];
 

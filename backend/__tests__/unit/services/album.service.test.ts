@@ -290,7 +290,7 @@ describe("Album Service", () => {
       // ==================== Assert Process ====================
       // 1. verify findOneAndUpdate was called
       expect(mockAlbumModel.findOneAndUpdate).toHaveBeenCalledWith(
-        { title: "New Album", artists: [mockArtistId] },
+        { title: "New Album" },
         { $addToSet: { users: mockUserId } },
         { new: true }
       );
@@ -327,7 +327,7 @@ describe("Album Service", () => {
       // ==================== Assert Process ====================
       // 1. verify findOneAndUpdate was called
       expect(mockAlbumModel.findOneAndUpdate).toHaveBeenCalledWith(
-        { title: "Existing Album", artists: [mockArtistId] },
+        { title: "Existing Album" },
         { $addToSet: { users: mockUserId } },
         { new: true }
       );

@@ -12,7 +12,7 @@ import {
   unfollowTargetMusician,
 } from "../../../src/services/musician.service";
 import { collectDocumentAttributes } from "../../../src/services/util.service";
-import { PROFILE_FETCH_LIMIT } from "../../../src/constants/env-validate.constant";
+import { INITIAL_FETCH_LIMIT } from "../../../src/constants/env-validate.constant";
 import { MusicianOptions } from "@joytify/types/constants";
 import appAssert from "../../../src/utils/app-assert.util";
 
@@ -23,7 +23,7 @@ jest.mock("../../../src/models/song.model");
 jest.mock("../../../src/services/util.service");
 jest.mock("../../../src/utils/app-assert.util");
 jest.mock("../../../src/constants/env-validate.constant", () => ({
-  PROFILE_FETCH_LIMIT: 50,
+  INITIAL_FETCH_LIMIT: 50,
 }));
 
 // Mock type definitions
@@ -409,7 +409,7 @@ describe("Musician Service", () => {
             ],
           },
         },
-        { $limit: PROFILE_FETCH_LIMIT },
+        { $limit: INITIAL_FETCH_LIMIT },
         {
           $group: {
             _id: null,
@@ -440,7 +440,7 @@ describe("Musician Service", () => {
       });
 
       // 5. verify query chain methods
-      expect(mockQueryChain.limit).toHaveBeenCalledWith(PROFILE_FETCH_LIMIT);
+      expect(mockQueryChain.limit).toHaveBeenCalledWith(INITIAL_FETCH_LIMIT);
       expect(mockQueryChain.populateNestedSongDetails).toHaveBeenCalled();
       expect(mockQueryChain.refactorSongFields).toHaveBeenCalledWith({
         transformNestedSongs: true,
@@ -568,7 +568,7 @@ describe("Musician Service", () => {
             ],
           },
         },
-        { $limit: PROFILE_FETCH_LIMIT },
+        { $limit: INITIAL_FETCH_LIMIT },
         {
           $group: {
             _id: null,
