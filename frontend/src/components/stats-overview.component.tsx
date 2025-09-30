@@ -60,7 +60,7 @@ const StatsOverviewSection: React.FC<StatsOverviewSectionProps> = ({
             flex
             py-2
             px-3
-            gap-1
+            gap-2
             text-sm
             font-ubuntu
             shadow-lg
@@ -70,7 +70,9 @@ const StatsOverviewSection: React.FC<StatsOverviewSectionProps> = ({
           `}
         >
           <Icon name={CiCalendar} opts={{ size: 20 }} className={`shrink-0`} />
-          {monthlyStatsFm("date", { month: monthFm(month), year })}
+          <p className={`line-clamp-1 whitespace-nowrap`}>
+            {monthlyStatsFm("date", { month: monthFm(month), year })}
+          </p>
         </div>
       </AnimationWrapper>
 
@@ -110,15 +112,15 @@ const StatsOverviewSection: React.FC<StatsOverviewSectionProps> = ({
                 {valueIsNumber ? (
                   <OdometerAnimated
                     value={value}
-                    type={"number"}
+                    type="percentage"
                     prefix={isGrowthRate && isPositive ? "+" : ""}
                     suffix={isGrowthRate ? " %" : ""}
                     className={`
                       -mt-4
                       text-[2.5rem]
                       font-bold
-                      truncate
                       line-clamp-1
+                      truncate
                       ${textColor}
                     `}
                   />

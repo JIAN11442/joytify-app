@@ -59,7 +59,7 @@ const OdometerAnimated = ({
         return (
           <span className={className}>
             {prefix}
-            <Odometer value={displayValue as number} format="d" />
+            <Odometer value={displayValue as number} format="(,ddd)" />
             {suffix}
           </span>
         );
