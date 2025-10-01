@@ -27,16 +27,24 @@ const handler = async (event) => {
 
     console.log("✅ Connected to MongoDB");
 
-    // 2. 獲取當月日期範圍 (使用 UTC 時間)
+    // 2. 獲取上個月日期範圍 (使用 UTC 時間) - 月報是統計上個月的數據
     const now = new Date();
     const currentYear = now.getUTCFullYear();
     const currentMonth = now.getUTCMonth(); // 0-11
-    const startOfMonth = new Date(Date.UTC(currentYear, currentMonth, 1));
-    const startOfNextMonth = new Date(Date.UTC(currentYear, currentMonth + 1, 1));
+    const previousMonth = currentMonth - 1;
+    const previousYear = previousMonth < 0 ? currentYear - 1 : currentYear;
+    const adjustedMonth = previousMonth < 0 ? 11 : previousMonth;
+
+    const startOfMonth = new Date(Date.UTC(previousYear, adjustedMonth, 1));
+    const startOfNextMonth = new Date(Date.UTC(currentYear, currentMonth, 1));
 
     // 3. 獲取所有用戶的當月統計並生成通知
     console.log("========== PART 1.2: 生成通知 ==========");
-    console.log(`📅 Processing stats...`);
+    console.log(
+      `📅 Processing stats for: ${startOfMonth
+        .toISOString()
+        .slice(0, 7)} (${startOfMonth.toISOString()} ~ ${startOfNextMonth.toISOString()})`
+    );
 
     const { notificationsCreated, usersProcessed, usersUpdated, notificationId, socketUserIds } =
       await generateMonthlyNotifications(db, startOfMonth, startOfNextMonth, testMode);

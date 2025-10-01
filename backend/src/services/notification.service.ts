@@ -78,6 +78,7 @@ export const getUserNotificationsByType = async (
         from: "stats",
         let: {
           userId: userObjectId,
+          // Monthly notification shows previous month's statistics
           notificationMonth: { $month: "$createdAt" },
           notificationYear: { $year: "$createdAt" },
         },
@@ -88,8 +89,32 @@ export const getUserNotificationsByType = async (
             $match: {
               $expr: {
                 $and: [
-                  { $eq: [{ $month: "$stats.createdAt" }, "$$notificationMonth"] },
-                  { $eq: [{ $year: "$stats.createdAt" }, "$$notificationYear"] },
+                  // Calculate previous month: if January, then 12; otherwise current month - 1
+                  {
+                    $eq: [
+                      { $month: "$stats.createdAt" },
+                      {
+                        $cond: [
+                          { $eq: ["$$notificationMonth", 1] },
+                          12,
+                          { $subtract: ["$$notificationMonth", 1] },
+                        ],
+                      },
+                    ],
+                  },
+                  // Calculate previous year: if January, then previous year; otherwise current year
+                  {
+                    $eq: [
+                      { $year: "$stats.createdAt" },
+                      {
+                        $cond: [
+                          { $eq: ["$$notificationMonth", 1] },
+                          { $subtract: ["$$notificationYear", 1] },
+                          "$$notificationYear",
+                        ],
+                      },
+                    ],
+                  },
                 ],
               },
             },
