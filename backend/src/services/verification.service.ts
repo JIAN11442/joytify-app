@@ -53,6 +53,15 @@ export const sendEmail = async ({
     react: content,
   });
 
+  // Debug logging
+  console.log("📧 Email send attempt:", {
+    to: rest.to,
+    from,
+    subject: rest.subject,
+    data,
+    error,
+  });
+
   appAssert(data?.id, INTERNAL_SERVER_ERROR, error ? error.message : "Failed to send email");
 };
 

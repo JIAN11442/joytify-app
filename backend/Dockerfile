@@ -28,7 +28,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 
 # RUN npm ci --only=production
-RUN npm ci --omit=dev
+# RUN npm ci --omit=dev
 
 EXPOSE 4004
 
